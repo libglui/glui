@@ -37,7 +37,7 @@
 
 GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
                                  int *value_ptr,
-                                 int id, GLUI_Update_CB cb)
+                                 int id, GLUI_CB cb)
 {
   common_init();
   GLUI_String      buf;

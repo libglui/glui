@@ -38,7 +38,7 @@
 GLUI_Translation::GLUI_Translation(
   GLUI_Node *parent, const char *name, 
   int trans_t, float *value_ptr,
-  int id, GLUI_Update_CB cb )
+  int id, GLUI_CB cb )
 {
   common_init();
 

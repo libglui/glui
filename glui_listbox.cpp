@@ -36,7 +36,7 @@
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
                             const char *name, int *value_ptr,
                             int id, 
-                            GLUI_Update_CB cb)
+                            GLUI_CB cb)
 {
   common_init();
   set_ptr_val( value_ptr );

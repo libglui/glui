@@ -35,7 +35,7 @@ GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
                                     const char *name,
                                     int type,
                                     int user_id,
-                                    GLUI_Update_CB callback)
+                                    GLUI_CB callback)
 {
   common_init();
 
@@ -45,15 +45,16 @@ GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
   this->callback   = callback;
 
   parent->add_control( this );
-  this->list = new GLUI_List(this, true, 1, NULL, this,
-                              (GLUI_InterObject_CB)(GLUI_FileBrowser::dir_list_callback));
+  list = new GLUI_List(this, true, 1);
+  list->set_object_callback( GLUI_FileBrowser::dir_list_callback, this );
   (this->list)->set_click_type(GLUI_DOUBLE_CLICK);
   this->fbreaddir(this->current_dir.c_str());
 }
 
 /****************************** GLUI_FileBrowser::draw() **********/
 
-void GLUI_FileBrowser::dir_list_callback(void *glui_object, int id) {
+void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
+  int id = glui_object->get_id();
   GLUI_FileBrowser* me = (GLUI_FileBrowser*) glui_object;
   int this_item;
   const char *selected;

@@ -388,7 +388,7 @@ void   GLUI_Rotation::set_spin( float damp_factor )
 GLUI_Rotation::GLUI_Rotation( GLUI_Node *parent,
                               const char *name, float *value_ptr,
                               int id, 
-                              GLUI_Update_CB cb )
+                              GLUI_CB cb )
 {
   common_init();
   set_ptr_val( value_ptr );

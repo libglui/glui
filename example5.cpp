@@ -42,8 +42,7 @@ int   curr_string = 0;
 
 /** Pointers to the windows and some of the controls we'll create **/
 GLUI *glui, *glui2;
-GLUI_Checkbox   *checkbox;
-GLUI_Spinner    *spinner, *light0_spinner, *light1_spinner;
+GLUI_Spinner    *light0_spinner, *light1_spinner;
 GLUI_RadioGroup *radio;
 GLUI_Panel      *obj_panel;
 
@@ -367,9 +366,9 @@ int main(int argc, char* argv[])
 
   /***** Control for object params *****/
 
-  checkbox = 
-    new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
-  spinner  = new GLUI_Spinner( obj_panel, "Segments:", &segments);
+  new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
+  GLUI_Spinner *spinner = 
+    new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
 

@@ -39,7 +39,7 @@ static const int LINE_HEIGHT = 15;
 /****************************** GLUI_TextBox::GLUI_TextBox() **********/
 
 GLUI_TextBox::GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
-                           bool scroll, int id, GLUI_Update_CB callback )
+                           bool scroll, int id, GLUI_CB callback )
 {
   common_construct(parent, &live_var, scroll, id, callback);
 }
@@ -47,7 +47,7 @@ GLUI_TextBox::GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
 /****************************** GLUI_TextBox::GLUI_TextBox() **********/
 
 GLUI_TextBox::GLUI_TextBox( GLUI_Node *parent, bool scroll, int id,
-                            GLUI_Update_CB callback )
+                            GLUI_CB callback )
 {
   common_construct(parent, NULL, scroll, id, callback);
 }
@@ -55,7 +55,7 @@ GLUI_TextBox::GLUI_TextBox( GLUI_Node *parent, bool scroll, int id,
 /****************************** GLUI_TextBox::common_construct() **********/
 void GLUI_TextBox::common_construct(
   GLUI_Node *parent, GLUI_String *data, 
-  bool scroll, int id, GLUI_Update_CB callback)
+  bool scroll, int id, GLUI_CB callback)
 {
   common_init();
 
@@ -82,11 +82,8 @@ void GLUI_TextBox::common_construct(
       new GLUI_Scrollbar(tb_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
-                         GLUI_SCROLL_INT, 
-                         -1,
-                         NULL,
-                         (GLUI_Control*) this,
-                         (GLUI_InterObject_CB )GLUI_TextBox::scrollbar_callback);
+                         GLUI_SCROLL_INT);
+    scrollbar->set_object_callback(GLUI_TextBox::scrollbar_callback, this);
     scrollbar->set_alignment(GLUI_ALIGN_LEFT);
     // scrollbar->can_activate = false; //kills ability to mouse drag too
   }
@@ -1112,11 +1109,13 @@ int    GLUI_TextBox::mouse_over( int state, int x, int y )
   return true;
 }
 
-void GLUI_TextBox::scrollbar_callback(void *glui_object, int new_start_line) {
-  GLUI_TextBox* me = (GLUI_TextBox*) glui_object;
+void GLUI_TextBox::scrollbar_callback(GLUI_Control *my_scrollbar) {
+  GLUI_Scrollbar *sb = dynamic_cast<GLUI_Scrollbar*>(my_scrollbar);
+  if (!sb) return;
+  GLUI_TextBox* me = (GLUI_TextBox*) sb->associated_object;
   if (me->scrollbar == NULL)
     return;
-  new_start_line;
+  int new_start_line = sb->get_int_val(); // ??
   me->start_line = new_start_line;
   if (new_start_line < (me->curr_line - me->visible_lines))
     me->curr_line = new_start_line + me->visible_lines;

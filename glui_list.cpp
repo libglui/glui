@@ -24,11 +24,11 @@
 /****************************** GLUI_List::GLUI_List() **********/
 
 GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
-                      int id, GLUI_Update_CB callback,
-                      GLUI_Control *object , 
-                      GLUI_InterObject_CB obj_cb)
+                      int id, GLUI_CB callback
+                      /*,GLUI_Control *object 
+                      GLUI_InterObject_CB obj_cb*/)
 {
-  common_construct(parent, NULL, scroll, id, callback, object, obj_cb);
+  common_construct(parent, NULL, scroll, id, callback/*, object, obj_cb*/);
 }
 
 /****************************** GLUI_List::GLUI_List() **********/
@@ -36,11 +36,11 @@ GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
 GLUI_List::GLUI_List( GLUI_Node *parent,
                       GLUI_String& live_var, bool scroll, 
                       int id, 
-                      GLUI_Update_CB callback, 
-                      GLUI_Control *object , 
-                      GLUI_InterObject_CB obj_cb )
+                      GLUI_CB callback 
+                      /* ,GLUI_Control *object
+                      ,GLUI_InterObject_CB obj_cb*/ )
 {
-  common_construct(parent, &live_var, scroll, id, callback, object, obj_cb);
+  common_construct(parent, &live_var, scroll, id, callback/*, object, obj_cb*/);
 }
 
 /****************************** GLUI_List::common_construct() **********/
@@ -49,9 +49,9 @@ void GLUI_List::common_construct(
   GLUI_Node *parent,
   GLUI_String* data, bool scroll, 
   int id, 
-  GLUI_Update_CB callback, 
-  GLUI_Control *object, 
-  GLUI_InterObject_CB obj_cb)
+  GLUI_CB callback
+  /*,GLUI_Control *object
+  , GLUI_InterObject_CB obj_cb*/)
 {
   common_init();
   GLUI_Node *list_panel = parent;
@@ -76,17 +76,10 @@ void GLUI_List::common_construct(
       new GLUI_Scrollbar(list_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
-                         GLUI_SCROLL_INT, 
-                         -1,
-                         NULL,
-                         (GLUI_Control*) this,
-                         (GLUI_InterObject_CB )GLUI_List::scrollbar_callback);
+                         GLUI_SCROLL_INT);
+    scrollbar->set_object_callback(GLUI_List::scrollbar_callback, this);
     scrollbar->set_alignment(GLUI_ALIGN_LEFT);
     // scrollbar->can_activate = false; //kills ability to mouse drag too
-  }
-  if (object) {
-    this->obj_cb    = obj_cb;
-    this->associated_object = object;
   }
   init_live();
 }
@@ -114,16 +107,18 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
     this->execute_callback();
     if (associated_object != NULL)
       if (cb_click_type == GLUI_SINGLE_CLICK) {
-	if (obj_cb) {
-	  obj_cb(associated_object, user_id);
-	}
+        if (obj_cb) {
+          // obj_cb(associated_object, user_id);
+          obj_cb(this);
+        }
       } else {
-	if (last_line == curr_line && (ms - last_click_time) < 300) {
-	  obj_cb(associated_object, user_id);
+        if (last_line == curr_line && (ms - last_click_time) < 300) {
+          //obj_cb(associated_object, user_id);
+          obj_cb(this);
         } else {
-	  last_click_time = ms;
-	  last_line = curr_line;
-	}
+          last_click_time = ms;
+          last_line = curr_line;
+        }
       }
     if ( can_draw())
       update_and_draw_text();
@@ -550,10 +545,13 @@ int    GLUI_List::mouse_over( int state, int x, int y )
   return true;
 }
 
-void GLUI_List::scrollbar_callback(void *glui_object, int new_start_line) {
-  GLUI_List* me = (GLUI_List*) glui_object;
+void GLUI_List::scrollbar_callback(GLUI_Control *my_scrollbar) {
+  GLUI_Scrollbar *sb = dynamic_cast<GLUI_Scrollbar*>(my_scrollbar);
+  if (!sb) return;
+  GLUI_List* me = (GLUI_List*) sb->associated_object;
   if (me->scrollbar == NULL)
     return;
+  int new_start_line = sb->get_int_val(); // TODO!!
   me->start_line = new_start_line;
 
   if ( me->can_draw() )

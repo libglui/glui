@@ -43,6 +43,14 @@ void finish_drawing(void)
 	glFinish();
 }
 
+/************************************ GLUI_CB::operator()() ************/
+void GLUI_CB::operator()(GLUI_Control*ctrl) const
+{
+  if (idCB)  idCB(ctrl->user_id);
+  if (objCB) objCB(ctrl);
+}
+
+
 /************************************************ GLUI::GLUI() **********/
 
 int GLUI::init( const char *text, long flags, int x, int y, int parent_window ) 

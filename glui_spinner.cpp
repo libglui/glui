@@ -72,7 +72,7 @@ void  spinner_edittext_callback( int id )
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
 GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
-                            int data_type, int id, GLUI_Update_CB callback )
+                            int data_type, int id, GLUI_CB callback )
 {
   common_construct(parent, name, data_type, NULL, id, callback);
 }
@@ -80,7 +80,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
 GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
-                            int *live_var, int id, GLUI_Update_CB callback )
+                            int *live_var, int id, GLUI_CB callback )
 {
   common_construct(parent, name, GLUI_SPINNER_INT, live_var, id, callback);
 }
@@ -88,7 +88,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
 GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
-             float *live_var, int id, GLUI_Update_CB callback )
+             float *live_var, int id, GLUI_CB callback )
 {
   common_construct(parent, name, GLUI_SPINNER_FLOAT, live_var, id, callback);
 }
@@ -97,7 +97,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name, 
                             int data_t, void *live_var,
-                            int id, GLUI_Update_CB callback )
+                            int id, GLUI_CB callback )
 {
   common_construct(parent, name, data_t, live_var, id, callback);
 }
@@ -106,7 +106,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name,
 
 void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name, 
                                      int data_t, void *data, 
-                                     int id, GLUI_Update_CB cb )
+                                     int id, GLUI_CB cb )
 {
   common_init();
 

@@ -34,7 +34,7 @@
 /****************************** GLUI_Button::GLUI_Button() **********/
 
 GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
-                          int id, GLUI_Update_CB cb )
+                          int id, GLUI_CB cb )
 {
   common_init();
   user_id     = id;

@@ -274,12 +274,34 @@ class Arcball;
 
 /*** Definition of callbacks ***/
 typedef void (*GLUI_Update_CB) (int id);
+typedef void (*GLUI_Control_CB)(GLUI_Control *);
 typedef void (*Int1_CB)        (int);
 typedef void (*Int2_CB)        (int, int);
 typedef void (*Int3_CB)        (int, int, int);
 typedef void (*Int4_CB)        (int, int, int, int);
-typedef void (*GLUI_InterObject_CB)(void *,int); /* Used for callbacks
-                                                    to/from scrollbar */
+
+/************************************************************/
+/*                                                          */
+/*     Callback Adapter Class                               */
+/*       Allows us to support different types of callbacks  */
+/*                                                          */
+/************************************************************/
+
+class GLUI_CB
+{
+public:
+  GLUI_CB() : idCB(0),objCB(0) {}
+  GLUI_CB(GLUI_Update_CB cb) : idCB(cb),objCB(0) {}
+  GLUI_CB(GLUI_Control_CB cb) : idCB(0),objCB(cb) {}
+  // (Compiler generated copy constructor)
+
+  void operator()(GLUI_Control*ctrl) const;
+  bool operator!() const { return !idCB && !objCB; }
+  operator bool() const { return !(!(*this)); }
+private:
+  GLUI_Update_CB idCB;
+  GLUI_Control_CB objCB;
+};
 
 /************************************************************/
 /*                                                          */
@@ -651,7 +673,7 @@ public:
     long            user_id;
     bool            is_container;  /* Is this a container class (e.g., panel) */
     int             alignment;
-    GLUI_Update_CB  callback;
+    GLUI_CB         callback;
     void           *ptr_val;          /* A pointer to the live variable value */
     float           float_val;                               /* A float value */
     bool            enabled;                   /* Is this control grayed out? */
@@ -684,6 +706,8 @@ public:
     virtual float  get_float_val( void )              { return float_val; }
     virtual int    get_int_val( void )                { return int_val; }
     virtual void   get_float_array_val( float *array_ptr );
+    virtual int    get_id( void ) const { return user_id; }
+    virtual void   set_id( int id ) { user_id=id; }
 
     virtual int mouse_down_handler( int local_x, int local_y )                 { return false; }
     virtual int mouse_up_handler( int local_x, int local_y, bool inside )       { return false; }
@@ -815,7 +839,7 @@ public:
     void update_size( void );
 
     GLUI_Button( GLUI_Node *parent, const char *name, 
-                 int id=-1, GLUI_Update_CB cb=NULL );
+                 int id=-1, GLUI_CB cb=GLUI_CB() );
     GLUI_Button( void ) { common_init(); };
 
 protected:
@@ -859,7 +883,7 @@ public:
     void set_int_val( int new_val );
 
     GLUI_Checkbox(GLUI_Node *parent, const char *name, int *value_ptr=NULL,
-                  int id=-1, GLUI_Update_CB callback=NULL);
+                  int id=-1, GLUI_CB callback=GLUI_CB());
     GLUI_Checkbox( void ) { common_init(); }
 
 protected:
@@ -940,15 +964,15 @@ class GLUI_FileBrowser : public GLUI_Panel
 public:
     GLUI_FileBrowser( GLUI_Node *parent, 
                       const char *name,
-                      int frame_type=GLUI_PANEL_EMBOSSED,
+                      int frame_type = GLUI_PANEL_EMBOSSED,
                       int user_id = -1,
-                      GLUI_Update_CB callback = NULL);
+                      GLUI_CB callback = GLUI_CB());
 
     GLUI_List *list;
     GLUI_String current_dir;
 
     void fbreaddir(const char *);
-    static void dir_list_callback(void *, int);
+    static void dir_list_callback(GLUI_Control*);
 
     void set_w(int w);
     void set_h(int h);
@@ -1201,47 +1225,47 @@ public:
 
     GLUI_RadioGroup 
     *add_radiogroup( int *live_var=NULL,
-                     int user_id=-1,GLUI_Update_CB callback=NULL);
+                     int user_id=-1,GLUI_CB callback=GLUI_CB());
 
     GLUI_RadioGroup 
     *add_radiogroup_to_panel(  GLUI_Panel *panel,
                                int *live_var=NULL,
-                               int user_id=-1, GLUI_Update_CB callback=NULL );
+                               int user_id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_RadioButton
     *add_radiobutton_to_group(  GLUI_RadioGroup *group,
                                 const char *name );
 
     GLUI_Listbox *add_listbox( const char *name, int *live_var=NULL,
-                               int id=-1, GLUI_Update_CB callback=NULL	);
+                               int id=-1, GLUI_CB callback=GLUI_CB()	);
     GLUI_Listbox *add_listbox_to_panel( GLUI_Panel *panel,
                                         const char *name, int *live_var=NULL,
-                                        int id=-1, GLUI_Update_CB callback=NULL);
+                                        int id=-1, GLUI_CB callback=GLUI_CB());
 
     GLUI_Rotation *add_rotation( const char *name, float *live_var=NULL,
-                                 int id=-1, GLUI_Update_CB callback=NULL	);
+                                 int id=-1, GLUI_CB callback=GLUI_CB()	);
     GLUI_Rotation *add_rotation_to_panel( GLUI_Panel *panel,
                                           const char *name, float *live_var=NULL,
-                                          int id=-1, GLUI_Update_CB callback=NULL);
+                                          int id=-1, GLUI_CB callback=GLUI_CB());
   
     GLUI_Translation *add_translation( const char *name,
                                        int trans_type, float *live_var=NULL,
-                                       int id=-1, GLUI_Update_CB callback=NULL	);
+                                       int id=-1, GLUI_CB callback=GLUI_CB()	);
     GLUI_Translation *add_translation_to_panel( 
         GLUI_Panel *panel, const char *name, 
         int trans_type, float *live_var=NULL,
-        int id=-1, GLUI_Update_CB callback=NULL);
+        int id=-1, GLUI_CB callback=GLUI_CB());
   
     GLUI_Checkbox  *add_checkbox( const char *name, 
                                   int *live_var=NULL,
-                                  int id=-1, GLUI_Update_CB callback=NULL);
+                                  int id=-1, GLUI_CB callback=GLUI_CB());
     GLUI_Checkbox  *add_checkbox_to_panel( GLUI_Panel *panel, const char *name, 
                                            int *live_var=NULL, int id=-1, 
-                                           GLUI_Update_CB callback=NULL);
+                                           GLUI_CB callback=GLUI_CB());
 
     GLUI_Button  *add_button( const char *name, int id=-1, 
-                              GLUI_Update_CB callback=NULL);
+                              GLUI_CB callback=GLUI_CB());
     GLUI_Button  *add_button_to_panel( GLUI_Panel *panel, const char *name, 
-                                       int id=-1, GLUI_Update_CB callback=NULL );
+                                       int id=-1, GLUI_CB callback=GLUI_CB() );
 
     GLUI_StaticText  *add_statictext( const char *name );
     GLUI_StaticText  *add_statictext_to_panel( GLUI_Panel *panel, const char *name );
@@ -1249,28 +1273,28 @@ public:
     GLUI_EditText  *add_edittext( const char *name, 
                                   int data_type=GLUI_EDITTEXT_TEXT,
                                   void*live_var=NULL,
-                                  int id=-1, GLUI_Update_CB callback=NULL	);
+                                  int id=-1, GLUI_CB callback=GLUI_CB()	);
     GLUI_EditText  *add_edittext_to_panel( GLUI_Panel *panel, 
                                            const char *name,
                                            int data_type=GLUI_EDITTEXT_TEXT,
                                            void *live_var=NULL, int id=-1, 
-                                           GLUI_Update_CB callback=NULL );
+                                           GLUI_CB callback=GLUI_CB() );
     GLUI_EditText  *add_edittext( const char *name, GLUI_String& live_var, 
-                                  int id=-1, GLUI_Update_CB callback=NULL	);
+                                  int id=-1, GLUI_CB callback=GLUI_CB()	);
     GLUI_EditText  *add_edittext_to_panel( GLUI_Panel *panel, const char *name, 
                                            GLUI_String& live_var, int id=-1,
-                                           GLUI_Update_CB callback=NULL );
+                                           GLUI_CB callback=GLUI_CB() );
 
     GLUI_Spinner  *add_spinner( const char *name, 
                                 int data_type=GLUI_SPINNER_INT,
                                 void *live_var=NULL,
-                                int id=-1, GLUI_Update_CB callback=NULL );
+                                int id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_Spinner  *add_spinner_to_panel( GLUI_Panel *panel, 
                                          const char *name,
                                          int data_type=GLUI_SPINNER_INT,
                                          void *live_var=NULL,
                                          int id=-1,
-                                         GLUI_Update_CB callback=NULL );
+                                         GLUI_CB callback=GLUI_CB() );
 
     GLUI_Panel     *add_panel( const char *name, int type=GLUI_PANEL_EMBOSSED );
     GLUI_Panel     *add_panel_to_panel( GLUI_Panel *panel, const char *name, 
@@ -1388,28 +1412,28 @@ public:
     // Constructor, no live variable
     GLUI_EditText( GLUI_Node *parent, const char *name,
                    int text_type=GLUI_EDITTEXT_TEXT,
-                   int id=-1, GLUI_Update_CB callback=NULL );
+                   int id=-1, GLUI_CB callback=GLUI_CB() );
     // Constructor, int live variable
     GLUI_EditText( GLUI_Node *parent, const char *name,
                    int *live_var,
-                   int id=-1, GLUI_Update_CB callback=NULL );
+                   int id=-1, GLUI_CB callback=GLUI_CB() );
     // Constructor, float live variable
     GLUI_EditText( GLUI_Node *parent, const char *name,
                    float *live_var,
-                   int id=-1, GLUI_Update_CB callback=NULL );
+                   int id=-1, GLUI_CB callback=GLUI_CB() );
     // Constructor, char* live variable
     GLUI_EditText( GLUI_Node *parent, const char *name, 
                    char *live_var,
-                   int id=-1, GLUI_Update_CB callback=NULL );
+                   int id=-1, GLUI_CB callback=GLUI_CB() );
     // Constructor, std::string live variable
     GLUI_EditText( GLUI_Node *parent, const char *name, 
                    std::string &live_var,
-                   int id=-1, GLUI_Update_CB callback=NULL );
+                   int id=-1, GLUI_CB callback=GLUI_CB() );
 
     // Deprecated constructor, only called internally
     GLUI_EditText( GLUI_Node *parent, const char *name,
                    int text_type, void *live_var,
-                   int id, GLUI_Update_CB callback );
+                   int id, GLUI_CB callback );
     // Deprecated constructor, only called internally
     GLUI_EditText( void ) { common_init(); }
 
@@ -1438,7 +1462,7 @@ protected:
     }
     void common_construct( GLUI_Node *parent, const char *name, 
                            int data_type, int live_type, void *live_var,
-                           int id, GLUI_Update_CB callback );
+                           int id, GLUI_CB callback );
 };
 
 /************************************************************/
@@ -1479,7 +1503,7 @@ public:
 
 
     GLUI_CommandLine( GLUI_Node *parent, const char *name, void *live_var=NULL,
-                      int id=-1, GLUI_Update_CB callback=NULL );
+                      int id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_CommandLine( void ) { common_init(); }
 protected:
     void common_init() {
@@ -1510,7 +1534,7 @@ public:
     void draw_group( int translate );
 
     GLUI_RadioGroup( GLUI_Node *parent, int *live_var=NULL,
-                     int user_id=-1,GLUI_Update_CB callback=NULL );
+                     int user_id=-1,GLUI_CB callback=GLUI_CB() );
     GLUI_RadioGroup( void ) { common_init(); }
 
 protected:
@@ -1613,18 +1637,18 @@ class GLUI_Spinner : public GLUI_Control
 public:
     // Constructor, no live var
     GLUI_Spinner( GLUI_Node* parent, const char *name, 
-                  int data_type=GLUI_SPINNER_INT, int id=-1, GLUI_Update_CB callback=NULL );
+                  int data_type=GLUI_SPINNER_INT, int id=-1, GLUI_CB callback=GLUI_CB() );
     // Constructor, int live var
     GLUI_Spinner( GLUI_Node* parent, const char *name, 
-                  int *live_var, int id=-1, GLUI_Update_CB callback=NULL );
+                  int *live_var, int id=-1, GLUI_CB callback=GLUI_CB() );
     // Constructor, float live var
     GLUI_Spinner( GLUI_Node* parent, const char *name, 
-                  float *live_var, int id=-1, GLUI_Update_CB callback=NULL );
+                  float *live_var, int id=-1, GLUI_CB callback=GLUI_CB() );
     // Deprecated constructor
     GLUI_Spinner( GLUI_Node* parent, const char *name, 
                   int data_type,
                   void *live_var,
-                  int id=-1, GLUI_Update_CB callback=NULL );
+                  int id=-1, GLUI_CB callback=GLUI_CB() );
     // Deprecated constructor
     GLUI_Spinner( void ) { common_init(); }
 
@@ -1693,7 +1717,7 @@ protected:
     }
     void common_construct( GLUI_Node* parent, const char *name, 
                            int data_type, void *live_var,
-                           int id, GLUI_Update_CB callback );
+                           int id, GLUI_CB callback );
 };
 
 /************************************************************/
@@ -1733,10 +1757,10 @@ class GLUI_TextBox : public GLUI_Control
 public:
     /* GLUI Textbox - JVK */
     GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
-                 bool scroll = false, int id=-1, GLUI_Update_CB callback=NULL );
+                 bool scroll = false, int id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_TextBox( GLUI_Node *parent,
                   bool scroll = false, int id=-1,
-                  GLUI_Update_CB callback=NULL );
+                  GLUI_CB callback=GLUI_CB() );
 
     GLUI_String         orig_text;
     int                 insertion_pt;
@@ -1790,7 +1814,7 @@ public:
     void dump( FILE *out, char *text );
     void set_tab_w(int w) { tab_width = w; }
     void set_start_line(int l) { start_line = l; }
-    static void scrollbar_callback(void *, int id);
+    static void scrollbar_callback(GLUI_Control*);
 
     bool wants_tabs( void ) const { return true; }
 
@@ -1822,7 +1846,7 @@ protected:
     }
     void common_construct(
         GLUI_Node *parent, GLUI_String *live_var, 
-        bool scroll, int id, GLUI_Update_CB callback); 
+        bool scroll, int id, GLUI_CB callback); 
 };
 
 /************************************************************/
@@ -1849,16 +1873,16 @@ class GLUI_List : public GLUI_Control
 public:
     /* GLUI List - JVK */
     GLUI_List( GLUI_Node *parent, bool scroll = false,
-               int id=-1, GLUI_Update_CB callback=NULL,
-               GLUI_Control *object = NULL, 
-               GLUI_InterObject_CB obj_cb = NULL);
+               int id=-1, GLUI_CB callback=GLUI_CB() );
+               /*, GLUI_Control *object = NULL 
+               ,GLUI_InterObject_CB obj_cb = NULL);*/
 
     GLUI_List( GLUI_Node *parent,
                GLUI_String& live_var, bool scroll = false, 
                int id=-1, 
-               GLUI_Update_CB callback=NULL, 
-               GLUI_Control *object = NULL, 
-               GLUI_InterObject_CB obj_cb = NULL);
+               GLUI_CB callback=GLUI_CB()
+               /*,GLUI_Control *object = NULL */
+               /*,GLUI_InterObject_CB obj_cb = NULL*/);
 
 
     GLUI_String         orig_text;
@@ -1871,7 +1895,7 @@ public:
     GLUI_Scrollbar      *scrollbar;
     GLUI_List_Item      items_list;
     GLUI_Control        *associated_object;
-    GLUI_InterObject_CB obj_cb;
+    GLUI_CB             obj_cb;
     int                 cb_click_type;
     int                 last_line;
     int                 last_click_time;
@@ -1908,10 +1932,12 @@ public:
 
     void dump( FILE *out, const char *text );
     void set_start_line(int l) { start_line = l; }
-    static void scrollbar_callback(void *, int id);
+    static void scrollbar_callback(GLUI_Control*);
     int get_current_item() { return curr_line; }
     void set_click_type(int d) {
         cb_click_type = d; }
+    void set_object_callback(GLUI_CB cb=GLUI_CB(), GLUI_Control*obj=NULL)
+    { obj_cb=cb; associated_object=obj; }
 
 protected:
     void common_init()
@@ -1932,16 +1958,15 @@ protected:
         cb_click_type         = GLUI_SINGLE_CLICK;
         last_line             = -1;
         last_click_time       = 0;
-        obj_cb                = NULL;
         associated_object     = NULL;
     };
     void common_construct(
         GLUI_Node *parent,
-        GLUI_String* live_var, bool scroll, 
-        int id, 
-        GLUI_Update_CB callback, 
-        GLUI_Control *object, 
-        GLUI_InterObject_CB obj_cb);
+        GLUI_String* live_var, bool scroll,
+        int id,
+        GLUI_CB callback
+        /*,GLUI_Control *object*/
+        /*,GLUI_InterObject_CB obj_cb*/);
 };
 
 /************************************************************/
@@ -1958,25 +1983,25 @@ public:
                     const char *name, 
                     int horz_vert=GLUI_SCROLL_HORIZONTAL,
                     int data_type=GLUI_SCROLL_INT,
-                    int id=-1, GLUI_Update_CB callback=NULL, 
-                    GLUI_Control *object = NULL,
-                    GLUI_InterObject_CB obj_cb = NULL
+                    int id=-1, GLUI_CB callback=GLUI_CB() 
+                    /*,GLUI_Control *object = NULL*/
+                    /*,GLUI_InterObject_CB obj_cb = NULL*/
                     );
 
     // Constructor, int live var
     GLUI_Scrollbar( GLUI_Node *parent, const char *name, int horz_vert,
                     int *live_var,
-                    int id=-1, GLUI_Update_CB callback=NULL, 
-                    GLUI_Control *object = NULL,
-                    GLUI_InterObject_CB obj_cb = NULL
+                    int id=-1, GLUI_CB callback=GLUI_CB() 
+                    /*,GLUI_Control *object = NULL*/
+                    /*,GLUI_InterObject_CB obj_cb = NULL*/
                     );
 
     // Constructor, float live var
     GLUI_Scrollbar( GLUI_Node *parent, const char *name, int horz_vert,
                     float *live_var,
-                    int id=-1, GLUI_Update_CB callback=NULL, 
-                    GLUI_Control *object = NULL,
-                    GLUI_InterObject_CB obj_cb = NULL
+                    int id=-1, GLUI_CB callback=GLUI_CB()
+                    /*,GLUI_Control *object = NULL*/
+                    /*,GLUI_InterObject_CB obj_cb = NULL*/
                     );
 
     bool          currently_inside;
@@ -2005,7 +2030,7 @@ public:
        particular object type before use.
     */
     void *        associated_object; /* Let's the Spinner manage it's own callbacks */
-    void (*object_cb)(void *,int); /* function pointer to object call_back */
+    GLUI_CB       object_cb; /* function pointer to object call_back */
 
     int  mouse_down_handler( int local_x, int local_y );
     int  mouse_up_handler( int local_x, int local_y, bool inside );
@@ -2037,6 +2062,8 @@ public:
 
     void set_speed( float speed ) { user_speed = speed; };
     void update_scroll_parameters();
+    void set_object_callback(GLUI_CB cb=GLUI_CB(), GLUI_Control*obj=NULL)
+    { object_cb=cb; associated_object=obj; }
 
 protected:
     void common_init ( void ) {
@@ -2057,7 +2084,6 @@ protected:
         int_min      = 0;
         int_max      = 0;
         associated_object = NULL;
-        object_cb = NULL;
         box_length         = 0;
         box_start_position = 0;
         box_end_position   = 0;
@@ -2069,9 +2095,9 @@ protected:
         const char *name, 
         int horz_vert,
         int data_type, void* live_var,
-        int id, GLUI_Update_CB callback,
-        GLUI_Control *object,
-        GLUI_InterObject_CB obj_cb
+        int id, GLUI_CB callback
+        /*,GLUI_Control *object
+        ,GLUI_InterObject_CB obj_cb*/
         );
 
     virtual void draw_scroll_arrow(int arrowtype, int x, int y);
@@ -2132,7 +2158,7 @@ public:
 
     GLUI_Listbox( GLUI_Node *parent,
                   const char *name, int *live_var=NULL,
-                  int id=-1, GLUI_Update_CB callback=NULL );
+                  int id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_Listbox( void ) { common_init(); }
 
 protected:
@@ -2239,7 +2265,7 @@ public:
     void set_spin( float damp_factor );
 
     GLUI_Rotation( GLUI_Node *parent, const char *name, float *live_var=NULL,
-                   int id=-1, GLUI_Update_CB callback=NULL );
+                   int id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_Rotation(void) { common_init(); }
 
 protected:
@@ -2301,7 +2327,7 @@ public:
 
     GLUI_Translation( GLUI_Node *parent, const char *name,
                       int trans_type, float *live_var=NULL,
-                      int id=-1, GLUI_Update_CB callback=NULL	);
+                      int id=-1, GLUI_CB callback=GLUI_CB()	);
     GLUI_Translation( void ) { common_init(); }
 
 protected:
