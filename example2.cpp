@@ -175,8 +175,7 @@ void myGlutDisplay( void )
   //  printf( "text: %s\n", text );
 
   /*** Render the live character array 'text' ***/
-  int i;
-  for( i=0; i< text.length(); i++ )
+  for (unsigned int i=0; i<text.length(); ++i)
     glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, text[i] );
 
   glEnable( GL_LIGHTING );
