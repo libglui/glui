@@ -256,7 +256,7 @@ void    GLUI_Rotation::setup_lights( void )
       else
       glDisable( GL_LIGHTING );*/
   glEnable(GL_LIGHT0);
-  glColorMaterial(GL_AMBIENT_AND_DIFFUSE, GL_FRONT_AND_BACK );
+  glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE );
   glEnable(GL_COLOR_MATERIAL);
   GLfloat light0_ambient[] =  {0.2f, 0.2f, 0.2f, 1.0f};
   GLfloat light0_diffuse[] =  {1.f, 1.f, 1.0f, 1.0f};
