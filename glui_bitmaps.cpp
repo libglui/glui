@@ -19,6 +19,32 @@
 #include "glui.h"
 #include "stdinc.h"
 
+#include <cassert>
+
+/************ Image Bitmap arrays **********/
+
+extern int glui_img_checkbox_0[];
+extern int glui_img_checkbox_1[];
+extern int glui_img_radiobutton_0[];
+extern int glui_img_radiobutton_1[];
+extern int glui_img_uparrow[];
+extern int glui_img_downarrow[];
+extern int glui_img_leftarrow[];
+extern int glui_img_rightarrow[];
+extern int glui_img_spinup_0[];
+extern int glui_img_spinup_1[];
+extern int glui_img_spindown_0[];
+extern int glui_img_spindown_1[];
+extern int glui_img_checkbox_0_dis[];
+extern int glui_img_checkbox_1_dis[];
+extern int glui_img_radiobutton_0_dis[];
+extern int glui_img_radiobutton_1_dis[];
+extern int glui_img_spinup_dis[];
+extern int glui_img_spindown_dis[];
+extern int glui_img_listbox_up[];
+extern int glui_img_listbox_down[];
+extern int glui_img_listbox_up_dis[];
+
 int *bitmap_arrays[] = {
   glui_img_checkbox_0,
   glui_img_checkbox_1,
@@ -46,59 +72,83 @@ int *bitmap_arrays[] = {
 
 /************************************ GLUI_Bitmap::load_from_array() ********/
 
-void GLUI_Bitmap::load_from_array( int *array )
+GLUI_Bitmap::GLUI_Bitmap() 
+:   pixels(NULL),
+    w(0), 
+    h(0)
 {
-  int i;
+}
 
-  w = 0;
-  h = 0;
+GLUI_Bitmap::~GLUI_Bitmap()
+{
+	if (pixels)
+	{
+		free(pixels);
+		pixels = NULL;
+	}
+}
 
-  if ( array == NULL )
-    return;
+void 
+GLUI_Bitmap::init(int *array)
+{
+	w = 0;
+	h = 0;
+	pixels = NULL;
 
-  w = array[0];
-  h = array[1];
-  
-  pixels = (unsigned char*) malloc( sizeof(unsigned char) * w * h * 3);
+	assert(array);
+	if (!array)
+		return;
 
-  for( i = 0; i<w*h*3; i++ )
-    pixels[i] = (unsigned char) array[i+2];
+	w = array[0];
+	h = array[1];
+
+	pixels = (unsigned char *) malloc(w*h*3);
+
+	assert(pixels);
+
+	for (int i = 0; i<w*h*3; i++)
+		pixels[i] = (unsigned char) array[i+2];
 }
 
 
 /*********************************** GLUI_StdBitmaps::draw() *****************/
 
-void GLUI_StdBitmaps::draw( int bitmap_num, int x, int y )
+GLUI_StdBitmaps::GLUI_StdBitmaps() 
 {
-  //  int i;
-
-  if ( bitmaps[bitmap_num].pixels != NULL ) {
-    glRasterPos2f( (float)x+.5, (float)y + (float)bitmaps[bitmap_num].h + .5);
-    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-
-    glDrawPixels( bitmaps[bitmap_num].w, bitmaps[bitmap_num].h,
-		  GL_RGB, GL_UNSIGNED_BYTE, bitmaps[bitmap_num].pixels ); 
-
-    /*    printf( "%d %d %d %d %d %d %d\n", 
-	  bitmaps[bitmap_num].w, bitmaps[bitmap_num].h, 0, 0, 0, 0,
-	  bitmaps[bitmap_num].pixels );
-
-	  for( i=0; i<bitmaps[bitmap_num].w*bitmaps[bitmap_num].h*3; i++ ) {
-	  printf( "%d ", bitmaps[bitmap_num].pixels[i] );
-	  }
-	  printf( "\n" );
-	  */
-    /*    for( i=0; i<bitmaps[bitmap_num].w; i++ ) {
-	  for( j=0; j<bitmaps[bitmap_num].h; j++ ) {
-	  if ( bitmaps[bitmap_num].pixels[(i+j*bitmaps[bitmap_num].w)*3]
-	  > 128 )
-	  putchar( '#' );
-	  else 
-	  putchar( ' ' );
-	  }
-	  putchar( '\n' );
-	  }
-	  fflush( stdout );
-	  */
-  }
+    for (int i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++) 
+        bitmaps[i].init(bitmap_arrays[i]);
 }
+
+GLUI_StdBitmaps::~GLUI_StdBitmaps()
+{
+}
+
+int 
+GLUI_StdBitmaps::width(int i) const
+{
+	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
+	return bitmaps[i].w;
+}
+
+int
+GLUI_StdBitmaps::height(int i) const
+{
+	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
+	return bitmaps[i].h;
+}
+
+void 
+GLUI_StdBitmaps::draw(int i, int x, int y) const
+{
+	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
+
+	if (bitmaps[i].pixels != NULL ) 
+	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+		glRasterPos2f(0.5f+x, 0.5f+y+bitmaps[i].h);
+		glDrawPixels( 
+			bitmaps[i].w, bitmaps[i].h,
+			GL_RGB, GL_UNSIGNED_BYTE, bitmaps[i].pixels); 
+	}
+}
+

@@ -35,7 +35,6 @@
 #pragma comment(lib, "glui32.lib")  // Link against GLUI library  
 #endif
 
-
 /********** Do some basic defines *******/
 
 #ifndef Byte
@@ -191,17 +190,17 @@ public:
 
     GLUI_String(const char *text) 
     {
-        strcpy(string,text );
+        strcpy(string,text);
     }
 
-    char &operator[](int i) 
+    char &operator[](const int i) 
     {
         return string[i];
     }
 
     operator char*() 
     { 
-        return (char*) &string[0]; 
+        return (char *) &string[0]; 
     }
 
     /*    operator void*() { return (void*) &string[0]; } */
@@ -238,11 +237,11 @@ class GLUI_Rollout;
 class Arcball;
 
 /*** Flags for GLUI class constructor ***/
-#define  GLUI_SUBWINDOW          ((long)(1<< 1))
-#define  GLUI_SUBWINDOW_TOP      ((long)(1<< 2))
-#define  GLUI_SUBWINDOW_BOTTOM   ((long)(1<< 3))
-#define  GLUI_SUBWINDOW_LEFT     ((long)(1<< 4))
-#define  GLUI_SUBWINDOW_RIGHT    ((long)(1<< 5))
+#define  GLUI_SUBWINDOW          ((long)(1<<1))
+#define  GLUI_SUBWINDOW_TOP      ((long)(1<<2))
+#define  GLUI_SUBWINDOW_BOTTOM   ((long)(1<<3))
+#define  GLUI_SUBWINDOW_LEFT     ((long)(1<<4))
+#define  GLUI_SUBWINDOW_RIGHT    ((long)(1<<5))
 
 /*** Codes for different type of edittext boxes and spinners ***/
 #define GLUI_EDITTEXT_TEXT             1
@@ -270,19 +269,8 @@ class GLUI_Node
     friend class GLUI_Main;
 
 public:
-    GLUI_Node()
-    : 
-        parent_node(NULL),
-        child_head(NULL),
-        child_tail(NULL),
-        next_sibling(NULL),
-        prev_sibling(NULL)
-    { 
-    } 
-
-    ~GLUI_Node()
-    {
-    }
+    GLUI_Node();
+    ~GLUI_Node();
 
     GLUI_Node *first_sibling();
     GLUI_Node *last_sibling();
@@ -293,11 +281,11 @@ public:
     GLUI_Node *last_child()    { return child_tail; }
     GLUI_Node *parent()        { return parent_node; }
 
-    void      link_this_to_parent_last (GLUI_Node *parent  );
-    void      link_this_to_parent_first(GLUI_Node *parent  );
-    void      link_this_to_sibling_next(GLUI_Node *sibling );
-    void      link_this_to_sibling_prev(GLUI_Node *sibling );
-    void      unlink();
+    void link_this_to_parent_last (GLUI_Node *parent  );
+    void link_this_to_parent_first(GLUI_Node *parent  );
+    void link_this_to_sibling_next(GLUI_Node *sibling );
+    void link_this_to_sibling_prev(GLUI_Node *sibling );
+    void unlink();
 
     void dump( FILE *out, char *name );
 
@@ -319,7 +307,7 @@ protected:
 
 enum GLUI_StdBitmaps_Codes 
 {
-    GLUI_STDBITMAP_CHECKBOX_OFF=0,
+    GLUI_STDBITMAP_CHECKBOX_OFF = 0,
     GLUI_STDBITMAP_CHECKBOX_ON,
     GLUI_STDBITMAP_RADIOBUTTON_OFF,
     GLUI_STDBITMAP_RADIOBUTTON_ON,
@@ -347,33 +335,6 @@ enum GLUI_StdBitmaps_Codes
     GLUI_STDBITMAP_NUM_ITEMS
 };
 
-
-/************ Image Bitmap arrays **********/
-
-extern int glui_img_checkbox_0[];
-extern int glui_img_checkbox_1[];
-extern int glui_img_radiobutton_0[];
-extern int glui_img_radiobutton_1[];
-extern int glui_img_uparrow[];
-extern int glui_img_downarrow[];
-extern int glui_img_leftarrow[];
-extern int glui_img_rightarrow[];
-extern int glui_img_spinup_0[];
-extern int glui_img_spinup_1[];
-extern int glui_img_spindown_0[];
-extern int glui_img_spindown_1[];
-extern int glui_img_checkbox_0_dis[];
-extern int glui_img_checkbox_1_dis[];
-extern int glui_img_radiobutton_0_dis[];
-extern int glui_img_radiobutton_1_dis[];
-extern int glui_img_spinup_dis[];
-extern int glui_img_spindown_dis[];
-extern int glui_img_listbox_up[];
-extern int glui_img_listbox_down[];
-extern int glui_img_listbox_up_dis[];
-
-extern int *bitmap_arrays[];
-
 /************************************************************/
 /*                                                          */
 /*                  Class GLUI_Bitmap                       */
@@ -382,21 +343,15 @@ extern int *bitmap_arrays[];
 
 class GLUI_Bitmap 
 {
+	friend class GLUI_StdBitmaps;
+
 public:
-    GLUI_Bitmap() 
-    :
-        pixels(NULL),
-        w(0), 
-        h(0)
-    {
-    }
+    GLUI_Bitmap();
+    ~GLUI_Bitmap();
 
-    ~GLUI_Bitmap()
-    {
-    }
+    void init(int *array);
 
-    void load_from_array(int *array);
-
+private:
     unsigned char *pixels;
     int            w, h;
 };
@@ -411,16 +366,15 @@ public:
 class GLUI_StdBitmaps
 {
 public:
-    GLUI_StdBitmaps() 
-    {
-        int i;
+    GLUI_StdBitmaps(); 
+	~GLUI_StdBitmaps();
 
-        for( i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++ ) 
-            bitmaps[i].load_from_array( bitmap_arrays[i] );
-    }
+	int  width (int n) const;
+	int  height(int n) const;
 
-    void draw(int bitmap_num, int x, int y);
+    void draw(int n, int x, int y) const;
 
+private:
     GLUI_Bitmap bitmaps[GLUI_STDBITMAP_NUM_ITEMS];
 };
 
@@ -437,15 +391,8 @@ class GLUI_Master_Object
   
 public:
 
-    GLUI_Master_Object() 
-    {
-        glut_idle_CB    = NULL;
-        glui_id_counter = 1;
-    }
-
-    ~GLUI_Master_Object()
-    {
-    }
+    GLUI_Master_Object();
+    ~GLUI_Master_Object();
 
     GLUI_Node     gluis;
     GLUI_Control *active_control, *curr_left_button_glut_menu;
@@ -470,7 +417,6 @@ public:
     **********/
 
     void  set_left_button_glut_menu_control( GLUI_Control *control );
-
 
     /********** GLUT callthroughs **********/
     /* These are the glut callbacks that we do not handle */
@@ -500,13 +446,13 @@ public:
     GLUI          *create_glui_subwindow( int parent_window, long flags=0 );
     GLUI          *find_glui_by_window_id( int window_id );
     void           get_viewport_area( int *x, int *y, int *w, int *h );
-    void           auto_set_viewport( void );
-    void           close_all( void );
-    void           sync_live_all( void );
+    void           auto_set_viewport();
+    void           close_all();
+    void           sync_live_all();
 
-    void           reshape( void );
+    void           reshape();
 
-    float          get_version( void ) { return GLUI_VERSION; }
+    float          get_version() { return GLUI_VERSION; }
 
 private:
     GLUI_Node     glut_windows;
@@ -526,19 +472,8 @@ extern GLUI_Master_Object GLUI_Master;
 class GLUI_Glut_Window : public GLUI_Node 
 {
 public:
-    GLUI_Glut_Window() 
-    {
-        glut_display_CB         = NULL;
-        glut_reshape_CB         = NULL;
-        glut_keyboard_CB        = NULL;
-        glut_special_CB         = NULL;
-        glut_mouse_CB           = NULL;
-        glut_motion_CB          = NULL;
-        glut_passive_motion_CB  = NULL;
-        glut_entry_CB           = NULL;
-        glut_visibility_CB      = NULL;
-        glut_window_id          = 0;
-    }
+    GLUI_Glut_Window(); 
+	~GLUI_Glut_Window();
 
     int    glut_window_id;
 
@@ -659,14 +594,14 @@ public:
     void         disactivate_current_control( void );
     void         draw_raised_box( int x, int y, int w, int h );
     void         draw_lowered_box( int x, int y, int w, int h );
-    int          set_front_draw_buffer( void );
-    void         post_update_main_gfx( void );
-    void         pack_controls( void );
-    void         close_internal( void );
-    void         check_subwindow_position( void );
-    void         set_ortho_projection( void );
-    void         set_viewport( void );
-    void         refresh( void );
+    int          set_front_draw_buffer();
+    void         post_update_main_gfx();
+    void         pack_controls();
+    void         close_internal();
+    void         check_subwindow_position();
+    void         set_ortho_projection();
+    void         set_viewport();
+    void         refresh();
 };
 
 /************************************************************/
@@ -907,7 +842,6 @@ public:
   
     virtual ~GLUI_Checkbox() {}
 };
-
 
 /************************************************************/
 /*                                                          */

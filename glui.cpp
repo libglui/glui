@@ -409,6 +409,17 @@ void glui_idle_func(void)
   }
 }
 
+/*********************************** GLUI_Master_Object::GLUI_Master_Object() ******/
+
+GLUI_Master_Object::GLUI_Master_Object()
+:   glut_idle_CB(NULL),
+	glui_id_counter(1)
+{
+}
+
+GLUI_Master_Object::~GLUI_Master_Object()
+{
+}
 
 /*********************************** GLUI_Master_Object::create_glui() ******/
 

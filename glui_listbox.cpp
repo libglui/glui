@@ -93,13 +93,13 @@ void    GLUI_Listbox::draw( int x, int y )
   if ( enabled ) {
     glui->std_bitmaps.
       draw(GLUI_STDBITMAP_LISTBOX_UP,
-	   w-glui->std_bitmaps.bitmaps[GLUI_STDBITMAP_LISTBOX_UP].w-1,
+	   w-glui->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
 	   2 );
   }
   else {
     glui->std_bitmaps.
       draw(GLUI_STDBITMAP_LISTBOX_UP_DIS,
-	   w-glui->std_bitmaps.bitmaps[GLUI_STDBITMAP_LISTBOX_UP].w-1,
+	   w-glui->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
 	   2 );
   }
 

@@ -20,6 +20,22 @@
 #include "glui.h"
 #include "stdinc.h"
 
+/********************************************* GLUI_Node::GLUI_Node() *******/
+
+GLUI_Node::GLUI_Node()
+: 
+    parent_node(NULL),
+    child_head(NULL),
+    child_tail(NULL),
+    next_sibling(NULL),
+    prev_sibling(NULL)
+{
+}
+
+GLUI_Node::~GLUI_Node()
+{
+}
+
 /********************************************* GLUI_Node::first() *******/
 /* Returns first sibling in 'this' node's sibling list                  */
 
