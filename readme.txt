@@ -60,7 +60,7 @@ CHANGES:
 
   And similarly to add it to a GLUI instead of a panel, rather than:
 
-    glui->add_button_to_panel( panel, "my button", myid, mycallback );
+    glui->add_button( glui, "my button", myid, mycallback );
 
   just call the constructor with the GLUI as the first argument:
 
@@ -130,17 +130,7 @@ That's about it.  Enjoy!
 If you find yourself with too much time on your hands, the things I
 think would be most useful for future improvements to GLUI would be:
 
-0. The GLUI_TextBox and GLUI_Tree definitely need some work, still.  
-   Also the scrollbar introduces a new different callback type, and 
-   the result is little ugly.  There's probably a better way to do it.
-   And it may be related to the next point:
-1. Allow for an enhanced callback type that also passes you a pointer
-   to the control and possibly the control's value.  Currently the
-   "live variable" is great if you don't need to do anything else as a
-   side effect, but if you need to take some action based on a changed
-   value, then you need BOTH a callback, AND the live var, or a global
-   pointer to the control.  If the callback provided more arguments
-   then the callback would be all that you need for those cases.
+1. The GLUI_TextBox and GLUI_Tree definitely need some work, still.  
 2. Clipboard integration under Windows/X-Win.  I have some code that
    works on Win32 that I once integrated with GLUI, but I lost that 
    version somewhere.  I still have the Win32 clipboard code, though
@@ -153,15 +143,11 @@ think would be most useful for future improvements to GLUI would be:
    something.
 
 
+Definitly consider submitting a patch if you've made some nice improvements
+to GLUI.  Hopefully being an LGPL sourceforge project will attract some new
+interest to the GLUI project.
 
-I don't think Paul or Nigel are doing much with GLUI any more so their
-mail addresses probably won't be much help.  Honestly, I may not have 
-much time to work on it either, but feel free to contact me, 
-nonetheless.  And definitly consider submitting a patch if you've made 
-some nice improvements to GLUI.  Hopefully the new API will encourage 
-people to work on 3rd party widgets more, too.
-
-Bill Baxter
+Bill Baxter    
 baxter
 at
 cs unc edu
