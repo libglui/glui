@@ -476,6 +476,9 @@
 			RelativePath="..\glui_treepanel.cpp">
 		</File>
 		<File
+			RelativePath="..\glui_window.cpp">
+		</File>
+		<File
 			RelativePath="..\quaternion.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
