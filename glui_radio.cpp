@@ -95,7 +95,13 @@ void    GLUI_RadioGroup::draw_group( int translate )
   button = (GLUI_RadioButton*) first_child();
   while( button != NULL ) {
     glPushMatrix();
-    button->translate_to_origin();
+    if (translate) {
+      button->translate_to_origin();
+    }
+    else {
+      glTranslatef(button->x_abs-x_abs,
+                   button->y_abs-y_abs,0.0);
+    }
 
     if ( button->int_val ) 
       button->draw_checked();
