@@ -568,8 +568,11 @@ protected:
 
 
     /*********** Controls ************/
-    GLUI_Control *controls;
-    int           num_controls;
+
+/* These are no longer used, it seems */
+
+//    GLUI_Control *controls;
+//    int           num_controls;
 
     int           add_control( GLUI_Node *parent, GLUI_Control *control );
 
