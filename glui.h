@@ -1131,6 +1131,7 @@ protected:
         column           = NULL;
         is_current       = 0;
         child_number     = 0;
+        format           = 0;
         panel            = NULL;
         name             = "";
         level_name       = "";
@@ -2080,7 +2081,8 @@ protected:
         callback_count = 0;
         first_callback = true;
         user_speed   = 1.0;
-        int_val      = 0;
+        float_min    = 0.0;
+        float_max    = 0.0;
         int_min      = 0;
         int_max      = 0;
         associated_object = NULL;
