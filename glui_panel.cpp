@@ -150,7 +150,7 @@ void    GLUI_Panel::draw( int x, int y )
 
 void    GLUI_Panel::set_name( const char *new_name )
 {
-  name = new_name;
+  name = new_name ? new_name : "";
 
   update_size();
 
