@@ -37,7 +37,7 @@
 
 GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
                                  int *value_ptr,
-                                 int user_id, GLUI_Update_CB cb)
+                                 int id, GLUI_Update_CB cb)
 {
   common_init();
   GLUI_String      buf;
@@ -51,7 +51,7 @@ GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
     last_live_int = *value_ptr;
   }
 
-  user_id    = user_id;
+  user_id    = id;
   glui_format_str( buf, "RadioGroup: %p", this );
   set_name( buf.c_str() );
   callback   = cb;
