@@ -3,20 +3,11 @@
   GLUI User Interface Toolkit
   ---------------------------
 
-     glui_spinner.cpp - GLUI_Spinner class
-
-
-  notes: 
-     spinner does not explicitly keep track of the current value - this is all
-        handled by the underlying edittext control
-        -> thus, spinner->sync_live() has no meaning, nor spinner->output_live
-    -> BUT, edittext will alter this spinner's float_val and int_val,
-       so that spinner->get/set will work
-
+     glui_scrollbar.cpp - GLUI_Scrollbar class
 
           --------------------------------------------------
 
-  Copyright (c) 1998 Paul Rademacher
+  Copyright (c) 2004 John Kew
 
   This program is freely distributable without licensing fees and is
   provided without guarantee or warrantee expressed or implied. This
@@ -34,7 +25,7 @@
 #define  GLUI_SCROLL_GROWTH_STEPS         800
 #define  GLUI_SCROLL_MIN_GROWTH_STEPS     100
 #define  GLUI_SCROLL_CALLBACK_INTERVAL    1
-#define  GLUI_SCROLL_BARLENGTH_PADDING    4
+#define  GLUI_SCROLL_BARLENGTH_PADDING    0
  
 /****************************** GLUI_Scrollbar::mouse_down_handler() **********/
 
@@ -172,29 +163,29 @@ void    GLUI_Scrollbar::draw( int x, int y )
   if ( enabled ) {
     /*** Draw the up arrow either pressed or unrpessed ***/
     if ( state == GLUI_SCROLL_STATE_UP OR state == GLUI_SCROLL_STATE_BOTH )
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_ON, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SCROLLBAR_UP_ON, 
                   w-GLUI_SCROLL_ARROW_WIDTH-1, 
                   GLUI_SCROLL_ARROW_Y);
     else
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_OFF, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SCROLLBAR_UP_OFF, 
                   w-GLUI_SCROLL_ARROW_WIDTH-1,
                   GLUI_SCROLL_ARROW_Y);
 
     /*** Draw the down arrow either pressed or unrpessed ***/
     if (state == GLUI_SCROLL_STATE_DOWN OR state == GLUI_SCROLL_STATE_BOTH)
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_ON, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SCROLLBAR_DOWN_ON, 
                   w-GLUI_SCROLL_ARROW_WIDTH-1, 
                   h-GLUI_SCROLL_ARROW_HEIGHT);
     else
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_OFF, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SCROLLBAR_DOWN_OFF, 
                   w-GLUI_SCROLL_ARROW_WIDTH-1,
                   h-GLUI_SCROLL_ARROW_HEIGHT);
   }
   else {  /**** The spinner is disabled ****/
-    glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_DIS, 
+    glui->std_bitmaps.draw( GLUI_STDBITMAP_SCROLLBAR_UP_DIS, 
                 w-GLUI_SCROLL_ARROW_WIDTH-1, 
                 GLUI_SCROLL_ARROW_Y);
-    glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_DIS, 
+    glui->std_bitmaps.draw( GLUI_STDBITMAP_SCROLLBAR_DOWN_DIS, 
                 w-GLUI_SCROLL_ARROW_WIDTH-1, 
                 h-GLUI_SCROLL_ARROW_HEIGHT);
   }
@@ -210,8 +201,13 @@ void GLUI_Scrollbar::update_scroll_parameters() {
   if (int_max < 0)
     int_max = 0;
   bar_length = this->h-GLUI_SCROLL_ARROW_HEIGHT*2+GLUI_SCROLL_ARROW_Y-GLUI_SCROLL_BARLENGTH_PADDING;
-  tab_length = (20 < ((double)bar_length/((double)2*int_max))) ? 
-    ((int)((double)bar_length/((double)2*int_max))) : 20;
+  if (int_max==0) 
+    tab_length=bar_length;
+  else {
+    const int MIN_TAB = GLUI_SCROLL_ARROW_HEIGHT;
+    tab_length = int(bar_length/float(int_max));
+    if (tab_length < MIN_TAB) tab_length = MIN_TAB;
+  }
   tab_start_position = (int)((int)((double)int_val)/((double)int_max)*(bar_length-tab_length));
   tab_end_position = (int)((int)((double)int_val)/((double)int_max)*(bar_length-tab_length)+tab_length);
 }
@@ -227,37 +223,39 @@ void GLUI_Scrollbar::draw_scroll() {
 
   update_scroll_parameters();
 
-  /*
-  printf("IV: %d IM: %d BL: %d TL: %d TS: %d TE: %d\n", int_val,
-	 int_max,
-	 bar_length,
-	 tab_length,
-	 tab_start_position,
-	 tab_end_position);
-  */
+  // Draw scrollbar track using a checkerboard background
+  const unsigned char scroll_bg[] = {
+    0xD4, 0xD0, 0xC8, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xD4, 0xD0, 0xC8
+  };
+	glColor3f( 1.0, 1.0, 1.0 );
+	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+	glEnable( GL_TEXTURE_2D);
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE,
+		scroll_bg);
 
-  draw_bkgd_box( w, 0, 
-		 GLUI_SCROLL_ARROW_HEIGHT+GLUI_SCROLL_ARROW_Y, 
-		 h-GLUI_SCROLL_ARROW_HEIGHT);
-  draw_box_inwards_outline( w-5, 3, 
-			    GLUI_SCROLL_ARROW_HEIGHT+GLUI_SCROLL_ARROW_Y, 
-			    h-GLUI_SCROLL_ARROW_HEIGHT);
+  int y0 = GLUI_SCROLL_ARROW_HEIGHT+1;
+  int y1 = h-GLUI_SCROLL_ARROW_HEIGHT+1;
+  int dy = y1-y0;
+  glBegin(GL_QUADS);
+  glTexCoord2f(0,     0);       glVertex2i(0,y0);
+  glTexCoord2f(w*0.5f,0);       glVertex2i(w,y0);
+  glTexCoord2f(w*0.5f,dy*0.5f); glVertex2i(w,y1);
+  glTexCoord2f(0,     dy*0.5f); glVertex2i(0,y1);
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
 
-  draw_box( w-2, 0, 
-	    GLUI_SCROLL_ARROW_HEIGHT + 
-	    GLUI_SCROLL_ARROW_Y + 
-	    tab_start_position, 
-	    GLUI_SCROLL_ARROW_HEIGHT + 
-	    GLUI_SCROLL_ARROW_Y + 
-	    tab_end_position, .7, .7, .7);
-  draw_box_inwards_outline( w-2, 0, 
-			    GLUI_SCROLL_ARROW_HEIGHT + 
-			    GLUI_SCROLL_ARROW_Y + 
-			    tab_start_position, 
-			    GLUI_SCROLL_ARROW_HEIGHT + 
-			    GLUI_SCROLL_ARROW_Y + 
-			    tab_end_position);
-
+  // Draw scrollbar thumb
+  float thumb = tab_start_position+GLUI_SCROLL_ARROW_HEIGHT+1;
+  glColor3ubv(scroll_bg);
+  glRecti(0,thumb,w,thumb+tab_length);
+  if (glui)
+    glui->draw_raised_box(0,thumb, w-1, tab_length);
   restore_window( orig );
 }
 

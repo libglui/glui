@@ -3,12 +3,12 @@
   GLUI User Interface Toolkit
   ---------------------------
 
-     glui_edittext.cpp - GLUI_EditText control class
+     glui_list.cpp - GLUI_List control class
 
 
           --------------------------------------------------
 
-  Copyright (c) 1998 Paul Rademacher
+  Copyright (c) 2004 John Kew
 
   This program is freely distributable without licensing fees and is
   provided without guarantee or warrantee expressed or implied. This
@@ -240,8 +240,8 @@ void    GLUI_List::draw_text(char *t, int selected, int x, int y )
   if ( selected ) {
     glColor3f( 0.0f, 0.0f, .6f );
     glBegin( GL_QUADS );
-    glVertex2i(text_x, y+2 );    glVertex2i( w-text_x, y+2 );
-    glVertex2i(w-text_x, y+16 );    glVertex2i(text_x, y+16 );
+    glVertex2i(text_x, y+5 );    glVertex2i( w-text_x, y+5 );
+    glVertex2i(w-text_x, y+19 );    glVertex2i(text_x, y+19 );
     glEnd();
   }
   box_width = get_box_width();   

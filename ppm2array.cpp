@@ -1,44 +1,48 @@
-#include "imagetype.h"
-#include <stdio.h>
+#include "ppm.hpp"
+#include <cstdio>
+#include <cstring>
 
-void main( int argc, char *argv[] )
+int main( int argc, char *argv[] )
 {
   int        i;
-  ImagePPM   img;
+  unsigned char* img = 0;
+  int        w, h;
   FILE      *output;
   char       basename[200];
 
-  if ( argc != 3 ) {
-    fprintf( stderr, "USAGE: %s input.ppm output.cpp\n", argv[0] );
-    return;
+  if ( argc != 2 && argc != 3 ) {
+    fprintf( stderr, "USAGE: %s input.ppm [output.cpp]\n", argv[0] );
+    return 1;
   }
 
-  img.read( argv[1] );
+  LoadPPM( argv[1], img, w, h );
 
-  if ( img.valid ) {
+  if ( img ) {
     strcpy( basename, argv[1] );
     basename[ strlen(basename)-4 ] = '\0';
-    
-    output = fopen( argv[2], "w" );
-    if ( NOT output ) {
+
+    if (argc == 3) 
+      output = fopen( argv[2], "w" );
+    else
+      output = stdout;
+    if ( !output ) {
       fprintf( stderr, "ERROR: File '%s' could not be opened for writing\n",
 	       argv[2] );
-      return;
+      return 1;
     }
 
-    img.flip_v(); /* Opengl bitmaps are specified bottom-to-top */
+    VFlip(img,w,h); /* Opengl bitmaps are specified bottom-to-top */
 
     fprintf( output, "\n\n");
     fprintf( output, "int %s[] = {", basename );
-    fprintf( output, "    %d, %d,   /* width, height */\n", 
-	     img.x_size, img.y_size );
+    fprintf( output, "    %d, %d,   /* width, height */\n", w, h);
 
     fprintf( output, "    " );  
-    for( i=0; i<img.x_size * img.y_size; i++ ) {
+    for( i=0; i<w * h; i++ ) {
       fprintf( output, "%3d,%3d,%3d,  ", 
-	       img.pixels[i*3+0],
-	       img.pixels[i*3+1],
-	       img.pixels[i*3+2] );
+	       img[i*3+0],
+	       img[i*3+1],
+	       img[i*3+2] );
       if ( (i%5) == 4 ) {
 	fprintf( output, "\n    " );
       }
@@ -49,8 +53,10 @@ void main( int argc, char *argv[] )
   }
   else {
     fprintf( stderr, "ERROR: Image '%s' invalid\n", argv[1] );
+    return 1;
   }
-  
+
+  return 0;  
 }
 
 
