@@ -81,6 +81,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="GLUI_NO_LIB_PRAGMA"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
