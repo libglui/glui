@@ -5,27 +5,31 @@
 #Change the following two lines to reflect the locations
 # of the GLUT library (.a) and includes on your system
 
-GLUT_LIB_LOCATION=/unc/walk/lib/sgi_irix
-GLUT_INC_LOCATION=/unc/walk/include
+GLUT_LIB_LOCATION=/usr/X11R6/lib
+GLUT_INC_LOCATION=/usr/X11R6/include
 
 CFLAGS = 
 
 
 #for sgi   -- comment out the lines below to use on HP
-CC=CC -g0 -o32
+#CC=CC -g0 -o32
 #CC=gcc
-#CC=g++ -O3
-CPPFLAGS=-I${GLUT_INC_LOCATION} #-w 
+CC=g++ -O3
+CPPFLAGS=-I${GLUT_INC_LOCATION} 
 GLLIBS=-L${GLUT_LIB_LOCATION} -lglut -lGL -lGLU
 LPATH=${GLUTPATH} 
 INCS= 
 
 
-libs =     ${GLLIBS}  -lXmu -lXext -lX11 -lXi -lm #-lmalloc 
+libs =     ${GLLIBS} -lXmu -lXext -lX11 -lXi -lm #-lmalloc 
 
 LIBGLUI= -Llib -lglui
 
-All: lib/libglui.a bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
+All: Setup lib/libglui.a bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
+
+Setup:
+	mkdir -p bin
+	mkdir -p lib
 
 GLUI_OBJS = glui_add_controls.o glui.o glui_bitmap_img_data.o glui_bitmaps.o glui_button.o glui_edittext.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o arcball.o algebra3.o quaternion.o viewmodel.o
 
@@ -59,7 +63,7 @@ lib/libglui.a: $(GLUI_OBJS)
 .c.o:
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $(INCS) $*.c
 clean:
-	/bin/rm *.o
+	rm *.o
 
 
 

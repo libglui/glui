@@ -12,7 +12,6 @@
 ****************************************************************************/
 
 #include <string.h>
-#include <GL/glut.h>
 #include "glui.h"
 
 float xy_aspect;
@@ -310,7 +309,7 @@ void myGlutDisplay( void )
 
 /**************************************** main() ********************/
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
   /****************************************/
   /*   Initialize GLUT and create window  */
@@ -481,5 +480,7 @@ void main(int argc, char* argv[])
   /**** Regular GLUT main loop ****/
   
   glutMainLoop();
+
+  return EXIT_SUCCESS;
 }
 
