@@ -251,11 +251,13 @@ void GLUI_Scrollbar::draw_scroll() {
   glDisable(GL_TEXTURE_2D);
 
   // Draw scrollbar thumb
-  float thumb = tab_start_position+GLUI_SCROLL_ARROW_HEIGHT+1;
-  glColor3ubv(scroll_bg);
-  glRecti(0,thumb,w,thumb+tab_length);
-  if (glui)
-    glui->draw_raised_box(0,thumb, w-1, tab_length);
+  if (enabled) {
+    float thumb = tab_start_position+GLUI_SCROLL_ARROW_HEIGHT+1;
+    glColor3ubv(scroll_bg);
+    glRecti(0,thumb,w,thumb+tab_length);
+    if (glui)
+      glui->draw_raised_box(0,thumb, w-1, tab_length);
+  }
   restore_window( orig );
 }
 

@@ -54,8 +54,10 @@ extern int glui_img_listbox_down[];
 extern int glui_img_listbox_up_dis[];
 extern int glui_img_scrollup_0[];
 extern int glui_img_scrollup_1[];
+extern int glui_img_scrollup_dis[];
 extern int glui_img_scrolldown_0[];
 extern int glui_img_scrolldown_1[];
+extern int glui_img_scrolldown_dis[];
 
 
 // These must be in the same order as the GLUI_STDBITMAP enums from glui.h!
@@ -82,8 +84,8 @@ int *bitmap_arrays[] = {
   glui_img_radiobutton_1_dis,
   glui_img_spinup_dis,
   glui_img_spindown_dis,
-  glui_img_scrollup_0,  // dis!
-  glui_img_scrolldown_0,  // dis!
+  glui_img_scrollup_dis,
+  glui_img_scrolldown_dis,
   glui_img_listbox_up,
   glui_img_listbox_down,
   glui_img_listbox_up_dis,
