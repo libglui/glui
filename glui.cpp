@@ -1062,8 +1062,8 @@ void      GLUI_Main::draw_raised_box( int x, int y, int w, int h )
 
   glColor3ub( bkgd_color.r, bkgd_color.g, bkgd_color.b );
   glBegin( GL_LINE_LOOP );
-  glVertex2i( x+1, y+1 );         glVertex2i( w-1, y+1 );
-  glVertex2i( w-1, h-1 );     glVertex2i( x+1, h-1 );
+  glVertex2i( x+1, y+1 );  glVertex2i( w-1, y+1 );
+  glVertex2i( w-1, h-1 );  glVertex2i( x+1, h-1 );
   glEnd();
 
   glColor3d( 1.0, 1.0, 1.0 );
@@ -1073,12 +1073,12 @@ void      GLUI_Main::draw_raised_box( int x, int y, int w, int h )
 
   glColor3d( 0.0, 0.0, 0.0 );
   glBegin( GL_LINE_STRIP );
-  glVertex2i( w, y );  glVertex2i( w, h );  glVertex2i( x, h );
+  glVertex2i( w, y );  glVertex2i( w, h );  glVertex2i( x-1, h );
   glEnd();
 
   glColor3d( .5, .5, .5 );
   glBegin( GL_LINE_STRIP );
-  glVertex2i( w-1, y+1 );  glVertex2i( w-1, h-1 );  glVertex2i( x+1, h-1 );
+  glVertex2i( w-1, y+1 );  glVertex2i( w-1, h-1 );  glVertex2i( x, h-1 );
   glEnd();
 }
 

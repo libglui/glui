@@ -51,7 +51,7 @@ GLUI_Panel      *obj_panel;
 #define LIGHT0_ENABLED_ID    200
 #define LIGHT1_ENABLED_ID    201
 #define LIGHT0_INTENSITY_ID  250
-#define LIGHT1_INTENSITY_ID  251
+#define LIGHT1_INTENSITY_ID  260
 #define ENABLE_ID            300
 #define DISABLE_ID           301
 #define SHOW_ID              302
@@ -95,8 +95,10 @@ void control_cb( int control )
       light1_spinner->disable();
     }
   }
-  else if ( control == LIGHT0_INTENSITY_ID ) {
-    float v[] = { light0_diffuse[0],  light0_diffuse[1],
+  else if ( control == LIGHT0_INTENSITY_ID) 
+  {
+    float v[] = { 
+      light0_diffuse[0],  light0_diffuse[1],
 		  light0_diffuse[2],  light0_diffuse[3] };
     
     v[0] *= light0_intensity;
@@ -106,7 +108,8 @@ void control_cb( int control )
     glLightfv(GL_LIGHT0, GL_DIFFUSE, v );
   }
   else if ( control == LIGHT1_INTENSITY_ID ) {
-    float v[] = { light1_diffuse[0],  light1_diffuse[1],
+    float v[] = { 
+      light1_diffuse[0],  light1_diffuse[1],
 		  light1_diffuse[2],  light1_diffuse[3] };
     
     v[0] *= light1_intensity;
@@ -391,10 +394,18 @@ int main(int argc, char* argv[])
 			       LIGHT0_ENABLED_ID, control_cb );
   light0_spinner = 
     glui->add_spinner_to_panel( light0, "Intensity:", GLUI_SPINNER_FLOAT,
-				&light0_intensity, LIGHT0_INTENSITY_ID,
-				control_cb );
+				&light0_intensity, LIGHT0_INTENSITY_ID, control_cb );
   light0_spinner->set_float_limits( 0.0, 1.0 );
-
+  GLUI_Scrollbar *sb;
+  sb = glui->add_scrollbar_to_panel( light0, "Red",GLUI_SCROLL_HORIZONTAL,
+    GLUI_SCROLL_FLOAT,&light0_diffuse[0],LIGHT0_INTENSITY_ID,control_cb);
+  sb->set_int_limits(0,255);
+  sb = glui->add_scrollbar_to_panel( light0, "Green",GLUI_SCROLL_HORIZONTAL,
+    GLUI_SCROLL_FLOAT,&light0_diffuse[1],LIGHT0_INTENSITY_ID,control_cb);
+  sb->set_float_limits(0,1);
+  sb = glui->add_scrollbar_to_panel( light0, "Blue",GLUI_SCROLL_HORIZONTAL,
+    GLUI_SCROLL_FLOAT,&light0_diffuse[2],LIGHT0_INTENSITY_ID,control_cb);
+  sb->set_float_limits(0,1);
   glui->add_checkbox_to_panel( light1, "Enabled", &light1_enabled,
 			       LIGHT1_ENABLED_ID, control_cb );
   light1_spinner = 
@@ -402,6 +413,15 @@ int main(int argc, char* argv[])
 				&light1_intensity, LIGHT1_INTENSITY_ID,
 				control_cb );
   light1_spinner->set_float_limits( 0.0, 1.0 );
+  sb = glui->add_scrollbar_to_panel( light1, "Red",GLUI_SCROLL_HORIZONTAL,
+    GLUI_SCROLL_FLOAT,&light1_diffuse[0],LIGHT1_INTENSITY_ID,control_cb);
+  sb->set_int_limits(0,255);
+  sb = glui->add_scrollbar_to_panel( light1, "Green",GLUI_SCROLL_HORIZONTAL,
+    GLUI_SCROLL_FLOAT,&light1_diffuse[1],LIGHT1_INTENSITY_ID,control_cb);
+  sb->set_float_limits(0,1);
+  sb = glui->add_scrollbar_to_panel( light1, "Blue",GLUI_SCROLL_HORIZONTAL,
+    GLUI_SCROLL_FLOAT,&light1_diffuse[2],LIGHT1_INTENSITY_ID,control_cb);
+  sb->set_float_limits(0,1);
 
 
   /*** Add another rollout ***/

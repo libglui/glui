@@ -208,7 +208,7 @@ void    GLUI_List::draw( int x, int y )
   }
 
   if (scrollbar) {
-    scrollbar->set_int_limits(0, num_lines, GLUI_LIMIT_CLAMP);
+    scrollbar->set_int_limits(num_lines, 0);
     glPushMatrix();
     glTranslatef(scrollbar->x_abs-x_abs, scrollbar->y_abs-y_abs,0.0);
     scrollbar->draw_scroll();
@@ -384,7 +384,7 @@ int  GLUI_List::add_item( int id, char *new_text )
   }
   num_lines++;
   if (scrollbar)
-    scrollbar->set_int_limits(0, num_lines, GLUI_LIMIT_CLAMP);
+    scrollbar->set_int_limits(num_lines, 0);
 
   return true;
 }

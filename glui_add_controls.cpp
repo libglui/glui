@@ -462,7 +462,8 @@ GLUI_TextBox  *GLUI::add_textbox_to_panel( GLUI_Panel *panel, char *data,
       add_column_to_panel(tb_panel, false);
       control->scrollbar = add_scrollbar_to_panel(tb_panel,
 						  "scrollbar",
-						  GLUI_SPINNER_INT, 
+              GLUI_SCROLL_VERTICAL,
+						  GLUI_SCROLL_INT, 
 						  NULL, 
 						  -1,
 						  NULL,
@@ -518,7 +519,8 @@ GLUI_List  *GLUI::add_list_to_panel( GLUI_Panel *panel, char *data,
       add_column_to_panel(list_panel, false);
       control->scrollbar = add_scrollbar_to_panel(list_panel,
 						  "scrollbar",
-						  GLUI_SPINNER_INT, 
+              GLUI_SCROLL_VERTICAL,
+						  GLUI_SCROLL_INT, 
 						  NULL, 
 						  -1,
 						  NULL,
@@ -608,24 +610,27 @@ add_spinner_to_panel( GLUI_Panel *panel, char *name,
 
 /********************************** GLUI::add_scrollbar() ************/
 
-GLUI_Scrollbar  *GLUI::add_scrollbar( char *name, 
+GLUI_Scrollbar  *GLUI::add_scrollbar( char *name, int orientation,
                   int data_type, void *data,
 				      int id, GLUI_Update_CB callback, 
 				      GLUI_Control *object,
 				  GLUI_InterObject_CB obj_cb)
 {
-  return add_scrollbar_to_panel( main_panel, name, data_type, data,
-				 id, callback, object, obj_cb);
+  return add_scrollbar_to_panel( main_panel, name, orientation, 
+         data_type, data, id, callback, object, obj_cb);
 }
 
 
 /******************************* GLUI::add_scrollbar_to_panel() **********/
 
-GLUI_Scrollbar  *GLUI::add_scrollbar_to_panel( GLUI_Panel *panel, char *name, 
-			int data_type, void *data,
-			int id, GLUI_Update_CB callback,
-			GLUI_Control *object,
-			GLUI_InterObject_CB obj_cb)
+GLUI_Scrollbar  *GLUI::add_scrollbar_to_panel( 
+  GLUI_Panel *panel, char *name, 
+  int orientation,
+  int data_type, void *data,
+  int id, GLUI_Update_CB callback,
+  GLUI_Control *object,
+  GLUI_InterObject_CB obj_cb
+  )
 {
   GLUI_Scrollbar *control;
   int           text_type;
@@ -633,16 +638,46 @@ GLUI_Scrollbar  *GLUI::add_scrollbar_to_panel( GLUI_Panel *panel, char *name,
   control = new GLUI_Scrollbar;
  
   if ( control ) {
-      control->set_int_limits(0,0,GLUI_LIMIT_CLAMP);
+    // make sure limits are wide enough to hold live value
+    if (data_type==GLUI_SCROLL_FLOAT) {
+      float lo = 0.0f, hi=1.0f;
+      if (data) {
+        float d = *(float*)(data);
+        lo = MIN(lo, d);
+        hi = MAX(hi, d);
+      }
+      control->set_float_limits(lo,hi);
+      control->set_float_val(lo);
+      control->live_type = GLUI_LIVE_FLOAT;
+    } else {
+      int lo = 0, hi=100;
+      if (data) {
+        int d = *(int*)(data);
+        lo = MIN(lo, d);
+        hi = MAX(hi, d);
+      }
+      control->set_int_limits(lo,hi);
       control->set_int_val(0);
-      control->data_type = GLUI_SPINNER_INT;
-      control->set_name(name);
-      control->user_id = id;
-      control->callback    = callback;
-      control->associated_object = object;
-      control->object_cb = obj_cb;
-      add_control( panel, control );
-      return control;
+      control->live_type = GLUI_LIVE_INT;
+    }
+    control->data_type = data_type;
+    control->set_ptr_val( data );
+    control->set_name(name);
+    control->user_id = id;
+    control->callback    = callback;
+    control->associated_object = object;
+    control->object_cb = obj_cb;
+    control->horizontal=(orientation==GLUI_SCROLL_HORIZONTAL);
+    if (control->horizontal) {
+      control->h = GLUI_SCROLL_ARROW_HEIGHT;
+      control->w = GLUI_TEXTBOX_WIDTH;
+    } else {
+      control->h = GLUI_TEXTBOX_HEIGHT;
+      control->w = GLUI_SCROLL_ARROW_WIDTH;
+    }
+    add_control( panel, control );
+    control->init_live();
+    return control;
   }
   else {
     return NULL;

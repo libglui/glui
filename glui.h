@@ -216,14 +216,16 @@ enum GLUI_Control_Types
 /******************* GLUI Scrollbar Defaults - JVK ***************************/
 #define  GLUI_SCROLL_ARROW_WIDTH  16
 #define  GLUI_SCROLL_ARROW_HEIGHT 16
-#define  GLUI_SCROLL_ARROW_Y       0
-#define  GLUI_SCROLL_THUMB_HEIGHT 16
+#define  GLUI_SCROLL_BOX_MIN_HEIGHT 5
+#define  GLUI_SCROLL_BOX_STD_HEIGHT 16
 #define  GLUI_SCROLL_STATE_NONE   0
 #define  GLUI_SCROLL_STATE_UP     1
 #define  GLUI_SCROLL_STATE_DOWN   2
 #define  GLUI_SCROLL_STATE_BOTH   3
 #define  GLUI_SCROLL_STATE_SCROLL 4
 #define  GLUI_SCROLL_DEFAULT_GROWTH_EXP   1.05f
+#define  GLUI_SCROLL_VERTICAL           0
+#define  GLUI_SCROLL_HORIZONTAL         1
 
 
 /* Default String Size for Dynamic String Class - JVK */
@@ -349,7 +351,8 @@ class Arcball;
 #define GLUI_EDITTEXT_FLOAT            3
 #define GLUI_SPINNER_INT               GLUI_EDITTEXT_INT
 #define GLUI_SPINNER_FLOAT             GLUI_EDITTEXT_FLOAT
-#define GLUI_SCROLL_INT                GLUI_EDITTEXT_INT /* JVK */
+#define GLUI_SCROLL_INT                GLUI_EDITTEXT_INT
+#define GLUI_SCROLL_FLOAT              GLUI_EDITTEXT_FLOAT
 
 /*** Definition of callbacks ***/
 typedef void (*GLUI_Update_CB) (int id);
@@ -439,9 +442,6 @@ enum GLUI_StdBitmaps_Codes
     GLUI_STDBITMAP_LISTBOX_UP,
     GLUI_STDBITMAP_LISTBOX_DOWN,
     GLUI_STDBITMAP_LISTBOX_UP_DIS,
-    /***
-    GLUI_STDBITMAP_SLIDER_TAB,
-    ***/
     GLUI_STDBITMAP_NUM_ITEMS
 };
 
@@ -1382,6 +1382,7 @@ public:
 
     /* GLUI Scrollbar - JVK (Very Similar to Spinner) */
     GLUI_Scrollbar  *add_scrollbar( char *name, 
+            int horz_vert=GLUI_SCROLL_HORIZONTAL,
 				    int data_type=GLUI_SCROLL_INT,
 				    void *live_var=NULL,
 				    int id=-1, GLUI_Update_CB callback=NULL , 
@@ -1389,6 +1390,7 @@ public:
 				    GLUI_InterObject_CB obj_cb = NULL);
     GLUI_Scrollbar  *add_scrollbar_to_panel( GLUI_Panel *panel, 
 					     char *name,
+               int horz_vert=GLUI_SCROLL_HORIZONTAL,
 					     int data_type=GLUI_SCROLL_INT,
 					     void *live_var=NULL,
 					     int id=-1,
@@ -1789,6 +1791,9 @@ public:
   void activate( int how );
   void disactivate( void );
 
+  void enable( void );
+  void disable( void );
+
   void draw( int x, int y );
 
   int  mouse_over( int state, int x, int y );
@@ -1956,13 +1961,13 @@ public:
   float         last_float_val;
   int           first_callback;
   float         user_speed;
-  int           int_val;
-  int           int_min;
-  int           int_max;
-  int tab_length;
-  int tab_start_position;
-  int tab_end_position;
-  int bar_length;
+  float         float_min, float_max;
+  int           int_min, int_max;
+  int           horizontal;
+  int box_length;
+  int box_start_position;
+  int box_end_position;
+  int track_length;
 
 
   /* Rather than directly access an Editbox or Textbox for 
@@ -1988,6 +1993,7 @@ public:
   void update_size( void );
 
   void set_int_limits( int low, int high,int limit_type=GLUI_LIMIT_CLAMP);
+  void set_float_limits( float low,float high,int limit_type=GLUI_LIMIT_CLAMP);
   int  find_arrow( int local_x, int local_y );
   void do_drag( int x, int y );
   void do_callbacks( void );
@@ -1997,7 +2003,7 @@ public:
   void idle( void );
   int  needs_idle( void );
   void set_int_val( int new_val );
-  int  get_int_val( void );
+  void set_float_val( float new_val );
   void increase_growth( void );
   void reset_growth( void );
 
@@ -2006,14 +2012,15 @@ public:
 
   GLUI_Scrollbar ( void ) {
     type         = GLUI_CONTROL_SCROLL;
-    h            = GLUI_TEXTBOX_HEIGHT;
-    w            = GLUI_SPINNER_ARROW_WIDTH;
+    horizontal   = true;
+    h            = GLUI_SCROLL_ARROW_HEIGHT;
+    w            = GLUI_TEXTBOX_WIDTH;
     x_off        = 0;
     y_off_top    = 0;
     y_off_bot    = 0;
     can_activate = true;
-    state        = GLUI_SPINNER_STATE_NONE;
-    growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
+    state        = GLUI_SCROLL_STATE_NONE;
+    growth_exp   = GLUI_SCROLL_DEFAULT_GROWTH_EXP;
     callback_count = 0;
     first_callback = true;
     user_speed   = 1.0;
@@ -2022,12 +2029,16 @@ public:
     int_max      = 0;
     associated_object = NULL;
     object_cb = NULL;
-    tab_length         = 0;
-    tab_start_position = 0;
-    tab_end_position   = 0;
-    bar_length         = 0;
+    box_length         = 0;
+    box_start_position = 0;
+    box_end_position   = 0;
+    track_length       = 0;
 
   };
+protected:
+  virtual void draw_scroll_arrow(int arrowtype, int x, int y);
+  virtual void draw_scroll_box(int x, int y, int w, int h);
+  
 };
 
 

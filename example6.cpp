@@ -22,6 +22,7 @@ int   main_window;
 int   dirty;
 int num_display  = 0;
 int num_format  = 0;
+int disable_textbox = 0;
 GLUI_StaticText *text;
 GLUI_List *hah;
 GLUI_TextBox *moo;
@@ -206,6 +207,13 @@ void control_cb(int control) {
     tp->set_format(format);
     tp->update_all();
   }
+  if (control == 12) {
+    if (disable_textbox) {
+      moo->disable();
+    } else {
+      moo->enable();
+    }
+  }
 }
 
 //void out_of_memory() {
@@ -247,6 +255,8 @@ int main(int argc, char* argv[])
   moo->set_h(400);
   moo->set_w(410);
   moo->disable();
+  disable_textbox=1;
+  edit->add_checkbox_to_panel(ep, "Disable text box:",&disable_textbox,12,control_cb);
 
 
 
