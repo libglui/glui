@@ -50,8 +50,8 @@
   
 **************************************************************************/
 
-#ifndef _ALGEBRA3_H_
-#define _ALGEBRA3_H_
+#ifndef GLUI_ALGEBRA3_H
+#define GLUI_ALGEBRA3_H
 
 #include <cmath>
 #include <cstdio>

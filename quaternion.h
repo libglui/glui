@@ -11,8 +11,8 @@
                 
 **************************************************************************/
 
-#ifndef _QUATERNION_H_
-#define _QUATERNION_H_
+#ifndef GLUI_QUATERNION_H
+#define GLUI_QUATERNION_H
 
 #include "algebra3.h"
 

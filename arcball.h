@@ -32,8 +32,8 @@
 
 **********************************************************************/
 
-#ifndef _ARCBALL_H_
-#define _ARCBALL_H_
+#ifndef GLUI_ARCBALL_H
+#define GLUI_ARCBALL_H
 
 #include "stdinc.h"
 #include "algebra3.h"

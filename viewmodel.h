@@ -78,8 +78,8 @@
 
 *********************************************************************/
 
-#ifndef _VIEW_MODEL_H_
-#define _VIEW_MODEL_H_
+#ifndef GLUI_VIEWMODEL_H
+#define GLUI_VIEWMODEL_H
 
 #include "algebra3.h"
 
