@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define GLUI_VERSION 2.01f    /********** Current version **********/
+#define GLUI_VERSION 2.2f    /********** Current version **********/
 
 #ifdef WIN32
 #pragma comment(lib, "glui32.lib")  // Link against GLUI library  
