@@ -133,7 +133,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\example6.cpp">
+			RelativePath="..\example\example6.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
