@@ -335,7 +335,6 @@ void GLUI_TextBox::disable( void )
 
 void    GLUI_TextBox::activate( int how )
 {
-  int i;
   if ( debug )
     dump( stdout, "-> ACTIVATE" );
   active = true;
