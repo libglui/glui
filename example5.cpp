@@ -315,6 +315,7 @@ int main(int argc, char* argv[])
   /*   Initialize GLUT and create window  */
   /****************************************/
 
+  glutInit(&argc, argv);
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 800, 600 );
