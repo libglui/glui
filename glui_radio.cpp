@@ -35,7 +35,7 @@ void    GLUI_RadioGroup::draw( int x, int y )
 void    GLUI_RadioGroup::draw_group( int translate )
 {
   GLUI_RadioButton *button;
-  int               state, orig;
+  int               state = 0, orig;
 
   if ( NOT can_draw() )
     return;

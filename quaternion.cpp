@@ -110,7 +110,6 @@ quat operator * ( const float t, const quat &a )
 mat4  quat::to_mat4( void )
 {
   float t, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
-  vec3  a, c, b, d;
   
   t  = 2.0 / (v*v + s*s);
   

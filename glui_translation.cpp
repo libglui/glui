@@ -301,12 +301,14 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
 {
   float x1 = .2, x2 = .4, y1 = .54, y2 = .94, y0;
   float x1a, x1b;
+/*
   vec3  col1( 0.0, 0.0, 0.0 ), col2( .45, .45, .45 ), 
     col3( .7, .7, .7 ), col4( 1.0, 1.0, 1.0 );
   vec3  c1, c2, c3, c4, c5, c6;
+*/
   vec3  white(1.0,1.0,1.0), black(0.0,0.0,0.0), gray(.45,.45,.45), 
     bkgd(.7,.7,.7);
-  int   c_off; /* color index offset */
+  int   c_off=0; /* color index offset */
 
   if ( glui )
     bkgd.set(glui->bkgd_color_f[0],

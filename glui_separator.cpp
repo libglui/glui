@@ -41,7 +41,7 @@ void    GLUI_Separator::draw( int x, int y )
     width = this->w;
   }
 
-  indent = width * .05;
+  indent = (int) floor(width * .05);
 
   glLineWidth( 1.0 );
   glBegin( GL_LINES );

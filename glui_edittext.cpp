@@ -224,7 +224,7 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
     }
 
     /******** check whether we have space ******/
-    if ( (int)strlen( text ) + 2 >= sizeof( GLUI_String ))
+    if ( (unsigned int)strlen( text ) + 2 >= sizeof( GLUI_String ))
       return false;
 
     /******** We insert the character into the string ***/

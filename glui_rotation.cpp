@@ -28,7 +28,7 @@ int    GLUI_Rotation::iaction_mouse_down_handler( int local_x, int local_y )
 
   init_ball();
 
-  local_y = 2.0 * ball->center[1] - local_y;
+  local_y = (int) floor(2.0 * ball->center[1] - local_y);
 
   ball->mouse_down( local_x, local_y );
 
@@ -65,7 +65,7 @@ int    GLUI_Rotation::iaction_mouse_held_down_handler( int local_x, int local_y,
 
   copy_float_array_to_ball();
 
-  local_y = 2.0 * ball->center[1] - local_y;
+  local_y = (int) floor(2.0 * ball->center[1] - local_y);
 
   /*	printf( "%d %d\n", local_x, local_y );              */
 

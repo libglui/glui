@@ -23,7 +23,7 @@
 
 int    GLUI_Mouse_Interaction::mouse_down_handler( int local_x, int local_y )
 {
-  int win_h = glutGet( GLUT_WINDOW_HEIGHT );
+  /* int win_h = glutGet( GLUT_WINDOW_HEIGHT ); */
 
   /*	iaction_mouse_down_handler( local_x, local_y );              */
   iaction_mouse_down_handler( local_x-x_abs, local_y-y_abs );

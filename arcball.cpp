@@ -83,7 +83,6 @@ vec3 Arcball::mouse_to_sphere( vec2 p )
   float mag;
   vec2  v2 = (p - center) / radius;
   vec3  v3( v2[0], v2[1], 0.0 );
-  vec3  axis;
   
   mag = v2*v2;
   

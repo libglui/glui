@@ -27,6 +27,10 @@
 
 #define GLUI_VERSION 2.01f    /********** Current version **********/
 
+#ifdef WIN32
+#pragma comment(lib, "glui32.lib")  // Link against GLUI library  
+#endif
+
 class Arcball;
 
 /********** Do some basic defines *******/
@@ -295,8 +299,8 @@ public:
     parent_node= child_head = child_tail = next_sibling = prev_sibling = NULL;
   }; 
 
-  friend GLUI_Rollout;
-  friend GLUI_Main;
+  friend class GLUI_Rollout;
+  friend class GLUI_Main;
 };
 
 
@@ -559,11 +563,11 @@ protected:
 
   /********** Friend classes *************/
 
-  friend GLUI_Control;
-  friend GLUI_Rotation;
-  friend GLUI_Translation;
-  friend GLUI;
-  friend GLUI_Master_Object;
+  friend class GLUI_Control;
+  friend class GLUI_Rotation;
+  friend class GLUI_Translation;
+  friend class GLUI;
+  friend class GLUI_Master_Object;
 
 
   /********** Misc functions *************/
@@ -815,7 +819,7 @@ public:
       float_array_val[i] = last_live_float_array[i] = 0.0;
   };
 
-  ~GLUI_Control();
+  virtual ~GLUI_Control();
 };
 
 
@@ -852,6 +856,8 @@ public:
     alignment    = GLUI_ALIGN_CENTER;
     can_activate = true;
   };
+  
+  virtual ~GLUI_Button() {};
 };
 
 
@@ -894,6 +900,8 @@ public:
     can_activate   = true;
     live_type      = GLUI_LIVE_INT;   /* This control has an 'int' live var */
   };
+  
+  virtual ~GLUI_Checkbox() {};
 };
 
 
@@ -915,6 +923,8 @@ public:
     int_val      = 0;
     can_activate = false;
   };
+  
+  virtual ~GLUI_Column() {};
 };
 
 
@@ -944,6 +954,8 @@ public:
     can_activate = false;
     strcpy( name, "" );
   };
+
+  virtual ~GLUI_Panel() {};
 };
 
 
@@ -986,6 +998,8 @@ public:
     collapsible      = true;
     strcpy( name, "" );
   };
+ 
+  virtual ~GLUI_Rollout() {};
 };
 
 

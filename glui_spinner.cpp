@@ -345,7 +345,7 @@ void    GLUI_Spinner::draw_arrows( void )
 
 void    GLUI_Spinner::do_click( void )
 {
-  int    direction;
+  int    direction = 0;
   float  incr;
   float  modifier_factor;
 
@@ -526,7 +526,7 @@ void    GLUI_Spinner::reset_growth( void )
 
 void    GLUI_Spinner::increase_growth( void )
 {
-  float hi,lo;
+  float hi = 0.0,lo = 0.0;
 
   if ( data_type == GLUI_SPINNER_FLOAT ) {
     lo = edittext->float_low;
