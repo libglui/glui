@@ -12,9 +12,6 @@
 ****************************************************************************/
 
 #include <string.h>
-#include <GL/glut.h>
-#include <new.h>
-//#include <unistd.h>
 #include "glui.h"
 
 /** These are the live variables passed into GLUI ***/
@@ -289,6 +286,8 @@ void control_cb(int control) {
 
 int main(int argc, char* argv[])
 {
+  glutInit(&argc, argv);
+  
   dirty = 1;
 
   GLUI *edit = GLUI_Master.create_glui("Help on GLUI Widgets", 0);
