@@ -298,7 +298,7 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
   text_x = 2 + GLUI_LIST_BOXINNERMARGINX;
 
   /** Draw selection area dark **/
-  if ( selected ) {
+  if ( enabled && selected ) {
     glColor3f( 0.0f, 0.0f, .6f );
     glBegin( GL_QUADS );
     glVertex2i(text_x, y+5 );    glVertex2i( w-text_x, y+5 );
@@ -307,8 +307,8 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
   }
   box_width = get_box_width();   
 
-  if ( !selected ) {   /* No current selection */
-    x_pos = text_x;
+  if ( !selected || !enabled ) {   /* No current selection */
+    x_pos = text_x;                /*  or control disabled */
     if ( enabled )
       glColor3b( 0, 0, 0 );
     else
