@@ -63,8 +63,8 @@ void GLUI_TextBox::common_construct(
 
   if (scroll) {
     GLUI_Panel *p = new GLUI_Panel(parent,"",GLUI_PANEL_NONE);
-    tb_panel = p;
     p->x_off = 1;
+    tb_panel = p;
   }
   this->ptr_val     = data;
   if (data) {
@@ -78,7 +78,7 @@ void GLUI_TextBox::common_construct(
   tb_panel->add_control( this );
   if (scroll) {
     new GLUI_Column(tb_panel, false);
-    this->scrollbar = 
+    scrollbar = 
       new GLUI_Scrollbar(tb_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
@@ -87,6 +87,8 @@ void GLUI_TextBox::common_construct(
                          NULL,
                          (GLUI_Control*) this,
                          (GLUI_InterObject_CB )GLUI_TextBox::scrollbar_callback);
+    scrollbar->set_alignment(GLUI_ALIGN_LEFT);
+    scrollbar->can_activate = false;
   }
   init_live();
 }

@@ -233,8 +233,6 @@ int    GLUI_Scrollbar::mouse_held_down_handler( int local_x, int local_y,
 
 int    GLUI_Scrollbar::key_handler( unsigned char key,int modifiers )
 {
-  
-
   return true;
 }
 
@@ -360,21 +358,32 @@ void GLUI_Scrollbar::draw_scroll() {
 
 int    GLUI_Scrollbar::special_handler( int key,int modifiers )
 {
-  if ( key == GLUT_KEY_UP ) {    /** Simulate a click in the up arrow **/
+  if ( !horizontal && key == GLUT_KEY_UP ) {
     mouse_down_handler( x_abs + w - GLUI_SCROLL_ARROW_WIDTH + 1,
-            y_abs + 1 );
+      y_abs + 1 );
     mouse_up_handler( x_abs + w - GLUI_SCROLL_ARROW_WIDTH + 1,
-              y_abs + 1, true );
+      y_abs + 1, true );
   }
-  else if ( key == GLUT_KEY_DOWN ) {  /** Simulate a click in the up arrow **/
+  else if ( !horizontal && key == GLUT_KEY_DOWN ) {
     mouse_down_handler(x_abs + w - GLUI_SCROLL_ARROW_WIDTH + 1,
-               y_abs+1+GLUI_SCROLL_ARROW_HEIGHT);
+      y_abs+1+GLUI_SCROLL_ARROW_HEIGHT);
     mouse_up_handler( x_abs + w - GLUI_SCROLL_ARROW_WIDTH + 1,
-              y_abs+1 +GLUI_SCROLL_ARROW_HEIGHT,
-              true );
+      y_abs+1 +GLUI_SCROLL_ARROW_HEIGHT,
+      true );
+  }
+  if ( horizontal && key == GLUT_KEY_LEFT ) {
+    mouse_down_handler( x_abs + 1,y_abs + 1 );
+    mouse_up_handler( x_abs + 1,   y_abs + 1, true );
+  }
+  else if ( horizontal && key == GLUT_KEY_RIGHT ) {
+    mouse_down_handler(x_abs + w - GLUI_SCROLL_ARROW_WIDTH + 1,
+      y_abs+1);
+    mouse_up_handler( x_abs + w - GLUI_SCROLL_ARROW_WIDTH + 1,
+      y_abs+1,
+      true );
   }
   else if ( key == GLUT_KEY_HOME ) {  /** Set value to limit top - 
-                    or increment by 10 **/
+                                          or increment by 10 **/
   }
   else if ( key == GLUT_KEY_END ) {  
   }
@@ -569,12 +578,24 @@ void GLUI_Scrollbar::draw_scroll_arrow(int arrowtype, int x, int y)
 
 void GLUI_Scrollbar::draw_scroll_box(int x, int y, int w, int h)
 {
-  if (enabled) {
-    if (glui) {
-      glColor3ubv(&glui->bkgd_color.r);
-      glRecti(x,y,x+w,y+h);
-      glui->draw_raised_box(x,y, w-1, h-1);
-    }
+  if (!enabled) return;
+  if (glui) {
+    glColor3ubv(&glui->bkgd_color.r);
+    glRecti(x,y,x+w,y+h);
+    glui->draw_raised_box(x,y, w-1, h-1);
+  }
+  if (active) {
+    glEnable( GL_LINE_STIPPLE );
+    glLineStipple( 1, 0x5555 );
+    glColor3f( 0., 0., 0. );
+    glBegin(GL_LINE_LOOP);
+    int x1 = x+2, y1 = y+2, x2 = x+w-4, y2 = y+h-4;
+    glVertex2i(x1,y1);
+    glVertex2i(x2,y1);
+    glVertex2i(x2,y2);
+    glVertex2i(x1,y2);
+    glEnd();
+    glDisable( GL_LINE_STIPPLE );
   }
 }
 

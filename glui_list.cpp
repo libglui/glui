@@ -72,7 +72,7 @@ void GLUI_List::common_construct(
   if (scroll) 
   {
     new GLUI_Column(list_panel, false);
-    this->scrollbar = 
+    scrollbar = 
       new GLUI_Scrollbar(list_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
@@ -81,6 +81,8 @@ void GLUI_List::common_construct(
                          NULL,
                          (GLUI_Control*) this,
                          (GLUI_InterObject_CB )GLUI_List::scrollbar_callback);
+    scrollbar->set_alignment(GLUI_ALIGN_LEFT);
+    scrollbar->can_activate = false;
   }
   if (object) {
     this->obj_cb    = obj_cb;
