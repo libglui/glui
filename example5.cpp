@@ -411,6 +411,9 @@ void main(int argc, char* argv[])
   glui->add_checkbox_to_panel( options, "Draw axes", &show_axes );
   glui->add_checkbox_to_panel( options, "Draw text", &show_text );
 
+  options->close();
+//  options->open();
+  options->set_w(180);
 
   /**** Add listbox ****/
   glui->add_statictext( "" );

@@ -82,9 +82,9 @@
 
 #include "algebra3.h" /* Include algebra3.h first to avoid Windows 
 			 problems */
-#include <GL/glut.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <GL/glui.h>
+#include <cstdio>
+#include <cstdlib>
 
 class ViewModel {
 public:

@@ -20,14 +20,20 @@
 #ifndef _GLUI_H_
 #define _GLUI_H_
 
+#if 1
 #include <GL/glut.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#else
+#include <GL/freeglut.h>
+#include <GL/freeglut_ext.h>
+#endif
+
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 #define GLUI_VERSION 2.2f    /********** Current version **********/
 
-#ifdef WIN32
+#if defined(MSC_VER)
 #pragma comment(lib, "glui32.lib")  // Link against GLUI library  
 #endif
 
@@ -58,7 +64,8 @@ public:
 
 /********** List of GLUT callbacks ********/
 
-enum GLUI_Glut_CB_Types { 
+enum GLUI_Glut_CB_Types 
+{ 
   GLUI_GLUT_RESHAPE,
   GLUI_GLUT_KEYBOARD,
   GLUI_GLUT_DISPLAY,
@@ -71,7 +78,8 @@ enum GLUI_Glut_CB_Types {
 };
 
 /********** List of control types **********/
-enum GLUI_Control_Types {
+enum GLUI_Control_Types 
+{
   GLUI_CONTROL_CHECKBOX =1,
   GLUI_CONTROL_BUTTON,
   GLUI_CONTROL_RADIOBUTTON,
@@ -171,7 +179,8 @@ enum GLUI_Control_Types {
 
 /**********  Translation codes  **********/
 
-enum TranslationCodes  {
+enum TranslationCodes  
+{
   GLUI_TRANSLATION_MOUSE_NONE=0,
   GLUI_TRANSLATION_MOUSE_UP,
   GLUI_TRANSLATION_MOUSE_DOWN,
@@ -184,30 +193,38 @@ enum TranslationCodes  {
 };
 
 /************ A string type for us to use **********/
-/*  typedef char  GLUI_String[300]; */
+
 class GLUI_String
 {
 public:
-  char string[300];
-
-  char &operator[]( int i ) {
-    return string[i];
-  }
-
-  operator char*() { return (char*) &string[0]; };
-  /*    operator void*() { return (void*) &string[0]; }; */
-
-  GLUI_String( void ) {
+  GLUI_String() 
+  {
     string[0] = '\0';
   }
 
-  GLUI_String( char *text ) {
-    strcpy( string, text );
+  GLUI_String(const char *text) 
+  {
+    strcpy(string,text );
   }
+
+  char &operator[](int i) 
+  {
+    return string[i];
+  }
+
+  operator char*() 
+  { 
+	  return (char*) &string[0]; 
+  };
+
+  /*    operator void*() { return (void*) &string[0]; }; */
+
+  char string[300];
 };
 
 
 /********* Pre-declare the various classes *********/
+
 class GLUI;
 class GLUI_Control;
 class GLUI_Listbox;
@@ -232,8 +249,6 @@ class GLUI_Master;
 class GLUI_Glut_Window;
 class GLUI_Rollout;
 
-
-
 /*** Flags for GLUI class constructor ***/
 #define  GLUI_SUBWINDOW          ((long)(1<< 1))
 #define  GLUI_SUBWINDOW_TOP      ((long)(1<< 2))
@@ -248,8 +263,6 @@ class GLUI_Rollout;
 #define GLUI_SPINNER_INT               GLUI_EDITTEXT_INT
 #define GLUI_SPINNER_FLOAT             GLUI_EDITTEXT_FLOAT
 
-
-
 /*** Definition of callbacks ***/
 typedef void (*GLUI_Update_CB) (int id);
 typedef void (*Int1_CB)        (int);
@@ -257,52 +270,56 @@ typedef void (*Int2_CB)        (int, int);
 typedef void (*Int3_CB)        (int, int, int);
 typedef void (*Int4_CB)        (int, int, int, int);
 
-				 
-
 /************************************************************/
 /*                                                          */
 /*          Base class, for hierarchical relationships      */
 /*                                                          */
 /************************************************************/
 
-class GLUI_Node {
+class GLUI_Node 
+{
+	friend class GLUI_Rollout;
+	friend class GLUI_Main;
+
+public:
+	GLUI_Node()
+	: 
+		parent_node(NULL),
+		child_head(NULL),
+		child_tail(NULL),
+		next_sibling(NULL),
+		prev_sibling(NULL)
+	{ 
+	}; 
+
+	~GLUI_Node()
+	{
+	}
+
+	GLUI_Node *first_sibling();
+	GLUI_Node *last_sibling();
+	GLUI_Node *prev();
+	GLUI_Node *next();
+
+	GLUI_Node *first_child()   { return child_head; };
+	GLUI_Node *last_child()    { return child_tail; };
+	GLUI_Node *parent()        { return parent_node; };
+
+	void      link_this_to_parent_last (GLUI_Node *parent  );
+	void      link_this_to_parent_first(GLUI_Node *parent  );
+	void      link_this_to_sibling_next(GLUI_Node *sibling );
+	void      link_this_to_sibling_prev(GLUI_Node *sibling );
+	void      unlink();
+
+	void dump( FILE *out, char *name );
+
 protected:
   GLUI_Node *parent_node;
   GLUI_Node *child_head;
   GLUI_Node *child_tail;
   GLUI_Node *next_sibling;
   GLUI_Node *prev_sibling;
-
-public:
-  GLUI_Node *first_sibling( void );
-  GLUI_Node *last_sibling( void );
-  GLUI_Node *prev( void );
-  GLUI_Node *next( void );
-  GLUI_Node *first_child( void )   { return child_head; };
-  GLUI_Node *last_child( void )    { return child_tail; };
-  GLUI_Node *parent(void)          { return parent_node; };
-
-  void      link_this_to_parent_last( GLUI_Node *parent );
-  void      link_this_to_parent_first( GLUI_Node *parent );
-  void      link_this_to_sibling_next( GLUI_Node *sibling );
-  void      link_this_to_sibling_prev( GLUI_Node *sibling );
-  void      unlink( void );
-
-  void dump( FILE *out, char *name ) {
-    fprintf( out, "GLUI_node: %s\n", name );
-    fprintf( out, "   parent: %p     child_head: %p    child_tail: %p\n",
-	     parent_node, child_head, child_tail );
-    fprintf( out, "   next: %p       prev: %p\n", next_sibling, prev_sibling );
-  }
-
-  GLUI_Node( void ) { 
-    parent_node= child_head = child_tail = next_sibling = prev_sibling = NULL;
-  }; 
-
-  friend class GLUI_Rollout;
-  friend class GLUI_Main;
 };
-
 
 
 /************************************************************/
@@ -311,7 +328,8 @@ public:
 /*                                                          */
 /************************************************************/
 
-enum GLUI_StdBitmaps_Codes {
+enum GLUI_StdBitmaps_Codes 
+{
   GLUI_STDBITMAP_CHECKBOX_OFF=0,
   GLUI_STDBITMAP_CHECKBOX_ON,
   GLUI_STDBITMAP_RADIOBUTTON_OFF,
@@ -342,6 +360,7 @@ enum GLUI_StdBitmaps_Codes {
 
 
 /************ Image Bitmap arrays **********/
+
 extern int glui_img_checkbox_0[];
 extern int glui_img_checkbox_1[];
 extern int glui_img_radiobutton_0[];
@@ -366,29 +385,31 @@ extern int glui_img_listbox_up_dis[];
 
 extern int *bitmap_arrays[];
 
-
-
 /************************************************************/
 /*                                                          */
 /*                  Class GLUI_Bitmap                       */
 /*                                                          */
 /************************************************************/
+
 class GLUI_Bitmap 
 {
 public:
-  unsigned char *pixels;
-  int            w, h;
+	GLUI_Bitmap() 
+	:
+		pixels(NULL),
+		w(0), h(0)
+	{
+	}
   
-  void load_from_array( int *array );
-
-  GLUI_Bitmap( void ) {
-    pixels = NULL;
-    w      = 0;
-    h      = 0;
+	~GLUI_Bitmap()
+	{
   }
+
+	void load_from_array(int *array);
+
+	unsigned char *pixels;
+	int            w, h;
 };
-
-
 
 
 /************************************************************/
@@ -396,20 +417,21 @@ public:
 /*                  Class GLUI_StdBitmap                    */
 /*                                                          */
 /************************************************************/
+
 class GLUI_StdBitmaps
 {
 public:
-  GLUI_Bitmap bitmaps[ GLUI_STDBITMAP_NUM_ITEMS ];
-
-  void draw( int bitmap_num, int x, int y );
-  
-  GLUI_StdBitmaps( void ) {
+	GLUI_StdBitmaps() 
+	{
     int i;
 
-    for( i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++ ) {
+		for( i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++ ) 
       bitmaps[i].load_from_array( bitmap_arrays[i] );
     }
-  }
+
+	void draw( int bitmap_num, int x, int y );
+
+	GLUI_Bitmap bitmaps[ GLUI_STDBITMAP_NUM_ITEMS ];
 };
 
 
@@ -420,14 +442,24 @@ public:
 /*                     Master GLUI Class                    */
 /*                                                          */
 /************************************************************/
-class GLUI_Master_Object {
-private:
-  GLUI_Node     glut_windows;
-  void (*glut_idle_CB)(void);
 
-  void                add_cb_to_glut_window(int window,int cb_type,void *cb);
+class GLUI_Master_Object 
+{
+
+	friend void glui_idle_func();
   
 public:
+
+	GLUI_Master_Object() 
+	{
+		glut_idle_CB    = NULL;
+		glui_id_counter = 1;
+	}
+
+	~GLUI_Master_Object()
+	{
+	}
+
   GLUI_Node     gluis;
   GLUI_Control *active_control, *curr_left_button_glut_menu;
   GLUI         *active_control_glui;
@@ -489,12 +521,11 @@ public:
 
   float          get_version( void ) { return GLUI_VERSION; };
 
-  friend void    glui_idle_func(void);
+private:
+	GLUI_Node     glut_windows;
+	void (*glut_idle_CB)(void);
 
-  GLUI_Master_Object( void ) {
-    glut_idle_CB    = NULL;
-    glui_id_counter = 1;
-  }
+	void                add_cb_to_glut_window(int window,int cb_type,void *cb);
 };
 
 extern GLUI_Master_Object GLUI_Master;
@@ -507,8 +538,23 @@ extern GLUI_Master_Object GLUI_Master;
 /*                                                          */
 /************************************************************/
 
-class GLUI_Glut_Window : public GLUI_Node {
+class GLUI_Glut_Window : public GLUI_Node 
+{
 public:
+	GLUI_Glut_Window() 
+	{
+		glut_display_CB         = NULL;
+		glut_reshape_CB         = NULL;
+		glut_keyboard_CB        = NULL;
+		glut_special_CB         = NULL;
+		glut_mouse_CB           = NULL;
+		glut_motion_CB          = NULL;
+		glut_passive_motion_CB  = NULL;
+		glut_entry_CB           = NULL;
+		glut_visibility_CB      = NULL;
+		glut_window_id          = 0;
+	};
+
   int    glut_window_id;
 
   /*********** Pointers to GLUT callthrough functions *****/
@@ -521,21 +567,7 @@ public:
   void (*glut_motion_CB)(int,int);
   void (*glut_display_CB)(void);
   void (*glut_entry_CB)(int);
-
-  GLUI_Glut_Window( void ) {
-    glut_display_CB         = NULL;
-    glut_reshape_CB         = NULL;
-    glut_keyboard_CB        = NULL;
-    glut_special_CB         = NULL;
-    glut_mouse_CB           = NULL;
-    glut_motion_CB          = NULL;
-    glut_passive_motion_CB  = NULL;
-    glut_entry_CB           = NULL;
-    glut_visibility_CB      = NULL;
-    glut_window_id          = 0;
-  };
 };
-
 
 
 /************************************************************/
@@ -544,7 +576,34 @@ public:
 /*                                                          */
 /************************************************************/
 
-class GLUI_Main : public GLUI_Node {
+class GLUI_Main : public GLUI_Node 
+{
+	/********** Friend classes *************/
+
+	friend class GLUI_Control;
+	friend class GLUI_Rotation;
+	friend class GLUI_Translation;
+	friend class GLUI;
+	friend class GLUI_Master_Object;
+
+	/*********** Friend functions **********/
+
+	friend void    glui_mouse_func(int button, int state, int x, int y);
+	friend void    glui_keyboard_func(unsigned char key, int x, int y);
+	friend void    glui_special_func(int key, int x, int y);
+	friend void    glui_passive_motion_func(int x, int y);
+	friend void    glui_reshape_func( int w, int h );
+	friend void    glui_visibility_func(int state);
+	friend void    glui_motion_func(int x, int y);
+	friend void    glui_entry_func(int state);
+	friend void    glui_display_func( void );
+	friend void    glui_idle_func(void);
+
+	friend void    glui_parent_window_reshape_func( int w, int h );
+	friend void    glui_parent_window_keyboard_func( unsigned char, int, int );
+	friend void    glui_parent_window_special_func( int, int, int );
+	friend void    glui_parent_window_mouse_func( int, int, int, int );
+
 protected:
   /*** Variables ***/
   int           main_gfx_window_id;
@@ -560,15 +619,6 @@ protected:
   int           closing;
   int           parent_window;
   int           glui_id;
-
-  /********** Friend classes *************/
-
-  friend class GLUI_Control;
-  friend class GLUI_Rotation;
-  friend class GLUI_Translation;
-  friend class GLUI;
-  friend class GLUI_Master_Object;
-
 
   /********** Misc functions *************/
 
@@ -598,25 +648,6 @@ protected:
   void (*glut_reshape_CB)(int, int);
 
   
-  /*********** Friend functions and classes **********/
-
-  friend void    glui_mouse_func(int button, int state, int x, int y);
-  friend void    glui_keyboard_func(unsigned char key, int x, int y);
-  friend void    glui_special_func(int key, int x, int y);
-  friend void    glui_passive_motion_func(int x, int y);
-  friend void    glui_reshape_func( int w, int h );
-  friend void    glui_visibility_func(int state);
-  friend void    glui_motion_func(int x, int y);
-  friend void    glui_entry_func(int state);
-  friend void    glui_display_func( void );
-  friend void    glui_idle_func(void);
-
-  friend void    glui_parent_window_reshape_func( int w, int h );
-  friend void    glui_parent_window_keyboard_func( unsigned char, int, int );
-  friend void    glui_parent_window_special_func( int, int, int );
-  friend void    glui_parent_window_mouse_func( int, int, int, int );
-
-
   /*********** Controls ************/
   GLUI_Control *controls;
   int           num_controls;
@@ -665,7 +696,8 @@ public:
 /*                                                          */
 /************************************************************/
 
-class GLUI_Control : public GLUI_Node {
+class GLUI_Control : public GLUI_Node 
+{
 public:
 
   int             w, h;                        /* dimensions of control */
@@ -793,7 +825,7 @@ public:
     int_val        = 0;
     last_live_int  = 0;
     float_array_size = 0;
-    sprintf( (char*)name, "Control: %p", this );
+    sprintf( (char*)name, "Control: %p", (void *) this );
     float_val      = 0.0;
     last_live_float = 0.0;
     ptr_val        = NULL;
@@ -849,7 +881,7 @@ public:
   void update_size( void );
 
   GLUI_Button( void ) {
-    sprintf( name, "Button: %p", this );
+    sprintf( name, "Button: %p", (void *) this );
     type         = GLUI_CONTROL_BUTTON;
     h            = GLUI_BUTTON_SIZE;
     w            = 100;
@@ -891,7 +923,7 @@ public:
   void set_int_val( int new_val );
 
   GLUI_Checkbox( void ) {
-    sprintf( name, "Checkbox: %p", this );
+    sprintf( name, "Checkbox: %p", (void *) this );
     type           = GLUI_CONTROL_CHECKBOX;
     w              = 100;
     h              = GLUI_CHECKBOX_SIZE;
@@ -938,13 +970,8 @@ public:
 class GLUI_Panel : public GLUI_Control
 {
 public:
-  void draw( int x, int y );
-  void set_name( char *text );
-  void set_type( int new_type );
-
-  void update_size( void );
-
-  GLUI_Panel( void ) {
+	GLUI_Panel() 
+	{
     type         = GLUI_CONTROL_PANEL;
     w            = 300;
     h            = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
@@ -956,6 +983,12 @@ public:
   };
 
   virtual ~GLUI_Panel() {};
+
+	void draw( int x, int y );
+	void set_name( char *text );
+	void set_type( int new_type );
+
+	void update_size( void );
 };
 
 
@@ -1009,7 +1042,8 @@ public:
 /*                                                          */
 /************************************************************/
 
-class GLUI : public GLUI_Main {
+class GLUI : public GLUI_Main 
+{
 private:
 public:
   void  add_column( int draw_bar = true );
@@ -1283,7 +1317,7 @@ public:
   GLUI_RadioGroup *group;
 
   GLUI_RadioButton( void ) {
-    sprintf( name, "RadioButton: %p", this );
+    sprintf( name, "RadioButton: %p", (void *) this );
     type           = GLUI_CONTROL_RADIOBUTTON;
     h              = GLUI_RADIOBUTTON_SIZE;
     group          = NULL;
@@ -1335,6 +1369,28 @@ public:
 class GLUI_Spinner : public GLUI_Control
 {
 public:
+	GLUI_Spinner( void ) 
+	{
+		sprintf( name, "Spinner: %p", (void *) this );
+		type         = GLUI_CONTROL_SPINNER;
+		h            = GLUI_EDITTEXT_HEIGHT;
+		w            = GLUI_EDITTEXT_WIDTH;
+		x_off        = 0;
+		y_off_top    = 0;
+		y_off_bot    = 0;
+		can_activate = true;
+		state        = GLUI_SPINNER_STATE_NONE;
+		edittext     = NULL;
+		growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
+		callback_count = 0;
+		first_callback = true;
+		user_speed   = 1.0;
+	};
+
+	~GLUI_Spinner()
+	{
+	};
+
   int           currently_inside;
   int           state;
   float         growth, growth_exp;
@@ -1381,23 +1437,6 @@ public:
   void reset_growth( void );
 
   void set_speed( float speed ) { user_speed = speed; };
-
-  GLUI_Spinner( void ) {
-    sprintf( name, "Spinner: %p", this );
-    type         = GLUI_CONTROL_SPINNER;
-    h            = GLUI_EDITTEXT_HEIGHT;
-    w            = GLUI_EDITTEXT_WIDTH;
-    x_off        = 0;
-    y_off_top    = 0;
-    y_off_bot    = 0;
-    can_activate = true;
-    state        = GLUI_SPINNER_STATE_NONE;
-    edittext     = NULL;
-    growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
-    callback_count = 0;
-    first_callback = true;
-    user_speed   = 1.0;
-  };
 };
 
 /************************************************************/
@@ -1478,7 +1517,7 @@ public:
   
 
   GLUI_Listbox( void ) {
-    sprintf( name, "Listbox: %p", this );
+    sprintf( name, "Listbox: %p", (void *) this );
     type           = GLUI_CONTROL_LISTBOX;
     w              = GLUI_EDITTEXT_WIDTH;
     h              = GLUI_EDITTEXT_HEIGHT;
@@ -1528,7 +1567,7 @@ public:
   virtual void iaction_init( void ) = 0;
   
   GLUI_Mouse_Interaction( void ) {
-    sprintf( name, "Mouse_Interaction: %p", this );
+    sprintf( name, "Mouse_Interaction: %p", (void *) this );
     type           = GLUI_CONTROL_MOUSE_INTERACTION;
     w              = GLUI_MOUSE_INTERACTION_WIDTH;
     h              = GLUI_MOUSE_INTERACTION_HEIGHT;
@@ -1643,7 +1682,7 @@ public:
 
   GLUI_Translation( void ) {
     locked              = GLUI_TRANSLATION_LOCK_NONE;
-    sprintf( name, "Translation: %p", this );
+    sprintf( name, "Translation: %p", (void *) this );
     type                = GLUI_CONTROL_TRANSLATION;
     w                   = GLUI_MOUSE_INTERACTION_WIDTH;
     h                   = GLUI_MOUSE_INTERACTION_HEIGHT;

@@ -18,13 +18,11 @@
 
 #include "glui.h"
 #include "stdinc.h"
-#include <GL/glut.h>
 
 
 /*** This object must be used to create a GLUI ***/
 
 GLUI_Master_Object GLUI_Master;
-
 
 /************************************ finish_drawing() ************/
 
