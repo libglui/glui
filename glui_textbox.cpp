@@ -88,7 +88,7 @@ void GLUI_TextBox::common_construct(
                          (GLUI_Control*) this,
                          (GLUI_InterObject_CB )GLUI_TextBox::scrollbar_callback);
     scrollbar->set_alignment(GLUI_ALIGN_LEFT);
-    scrollbar->can_activate = false;
+    // scrollbar->can_activate = false; //kills ability to mouse drag too
   }
   init_live();
 }
@@ -346,8 +346,7 @@ void    GLUI_TextBox::activate( int how )
   if ( how == GLUI_ACTIVATE_MOUSE )
     return;  /* Don't select everything if activated with mouse */
 
-  for (i = 0; i < text.length(); i++)
-    orig_text[i] = text[i];
+  orig_text = text;
 
   sel_start    = 0;
   sel_end      = text.length();
@@ -845,7 +844,7 @@ void     GLUI_TextBox::draw_insertion_pt( void )
                                           between the text and the box       **/
   
   curr_x += substring_width(sol,insertion_pt-1);
-  if (text[insertion_pt] == '\0' && text[insertion_pt - 1] == '\n'
+  if (insertion_pt == text.length() && text[text.length()-1] == '\n'
       || curr_x-this->x_abs > (w - 2 - GLUI_TEXTBOX_BOXINNERMARGINX)) { // Insert on the next line 
     curr_x = this->x_abs + GLUI_TEXTBOX_BOXINNERMARGINX;
     line++;
@@ -1044,17 +1043,7 @@ int    GLUI_TextBox::find_word_break( int start, int direction )
 
 void   GLUI_TextBox::clear_substring( int start, int end )
 {
-  int i, leftover;
-
-  /*** Shift over string ***/
-  leftover = text.length() - end;
-  
-  /*  printf( "leftover: %d     - ", leftover );              */
-
-  for( i=0; i<leftover+1; i++ )
-    text[start+i] = text[end+i];    
-
-  /*  printf( "final string: '%s'\n", text );              */
+  text.erase(start,end-start);
 }
 
 
