@@ -314,7 +314,7 @@ int       GLUI_Rotation::needs_idle( void )
 
 void        GLUI_Rotation::idle( void )
 {
-  spinning = ball->is_spinning;
+  spinning = ball->is_spinning?true:false;
 
   if ( can_spin AND spinning ) {
     copy_float_array_to_ball();

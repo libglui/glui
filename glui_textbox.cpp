@@ -166,7 +166,7 @@ int    GLUI_TextBox::mouse_held_down_handler( int local_x, int local_y,
 /****************************** GLUI_TextBox::key_handler() **********/
 int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
 {
-  int i, regular_key;
+  int regular_key;
   /* int has_selection;              */
 
   if ( NOT glui )
@@ -359,8 +359,6 @@ void    GLUI_TextBox::activate( int how )
 
 void    GLUI_TextBox::disactivate( void )
 {
-  int    new_int_val;
-  float  new_float_val;
   active = false;
 
   if ( NOT glui )
@@ -397,7 +395,6 @@ void    GLUI_TextBox::disactivate( void )
 void    GLUI_TextBox::draw( int x, int y )
 {
   int orig;
-  int name_x;
   int line = 0;
   int text_length;
   int box_width;
@@ -579,7 +576,7 @@ void    GLUI_TextBox::update_x_offsets( void )
 
 void    GLUI_TextBox::draw_text( int x, int y )
 {
-  int text_x, i, j, sel_lo, sel_hi, x_pos;
+  int text_x, i, sel_lo, sel_hi, x_pos;
   int orig;
 
   if ( NOT can_draw() )
@@ -683,8 +680,6 @@ void    GLUI_TextBox::draw_text( int x, int y )
 
 int  GLUI_TextBox::find_insertion_pt( int x, int y )
 {
-  int i;
-  
   /*** See if we clicked outside box ***/
   if ( x < this->x_abs || y < this->y_abs)
     return -1;
@@ -782,7 +777,7 @@ int GLUI_TextBox::get_box_width()
 
 void     GLUI_TextBox::draw_insertion_pt( void )
 {
-  int curr_x, curr_y, i, box_width, text_length, eol, sol, line;
+  int curr_x, box_width, text_length, eol, sol, line;
 
   if ( NOT can_draw() )
     return;
@@ -1078,8 +1073,6 @@ void   GLUI_TextBox::update_size( void )
 
 void    GLUI_TextBox::set_text( const char *new_text )
 {
-  int i;
-
   text = new_text;
 
   substring_start = 0;

@@ -168,7 +168,6 @@ int    GLUI_List::key_handler( unsigned char key,int modifiers )
 
 void    GLUI_List::activate( int how )
 {
-  int i;
 //   if ( debug )
 //     dump( stdout, "-> ACTIVATE" );
   active = true;
@@ -183,8 +182,6 @@ void    GLUI_List::activate( int how )
 
 void    GLUI_List::disactivate( void )
 {
-  int    new_int_val;
-  float  new_float_val;
   active = false;
 
   if ( NOT glui )
@@ -198,11 +195,8 @@ void    GLUI_List::disactivate( void )
 void    GLUI_List::draw( int x, int y )
 {
   int orig;
-  int name_x;
   int line = 0;
-  int text_length;
   int box_width;
-  int i;
   GLUI_List_Item *item;
  
   if ( NOT can_draw() )
@@ -288,7 +282,7 @@ void    GLUI_List::draw( int x, int y )
 
 void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
 {
-  int text_x, i, j, sel_lo, sel_hi, x_pos;
+  int text_x, i, x_pos;
   int orig;
   int box_width;
 
@@ -300,8 +294,6 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
   /** Find where to draw the text **/
 
   text_x = 2 + GLUI_LIST_BOXINNERMARGINX;
-
-  int sel_x_start, sel_x_end, delta;
 
   /** Draw selection area dark **/
   if ( selected ) {

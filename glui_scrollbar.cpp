@@ -88,7 +88,6 @@ void GLUI_Scrollbar::common_construct(
   )
 {
   common_init();
-  int           text_type;
 
   // make sure limits are wide enough to hold live value
   if (data_type==GLUI_SCROLL_FLOAT) {

@@ -549,7 +549,7 @@ extern GLUI_Master_Object GLUI_Master;
 class GLUI_Glut_Window : public GLUI_Node 
 {
 public:
-    GLUI_Glut_Window() : glut_window_id(0) {} 
+    GLUI_Glut_Window();
 
     int    glut_window_id;
 

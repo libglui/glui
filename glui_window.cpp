@@ -42,6 +42,3 @@ GLUI_Glut_Window::GLUI_Glut_Window()
 {
 }
 
-GLUI_Glut_Window::~GLUI_Glut_Window()
-{
-}

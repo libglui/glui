@@ -57,7 +57,6 @@ void GLUI_FileBrowser::dir_list_callback(void *glui_object, int id) {
   GLUI_FileBrowser* me = (GLUI_FileBrowser*) glui_object;
   int this_item;
   const char *selected;
-  int i;
   if (me == NULL)
     return;
   if (me->list) {
