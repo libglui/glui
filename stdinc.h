@@ -36,9 +36,6 @@
 #define M_PI 3.141592654
 #endif
 
-typedef  char String[81];
-
-
 /*********** flush the stdout and stderr output streams *************/
 #ifndef flushout
 #define flushout fflush(stdout)
