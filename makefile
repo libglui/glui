@@ -14,7 +14,9 @@ endif
 
 #######################################
 
-LIBGLUI = -Llib -lglui
+CPPFLAGS += -I./
+
+LIBGLUI = -L./lib -lglui
 LIBGL   = -lGLU -lGL
 LIBS    = -lXmu -lXext -lX11 -lXi -lm
 
@@ -57,7 +59,7 @@ tools: $(GLUI_TOOLS)
 bin/ppm2array: ppm2array.cpp ppm.cpp
 	$(CXX) $(CPPFLAGS) -o $@ $^
 
-bin/%: %.cpp $(GLUI_LIB)
+bin/%: example/%.cpp $(GLUI_LIB)
 	$(CXX) $(CPPFLAGS) -o $@ $<  $(LIBGLUI) $(LIBGLUT) $(LIBGL) $(LIBS)
 
 $(GLUI_LIB): $(GLUI_OBJS)
