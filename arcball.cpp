@@ -90,7 +90,7 @@ vec3 Arcball::mouse_to_sphere( vec2 p )
     v3.normalize();
   }
   else {
-    v3[VZ] = sqrt( 1.0 - mag );
+    v3[VZ] = (float) sqrt( 1.0 - mag );
   }
 
   /* Now we add constraints - X takes precedence over Y */
@@ -197,13 +197,13 @@ void  Arcball::idle( void )
     zero_increment = true;
   }
 
-  if ( damp_factor < 1.0 ) {
-    q_increment.scale_angle( 1.0 - damp_factor );
+  if ( damp_factor < 1.0f ) {
+    q_increment.scale_angle( 1.0f - damp_factor );
   }
 
   rot_increment = q_increment.to_mat4();
 
-  if ( q_increment.s >= .999999 ) {
+  if ( q_increment.s >= .999999f ) {
     is_spinning = false;
     zero_increment = true;
   }
