@@ -188,7 +188,7 @@ void glui_reshape_func(int w,int h )
   /***  First check if this is main glut window ***/
   glut_window = GLUI_Master.find_glut_window( current_window );
   if ( glut_window ) {
-    glut_window->glut_reshape_CB(w,h);
+    if (glut_window->glut_reshape_CB) glut_window->glut_reshape_CB(w,h);
 
     /***  Now send reshape events to all subwindows  ***/
     glui = (GLUI*) GLUI_Master.gluis.first_child();
@@ -236,7 +236,8 @@ void glui_keyboard_func(unsigned char key, int x, int y)
       glutSetWindow( current_window );
     }
     else {
-      glut_window->glut_keyboard_CB( key, x, y );
+      if (glut_window->glut_keyboard_CB) 
+        glut_window->glut_keyboard_CB( key, x, y );
     } 
   }
   else {   /***  Nope, event was in a standalone GLUI window  **/
@@ -305,7 +306,8 @@ void glui_mouse_func(int button, int state, int x, int y)
     if ( GLUI_Master.active_control_glui != NULL ) 
       GLUI_Master.active_control_glui->disactivate_current_control();
 
-    glut_window->glut_mouse_CB( button, state, x, y );
+    if (glut_window->glut_mouse_CB)
+      glut_window->glut_mouse_CB( button, state, x, y );
 	finish_drawing();
   }
   else {               /**  Nope - event was in a GLUI standalone window  **/
@@ -1621,9 +1623,9 @@ void glui_parent_window_reshape_func( int w, int h )
       glutSetWindow( current_window );
 
       if ( first ) {
-	glui->glut_reshape_CB( w, h );
+        if (glui->glut_reshape_CB) glui->glut_reshape_CB( w, h );
 	
-	first = false;
+        first = false;
       }
     }
     
@@ -1654,9 +1656,11 @@ void glui_parent_window_keyboard_func(unsigned char key, int x, int y)
     glui = (GLUI*) GLUI_Master.gluis.first_child();
     while( glui ) {
       if ( TEST_AND( glui->flags, GLUI_SUBWINDOW) AND 
-	   glui->parent_window == current_window ) {
-	glui->glut_keyboard_CB( key, x, y );
-	break;
+           glui->parent_window == current_window AND
+           glui->glut_keyboard_CB ) 
+      {
+        glui->glut_keyboard_CB( key, x, y );
+        break;
       }
 	
       glui = (GLUI*) glui->next();
@@ -1686,9 +1690,10 @@ void glui_parent_window_special_func(int key, int x, int y)
   glui = (GLUI*) GLUI_Master.gluis.first_child();
   while( glui ) {
     if ( TEST_AND( glui->flags, GLUI_SUBWINDOW) AND 
-	 glui->parent_window == current_window ) {
+         glui->parent_window == current_window ) 
+    {
       glutSetWindow( glui->get_glut_window_id());
-      glui->glut_special_CB( key, x, y );
+      if (glui->glut_special_CB) glui->glut_special_CB( key, x, y );
       break;
     }
     
@@ -1717,7 +1722,9 @@ void glui_parent_window_mouse_func(int button, int state, int x, int y)
   glui = (GLUI*) GLUI_Master.gluis.first_child();
   while( glui ) {
     if ( TEST_AND( glui->flags, GLUI_SUBWINDOW) AND 
-	 glui->parent_window == current_window ) {
+         glui->parent_window == current_window AND
+         glui->glut_mouse_CB) 
+    {
       glutSetWindow( glui->get_glut_window_id());
       glui->glut_mouse_CB( button, state, x, y );
       break;
