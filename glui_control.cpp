@@ -24,7 +24,8 @@ int _glui_draw_border_only = 0;
 
 /**************************************** GLUI_Control::align() **************/
 
-void    GLUI_Control::align( void )
+void
+GLUI_Control::align()
 {
   int  col_x, col_y, col_w, col_h, col_x_off, col_y_off;
   int  orig_x_abs;
@@ -86,7 +87,8 @@ void    GLUI_Control::align( void )
 /**************************************** GLUI_Control::pack() ************/
 /* Recalculate positions and offsets  */
 
-void    GLUI_Control::pack_old( int x, int y )
+void
+GLUI_Control::pack_old(int x, int y)
 {
   GLUI_Control  *node;
   int            max_w, curr_y, curr_x, max_y;
@@ -180,7 +182,8 @@ void    GLUI_Control::pack_old( int x, int y )
 
 /********************************* GLUT_Control::draw_recursive() **********/
 
-void   GLUI_Control::draw_recursive( int x, int y )
+void
+GLUI_Control::draw_recursive( int x, int y )
 {
   GLUI_Control *node;
 
@@ -237,7 +240,8 @@ void   GLUI_Control::draw_recursive( int x, int y )
 /******************************** GLUI_Control::set_to_glut_window() *********/
 /*  Sets the current window to the glut window associated with this control  */
 
-int   GLUI_Control::set_to_glut_window( void )
+int
+GLUI_Control::set_to_glut_window()
 {
   int orig_window;
 
@@ -255,7 +259,8 @@ int   GLUI_Control::set_to_glut_window( void )
 
 /************************************ GLUI_Control::restore_window() *********/
 
-void   GLUI_Control::restore_window( int orig )
+void
+GLUI_Control::restore_window(int orig)
 {
   if ( orig > 0 )
     glutSetWindow( orig );
@@ -264,7 +269,8 @@ void   GLUI_Control::restore_window( int orig )
 
 /************************************* GLUI_Control::enable() ****************/
 
-void   GLUI_Control::enable( void )
+void
+GLUI_Control::enable()
 {
   GLUI_Control *node;
 
@@ -277,7 +283,8 @@ void   GLUI_Control::enable( void )
 
   /*** Now recursively enable all buttons below it ***/
   node = (GLUI_Control*) first_child();
-  while(node) {
+  while(node)
+  {
     node->enable();
     node = (GLUI_Control*) node->next();
   }
@@ -286,7 +293,8 @@ void   GLUI_Control::enable( void )
 
 /************************************ GLUI_Control::disable() ****************/
 
-void   GLUI_Control::disable( void )
+void
+GLUI_Control::disable()
 {
   GLUI_Control *node;
 
@@ -311,7 +319,8 @@ void   GLUI_Control::disable( void )
 
 /***************************************** GLUI_Control::set_font() **********/
 
-void    GLUI_Control::set_font( void *new_font )
+void
+GLUI_Control::set_font(void *new_font)
 {
   int orig, state;
 
@@ -342,7 +351,8 @@ void    GLUI_Control::set_font( void *new_font )
 
 /************************************ GLUI_Control::draw_string() ************/
 
-void   GLUI_Control::draw_string( char *text )
+void
+GLUI_Control::draw_string(char *text)
 {
   _glutBitmapString( get_font(), text );
 }
@@ -350,7 +360,8 @@ void   GLUI_Control::draw_string( char *text )
 
 /****************************************** GLUI_Control::draw_char() ********/
 
-void         GLUI_Control::draw_char( char c )
+void
+GLUI_Control::draw_char(char c)
 {
   glutBitmapCharacter( get_font(), c );
 }
@@ -358,15 +369,17 @@ void         GLUI_Control::draw_char( char c )
 
 /************************************* GLUI_Control::string_width() **********/
 
-int          GLUI_Control::string_width( char *text )
+int
+GLUI_Control::string_width(char *text)
 {
-  return _glutBitmapWidthString( get_font(), text );
+    return _glutBitmapWidthString(get_font(), text);
 }
 
 
 /*************************************** GLUI_Control::char_width() **********/
 
-int          GLUI_Control::char_width( char c )
+int
+GLUI_Control::char_width(char c)
 {
   return glutBitmapWidth( get_font(), c );
 }
@@ -374,7 +387,8 @@ int          GLUI_Control::char_width( char c )
 
 /***************************************** GLUI_Control::get_font() **********/
 
-void    *GLUI_Control::get_font( void )
+void *
+GLUI_Control::get_font( void )
 {
   /*** Does this control have its own font? ***/
   if ( this->font != NULL )
@@ -393,12 +407,14 @@ void    *GLUI_Control::get_font( void )
 /* This draws the name of the control as either black (if enabled), or       */
 /* embossed if disabled.                                                     */
 
-void         GLUI_Control::draw_name( int x, int y )
+void
+GLUI_Control::draw_name(int x, int y)
 {
   if ( NOT can_draw() )
     return;
 
-  if ( enabled ) {
+  if ( enabled )
+  {
     set_to_bkgd_color();
     glRasterPos2i(x+1, y+1);
     draw_string(name);
@@ -406,7 +422,8 @@ void         GLUI_Control::draw_name( int x, int y )
     glRasterPos2i(x, y);
     draw_string(name);
   }
-  else {   /* Control is disabled - emboss the string */
+  else
+  {   /* Control is disabled - emboss the string */
     glColor3f( 1.0f, 1.0f, 1.0f );
     glRasterPos2i(x+1, y+1);
     draw_string(name);
@@ -419,20 +436,21 @@ void         GLUI_Control::draw_name( int x, int y )
 
 /*************************** GLUI_Control::translate_and_draw_front() ********/
 
-void    GLUI_Control::translate_and_draw_front( void )
+void
+GLUI_Control::translate_and_draw_front()
 {
-  int orig,state;
-
   if ( NOT can_draw() )
     return;
 
-  orig = set_to_glut_window();
-  state = glui->set_front_draw_buffer();
+    int orig = set_to_glut_window();
+    int state = glui->set_front_draw_buffer();
+
   glMatrixMode( GL_MODELVIEW );
   glPushMatrix();
   translate_to_origin();
   draw(0,0);
   glPopMatrix();
+
   glui->restore_draw_buffer(state);  
   restore_window(orig);
 }
@@ -440,7 +458,8 @@ void    GLUI_Control::translate_and_draw_front( void )
 
 /**************************************** GLUI_Control::set_w() **************/
 
-void      GLUI_Control::set_w( int new_w )
+void
+GLUI_Control::set_w(int new_w)
 {
   w = new_w;
   update_size();  /* Make sure control is big enough to fit text */
@@ -450,7 +469,8 @@ void      GLUI_Control::set_w( int new_w )
   
   glui->pack_controls();
 
-  if ( glui->get_glut_window_id() != -1 ) {
+    if ( glui->get_glut_window_id() != -1 )
+    {
     int orig = set_to_glut_window();
     glutReshapeWindow( glui->main_panel->w, glui->main_panel->h );
     glutPostRedisplay();
@@ -464,7 +484,8 @@ void      GLUI_Control::set_w( int new_w )
 
 /**************************************** GLUI_Control::set_h() **************/
 
-void      GLUI_Control::set_h( int new_h )
+void
+GLUI_Control::set_h(int new_h)
 {
   h = new_h;
   update_size();  /* Make sure control is big enough to fit text */
@@ -474,7 +495,8 @@ void      GLUI_Control::set_h( int new_h )
   
   glui->pack_controls();
 
-  if ( glui->get_glut_window_id() != -1 ) {
+    if ( glui->get_glut_window_id() != -1 )
+    {
     int orig = set_to_glut_window();
     glutReshapeWindow( glui->main_panel->w, glui->main_panel->h );
     glutPostRedisplay();
@@ -485,14 +507,17 @@ void      GLUI_Control::set_h( int new_h )
 
 /**************************************** GLUI_Control::set_alignment() ******/
 
-void      GLUI_Control::set_alignment( int new_align )
+void
+GLUI_Control::set_alignment(int new_align)
 {
   alignment = new_align;
 
-  if ( glui ) {
-    glui->align_controls( this );  
+    if ( glui )
+    {
+        glui->align_controls(this);
 
-    if ( glui->get_glut_window_id() != -1 ) {
+        if ( glui->get_glut_window_id() != -1 )
+        {
       int orig = set_to_glut_window();
       glutPostRedisplay();
       restore_window(orig);
@@ -505,7 +530,8 @@ void      GLUI_Control::set_alignment( int new_align )
 /* Reads live variable and sets control to its current value                */
 /* This function is recursive, and operates on control's children           */
 
-void      GLUI_Control::sync_live( int recurse, int draw_it )
+void
+GLUI_Control::sync_live(int recurse, int draw_it)
 {
   GLUI_Node *node;
   int        sync_it=true;
@@ -515,7 +541,8 @@ void      GLUI_Control::sync_live( int recurse, int draw_it )
 
   /*** If this is currently active control, and mouse button is down,
     don't sync ***/
-  if ( glui ) {
+    if ( glui )
+    {
     if ( this == glui->active_control AND glui->mouse_button_down )
       sync_it = false;
 
@@ -615,7 +642,8 @@ void      GLUI_Control::sync_live( int recurse, int draw_it )
 /************************************ GLUI_Control::output_live() ************/
 /* Writes current value of control to live variable.                         */
 
-void      GLUI_Control::output_live( int update_main_gfx )
+void
+GLUI_Control::output_live(int update_main_gfx)
 {
   int    i;
   float *fp;
@@ -661,7 +689,8 @@ void      GLUI_Control::output_live( int update_main_gfx )
 
 /******************************** GLUI_Control::execute_callback() **********/
 
-void     GLUI_Control::execute_callback( void )
+void
+GLUI_Control::execute_callback()
 {
   int old_window;
   
@@ -794,7 +823,8 @@ void    GLUI_Control::get_this_column_dims( int *col_x, int *col_y,
 /**************************************** GLUI_Control::init_live() **********/
 /* Reads in  value of a live variable.  Called once, when ctrl is created   */
 
-void     GLUI_Control::init_live( void )
+void
+GLUI_Control::init_live(void)
 {
   int    i;
   float *fp;
@@ -841,7 +871,8 @@ void     GLUI_Control::init_live( void )
 /* the mouse down in one of the arrows.  Otherwise, don't waste cycles       */
 /* and OpenGL context switching by calling its idle.                         */
 
-int  GLUI_Control::needs_idle( void )
+int
+GLUI_Control::needs_idle()
 { 
   return false; 
 };
@@ -868,8 +899,8 @@ GLUI_Control::~GLUI_Control()
 
 /************************** GLUI_Control::draw_box_inwards_outline() ********/
 
-void     GLUI_Control::draw_box_inwards_outline( int x_min, int x_max, 
-						 int y_min, int y_max )
+void
+GLUI_Control::draw_box_inwards_outline( int x_min, int x_max, int y_min, int y_max )
 {
   glBegin( GL_LINES );
   glColor3f( .5, .5, .5 );
@@ -884,6 +915,7 @@ void     GLUI_Control::draw_box_inwards_outline( int x_min, int x_max,
     glColor3f( 0., 0., 0. );
   else
     glColor3f( .25, .25, .25 );
+
   glVertex2i( x_min+1, y_min+1 );     glVertex2i( x_max-1, y_min+1 );
   glVertex2i( x_min+1, y_min+1 );     glVertex2i( x_min+1, y_max-1 );
 
@@ -896,8 +928,8 @@ void     GLUI_Control::draw_box_inwards_outline( int x_min, int x_max,
 
 /************************************* GLUI_Control::draw_box() **********/
 
-void     GLUI_Control::draw_box( int x_min, int x_max, int y_min, int y_max,
-				 float r, float g, float b)
+void
+GLUI_Control::draw_box( int x_min, int x_max, int y_min, int y_max, float r, float g, float b)
 {
   if ( r == 1.0 AND g == 1.0 AND b == 1.0 AND NOT enabled AND glui ) {
     draw_bkgd_box( x_min, x_max, y_min, y_max );
@@ -914,7 +946,8 @@ void     GLUI_Control::draw_box( int x_min, int x_max, int y_min, int y_max,
 
 /************************************* GLUI_Control::draw_bkgd_box() **********/
 
-void     GLUI_Control::draw_bkgd_box( int x_min, int x_max, int y_min, int y_max )
+void
+GLUI_Control::draw_bkgd_box( int x_min, int x_max, int y_min, int y_max )
 {
   set_to_bkgd_color();
 
@@ -927,8 +960,8 @@ void     GLUI_Control::draw_bkgd_box( int x_min, int x_max, int y_min, int y_max
 
 /***************************** GLUI_Control::draw_active_area() ********/
 
-void    GLUI_Control::draw_active_box( int x_min, int x_max, 
-				       int y_min, int y_max )
+void
+GLUI_Control::draw_active_box( int x_min, int x_max, int y_min, int y_max )
 {
   int orig;
 

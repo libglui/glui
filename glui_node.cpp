@@ -173,3 +173,16 @@ void   GLUI_Node::unlink( void )
   this->child_head   = NULL;
   this->child_tail   = NULL;
 }
+
+void
+GLUI_Node::dump( FILE *out, char *name )
+{
+    fprintf( out, "GLUI_node: %s\n", name );
+    fprintf( out, "   parent: %p     child_head: %p    child_tail: %p\n",
+        (void *) parent_node,
+        (void *) child_head,
+        (void *) child_tail );
+    fprintf( out, "   next: %p       prev: %p\n",
+        (void *) next_sibling,
+        (void *) prev_sibling );
+}

@@ -371,7 +371,7 @@ void   GLUI_Rotation::set_spin( float damp_factor )
 
 GLUI_Rotation::GLUI_Rotation( void ) 
 {
-  sprintf( name, "Rotation: %p", this );
+  sprintf( name, "Rotation: %p", (void *) this );
   type                = GLUI_CONTROL_ROTATION;
   w                   = GLUI_ROTATION_WIDTH;
   h                   = GLUI_ROTATION_HEIGHT;

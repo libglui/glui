@@ -171,7 +171,7 @@ GLUI_RadioGroup *GLUI::add_radiogroup_to_panel(  GLUI_Panel *panel,
     }
 
     control->user_id    = user_id;
-    sprintf( buf, "RadioGroup: %p", control );
+    sprintf( buf, "RadioGroup: %p", (void *) control );
     control->set_name( buf );
     control->callback   = callback;
 

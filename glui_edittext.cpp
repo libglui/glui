@@ -1022,8 +1022,12 @@ void   GLUI_EditText::dump( FILE *out, char *name )
 {
   fprintf( out, 
 	   "%s (edittext@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
-	   name, this, 
-	   insertion_pt, substring_start, substring_end, sel_start, sel_end,
+       name, (void *) this,
+       insertion_pt,
+       substring_start,
+       substring_end,
+       sel_start,
+       sel_end,
 	   (int)strlen( text ));
 }
 
