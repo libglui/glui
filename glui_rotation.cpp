@@ -304,7 +304,7 @@ void  GLUI_Rotation::reset( void )
 
 /****************************** GLUI_Rotation::needs_idle() *********/
 
-int       GLUI_Rotation::needs_idle( void )
+bool GLUI_Rotation::needs_idle( void ) const
 {
   return can_spin;
 }
@@ -427,7 +427,7 @@ NO! WVB
 void GLUI_Rotation::common_init( void ) 
 {
   glui_format_str( name, "Rotation: %p", this );
-  type                = GLUI_CONTROL_ROTATION;
+//  type                = GLUI_CONTROL_ROTATION;
   w                   = GLUI_ROTATION_WIDTH;
   h                   = GLUI_ROTATION_HEIGHT;
   can_activate        = true;

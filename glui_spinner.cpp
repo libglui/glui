@@ -507,7 +507,7 @@ void    GLUI_Spinner::do_drag( int x, int y )
 
 /***************************************** GLUI_Spinner::needs_idle() ******/
 
-int     GLUI_Spinner::needs_idle( void )
+bool GLUI_Spinner::needs_idle( void ) const
 {
   if  (state == GLUI_SPINNER_STATE_UP OR state == GLUI_SPINNER_STATE_DOWN ) {
     return true;

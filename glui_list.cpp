@@ -82,7 +82,7 @@ void GLUI_List::common_construct(
                          (GLUI_Control*) this,
                          (GLUI_InterObject_CB )GLUI_List::scrollbar_callback);
     scrollbar->set_alignment(GLUI_ALIGN_LEFT);
-    scrollbar->can_activate = false;
+    // scrollbar->can_activate = false; //kills ability to mouse drag too
   }
   if (object) {
     this->obj_cb    = obj_cb;

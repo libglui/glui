@@ -103,37 +103,6 @@ enum GLUI_Glut_CB_Types
     GLUI_GLUT_VISIBILITY  
 };
 
-/********** List of control types **********/
-
-enum GLUI_Control_Types 
-{
-    GLUI_CONTROL_CHECKBOX = 1,
-    GLUI_CONTROL_BUTTON,
-    GLUI_CONTROL_RADIOBUTTON,
-    GLUI_CONTROL_RADIOGROUP,
-    GLUI_CONTROL_SLIDER,
-    GLUI_CONTROL_STATICTEXT,
-    GLUI_CONTROL_EDITTEXT,
-    GLUI_CONTROL_COMMANDLINE,
-    GLUI_CONTROL_BITMAP,
-    GLUI_CONTROL_PANEL,
-    GLUI_CONTROL_SPINNER,
-    GLUI_CONTROL_SEPARATOR,
-    GLUI_CONTROL_COLUMN,
-    GLUI_CONTROL_LISTBOX,
-    GLUI_CONTROL_MOUSE_INTERACTION,
-    GLUI_CONTROL_ROTATION,
-    GLUI_CONTROL_TRANSLATION,
-    GLUI_CONTROL_ROLLOUT,
-    GLUI_CONTROL_TEXTBOX,      /* New GLUI Widgets - JVK */
-    GLUI_CONTROL_LIST,
-    GLUI_CONTROL_FILEBROWSER,
-    GLUI_CONTROL_TREE,
-    GLUI_CONTROL_TREEPANEL,
-    GLUI_CONTROL_SCROLL
-};
-
-
 /********* Constants for window placement **********/
 
 #define GLUI_XOFF                       6
@@ -679,7 +648,7 @@ public:
     int             active_type;
     bool            active, can_activate;
     int             spacebar_mouse_click;
-    long            user_id, type;
+    long            user_id;
     bool            is_container;  /* Is this a container class (e.g., panel) */
     int             alignment;
     GLUI_Update_CB  callback;
@@ -778,7 +747,8 @@ public:
     void         get_this_column_dims( int *col_x, int *col_y, 
                                        int *col_w, int *col_h, 
                                        int *col_x_off, int *col_y_off );
-    virtual int  needs_idle( void );
+    virtual bool needs_idle( void ) const;
+    virtual bool wants_tabs() const      { return false; }
 
     GLUI_Control(void) 
     {
@@ -851,7 +821,6 @@ public:
 protected:
     void common_init(void) {
         glui_format_str(name, "Button: %p", this );
-        type         = GLUI_CONTROL_BUTTON;
         h            = GLUI_BUTTON_SIZE;
         w            = 100;
         alignment    = GLUI_ALIGN_CENTER;
@@ -896,7 +865,6 @@ public:
 protected:
     void common_init(void) {
         glui_format_str( name, "Checkbox: %p", this );
-        type           = GLUI_CONTROL_CHECKBOX;
         w              = 100;
         h              = GLUI_CHECKBOX_SIZE;
         orig_value     = -1;
@@ -922,7 +890,6 @@ public:
 
 protected:
     void common_init() {
-        type         = GLUI_CONTROL_COLUMN;
         w            = 0;
         h            = 0;
         int_val      = 0;
@@ -952,7 +919,6 @@ public:
 
 protected:
     void common_init( void ) {
-        type         = GLUI_CONTROL_PANEL;
         w            = 300;
         h            = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
         int_val      = GLUI_PANEL_EMBOSSED;
@@ -992,7 +958,6 @@ public:
 protected:
     void common_init() 
     {
-        type         = GLUI_CONTROL_FILEBROWSER;
         w            = GLUI_DEFAULT_CONTROL_WIDTH;
         h            = GLUI_DEFAULT_CONTROL_HEIGHT;
         int_val      = GLUI_PANEL_EMBOSSED;
@@ -1049,7 +1014,6 @@ protected:
         initially_inside = false;
         can_activate     = true;
         is_container     = true;
-        type             = GLUI_CONTROL_ROLLOUT;
         h                = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
         w                = GLUI_DEFAULT_CONTROL_WIDTH;
         y_off_top        = 21;
@@ -1130,7 +1094,6 @@ protected:
         initially_inside = false;
         can_activate     = true;
         is_container     = true;
-        type             = GLUI_CONTROL_TREE;
         h                = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
         w                = GLUI_DEFAULT_CONTROL_WIDTH;
         y_off_top        = 21;
@@ -1209,7 +1172,6 @@ protected:
     void common_init() 
     {
         GLUI_Panel();
-        type = GLUI_CONTROL_TREEPANEL;
         next_id = 0;
         curr_root = this;
         curr_branch = NULL;
@@ -1453,7 +1415,6 @@ public:
 
 protected:
     void common_init( void ) {
-        type                  = GLUI_CONTROL_EDITTEXT;
         h                     = GLUI_EDITTEXT_HEIGHT;
         w                     = GLUI_EDITTEXT_WIDTH;
         title_x_offset        = 0;
@@ -1554,7 +1515,6 @@ public:
 
 protected:
     void common_init( void ) {
-        type          = GLUI_CONTROL_RADIOGROUP;
         x_off         = 0;
         y_off_top     = 0;
         y_off_bot     = 0;
@@ -1600,7 +1560,6 @@ protected:
     void common_init()
     {
         glui_format_str( name, "RadioButton: %p", (void *) this );
-        type           = GLUI_CONTROL_RADIOBUTTON;
         h              = GLUI_RADIOBUTTON_SIZE;
         group          = NULL;
         orig_value     = -1;
@@ -1626,7 +1585,6 @@ public:
 
 protected:
     void common_init() {
-        type         = GLUI_CONTROL_SEPARATOR;
         w            = 100;
         h            = GLUI_SEPARATOR_HEIGHT;
         can_activate = false;
@@ -1704,7 +1662,7 @@ public:
     void draw_arrows( void );
     void do_click( void );
     void idle( void );
-    int  needs_idle( void );
+    bool needs_idle( void ) const;
 
     const char *get_text( void );
 
@@ -1720,7 +1678,6 @@ public:
 protected:
     void common_init() {
         glui_format_str( name, "Spinner: %p", this );
-        type         = GLUI_CONTROL_SPINNER;
         h            = GLUI_EDITTEXT_HEIGHT;
         w            = GLUI_EDITTEXT_WIDTH;
         x_off        = 0;
@@ -1759,7 +1716,6 @@ public:
 
 protected:
     void common_init() {
-        type    = GLUI_CONTROL_STATICTEXT;
         h       = GLUI_STATICTEXT_SIZE;
         name    = "";
         can_activate  = false;
@@ -1836,10 +1792,11 @@ public:
     void set_start_line(int l) { start_line = l; }
     static void scrollbar_callback(void *, int id);
 
+    bool wants_tabs( void ) const { return true; }
+
 protected:
     void common_init()
     {
-        type                  = GLUI_CONTROL_TEXTBOX;
         h                     = GLUI_TEXTBOX_HEIGHT;
         w                     = GLUI_TEXTBOX_WIDTH;
         tab_width             = GLUI_TAB_WIDTH;
@@ -1959,7 +1916,6 @@ public:
 protected:
     void common_init()
     {
-        type                  = GLUI_CONTROL_LIST;
         h                     = GLUI_LIST_HEIGHT;
         w                     = GLUI_LIST_WIDTH;
         num_lines             = 0;
@@ -2073,7 +2029,7 @@ public:
     void draw_scroll( void );
     void do_click( void );
     void idle( void );
-    int  needs_idle( void );
+    bool needs_idle( void ) const;
     void set_int_val( int new_val );
     void set_float_val( float new_val );
     void increase_growth( void );
@@ -2084,7 +2040,6 @@ public:
 
 protected:
     void common_init ( void ) {
-        type         = GLUI_CONTROL_SCROLL;
         horizontal   = true;
         h            = GLUI_SCROLL_ARROW_HEIGHT;
         w            = GLUI_TEXTBOX_WIDTH;
@@ -2183,7 +2138,6 @@ public:
 protected:
     void common_init() {
         glui_format_str( name, "Listbox: %p", this );
-        type           = GLUI_CONTROL_LISTBOX;
         w              = GLUI_EDITTEXT_WIDTH;
         h              = GLUI_EDITTEXT_HEIGHT;
         orig_value     = -1;
@@ -2232,7 +2186,6 @@ public:
   
     GLUI_Mouse_Interaction( void ) {
         glui_format_str( name, "Mouse_Interaction: %p", this );
-        type           = GLUI_CONTROL_MOUSE_INTERACTION;
         w              = GLUI_MOUSE_INTERACTION_WIDTH;
         h              = GLUI_MOUSE_INTERACTION_HEIGHT;
         can_activate   = true;
@@ -2277,7 +2230,7 @@ public:
 
     void reset( void );
 
-    int  needs_idle( void );
+    bool needs_idle( void ) const;
     void idle( void );
 
     void copy_float_array_to_ball( void );
@@ -2355,7 +2308,6 @@ protected:
     void common_init() {
         locked              = GLUI_TRANSLATION_LOCK_NONE;
         glui_format_str( name, "Translation: %p", this );
-        type                = GLUI_CONTROL_TRANSLATION;
         w                   = GLUI_MOUSE_INTERACTION_WIDTH;
         h                   = GLUI_MOUSE_INTERACTION_HEIGHT;
         can_activate        = true;

@@ -704,7 +704,7 @@ void    GLUI_Scrollbar::do_drag( int x, int y )
 
 /***************************************** GLUI_Scrollbar::needs_idle() ******/
 
-int     GLUI_Scrollbar::needs_idle( void )
+bool GLUI_Scrollbar::needs_idle( void ) const
 {
   if  (state == GLUI_SCROLL_STATE_UP OR state == GLUI_SCROLL_STATE_DOWN ) {
     return true;
