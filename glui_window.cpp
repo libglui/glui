@@ -25,7 +25,7 @@
 */
 
 #include "glui.h"
-#include "stdinc.h"
+#include "glui_internal.h"
 
 GLUI_Glut_Window::GLUI_Glut_Window()
 :   GLUI_Node(),

@@ -29,7 +29,7 @@
 *****************************************************************************/
 
 #include "glui.h"
-#include "stdinc.h"
+#include "glui_internal.h"
 
 
 /*** This object must be used to create a GLUI ***/

@@ -33,7 +33,7 @@
 
 #include "quaternion.h"
 #include <cmath>
-#include "stdinc.h"
+#include "glui_internal.h"
 
 /******************************************* constructors **************/
 

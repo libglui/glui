@@ -17,7 +17,7 @@
 *****************************************************************************/
 
 #include "glui.h"
-#include "stdinc.h"
+#include "glui_internal.h"
 #include <sys/types.h>
 
 #ifdef __GNUC__

@@ -73,7 +73,7 @@
 **************************************************************************/
 
 #include "algebra3.h"
-#include "stdinc.h"
+#include "glui_internal.h"
 #include <cmath>
 
 #ifdef VEC_ERROR_FATAL

@@ -30,7 +30,7 @@
 *****************************************************************************/
 
 #include "glui.h"
-#include "stdinc.h"
+#include "glui_internal.h"
 #include "algebra3.h"
 
 /********************** GLUI_Translation::GLUI_Translation() ***/

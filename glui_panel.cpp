@@ -30,7 +30,7 @@
 *****************************************************************************/
 
 #include "glui.h"
-#include "stdinc.h"
+#include "glui_internal.h"
 
 GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const char *name, int type )
 {

@@ -75,15 +75,15 @@ clean:
 ############################################################################
 
 algebra3.o: algebra3.h
-arcball.o: arcball.h algebra3.h quaternion.h stdinc.h
+arcball.o: arcball.h algebra3.h quaternion.h glui_internal.h
 example1.o: glui.h
 example2.o:   glui.h
 example3.o:   glui.h
 example4.o:   glui.h
 example6.o:   glui.h
-glui.o: glui.h  stdinc.h 
-glui_filebrowser.o: glui.h stdinc.h
-glui_add_controls.o: glui.h  stdinc.h 
+glui.o: glui.h  glui_internal.h 
+glui_filebrowser.o: glui.h glui_internal.h
+glui_add_controls.o: glui.h  glui_internal.h 
 glui_bitmap_img_data.o: glui_img_checkbox_0.c glui_img_checkbox_1.c
 glui_bitmap_img_data.o: glui_img_radiobutton_0.c glui_img_radiobutton_1.c
 glui_bitmap_img_data.o: glui_img_uparrow.c glui_img_downarrow.c
@@ -94,29 +94,29 @@ glui_bitmap_img_data.o: glui_img_checkbox_0_dis.c glui_img_checkbox_1_dis.c
 glui_bitmap_img_data.o: glui_img_radiobutton_0_dis.c
 glui_bitmap_img_data.o: glui_img_radiobutton_1_dis.c glui_img_spinup_dis.c
 glui_bitmap_img_data.o: glui_img_spindown_dis.c
-glui_string.o: glui.h stdinc.h 
-glui_bitmaps.o: glui.h stdinc.h 
-glui_button.o: glui.h stdinc.h 
-glui_checkbox.o: glui.h stdinc.h 
-glui_column.o: glui.h stdinc.h 
-glui_control.o: glui.h stdinc.h 
-glui_edittext.o: glui.h stdinc.h 
-glui_commandline.o: glui.h stdinc.h 
-glui_node.o: glui.h stdinc.h 
-glui_panel.o: glui.h stdinc.h 
-glui_radio.o: glui.h stdinc.h 
-glui_separator.o: glui.h stdinc.h 
-glui_spinner.o: glui.h stdinc.h 
-glui_statictext.o: glui.h stdinc.h 
-quaternion.o: quaternion.h algebra3.h stdinc.h
-glui_translation.o: glui.h stdinc.h  
-glui_rotation.o: glui.h stdinc.h  
-glui_mouse_iaction.o: glui.h stdinc.h  
-glui_listbox.o: glui.h stdinc.h  
-glui_rollout.o: glui.h stdinc.h 
-viewmodel.o: viewmodel.h glui.h stdinc.h
-glui_tree.o: glui.h stdinc.h
-glui_textbox.o: glui.h stdinc.h
-glui_scrollbar.o: glui.h stdinc.h
-glui_list.o: glui.h stdinc.h
-glui_treepanel.o: glui.h stdinc.h
+glui_string.o: glui.h glui_internal.h 
+glui_bitmaps.o: glui.h glui_internal.h 
+glui_button.o: glui.h glui_internal.h 
+glui_checkbox.o: glui.h glui_internal.h 
+glui_column.o: glui.h glui_internal.h 
+glui_control.o: glui.h glui_internal.h 
+glui_edittext.o: glui.h glui_internal.h 
+glui_commandline.o: glui.h glui_internal.h 
+glui_node.o: glui.h glui_internal.h 
+glui_panel.o: glui.h glui_internal.h 
+glui_radio.o: glui.h glui_internal.h 
+glui_separator.o: glui.h glui_internal.h 
+glui_spinner.o: glui.h glui_internal.h 
+glui_statictext.o: glui.h glui_internal.h 
+quaternion.o: quaternion.h algebra3.h glui_internal.h
+glui_translation.o: glui.h glui_internal.h  
+glui_rotation.o: glui.h glui_internal.h  
+glui_mouse_iaction.o: glui.h glui_internal.h  
+glui_listbox.o: glui.h glui_internal.h  
+glui_rollout.o: glui.h glui_internal.h 
+viewmodel.o: viewmodel.h glui.h glui_internal.h
+glui_tree.o: glui.h glui_internal.h
+glui_textbox.o: glui.h glui_internal.h
+glui_scrollbar.o: glui.h glui_internal.h
+glui_list.o: glui.h glui_internal.h
+glui_treepanel.o: glui.h glui_internal.h

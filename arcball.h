@@ -55,7 +55,7 @@
 #ifndef GLUI_ARCBALL_H
 #define GLUI_ARCBALL_H
 
-#include "stdinc.h"
+#include "glui_internal.h"
 #include "algebra3.h"
 #include "quaternion.h"
 
