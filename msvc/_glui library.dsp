@@ -72,7 +72,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"lib\glui32d.lib"
+# ADD LIB32 /nologo /out:"Debug\glui32.lib"
 
 !ENDIF 
 
@@ -82,11 +82,11 @@ LIB32=link.exe -lib
 # Name "_glui library - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\ALGEBRA3.CPP
+SOURCE=..\algebra3.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\ARCBALL.CPP
+SOURCE=..\arcball.cpp
 # End Source File
 # Begin Source File
 
@@ -131,6 +131,10 @@ SOURCE=..\glui_edittext.cpp
 # Begin Source File
 
 SOURCE=..\glui_filebrowser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_img_scrollbar.c
 # End Source File
 # Begin Source File
 
@@ -179,6 +183,10 @@ SOURCE=..\glui_spinner.cpp
 # Begin Source File
 
 SOURCE=..\glui_statictext.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_string.cpp
 # End Source File
 # Begin Source File
 
