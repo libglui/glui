@@ -54,7 +54,6 @@ GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
 /****************************** GLUI_FileBrowser::draw() **********/
 
 void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
-  int id = glui_object->get_id();
   GLUI_FileBrowser* me = (GLUI_FileBrowser*) glui_object;
   int this_item;
   const char *selected;
