@@ -8,7 +8,7 @@ Rademacher (http://www.cs.unc.edu/~rademach/glui/) plus the
 compatibility changes made by Nigel Stewart in his "GLUI v2.2" 
 (http://www.nigels.com/glt/glui) In accordance with the LGPL under
 which the library is released (according to Paul's web page at least),
-These changes are available to everyone community.
+these changes are available to everyone in the community.
 
 WARNING: This version (2.3) introduces some incompatible changes with
 previous versions!!
@@ -130,21 +130,36 @@ That's about it.  Enjoy!
 If you find yourself with too much time on your hands, the things I
 think would be most useful for future improvements to GLUI would be:
 
-1. Remove the dependency on GLUT.
-2. Allow for an enhanced callback type that also passes you a pointer
+0. The GLUI_TextBox and GLUI_Tree definitely need some work, still.  
+   Also the scrollbar introduces a new different callback type, and 
+   the result is little ugly.  There's probably a better way to do it.
+   And it may be related to the next point:
+1. Allow for an enhanced callback type that also passes you a pointer
    to the control and possibly the control's value.  Currently the
    "live variable" is great if you don't need to do anything else as a
    side effect, but if you need to take some action based on a changed
    value, then you need BOTH a callback, AND the live var, or a global
    pointer to the control.  If the callback provided more arguments
    then the callback would be all that you need for those cases.
-3. Clipboard integration under Windows/X-Win.
+2. Clipboard integration under Windows/X-Win.  I have some code that
+   works on Win32 that I once integrated with GLUI, but I lost that 
+   version somewhere.  I still have the Win32 clipboard code, though
+   if anyone wants to work on integrating it.  I have some X-Win
+   clipboard code, too, but I never got it working quite right.
+3. Remove the dependency on GLUT, making the connection with window 
+   system APIs into a more plug-in/adapter modular design.  
+   So e.g. if you want to use GLUT, you'd link with the GLUI lib and a
+   GLUI_GLUT lib, and call one extra GLUI_glut_init() function or 
+   something.
+
 
 
 I don't think Paul or Nigel are doing much with GLUI any more so their
-mail addresses probably won't be much help.  Honestly, I'm probably
-not going to do much with it either.  Feel free to contact me, but
-I'll also feel free to ignore you.  :-)
+mail addresses probably won't be much help.  Honestly, I may not have 
+much time to work on it either, but feel free to contact me, 
+nonetheless.  And definitly consider submitting a patch if you've made 
+some nice improvements to GLUI.  Hopefully the new API will encourage 
+people to work on 3rd party widgets more, too.
 
 Bill Baxter
 baxter
@@ -222,4 +237,6 @@ e-mail so I can add you to a mailing list for updates.
 Good luck, and thanks for trying this out!
 
 Paul Rademacher
-rademach@cs.unc.edu
+rademach
+at
+cs unc edu
