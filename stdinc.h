@@ -15,10 +15,6 @@
 #define false 0
 #endif
 
-#ifndef Bool
-typedef char Bool;
-#endif
-
 #ifndef MAX
 #define MAX(a,b)  ((a)>(b) ? (a) : (b))
 #define MIN(a,b)  ((a)<(b) ? (a) : (b))
@@ -27,12 +23,6 @@ typedef char Bool;
 #ifndef ABS
 #define ABS(a) ((a)>=0 ? (a) : (-(a)))
 #endif
-
-/********* TOGGLE_BOOL(boolean) : toggles values of 'boolean' ******/
-#ifndef TOGGLE_BOOL
-#define TOGGLE_BOOL(a)  ((a)=1-(a))
-#endif
-
 
 /********************  bit comparisons and operations ***************/
 #ifndef TEST_BIT

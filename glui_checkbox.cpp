@@ -25,7 +25,7 @@ int    GLUI_Checkbox::mouse_down_handler( int local_x, int local_y )
 {
   orig_value = int_val;
   
-  TOGGLE_BOOL( int_val );
+  int_val = !int_val;
 
   currently_inside = true;
 
@@ -76,7 +76,7 @@ int    GLUI_Checkbox::mouse_held_down_handler( int local_x, int local_y,
     draw_checked();*/
 
   if ( inside != currently_inside )
-    TOGGLE_BOOL( int_val );
+	int_val = !int_val;
 
   currently_inside = inside;
 
