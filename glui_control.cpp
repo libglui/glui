@@ -882,18 +882,14 @@ GLUI_Control::needs_idle()
 
 GLUI_Control::~GLUI_Control()
 {
-  GLUI_Control *node, *node_tmp;
-  
-  /*  printf( "destroying %s\n", this->name );              */
+	GLUI_Control *item = (GLUI_Control*) this->first_child();
 
-  node = (GLUI_Control*) this->first_child();
-  while( node != NULL ) {
-    /*    printf( "recursively destroying: '%s'\n", node->name );              */
-
-    node_tmp = node;
-    node = (GLUI_Control*) node->next();
-    delete node_tmp;
-  }
+	while (item) 
+	{
+		GLUI_Control *tmp = item;
+		item = (GLUI_Control*) item->next();
+		delete tmp;
+	}
 }
 
 
