@@ -138,7 +138,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
         } else {
           item = dirp->d_name;
         }
-        list->add_item(i,item);
+        list->add_item(i,item.c_str());
         i++;
       }
       closedir(dir);
