@@ -41,6 +41,8 @@ int    GLUI_TextBox::mouse_down_handler( int local_x, int local_y )
 
   sel_start = sel_end = insertion_pt;
  
+  keygoal_x = insert_x;
+
   if ( can_draw())
     update_and_draw_text();
 
@@ -70,6 +72,7 @@ int    GLUI_TextBox::mouse_held_down_handler( int local_x, int local_y,
   if ( debug )    dump( stdout, "-> HELD DOWN" );
   
   tmp_pt = find_insertion_pt( local_x, local_y );
+  keygoal_x = insert_x;
   
   if ( tmp_pt == -1 AND sel_end != 0 ) {    /* moved mouse past left edge */
     special_handler( GLUT_KEY_LEFT, GLUT_ACTIVE_SHIFT );
@@ -369,7 +372,7 @@ void    GLUI_TextBox::draw( int x, int y )
 
   draw_insertion_pt();
   if (scrollbar) {
-    scrollbar->set_int_limits(num_lines/*-1*/-visible_lines,0);
+    scrollbar->set_int_limits(MAX(0,num_lines/*-1*/-visible_lines),0);
     glPushMatrix();
     glTranslatef(scrollbar->x_abs-x_abs, scrollbar->y_abs-y_abs,0.0);
     scrollbar->draw_scroll();
@@ -560,8 +563,7 @@ void    GLUI_TextBox::draw_text( int x, int y )
 
 int  GLUI_TextBox::find_insertion_pt( int x, int y )
 {
-  int curr_x, i;
-  int text_length, line, box_width, chars_per_line = 0, eol, sol;
+  int i;
   
   /*** See if we clicked outside box ***/
   if ( x < this->x_abs || y < this->y_abs)
@@ -575,29 +577,48 @@ int  GLUI_TextBox::find_insertion_pt( int x, int y )
   insert_x = x;
   insert_y = y;
 
-  text_length = (int)strlen(text)-1;
-  box_width = get_box_width();
+  int text_length = (int)strlen(text)-1;
+  int box_width = get_box_width();
+
+  int sol = 0;
+  int eol = 0;
+  int line = 0;
+
+  int y_off = y - (y_abs + 2 + GLUI_TEXTBOX_BOXINNERMARGINX);
+  int x_off = x - (x_abs + 2 + GLUI_TEXTBOX_BOXINNERMARGINX);
 
   /* Find the line clicked, 
      The possibility of long lines getting wrapped complicates this. */
-  sol = 0;
-  eol = 0;
-  line = 0;
-
-  int y_off = y-(y_abs+2+GLUI_TEXTBOX_BOXINNERMARGINX);
-
-  while ((line-start_line+1)*LINE_HEIGHT < y_off &&  eol < text_length) {
+  while ((line-start_line+1)*LINE_HEIGHT < y_off && eol < text_length) 
+  {
     while (eol < text_length && text[eol] != '\n' && 
            substring_width(sol, eol+1) <= box_width)
     {
       eol++;
     }
-    if (text[eol]=='\n') { eol++; }
+    if (text[eol]=='\n' && eol<text_length) { eol++; }
     line++;
     sol = eol;
   }
   curr_line = line;
-  int x_off = x - (x_abs+2+GLUI_TEXTBOX_BOXINNERMARGINX);
+  // Now search to the end of this line for the closest insertion point
+  int prev_w=0,total_w=0,prev_eol=eol;
+  while (eol <= text_length 
+         && (total_w=substring_width(prev_eol,eol,prev_w))< x_off 
+         && (eol==text_length||text[eol]!='\n')) 
+  {
+    prev_w=total_w;
+    eol++;
+    prev_eol=eol;
+  }
+  if (total_w>=x_off) {  
+    // did we go far enough? (see if click was >1/2 width of last char)
+    int decision_pt = prev_w+(total_w-prev_w)/2;
+    if (x_off>decision_pt) eol++;
+  }
+  return eol;
+
+#if 0
   while (eol < text_length && text[eol] != '\n' && 
          substring_width(sol, eol+1) < box_width )
   {
@@ -608,7 +629,7 @@ int  GLUI_TextBox::find_insertion_pt( int x, int y )
   /* We move from right to left, looking to see if the mouse was clicked
      to the right of the ith character */
 #if 0
-  curr_x = this->x_abs 
+  int curr_x = this->x_abs 
     + substring_width( sol, eol )
     + 2                             /* The edittext box has a 2-pixel margin */
     + GLUI_TEXTBOX_BOXINNERMARGINX;   /** plus this many pixels blank space
@@ -624,15 +645,16 @@ int  GLUI_TextBox::find_insertion_pt( int x, int y )
     if (x_off <= substring_width(sol, i))
 	    return i+1;
   }
-
   return 0;
+#endif
 }
 
 
-int      GLUI_TextBox::get_box_width() {
-   return MAX( this->w 
-		   - 4     /*  2 * the two-line box border */ 
-		   - 2 * GLUI_TEXTBOX_BOXINNERMARGINX, 0 );
+int GLUI_TextBox::get_box_width() 
+{
+  return MAX( this->w 
+              - 4     /*  2 * the two-line box border */ 
+              - 2 * GLUI_TEXTBOX_BOXINNERMARGINX, 0 );
 
 }
 
@@ -649,15 +671,22 @@ void     GLUI_TextBox::draw_insertion_pt( void )
   if ( NOT enabled )
     return;
 
-  if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
-
   if ( sel_start != sel_end OR insertion_pt < 0 ) {
     return;  /* Don't draw insertion point if there is a current selection */
   }
 
+  if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
+
   /*    printf( "insertion pt: %d\n", insertion_pt );              */
 
   box_width = get_box_width();
+
+  // This function is unable to distinguish whether an insertion
+  // point on a line break should be drawn on the line before or the line after.
+  // This depends on the sequence of operations used to get there, and this
+  // function just doesn't have that information.  If curr_line were kept up
+  // to date elsewhere that could be used here to disambiguate, but arrow keys
+  // and such do not update it.
 
   sol = 0;
   eol = 0;
@@ -667,12 +696,13 @@ void     GLUI_TextBox::draw_insertion_pt( void )
   //       && substring_width(sol, eol + 1) < box_width )
   //  eol++;
   line = 0;
-  while (eol < insertion_pt && eol < text_length) 
+  while (eol < insertion_pt && eol <= text_length) 
   {
     if (text[eol] == '\n' || substring_width(sol, eol + 1) >= box_width) 
     {
       eol++;
-      if (text[eol]=='\n'||eol!=insertion_pt) {
+      if (text[eol]=='\n'||eol!=insertion_pt
+          ||(eol==insertion_pt && eol>0 && text[eol-1]=='\n')) {
         sol = eol;
         line++;
       }
@@ -726,15 +756,15 @@ void     GLUI_TextBox::draw_insertion_pt( void )
 
 
 /******************************** GLUI_TextBox::substring_width() *********/
-int  GLUI_TextBox::substring_width( int start, int end )
+int  GLUI_TextBox::substring_width( int start, int end, int initial_width )
 {
-  int i, width;
-
-  width = 0;
+  // This function only works properly if start is really the start of a line.
+  // Otherwise tabs will be messed up.
+  int i, width = initial_width;
 
   for( i=start; i<=end; i++ )
-    if (text[i] == '\t') {/* Character is a tab, add spaces up to next tab */
-      width = (width/tab_width)*(1+tab_width);
+    if (text[i] == '\t') { // Character is a tab, jump to next tab stop
+      width += tab_width-(width%tab_width);
       //while (width == 0 || width % tab_width) 
 	    //  width++;
     }
@@ -776,7 +806,7 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
   if ( key == GLUT_KEY_DOWN ) {
     if (insert_x == -1 || insert_y == -1)
       return false;
-    tmp_insertion_pt = find_insertion_pt( insert_x, insert_y+LINE_HEIGHT);  
+    tmp_insertion_pt = find_insertion_pt( keygoal_x, insert_y+LINE_HEIGHT);
     if (tmp_insertion_pt < 0)
       return false;
     insertion_pt = tmp_insertion_pt;
@@ -789,7 +819,7 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
   } else if ( key == GLUT_KEY_UP ) {
     if (insert_x == -1 || insert_y == -1)
       return false;
-    tmp_insertion_pt = find_insertion_pt( insert_x, insert_y-LINE_HEIGHT);  
+    tmp_insertion_pt = find_insertion_pt( keygoal_x, insert_y-LINE_HEIGHT);  
     if (tmp_insertion_pt < 0)
       return false;
     insertion_pt = tmp_insertion_pt;
@@ -806,6 +836,7 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     else {
       insertion_pt--;
     }
+    // update keygoal_x!
   }
   else if ( key == GLUT_KEY_RIGHT ) {
     if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) {
@@ -814,12 +845,15 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     else {
       insertion_pt++;
     }
+    // update keygoal_x!
   }
   else if ( key == GLUT_KEY_HOME ) {
     insertion_pt = 0;
+    // update keygoal_x!
   }
   else if ( key == GLUT_KEY_END ) {
     insertion_pt = (int)strlen( text );
+    // update keygoal_x!
   }
 
   /*** Update selection if shift key is down ***/
@@ -854,7 +888,7 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
 int    GLUI_TextBox::find_word_break( int start, int direction )
 {
   int    i, j;
-  char   *breaks = " :-.,";
+  char   *breaks = " \n\t:-.,";
   int     num_break_chars = (int)strlen(breaks), text_len = (int)strlen(text);
   int     new_pt;
 
@@ -952,8 +986,8 @@ void    GLUI_TextBox::set_text( char *new_text )
 void   GLUI_TextBox::dump( FILE *out, char *name )
 {
   fprintf( out, 
-       "%s (edittext@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
-       name, this, 
+       "%s (edittext@%p):   line:%d ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
+       name, this, curr_line,
        insertion_pt, substring_start, substring_end, sel_start, sel_end,
        (int)strlen( text ));
 }

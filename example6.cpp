@@ -31,18 +31,19 @@ GLUI_TreePanel *tp;
 GLUI_FileBrowser *fb;
 GLUI_EditText * bedit;
 
-char * scroll = "Scrollbar Widget";
-char * general = "NSI GLUI Patches";
+char scroll[] = "Scrollbar Widget";
 
-char * tree_txt = "Tree Widget";
+char general[] = "GLUI 2.3 Widgets";
 
-char * rollout = "Rollout Widget";
+char tree_txt[] = "Tree Widget";
 
-char * string = "GLUI_String";
+char rollout[] = "Rollout Widget";
 
-char * list  = "List Widget";
+char string[] = "GLUI_String";
 
-char * text_box = "TextBox w/ optional Scrollbar\n\
+char list[] = "List Widget";
+
+char text_box[] = "TextBox w/ optional Scrollbar\n\
 \n\
 A TextBox is a multiline editing box that supports basic navigation, formatting, and editing capabilities. These are text block selection, tabs, new lines, arrow key navigation, as well as an optional scrollbar. The scrollbar is actually a distinct widget and can exist by itself, or be associated with objects that have a specified callback routine.\n\
 \n\
@@ -82,15 +83,12 @@ Wishlist:\n\
 \n\
 ";
 /*Bugs:\n\
-* less Mouse Drag calls  with large texts\n\
+* fewer Mouse Drag calls  with large texts\n\
 * Insertion Pt sometimes drawn on wrong line.\n\
 * The scrollbar tab does not exactly match mouse position.\n\
 * Two tabs cannot be placed next to each other in a string without a space between them.\n\
 * Occasional horizontal drawing overruns.\n\
 * set_text seems to like being called after all the windows are open for large amounts of text. If you try it with a string longer than 195 characters it seems to trucate it to 195.\n\
-\n\
-Future:\n\
-I am currently working on a precurser object to a file browser using the textbox as a base object.\n\
 \n\
 ";*/
 
@@ -236,7 +234,7 @@ int main(int argc, char* argv[])
   GLUI_Panel *ep = edit->add_panel("",true);
   edit->add_statictext_to_panel(ep,"Widget Information:");
   hah = edit->add_list_to_panel(ep,NULL,true,1,control_cb);
-  hah->add_item(0,"NSI GLUI Patches");
+  hah->add_item(0,"GLUI 2.3");
   hah->add_item(1,"TextBox");
   hah->add_item(2,"Scrollbar");
   hah->add_item(3,"GLUI_String");

@@ -426,10 +426,6 @@ enum GLUI_StdBitmaps_Codes
     GLUI_STDBITMAP_SPINNER_UP_ON,
     GLUI_STDBITMAP_SPINNER_DOWN_OFF,
     GLUI_STDBITMAP_SPINNER_DOWN_ON,
-    GLUI_STDBITMAP_SCROLLBAR_UP_OFF, 
-    GLUI_STDBITMAP_SCROLLBAR_UP_ON, 
-    GLUI_STDBITMAP_SCROLLBAR_DOWN_OFF, 
-    GLUI_STDBITMAP_SCROLLBAR_DOWN_ON, 
 
     GLUI_STDBITMAP_CHECKBOX_OFF_DIS,    /*** Disactivated control bitmaps ***/
     GLUI_STDBITMAP_CHECKBOX_ON_DIS,
@@ -437,8 +433,6 @@ enum GLUI_StdBitmaps_Codes
     GLUI_STDBITMAP_RADIOBUTTON_ON_DIS,
     GLUI_STDBITMAP_SPINNER_UP_DIS,
     GLUI_STDBITMAP_SPINNER_DOWN_DIS,
-    GLUI_STDBITMAP_SCROLLBAR_UP_DIS,
-    GLUI_STDBITMAP_SCROLLBAR_DOWN_DIS,
     GLUI_STDBITMAP_LISTBOX_UP,
     GLUI_STDBITMAP_LISTBOX_DOWN,
     GLUI_STDBITMAP_LISTBOX_UP_DIS,
@@ -1780,6 +1774,7 @@ public:
   int                 visible_lines;
   int                 insert_x;        /* Similar to "insertion_pt", these variables keep */
   int                 insert_y;        /* track of where the ptr is, but in pixels */
+  int                 keygoal_x;       /* where up down keys would like to put insertion pt*/
   GLUI_Scrollbar     *scrollbar;
 
   int  mouse_down_handler( int local_x, int local_y );
@@ -1800,7 +1795,7 @@ public:
 
   int get_box_width();
   int  find_word_break( int start, int direction );
-  int  substring_width( int start, int end );
+  int  substring_width( int start, int end, int initial_width=0 );
   void clear_substring( int start, int end );
   int  find_insertion_pt( int x, int y );
   int  update_substring_bounds( void );
