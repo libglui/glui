@@ -337,47 +337,47 @@ public:
     // Constructors
 
     mat3();
-    mat3(const vec3& v0, const vec3& v1, const vec3& v2);
+    mat3(const vec3 &v0, const vec3 &v1, const vec3 &v2);
     mat3(const float d);
-    mat3(const mat3& m);
+    mat3(const mat3 &m);
 
     // Assignment operators
 
-    mat3& operator  = ( const mat3& m );        // assignment of a mat3
-    mat3& operator += ( const mat3& m );        // incrementation by a mat3
-    mat3& operator -= ( const mat3& m );        // decrementation by a mat3
-    mat3& operator *= ( const float d );        // multiplication by a constant
-    mat3& operator /= ( const float d );        // division by a constant
-    vec3& operator [] ( int i);                 // indexing
+    mat3 &operator  = (const mat3  &m);        // assignment of a mat3
+    mat3 &operator += (const mat3  &m);        // incrementation by a mat3
+    mat3 &operator -= (const mat3  &m);        // decrementation by a mat3
+    mat3 &operator *= (const float  d);        // multiplication by a constant
+    mat3 &operator /= (const float  d);        // division by a constant
+    vec3 &operator [] (int i);                 // indexing
 
     // special functions
 
-    mat3 transpose();                           // transpose
-    mat3 inverse();                             // inverse
-    mat3& apply(V_FCT_PTR fct);                 // apply a func. to each element
-    void print( FILE *file, char *name );       // print matrix to a file
-    void set(const vec3& v0, const vec3& v1, const vec3& v2);
+    mat3  transpose();                         // transpose
+    mat3  inverse();                           // inverse
+    mat3 &apply(V_FCT_PTR fct);                // apply a func. to each element
+    void  print(FILE *file, char *name );      // print matrix to a file
+    void  set(const vec3 &v0, const vec3 &v1, const vec3 &v2);
 
 
     // friends
 
-    friend mat3 operator - (const mat3& a);                     // -m1
-    friend mat3 operator + (const mat3& a, const mat3& b);      // m1 + m2
-    friend mat3 operator - (const mat3& a, const mat3& b);      // m1 - m2
-    friend mat3 operator * (mat3& a, mat3& b);                  // m1 * m2
-    friend mat3 operator * (const mat3& a, const float d);      // m1 * 3.0
-    friend mat3 operator * (const float d, const mat3& a);      // 3.0 * m1
-    friend mat3 operator / (const mat3& a, const float d);      // m1 / 3.0
-    friend int operator == (const mat3& a, const mat3& b);      // m1 == m2 ?
-    friend int operator != (const mat3& a, const mat3& b);      // m1 != m2 ?
-    //friend ostream& operator << (ostream& s, mat3& m);        // output to stream
-    //friend istream& operator >> (istream& s, mat3& m);        // input from strm.
-    friend void swap(mat3& a, mat3& b);                         // swap m1 & m2
+    friend mat3 operator -  (const mat3 &a);                     // -m1
+    friend mat3 operator +  (const mat3 &a, const mat3 &b);      // m1 + m2
+    friend mat3 operator -  (const mat3 &a, const mat3 &b);      // m1 - m2
+    friend mat3 operator *  (mat3 &a, mat3 &b);                  // m1 * m2
+    friend mat3 operator *  (const mat3 &a, const float d);      // m1 * 3.0
+    friend mat3 operator *  (const float d, const mat3 &a);      // 3.0 * m1
+    friend mat3 operator /  (const mat3 &a, const float d);      // m1 / 3.0
+    friend int  operator == (const mat3 &a, const mat3 &b);      // m1 == m2 ?
+    friend int  operator != (const mat3 &a, const mat3 &b);      // m1 != m2 ?
+    //friend ostream& operator << (ostream& s, mat3& m);         // output to stream
+    //friend istream& operator >> (istream& s, mat3& m);         // input from strm.
+    friend void swap(mat3 &a, mat3 &b);                          // swap m1 & m2
 
     // necessary friend declarations
 
-    friend vec3 operator * (const mat3& a, const vec3& v);      // linear transform
-    friend vec2 operator * (const mat3& a, const vec2& v);      // linear transform
+    friend vec3 operator * (const mat3 &a, const vec3 &v);       // linear transform
+    friend vec2 operator * (const mat3 &a, const vec2 &v);       // linear transform
 };
 
 /****************************************************************
@@ -397,54 +397,54 @@ public:
     // Constructors
 
     mat4();
-    mat4(const vec4& v0, const vec4& v1, const vec4& v2, const vec4& v3);
+    mat4(const vec4 &v0, const vec4 &v1, const vec4 &v2, const vec4 &v3);
     mat4(const float d);
-    mat4(const mat4& m);
+    mat4(const mat4 &m);
     mat4(const float a00, const float a01, const float a02, const float a03,
-    const float a10, const float a11, const float a12, const float a13,
-    const float a20, const float a21, const float a22, const float a23,
-    const float a30, const float a31, const float a32, const float a33 );
+         const float a10, const float a11, const float a12, const float a13,
+         const float a20, const float a21, const float a22, const float a23,
+         const float a30, const float a31, const float a32, const float a33 );
 
 
     // Assignment operators
 
-    mat4& operator  = ( const mat4& m );        // assignment of a mat4
-    mat4& operator += ( const mat4& m );        // incrementation by a mat4
-    mat4& operator -= ( const mat4& m );        // decrementation by a mat4
-    mat4& operator *= ( const float d );        // multiplication by a constant
-    mat4& operator /= ( const float d );        // division by a constant
-    vec4& operator [] ( int i);                 // indexing
+    mat4 &operator  = (const mat4 &m);        // assignment of a mat4
+    mat4 &operator += (const mat4 &m);        // incrementation by a mat4
+    mat4 &operator -= (const mat4 &m);        // decrementation by a mat4
+    mat4 &operator *= (const float d);        // multiplication by a constant
+    mat4 &operator /= (const float d);        // division by a constant
+    vec4 &operator [] (int i);                // indexing
 
     // special functions
 
-    mat4 transpose();                           // transpose
-    mat4 inverse();                             // inverse
-    mat4& apply(V_FCT_PTR fct);                 // apply a func. to each element
-    void print( FILE *file, char *name );       // print matrix to a file
-    void swap_rows( int i, int j );             // swap rows i and j
-    void swap_cols( int i, int j );             // swap cols i and j
+    mat4  transpose();                        // transpose
+    mat4  inverse();                          // inverse
+    mat4 &apply(V_FCT_PTR fct);               // apply a func. to each element
+    void  print(FILE *file, char *name);      // print matrix to a file
+    void  swap_rows(int i, int j);            // swap rows i and j
+    void  swap_cols(int i, int j);            // swap cols i and j
 
     // friends
 
-    friend mat4 operator - (const mat4& a);                     // -m1
-    friend mat4 operator + (const mat4& a, const mat4& b);      // m1 + m2
-    friend mat4 operator - (const mat4& a, const mat4& b);      // m1 - m2
-    friend mat4 operator * (mat4& a, mat4& b);                  // m1 * m2
-    friend mat4 operator * (const mat4& a, const float d);      // m1 * 4.0
-    friend mat4 operator * (const float d, const mat4& a);      // 4.0 * m1
-    friend mat4 operator / (const mat4& a, const float d);      // m1 / 3.0
-    friend int operator == (const mat4& a, const mat4& b);      // m1 == m2 ?
-    friend int operator != (const mat4& a, const mat4& b);      // m1 != m2 ?
-    //friend ostream& operator << (ostream& s, mat4& m);        // output to stream
-    //friend istream& operator >> (istream& s, mat4& m);        // input from strm.
-    friend void swap(mat4& a, mat4& b);                         // swap m1 & m2
+    friend mat4 operator -  (const mat4 &a);                     // -m1
+    friend mat4 operator +  (const mat4 &a, const mat4 &b);      // m1 + m2
+    friend mat4 operator -  (const mat4 &a, const mat4 &b);      // m1 - m2
+    friend mat4 operator *  (mat4 &a, mat4 &b);                  // m1 * m2
+    friend mat4 operator *  (const mat4 &a, const float d);      // m1 * 4.0
+    friend mat4 operator *  (const float d, const mat4 &a);      // 4.0 * m1
+    friend mat4 operator /  (const mat4 &a, const float d);      // m1 / 3.0
+    friend int  operator == (const mat4 &a, const mat4 &b);      // m1 == m2 ?
+    friend int  operator != (const mat4 &a, const mat4 &b);      // m1 != m2 ?
+    //friend ostream& operator << (ostream& s, mat4& m);         // output to stream
+    //friend istream& operator >> (istream& s, mat4& m);         // input from strm.
+    friend void swap(mat4 &a, mat4 &b);                          // swap m1 & m2
 
     // necessary friend declarations
 
-    friend vec4 operator * (const mat4& a, const vec4& v);      // linear transform
+    friend vec4 operator * (const mat4 &a, const vec4 &v);      // linear transform
     //friend vec4 operator * (const vec4& v, const mat4& a);    // linear transform
-    friend vec3 operator * (const mat4& a, const vec3& v);      // linear transform
-    friend vec3 operator * (const vec3& v, const mat4& a);      // linear transform
+    friend vec3 operator * (const mat4 &a, const vec3 &v);      // linear transform
+    friend vec3 operator * (const vec3 &v, const mat4 &a);      // linear transform
 };
 
 /****************************************************************
