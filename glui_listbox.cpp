@@ -202,35 +202,35 @@ int  GLUI_Listbox::add_item( int id, char *new_text )
 
 /************************************** GLUI_Listbox::delete_item() **********/
 
-int  GLUI_Listbox::delete_item( char *text )
+int  GLUI_Listbox::delete_item(char *text)
 {
-  GLUI_Listbox_Item *node = get_item_ptr( text );
+	GLUI_Listbox_Item *node = get_item_ptr(text);
 
-  if ( node ) {
-    node->unlink();
-    delete node;
-    return true;
-  }
-  else {
-    return false;
-  }
+	if (node) 
+	{
+		node->unlink();
+		delete node;
+		return true;
+	}
+
+	return false;
 }
 
 
 /************************************** GLUI_Listbox::delete_item() **********/
 
-int  GLUI_Listbox::delete_item( int id )
+int  GLUI_Listbox::delete_item(int id)
 {
-  GLUI_Listbox_Item *node = get_item_ptr( id );
+	GLUI_Listbox_Item *node = get_item_ptr(id);
 
-  if ( node ) {
-    node->unlink();
-    delete node;
-    return true;
-  }
-  else {
+	if (node) 
+	{
+		node->unlink();
+		delete node;
+		return true;
+	}
+
     return false;
-  }
 }
 
 
@@ -391,20 +391,17 @@ int    GLUI_Listbox::do_selection( int item_num )
 
 /*********************************** GLUI_Listbox::~GLUI_Listbox() **********/
 
-GLUI_Listbox::~GLUI_Listbox( )
+GLUI_Listbox::~GLUI_Listbox()
 {
-  GLUI_Listbox_Item *item, *tmp_item;
+	GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
 
-  item = (GLUI_Listbox_Item *) items_list.first_child();
-  while( item ) {
-    tmp_item = item;
-
-    delete item;
-    
-    item = (GLUI_Listbox_Item *) tmp_item->next();
-  }
+	while (item) 
+	{
+		GLUI_Listbox_Item *tmp = item;
+		item = (GLUI_Listbox_Item *) item->next();
+		delete tmp;
+	}
 }
-
 
 /****************************** GLUI_Listbox::special_handler() **********/
 
