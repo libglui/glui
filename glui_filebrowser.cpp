@@ -34,52 +34,54 @@
 GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent, 
                                     const char *name,
                                     int type,
-                                    int user_id,
-                                    GLUI_CB callback)
+                                    int id,
+                                    GLUI_CB cb)
 {
   common_init();
 
-  this->set_name( name );
-  this->user_id    = user_id;
-  this->int_val    = type;
-  this->callback   = callback;
+  set_name( name );
+  user_id    = id;
+  int_val    = type;
+  callback   = cb;
 
   parent->add_control( this );
   list = new GLUI_List(this, true, 1);
   list->set_object_callback( GLUI_FileBrowser::dir_list_callback, this );
-  (this->list)->set_click_type(GLUI_DOUBLE_CLICK);
+  list->set_click_type(GLUI_DOUBLE_CLICK);
   this->fbreaddir(this->current_dir.c_str());
 }
 
 /****************************** GLUI_FileBrowser::draw() **********/
 
 void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
-  GLUI_FileBrowser* me = (GLUI_FileBrowser*) glui_object;
+  GLUI_List *list = dynamic_cast<GLUI_List*>(glui_object);
+  if (!list) 
+    return;
+  GLUI_FileBrowser* me = dynamic_cast<GLUI_FileBrowser*>(list->associated_object);
+  if (!me)
+    return;
   int this_item;
   const char *selected;
-  if (me == NULL)
-    return;
-  if (me->list) {
-    this_item = (me->list)->get_current_item();
-    if (this_item > 0) { /* file or directory selected */
-      selected = ((me->list)->get_item_ptr( this_item ))->text.c_str();
-      if (selected[0] == '/' || selected[0] == '\\') {
-        if (me->allow_change_dir) {
+  this_item = list->get_current_item();
+  if (this_item > 0) { /* file or directory selected */
+    selected = list->get_item_ptr( this_item )->text.c_str();
+    if (selected[0] == '/' || selected[0] == '\\') {
+      if (me->allow_change_dir) {
 #ifdef __GNUC__
-	      chdir(selected+1);
+        chdir(selected+1);
 #endif
 #ifdef _WIN32
-          SetCurrentDirectory(selected+1);
+        SetCurrentDirectory(selected+1);
 #endif
-          me->fbreaddir(".");
-        }
-      } else {
-        me->file = selected;
-        me->execute_callback();
+        me->fbreaddir(".");
       }
+    } else {
+      me->file = selected;
+      me->execute_callback();
     }
   }
 }
+
 
 
 void GLUI_FileBrowser::fbreaddir(const char *d) {
