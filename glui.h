@@ -31,18 +31,18 @@
 #ifndef GLUI_GLUI_H
 #define GLUI_GLUI_H
 
-#if defined(USE_FREEGLUT)
+#if defined(GLUI_FREEGLUT)
 
   // FreeGLUT does not yet work perfectly with GLUI
   //  - use at your own risk.
   
   #include <GL/freeglut.h>
-  #include <GL/freeglut_ext.h>
 
-#elif defined(USE_OPENGLUT)
+#elif defined(GLUI_OPENGLUT)
 
   // OpenGLUT does not yet work properly with GLUI
   //  - use at your own risk.
+  
   #include <GL/openglut.h>
 
 #else 
@@ -806,7 +806,7 @@ public:
         collapsible    = false;
         is_open        = true;
         hidden         = false;
-        memset(char_widths, -1, CHAR_WIDTH_HASH_SIZE*2); /* JVK */
+        memset(char_widths, -1, sizeof(char_widths)); /* JVK */
         int i;
         for( i=0; i<GLUI_DEF_MAX_ARRAY; i++ )
             float_array_val[i] = last_live_float_array[i] = 0.0;
