@@ -34,13 +34,17 @@ CPPFLAGS += -I/usr/X11R6/include
 
 #######################################
 
-GLUI_EXAMPLES = bin/example1 bin/example2 bin/example3 bin/example4 bin/example5 bin/example6
-
 GLUI_OBJS = glui_add_controls.o glui_string.o glui.o glui_bitmap_img_data.o glui_bitmaps.o glui_button.o glui_edittext.o glui_commandline.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o glui_window.o arcball.o algebra3.o quaternion.o viewmodel.o glui_treepanel.o glui_tree.o glui_textbox.o glui_scrollbar.o glui_list.o glui_filebrowser.o
 
-.PHONY: all setup examples clean
+GLUI_LIB = lib/libglui.a
 
-all: setup lib/libglui.a examples
+GLUI_EXAMPLES = bin/example1 bin/example2 bin/example3 bin/example4 bin/example5 bin/example6
+
+GLUI_TOOLS = bin/ppm2array
+
+.PHONY: all setup examples tools clean
+
+all: setup $(GLUI_LIB) examples tools
 
 setup:
 	mkdir -p bin
@@ -48,11 +52,16 @@ setup:
 
 examples: $(GLUI_EXAMPLES)
 
-bin/%: %.cpp lib/libglui.a
+tools: $(GLUI_TOOLS)
+
+bin/ppm2array: ppm2array.cpp ppm.cpp
+	$(CXX) $(CPPFLAGS) -o $@ $^
+
+bin/%: %.cpp $(GLUI_LIB)
 	$(CXX) $(CPPFLAGS) -o $@ $<  $(LIBGLUI) $(LIBGLUT) $(LIBGL) $(LIBS)
 
-lib/libglui.a: $(GLUI_OBJS)
-	ar -r lib/libglui.a $(GLUI_OBJS)
+$(GLUI_LIB): $(GLUI_OBJS)
+	ar -r $(GLUI_LIB) $(GLUI_OBJS)
 
 .cpp.o:
 	$(CXX) $(CPPFLAGS) -c $<
@@ -61,7 +70,7 @@ lib/libglui.a: $(GLUI_OBJS)
 	$(CXX) $(CPPFLAGS) -c $<
 
 clean:
-	rm -f *.o lib/libglui.a $(GLUI_EXAMPLES)
+	rm -f *.o $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS)
 
 ############################################################################
 
