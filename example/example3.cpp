@@ -33,16 +33,19 @@ int   counter = 0;
 float scale = 1.0;
 
 /** Pointers to the windows and some of the controls we'll create **/
-GLUI *cmd_line_glui, *glui;
+GLUI *cmd_line_glui=0, *glui;
 GLUI_Checkbox    *checkbox;
 GLUI_Spinner     *spinner, *light0_spinner, *light1_spinner, *scale_spinner;
 GLUI_RadioGroup  *radio;
 GLUI_EditText    *edittext;
 GLUI_CommandLine *cmd_line;
 GLUI_Panel       *obj_panel;
+GLUI_Button      *open_console_btn;
 
 /********** User IDs for callbacks ********/
+#define OPEN_CONSOLE_ID      100
 #define CMD_HIST_RESET_ID    101
+#define CMD_CLOSE_ID         102
 #define LIGHT0_ENABLED_ID    200
 #define LIGHT1_ENABLED_ID    201
 #define LIGHT0_INTENSITY_ID  250
@@ -115,7 +118,29 @@ void control_cb( int control )
 
 void pointer_cb( GLUI_Control* control )
 {
-  if ( control == cmd_line ) {
+  if (control->get_id() == OPEN_CONSOLE_ID ) {
+    /****** Make command line window ******/
+    cmd_line_glui = GLUI_Master.create_glui( "Enter command:",
+      0, 50, 500 );
+    
+    cmd_line = new GLUI_CommandLine( 
+      cmd_line_glui, "Command (try 'exit'):", NULL, -1, pointer_cb );
+    cmd_line->set_w( 400 );  /** Widen 'command line' control **/
+
+    GLUI_Panel *panel = new GLUI_Panel(cmd_line_glui,"", GLUI_PANEL_NONE);
+    new GLUI_Button(panel, "Clear History", CMD_HIST_RESET_ID, pointer_cb);
+    new GLUI_Column(panel, false);
+    new GLUI_Button(panel, "Close", CMD_CLOSE_ID, pointer_cb);
+    
+    cmd_line_glui->set_main_gfx_window( main_window );
+
+    control->disable();
+  }
+  else if ( control->get_id() == CMD_CLOSE_ID ) {
+    open_console_btn->enable();
+    control->glui->close();
+  }
+  else if ( control == cmd_line ) {
     /*** User typed text into the 'command line' window ***/
     printf( "Command (%d): %s\n", counter, cmd_line->get_text() );
     std::string text = cmd_line->get_text();
@@ -134,6 +159,17 @@ void myGlutKeyboard(unsigned char Key, int x, int y)
 {
   switch(Key)
   {
+    // A few keys here to test the sync_live capability.
+  case 'o':
+    // Cycle through object types
+    ++obj_type %= 3;
+    GLUI_Master.sync_live_all();
+    break;
+  case 'w':
+    // Toggle wireframe mode
+    wireframe = !wireframe;
+    GLUI_Master.sync_live_all();
+    break;
   case 27: 
   case 'q':
     exit(0);
@@ -383,25 +419,17 @@ int main(int argc, char* argv[])
     new GLUI_EditText( glui, "Count:", &counter );
   counter_edittext->disable();
 
+  /****** Button to Open Command Line Window ******/
+  open_console_btn = 
+    new GLUI_Button(glui, "Open Console", OPEN_CONSOLE_ID, pointer_cb);
+
   /****** A 'quit' button *****/
 
   new GLUI_Button(glui, "Quit", 0,(GLUI_Update_CB)exit );
 
-  /****** Command line window ******/
-
-  cmd_line_glui = GLUI_Master.create_glui( "Enter command:",
-					   0, 50, 500 );
-  
-  cmd_line = new GLUI_CommandLine( cmd_line_glui, "Command (try 'exit'):", NULL,
-                                   -1, pointer_cb );
-  cmd_line->set_w( 400 );  /** Widen 'command line' control **/
-
-  new GLUI_Button(cmd_line_glui, "Clear History", CMD_HIST_RESET_ID, pointer_cb);
-
   /**** Link windows to GLUI, and register idle callback ******/
   
   glui->set_main_gfx_window( main_window );
-  cmd_line_glui->set_main_gfx_window( main_window );
 
   /* We register the idle callback with GLUI, not with GLUT */
   GLUI_Master.set_glutIdleFunc( myGlutIdle );
