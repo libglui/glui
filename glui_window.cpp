@@ -28,17 +28,17 @@
 #include "stdinc.h"
 
 GLUI_Glut_Window::GLUI_Glut_Window()
-:
-	glut_display_CB(NULL),
-	glut_reshape_CB(NULL),
+:   GLUI_Node(),
+
+	glut_window_id(0),
 	glut_keyboard_CB(NULL),
 	glut_special_CB(NULL),
-	glut_mouse_CB(NULL),
-	glut_motion_CB(NULL),
+	glut_reshape_CB(NULL),
 	glut_passive_motion_CB(NULL),
-	glut_entry_CB(NULL),
+	glut_mouse_CB(NULL),
 	glut_visibility_CB(NULL),
-	glut_window_id(0)
+	glut_motion_CB(NULL),
+	glut_display_CB(NULL),
+	glut_entry_CB(NULL)
 {
 }
-
