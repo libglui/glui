@@ -28,10 +28,21 @@
 #define GLUI_GLUI_H
 
 #if 1
-#include <GL/glut.h>
+
+  #ifdef __APPLE__
+  #include <GLUT/glut.h>
+  #else
+  #include <GL/glut.h>
+  #endif
+
 #else
-#include <GL/freeglut.h>
-#include <GL/freeglut_ext.h>
+
+  /* GLUI does not yet work perfectly      */
+  /* with FreeGLUT - use at your own risk. */
+  
+  #include <GL/freeglut.h>
+  #include <GL/freeglut_ext.h>
+
 #endif
 
 #include <cstdlib>
