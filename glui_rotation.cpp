@@ -172,7 +172,8 @@ int    GLUI_Rotation::iaction_special_handler( int key,int modifiers )
 
 /********************************** GLUI_Rotation::init_ball() **********/
 
-void  GLUI_Rotation::init_ball( void )
+void  
+GLUI_Rotation::init_ball( void )
 {
   /*printf( "%f %f %f", float( MIN(w/2,h/2)), (float) w/2, (float) h/2 );              */
 
@@ -186,48 +187,53 @@ void  GLUI_Rotation::init_ball( void )
 
 /****************************** GLUI_Rotation::setup_texture() *********/
 
-void    GLUI_Rotation::setup_texture( void )
+void 
+GLUI_Rotation::setup_texture( void )
 {
   int i, j;
   int dark, light;   /*** Dark and light colors for ball checkerboard  ***/
 
 #define CHECKBOARD_SIZE 64
-  unsigned char texture_image[CHECKBOARD_SIZE] [CHECKBOARD_SIZE] [3];
-  unsigned char c;
-  for( i=0; i<CHECKBOARD_SIZE; i++ ) {
-    for( j=0; j<CHECKBOARD_SIZE; j++ ) {
-      if ( enabled ) {
-	dark = 110;
-	light = 220;
-      }
-      else {
-	dark = glui->bkgd_color.r - 30;
-	light = glui->bkgd_color.r;
-      }
+	unsigned char texture_image[CHECKBOARD_SIZE] [CHECKBOARD_SIZE] [3];
+	unsigned char c;
+	for( i=0; i<CHECKBOARD_SIZE; i++ ) 
+	{
+		for( j=0; j<CHECKBOARD_SIZE; j++ ) 
+		{
+			if (enabled) 
+			{
+				dark = 110;
+				light = 220;
+			}
+			else 
+			{
+				dark = glui->bkgd_color.r - 30;
+				light = glui->bkgd_color.r;
+			}
 
-      c = ((((i&0x8)==0) ^ ((j&0x8))==0)) * light;
-      if ( c == 0 )
-	c = dark;
-      texture_image[i][j][0] = c;
-      texture_image[i][j][1] = c;
-      texture_image[i][j][2] = c;
-    }    
-  }
+		  if (((i&0x8)==0) ^ ((j&0x8)==0))
+			  c = light;
+		  else
+			  c = dark;
+
+		  texture_image[i][j][0] = c;
+		  texture_image[i][j][1] = c;
+		  texture_image[i][j][2] = c;
+		}    
+	}
   
-  glColor3f( 1.0, 1.0, 1.0 );
-  glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-  glEnable( GL_TEXTURE_2D);
-  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-  glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, CHECKBOARD_SIZE, 
+	glColor3f( 1.0, 1.0, 1.0 );
+	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+	glEnable( GL_TEXTURE_2D);
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, CHECKBOARD_SIZE, 
 		CHECKBOARD_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE,
 		texture_image );
-
 }
-
 
 /****************************** GLUI_Rotation::setup_lights() ***********/
 
