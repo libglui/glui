@@ -1,8 +1,8 @@
 #ifndef _STDINC_H_
 #define _STDINC_H_
 
-#include <stdio.h>
-#include <math.h>
+#include <cstdio>
+#include <cmath>
 
 #ifndef AND
 #define AND &&

@@ -27,28 +27,38 @@
 
   ------------------------------------------------------------------
 
-  Feb 25, 1998 - Paul Rademacher (rademach@cs.unc.edu)
+  Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
+  Oct 2003, Nigel Stewart - GLUI Code Cleaning
 
 **********************************************************************/
 
-
 #ifndef _ARCBALL_H_
 #define _ARCBALL_H_
-
 
 #include "stdinc.h"
 #include "algebra3.h"
 #include "quaternion.h"
 
-class Arcball {
+class Arcball 
+{
 public:
-  Bool  constraint_x, constraint_y;
-  vec2  center;
-  float radius, damp_factor;
-  int   zero_increment;
+    Arcball();
+    Arcball(mat4 *mtx);
+    Arcball(vec2 center, float radius);
 
-  vec3  constrain_vector( vec3 vector, vec3 axis );
-  vec3  mouse_to_sphere( vec2 p );
+    void  set_damping(float d);
+    void  idle();
+    void  mouse_down(int x, int y);
+    void  mouse_up();
+    void  mouse_motion(int x, int y, int shift, int ctrl, int alt);
+    void  mouse_motion(int x, int y);
+    void  set_constraints( Bool constrain_x, Bool constrain_y);
+    void  set_params( vec2 center, float radius);  
+    void  reset_mouse();
+    void  init();
+
+    vec3  constrain_vector(vec3 vector, vec3 axis);
+    vec3  mouse_to_sphere(vec2 p);
  
   //public:
     int   is_mouse_down;  /* true for down, false for up */
@@ -58,22 +68,10 @@ public:
     mat4  rot, rot_increment;
     mat4  *rot_ptr;
 
-    void  set_damping( float d );
-    void  idle( void );
-    void  mouse_down( int x, int y );
-    void  mouse_up( void );
-    void  mouse_motion( int x, int y, int shift, int ctrl, int alt );
-    void  mouse_motion( int x, int y );
-    void  set_constraints( Bool constrain_x, Bool constrain_y );
-    void  set_params( vec2 center, float radius );  
-    void  reset_mouse( void );
-    void  init( void );
-
-    Arcball( void );
-    Arcball( mat4 *mtx );
-    Arcball( vec2 center, float radius );
+    Bool  constraint_x, constraint_y;
+    vec2  center;
+    float radius, damp_factor;
+    int   zero_increment;
 };
 
-
 #endif
-
