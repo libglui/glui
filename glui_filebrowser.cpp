@@ -131,17 +131,15 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
       perror("fbreaddir:");
     else {
       while ((dirp = readdir(dir)) != NULL) { /* open directory     */
-	if (!lstat(dirp->d_name,&dr)       /* dir can be stated  */
-	    && S_ISDIR(dr.st_mode)) {         /* dir is directory   */
-	    item[0] = '/';
-	    strncpy(item+sizeof(char), dirp->d_name, strlen(dirp->d_name)+1);
-            item[strlen(dirp->d_name)+1] = '\0';
-	} else {
-	  strncpy(item, dirp->d_name, strlen(dirp->d_name));
-          item[strlen(dirp->d_name)] = '\0';
-	}
-	list->add_item(i,item);
-	i++;
+        if (!lstat(dirp->d_name,&dr)       /* dir can be stated  */
+            && S_ISDIR(dr.st_mode)) {         /* dir is directory   */
+          item[0] = '/';
+          item += dirp->d_name;
+        } else {
+          item = dirp->d_name;
+        }
+        list->add_item(i,item);
+        i++;
       }
       closedir(dir);
     }
@@ -156,5 +154,12 @@ void ProcessFiles(const char *path_name)
 }
 
 
-void GLUI_FileBrowser::set_w(int w) { if (list) list->set_w(w); }
-void GLUI_FileBrowser::set_h(int h) { if (list) list->set_h(h); }
+void GLUI_FileBrowser::set_w(int w) 
+{ 
+  if (list) list->set_w(w);
+}
+
+void GLUI_FileBrowser::set_h(int h) 
+{
+  if (list) list->set_h(h);
+}
