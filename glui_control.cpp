@@ -216,7 +216,7 @@ GLUI_Control::draw_recursive( int x, int y )
 		0.0 );
 
   if ( NOT _glui_draw_border_only ) {
-    if ( NOT strcmp( name.string, "Rollout" ) ) {
+    if ( NOT strcmp( name, "Rollout" ) ) {
     }
 
     this->draw( this->x_off, this->y_off_top );
@@ -388,8 +388,15 @@ GLUI_Control::string_width(char *text)
 
 int
 GLUI_Control::char_width(char c)
-{
-  return glutBitmapWidth( get_font(), c );
+{ /* Hash table for faster character width lookups - JVK 
+       Speeds up the textbox a little bit.
+  */
+  int hash_index = c % CHAR_WIDTH_HASH_SIZE;
+  if (char_widths[hash_index][0] != c) {
+    char_widths[hash_index][0] = c;
+    char_widths[hash_index][1] = glutBitmapWidth( get_font(), c );
+  }
+  return char_widths[hash_index][1];
 }
 
 
@@ -586,9 +593,9 @@ GLUI_Control::sync_live(int recurse, int draw_it)
       }
     } 
     else if ( live_type == GLUI_LIVE_TEXT ) {
-      if ( strncmp((char*)ptr_val,last_live_text,sizeof(GLUI_String)) != 0 ) {
+      if ( strncmp((char*)ptr_val,last_live_text, GLUI_STRING_SIZE) != 0 ) {
 	set_text( (char*) ptr_val );
-	strncpy( last_live_text, (char*) ptr_val, sizeof(GLUI_String));
+	strncpy( last_live_text, (char*) ptr_val, GLUI_STRING_SIZE);
 	changed = true;
       }
     } 
@@ -658,10 +665,10 @@ GLUI_Control::output_live(int update_main_gfx)
 
   if ( ptr_val == NULL )
     return;
-
+   
   if ( NOT live_inited ) 
     return;
-  
+   
   if ( live_type == GLUI_LIVE_NONE ) {
   }
   else if ( live_type == GLUI_LIVE_INT ) {
@@ -673,8 +680,8 @@ GLUI_Control::output_live(int update_main_gfx)
     last_live_float    = float_val;
   } 
   else if ( live_type == GLUI_LIVE_TEXT ) {
-    strncpy( (char*) ptr_val, text, sizeof(GLUI_String));
-    strncpy( last_live_text,  text, sizeof(GLUI_String));
+    strncpy( (char*) ptr_val, text, GLUI_STRING_SIZE);
+    strncpy( last_live_text,  text, GLUI_STRING_SIZE);
   } 
   else if ( live_type == GLUI_LIVE_FLOAT_ARRAY ) {
     fp = (float*) ptr_val;
@@ -852,7 +859,7 @@ GLUI_Control::init_live(void)
   } 
   else if ( live_type == GLUI_LIVE_TEXT ) {
     set_text( (char*) ptr_val );
-    strncpy( last_live_text, (char*) ptr_val, sizeof(GLUI_String));
+    strncpy( last_live_text, (char*) ptr_val, GLUI_STRING_SIZE);
   }
   else if ( live_type == GLUI_LIVE_FLOAT_ARRAY ) {
     set_float_array_val( (float*) ptr_val );
@@ -1042,7 +1049,7 @@ void  GLUI_Control::get_float_array_val( float *array_ptr )
 
 void   GLUI_Control::set_name(char *string )
 {
-  strncpy((char*)name,string,sizeof(GLUI_String)); 
+  strncpy((char*)name,string,GLUI_STRING_SIZE); 
 
   if ( glui) 
     glui->refresh(); 
@@ -1141,7 +1148,8 @@ void    GLUI_Control::pack( int x, int y )
       this->h        = (max_y - y_in);
     }
     else  {            /* An empty container, so just assign default w & h */
-      if ( this->type != GLUI_CONTROL_ROLLOUT ) {
+      if ( this->type != GLUI_CONTROL_ROLLOUT &&
+           this->type != GLUI_CONTROL_TREE ) {
 	this->w        = GLUI_DEFAULT_CONTROL_WIDTH;
 	this->h        = GLUI_DEFAULT_CONTROL_HEIGHT;
       }

@@ -109,7 +109,13 @@ enum GLUI_Control_Types
     GLUI_CONTROL_MOUSE_INTERACTION,
     GLUI_CONTROL_ROTATION,
     GLUI_CONTROL_TRANSLATION,
-    GLUI_CONTROL_ROLLOUT
+    GLUI_CONTROL_ROLLOUT,
+    GLUI_CONTROL_TEXTBOX,      /* New GLUI Widgets - JVK */
+    GLUI_CONTROL_LIST,
+    GLUI_CONTROL_FILEBROWSER,
+    GLUI_CONTROL_TREE,
+    GLUI_CONTROL_TREEPANEL,
+    GLUI_CONTROL_SCROLL
 };
 
 
@@ -183,6 +189,48 @@ enum GLUI_Control_Types
 #define GLUI_LIVE_DOUBLE        4
 #define GLUI_LIVE_FLOAT_ARRAY   5
 
+/************* Textbox and List Defaults - JVK ******************/
+#define GLUI_TEXTBOX_HEIGHT           130
+#define GLUI_TEXTBOX_WIDTH             130
+#define GLUI_LIST_HEIGHT           130
+#define GLUI_LIST_WIDTH             130
+#define GLUI_DOUBLE_CLICK             1
+#define GLUI_SINGLE_CLICK             0
+#define GLUI_TAB_WIDTH                50 /* In pixels */
+#define GLUI_TEXTBOX_BOXINNERMARGINX   3
+#define GLUI_TEXTBOX_MIN_TEXT_WIDTH   50
+#define GLUI_LIST_BOXINNERMARGINX   3
+#define GLUI_LIST_MIN_TEXT_WIDTH   50
+
+/*********************** TreePanel Defaults - JVK *****************************/
+#define GLUI_TREEPANEL_DEFAULTS 0                /* bar, standard bar color */        
+#define GLUI_TREEPANEL_ALTERNATE_COLOR 1         /* Alternate between 8 different bar colors */
+#define GLUI_TREEPANEL_ENABLE_BAR  2             /* enable the bar */
+#define GLUI_TREEPANEL_DISABLE_BAR  4            /* disable the bar */
+#define GLUI_TREEPANEL_DISABLE_DEEPEST_BAR 8     /* disable only the deepest bar */
+#define GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY  16 /* disable only the bar of the last child of each root */
+#define GLUI_TREEPANEL_DISPLAY_HIERARCHY  32     /* display some sort of hierachy in the tree node title */
+#define GLUI_TREEPANEL_HIERARCHY_NUMERICDOT  64  /* display hierarchy in 1.3.2 (etc... ) format */
+#define GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY  128 /* display hierarchy as only the level depth */
+ 
+/******************* GLUI Scrollbar Defaults - JVK ***************************/
+#define  GLUI_SCROLL_ARROW_WIDTH  12
+#define  GLUI_SCROLL_ARROW_HEIGHT  8
+#define  GLUI_SCROLL_ARROW_Y       2
+#define  GLUI_SCROLL_STATE_NONE   0
+#define  GLUI_SCROLL_STATE_UP     1
+#define  GLUI_SCROLL_STATE_DOWN   2
+#define  GLUI_SCROLL_STATE_BOTH   3
+#define  GLUI_SCROLL_STATE_SCROLL 4
+#define  GLUI_SCROLL_DEFAULT_GROWTH_EXP   1.05f
+
+
+/* Default String Size for Dynamic String Class - JVK */
+#define GLUI_STRING_SIZE            300
+
+/* Size of the character width hash table for faster lookups */
+#define CHAR_WIDTH_HASH_SIZE 126
+
 /**********  Translation codes  **********/
 
 enum TranslationCodes  
@@ -198,34 +246,58 @@ enum TranslationCodes
     GLUI_TRANSLATION_MOUSE_DOWN_RIGHT
 };
 
-/************ A string type for us to use **********/
+/************ A string type for us to use **********
+   This is a dynamically sized string class. It's
+   necessary for the TextBox which can have very
+   large strings.
+*/
 
 class GLUI_String
 {
+private:
+  char *string;
+
 public:
-    GLUI_String() 
-    {
-        string[0] = '\0';
+  unsigned int size;
+  char &operator[]( int i ) {
+    char *temp;
+    if (i >= int(size)) {
+      temp = string;
+      if (i < int(size)*2) { // double the size of the string
+        string = (char *)malloc(sizeof(char)*size*2); 
+        size = size*2;
+        string[size-1] = '\0'; /* safety */
+      } else { // If i is really big compared to size, allocate up to i
+        string = (char *)malloc(sizeof(char)*(i+1)); 
+        size = i + 1;
+        string[size-1] = '\0'; /* safety */
+      }
+      strcpy(string, temp);
+      free(temp);
     }
+    return string[i];
+  }
 
-    GLUI_String(const char *text) 
-    {
-        strcpy(string,text);
+  operator char*() { return (char*) string; };
+  /*    operator void*() { return (void*) &string[0]; }; */
+
+  GLUI_String( void ) {
+    string = (char *)malloc(sizeof(char)*GLUI_STRING_SIZE);
+    size = GLUI_STRING_SIZE;
+    string[0] = '\0'; /* Safety */
+    string[size-1] = '\0';
+  }
+
+  GLUI_String( char *text ) {
+    string = (char *)malloc(sizeof(char)*GLUI_STRING_SIZE);
+    size = GLUI_STRING_SIZE;
+    string[0] = '\0'; /* Safety */
+    string[size-1] = '\0';
+    if (text[0] == '\0' || strlen(text) < size) {
+      strcpy( string, text );
     }
-
-    char &operator[](const int i) 
-    {
-        return string[i];
-    }
-
-    operator char*() 
-    { 
-        return (char *) &string[0]; 
-    }
-
-    /*    operator void*() { return (void*) &string[0]; } */
-
-    char string[300];
+  }
+  ~GLUI_String() {if (string != NULL) free(string);}
 };
 
 /********* Pre-declare the various classes *********/
@@ -253,6 +325,13 @@ class GLUI_Column;
 class GLUI_Master;
 class GLUI_Glut_Window;
 class GLUI_Rollout;
+class GLUI_FileBrowser;  /* New Widgets - JVK */
+class GLUI_Tree;
+class GLUI_TreeNode;
+class GLUI_TreePanel;
+class GLUI_Scrollbar;
+class GLUI_TextBox;
+class GLUI_List;
 
 class Arcball;
 
@@ -269,6 +348,7 @@ class Arcball;
 #define GLUI_EDITTEXT_FLOAT            3
 #define GLUI_SPINNER_INT               GLUI_EDITTEXT_INT
 #define GLUI_SPINNER_FLOAT             GLUI_EDITTEXT_FLOAT
+#define GLUI_SCROLL_INT                GLUI_EDITTEXT_INT /* JVK */
 
 /*** Definition of callbacks ***/
 typedef void (*GLUI_Update_CB) (int id);
@@ -276,6 +356,8 @@ typedef void (*Int1_CB)        (int);
 typedef void (*Int2_CB)        (int, int);
 typedef void (*Int3_CB)        (int, int, int);
 typedef void (*Int4_CB)        (int, int, int, int);
+typedef void (*GLUI_InterObject_CB)(void *,int); /* Used for callbacks
+                                                    to/from scrollbar */
 
 /************************************************************/
 /*                                                          */
@@ -285,6 +367,7 @@ typedef void (*Int4_CB)        (int, int, int, int);
 
 class GLUI_Node 
 {
+    friend class GLUI_Tree;     /* JVK */
     friend class GLUI_Rollout;
     friend class GLUI_Main;
 
@@ -625,6 +708,7 @@ public:
     void         set_ortho_projection();
     void         set_viewport();
     void         refresh();
+    int          get_glut_window_id( void ) { return glut_window_id; } /* JVK */
 };
 
 /************************************************************/
@@ -672,7 +756,7 @@ public:
     int             collapsible, is_open;
     GLUI_Node       collapsed_node;
     int             hidden; /* Collapsed controls (and children) are hidden */
-
+    int             char_widths[CHAR_WIDTH_HASH_SIZE][2]; /* Character width hash table */
     /*** Get/Set values ***/
 
     virtual void   set_name( char *string );
@@ -778,7 +862,7 @@ public:
         collapsible    = false;
         is_open        = true;
         hidden         = false;
-
+        memset(char_widths, -1, CHAR_WIDTH_HASH_SIZE*2); /* JVK */
         int i;
         for( i=0; i<GLUI_DEF_MAX_ARRAY; i++ )
             float_array_val[i] = last_live_float_array[i] = 0.0;
@@ -875,10 +959,16 @@ public:
 class GLUI_Column : public GLUI_Control
 {
 public:
+    float red;    /* Color of the column line - JVK */
+    float green;  /* Column colors are used bby the tree panel to */
+    float blue;   /* clearly denote the hierarchy */ 
     void draw( int x, int y );
 
     GLUI_Column() 
     {
+        red          = .5; /* Column Colors default to grey - JVK */
+        green        = .5;
+        blue         = .5;
         type         = GLUI_CONTROL_COLUMN;
         w            = 0;
         h            = 0;
@@ -921,7 +1011,50 @@ public:
 
 /************************************************************/
 /*                                                          */
-/*               Panel class (container)                    */
+/*               File Browser class (container)             */
+/*                         JVK                              */
+/************************************************************/
+
+class GLUI_FileBrowser : public GLUI_Panel
+{
+ private:
+  int last_item;
+  char *file;
+  int allow_change_dir;
+ public:
+  GLUI_List *list;
+  GLUI_String current_dir;
+
+  void fbreaddir(char *);
+  static void dir_list_callback(void *, int);
+
+  void set_w(int w);// { if (list) list->set_w(w) }
+  void set_h(int h);// { if (list) list->set_h(h) }
+  char* get_file() { return file; }
+  void set_allow_change_dir(int c) { allow_change_dir = c; }
+
+  GLUI_FileBrowser( void ) {
+    type         = GLUI_CONTROL_FILEBROWSER;
+    w            = GLUI_DEFAULT_CONTROL_WIDTH;
+    h            = GLUI_DEFAULT_CONTROL_HEIGHT;
+    int_val      = GLUI_PANEL_EMBOSSED;
+    alignment    = GLUI_ALIGN_CENTER;
+    is_container = true; 
+    can_activate = false;
+    allow_change_dir = true;
+    last_item    = -1;
+    user_id      = -1;
+    strcpy( name, "" );
+    strcpy( current_dir, "." );
+    file = NULL;
+  };
+
+  virtual ~GLUI_FileBrowser() {};
+};
+
+/************************************************************/
+/*                                                          */
+/*               Rollout class (container)                  */
 /*                                                          */
 /************************************************************/
 
@@ -963,6 +1096,177 @@ public:
     virtual ~GLUI_Rollout() {}
 };
 
+/************************************************************/
+/*                                                          */
+/*               Tree    Panel class (container)            */
+/*                         JVK                              */
+/************************************************************/
+
+class GLUI_Tree : public GLUI_Panel
+{
+
+ private:
+  int level;   // how deep is this node
+  float red;   //Color coding of column line
+  float green;
+  float blue;
+  float lred;   //Color coding of level name
+  float lgreen;
+  float lblue;
+  int id;
+  GLUI_Column *column;
+  int is_current;          // Whether this tree is the
+                           // current root in a treePanel
+  int child_number;
+  int format;
+
+ public:
+  int          currently_inside, initially_inside;
+  GLUI_Button  button;
+  char         level_name[100]; // level name, eg: 1.1.2, III, or 3
+  GLUI_TreePanel *panel; 
+
+  void draw( int x, int y );
+  void draw_pressed( void );
+  void draw_unpressed( void );
+  int mouse_down_handler( int local_x, int local_y );
+  int mouse_up_handler( int local_x, int local_y, int inside );
+  int  mouse_held_down_handler( int local_x, int local_y, int inside );
+  void set_column(GLUI_Column *c) { column = c; }
+  void  open( void ); 
+  void  close( void );
+
+    /*   void set_name( char *text )   { panel.set_name( text ); }; */
+  void update_size( void );
+  void set_id(int i) { id = i; }
+  void set_level(int l) { level = l; }
+  void set_format(int f) { format = f; }
+  void set_current(int c) { is_current = c; }
+  int get_id() { return id; }
+  int get_level() { return level; }
+  int get_child_number() { return child_number; }
+  void enable_bar() { if (column) { column->int_val = 1;  set_color(red, green, blue); } }
+  void disable_bar() { if (column) { column->int_val = 0;  } } 
+  void set_child_number(int c) { child_number = c; } 
+  void set_level_color(float r, float g, float b) { 
+    lred = r;
+    lgreen = g;
+    lblue  = b;
+  }
+
+  void set_color(float r, float g, float b) { 
+    red = r;
+    green = g;
+    blue  = b;
+    if (column) {
+      column->red = r;
+      column->green = g;
+      column->blue = b;
+    }
+  }
+
+  GLUI_Tree( void ) {
+    currently_inside = false;
+    initially_inside = false;
+    can_activate     = true;
+    is_container     = true;
+    type             = GLUI_CONTROL_TREE;
+    h                = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+    w                = GLUI_DEFAULT_CONTROL_WIDTH;
+    y_off_top        = 21;
+    collapsible      = true;
+    red              = .5;
+    green            = .5;
+    blue             = .5;
+    lred              = 0;
+    lgreen            = 0;
+    lblue             = 0;
+    column           = NULL;
+    is_current       = 0;
+    child_number     = 0;
+    panel         = NULL;
+    strcpy( name, "" );
+    strcpy( level_name, "" );
+    level            = 0;
+    
+  };
+ 
+  virtual ~GLUI_Tree() {};
+};
+
+
+/************************************************************/
+/*                                                          */
+/*               TreePanel class (container) JVK            */
+/*     Manages, maintains, and formats entire trees         */
+/************************************************************/
+class GLUI_TreePanel : public GLUI_Panel {
+   int max_levels;
+   int next_id;
+   int format;
+   float red;
+   float green;
+   float blue;
+   float lred;
+   float lgreen;
+   float lblue;
+   int root_children;
+   /* These variables allow the tree panel to traverse the tree
+      using only two function calls. (Well, four, if you count 
+      going in reverse */
+
+   GLUI_Tree    *curr_branch; /* Current Branch */
+   GLUI_Panel *curr_root;   /* Current Root */
+
+ protected:
+   int uniqueID( void ) { next_id++; return next_id - 1; }
+ public:
+   void            set_color(float r, float g, float b) {
+                                     red = r;
+                                     green = g;
+                                     blue = b;
+                                    }
+   void            set_level_color(float r, float g, float b) {
+                                     lred = r;
+                                     lgreen = g;
+                                     lblue = b;
+                                    }
+   void            set_format(int f) { format = f; }
+
+   /* Adds branch to curr_root */
+   GLUI_Tree *     ab(char *name, GLUI_Tree *root = NULL);
+   /* Goes up one level, resets curr_root and curr_branch to parents*/
+   void            fb(GLUI_Tree *branch= NULL);
+   /* Deletes the curr_branch, goes up one level using fb */
+   void            db(GLUI_Tree *branch = NULL);
+   /* Finds the very last branch of curr_root, resets vars */
+   void            descendBranch(GLUI_Panel *root = NULL);
+   /* Resets curr_root and curr branch to TreePanel and lastChild */
+   void            resetToRoot(GLUI_Panel *new_root = NULL);
+   void            next( void );
+   void            refresh( void );
+   void            expand_all( void );
+   void            collapse_all( void );
+   void            update_all( void );
+   void            initNode(GLUI_Tree *temp);
+   void            formatNode(GLUI_Tree *temp);
+
+   GLUI_TreePanel() {
+     GLUI_Panel();
+     type = GLUI_CONTROL_TREEPANEL;
+     next_id = 0;
+     curr_root = this;
+     curr_branch = NULL;
+     red = .5;
+     green = .5;
+     blue = .5;
+     root_children = 0;
+   }
+
+   ~GLUI_TreePanel() {
+   }
+
+};
 
 /************************************************************/
 /*                                                          */
@@ -974,8 +1278,10 @@ class GLUI : public GLUI_Main
 {
 private:
 public:
-    void  add_column( int draw_bar = true );
-    void  add_column_to_panel( GLUI_Panel *panel, int draw_bar = true );
+   /* Add Column returns a pointer so the tree can later change
+      the column color - JVK */
+    GLUI_Column *  add_column( int draw_bar = true );
+    GLUI_Column *  add_column_to_panel( GLUI_Panel *panel, int draw_bar = true );
 
     void  add_separator( void );
     void  add_separator_to_panel( GLUI_Panel *panel );
@@ -1037,6 +1343,25 @@ public:
                      void *live_var=NULL, int id=-1, 
                      GLUI_Update_CB callback=NULL );
 
+    /* GLUI Textbox - JVK */
+    GLUI_TextBox  *add_textbox(char *live_var=NULL, int scroll = false,
+		     int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_TextBox  *add_textbox_to_panel( GLUI_Panel *panel, 
+		     char *live_var=NULL, int scroll = false, int id=-1, 
+		     GLUI_Update_CB callback=NULL );
+
+    /* GLUI List - JVK */
+    GLUI_List  *add_list(char *live_var=NULL, int scroll = false,
+		         int id=-1, GLUI_Update_CB callback=NULL,
+		         GLUI_Control *object = NULL, 
+		         GLUI_InterObject_CB obj_cb = NULL);
+    GLUI_List  *add_list_to_panel( GLUI_Panel *panel, 
+				   char *live_var=NULL, int scroll = false, 
+				   int id=-1, 
+				   GLUI_Update_CB callback=NULL, 
+				   GLUI_Control *object = NULL, 
+				   GLUI_InterObject_CB obj_cb = NULL);
+
     GLUI_Spinner  *add_spinner( char *name, 
                   int data_type=GLUI_SPINNER_INT,
                   void *live_var=NULL,
@@ -1048,12 +1373,48 @@ public:
                        int id=-1,
                        GLUI_Update_CB callback=NULL );
 
+    /* GLUI Scrollbar - JVK (Very Similar to Spinner) */
+    GLUI_Scrollbar  *add_scrollbar( char *name, 
+				    int data_type=GLUI_SCROLL_INT,
+				    void *live_var=NULL,
+				    int id=-1, GLUI_Update_CB callback=NULL , 
+				    GLUI_Control *object = NULL,
+				    GLUI_InterObject_CB obj_cb = NULL);
+    GLUI_Scrollbar  *add_scrollbar_to_panel( GLUI_Panel *panel, 
+					     char *name,
+					     int data_type=GLUI_SCROLL_INT,
+					     void *live_var=NULL,
+					     int id=-1,
+					     GLUI_Update_CB callback=NULL,
+					     GLUI_Control *object = NULL,
+					     GLUI_InterObject_CB obj_cb = NULL);
+
     GLUI_Panel     *add_panel( char *name, int type=GLUI_PANEL_EMBOSSED );
     GLUI_Panel     *add_panel_to_panel( GLUI_Panel *panel, char *name, 
                       int type=GLUI_PANEL_EMBOSSED );
 
-    GLUI_Rollout   *add_rollout( char *name, int open=true );
-    GLUI_Rollout   *add_rollout_to_panel( GLUI_Panel *panel, char *name, int open=true );
+    GLUI_FileBrowser  *add_filebrowser( char *name, 
+				        int type=GLUI_PANEL_EMBOSSED, 
+				        int user_id = -1, 
+				        GLUI_Update_CB callback = NULL);
+    GLUI_FileBrowser  *add_filebrowser_to_panel( GLUI_Panel *panel, 
+					         char *name, 
+					         int type=GLUI_PANEL_EMBOSSED, 
+					         int user_id = -1, 
+					         GLUI_Update_CB callback = NULL);
+
+    GLUI_Tree      *add_tree( char *name, int open=false, int inset=0);
+    GLUI_Tree      *add_tree_to_panel( GLUI_Panel *panel, char *name, 
+                        	       int open=false, int inset=0);
+
+    GLUI_TreePanel      *add_treepanel( char *name, int open=false, int inset=0);
+    GLUI_TreePanel      *add_treepanel_to_panel( GLUI_Panel *panel, char *name, 
+				                 int open=false, int inset=0);
+
+    GLUI_Rollout   *add_rollout( char *name, int open=true, int type=GLUI_PANEL_EMBOSSED);
+    GLUI_Rollout   *add_rollout_to_panel( GLUI_Panel *panel, char *name, 
+					  int open=true, 
+					  int type=GLUI_PANEL_EMBOSSED);
 
     void            set_main_gfx_window( int window_id );
     int             get_glut_window_id( void ) { return glut_window_id; }
@@ -1385,6 +1746,283 @@ public:
         can_activate  = false;
     }
 };
+
+/************************************************************/
+/*                                                          */
+/*               TextBox class - JVK                        */
+/*                                                          */
+/************************************************************/
+
+class GLUI_TextBox : public GLUI_Control
+{
+public:
+  GLUI_String         orig_text;
+  int                 insertion_pt;
+  int                 substring_start; /*substring that gets displayed in box*/
+  int                 substring_end;  
+  int                 sel_start, sel_end;  /* current selection */
+  int                 last_insertion_pt;
+  int                 debug;
+  int                 draw_text_only;
+  int                 tab_width;
+  int                 start_line;
+  int                 num_lines;
+  int                 curr_line;
+  int                 visible_lines;
+  int                 insert_x;        /* Similar to "insertion_pt", these variables keep */
+  int                 insert_y;        /* track of where the ptr is, but in pixels */
+  GLUI_Scrollbar     *scrollbar;
+
+  int  mouse_down_handler( int local_x, int local_y );
+  int  mouse_up_handler( int local_x, int local_y, int same );
+  int  mouse_held_down_handler( int local_x, int local_y, int inside );
+  int  key_handler( unsigned char key,int modifiers );
+  int  special_handler( int key,int modifiers );
+  
+  void activate( int how );
+  void disactivate( void );
+
+  void draw( int x, int y );
+
+  int  mouse_over( int state, int x, int y );
+
+  int get_box_width();
+  int  find_word_break( int start, int direction );
+  int  substring_width( int start, int end );
+  void clear_substring( int start, int end );
+  int  find_insertion_pt( int x, int y );
+  int  update_substring_bounds( void );
+  void update_and_draw_text( void );
+  void draw_text( int x, int y );
+  void draw_insertion_pt( void );
+  void update_x_offsets( void );
+  void update_size( void );
+
+  void set_text( char *text );
+  char *get_text( void )         { return text; };  
+
+  void dump( FILE *out, char *text );
+  void set_tab_w(int w) { tab_width = w; }
+  void set_start_line(int l) { start_line = l; }
+  static void scrollbar_callback(void *, int id);
+
+  GLUI_TextBox( void ) {
+    type                  = GLUI_CONTROL_TEXTBOX;
+    h                     = GLUI_TEXTBOX_HEIGHT;
+    w                     = GLUI_TEXTBOX_WIDTH;
+    tab_width             = GLUI_TAB_WIDTH;
+    num_lines             = 0;
+    visible_lines         = 0;
+    start_line            = 0;
+    curr_line             = 0;
+    insert_y              = -1;
+    insert_x              = -1;
+    insertion_pt          = -1;
+    last_insertion_pt     = -1;
+    name[0]               = '\0';
+    substring_start       = 0;
+    substring_end         = 2;
+    sel_start             = 0;
+    sel_end               = 0;
+    active_type           = GLUI_CONTROL_ACTIVE_PERMANENT;
+    can_activate          = true;
+    spacebar_mouse_click  = false;
+    scrollbar             = NULL;
+    debug                 = false;
+    draw_text_only        = false;
+  };
+};
+
+/************************************************************/
+/*                                                          */
+/*                   Listbox class - JVK                    */
+/*                                                          */
+/************************************************************/
+
+class GLUI_List_Item : public GLUI_Node 
+{
+public:
+  GLUI_String text;
+  int         id;
+};
+
+/************************************************************/
+/*                                                          */
+/*               List class - JVK                           */
+/*                                                          */
+/************************************************************/
+
+class GLUI_List : public GLUI_Control
+{
+public:
+  GLUI_String         orig_text;
+  int                 debug;
+  int                 draw_text_only;
+  int                 start_line;
+  int                 num_lines;
+  int                 curr_line;
+  int                 visible_lines;
+  GLUI_Scrollbar      *scrollbar;
+  GLUI_List_Item      items_list;
+  GLUI_Control        *associated_object;
+  GLUI_InterObject_CB obj_cb;
+  int                 cb_click_type;
+  int                 last_line;
+  int                 last_click_time;
+
+  int  mouse_down_handler( int local_x, int local_y );
+  int  mouse_up_handler( int local_x, int local_y, int same );
+  int  mouse_held_down_handler( int local_x, int local_y, int inside );
+  int  key_handler( unsigned char key,int modifiers );
+  int  special_handler( int key,int modifiers );
+  
+  void activate( int how );
+  void disactivate( void );
+
+  void draw( int x, int y );
+
+  int  mouse_over( int state, int x, int y );
+
+  int get_box_width();
+  int  find_word_break( int start, int direction );
+  int  substring_width( char *t, int start, int end );
+  int  find_line( int x, int y );
+  void update_and_draw_text( void );
+  void draw_text( char *t, int selected, int x, int y );
+  void update_size( void );
+
+
+  int  add_item( int id, char *text );
+  int  delete_item( char *text );
+  int  delete_item( int id );
+  int  delete_all();
+
+  GLUI_List_Item *get_item_ptr( char *text );
+  GLUI_List_Item *get_item_ptr( int id );
+
+  void dump( FILE *out, char *text );
+  void set_start_line(int l) { start_line = l; }
+  static void scrollbar_callback(void *, int id);
+  int get_current_item() { return curr_line; }
+  void set_click_type(int d) {
+    cb_click_type = d; }
+  
+  GLUI_List( void ) {
+    type                  = GLUI_CONTROL_LIST;
+    h                     = GLUI_LIST_HEIGHT;
+    w                     = GLUI_LIST_WIDTH;
+    num_lines             = 0;
+    visible_lines         = 0;
+    start_line            = 0;
+    curr_line             = 0;
+    name[0]               = '\0';
+    active_type           = GLUI_CONTROL_ACTIVE_PERMANENT;
+    can_activate          = true;
+    spacebar_mouse_click  = false;
+    scrollbar             = NULL;
+    debug                 = false;
+    draw_text_only        = false;
+    cb_click_type         = GLUI_SINGLE_CLICK;
+    last_line             = -1;
+    last_click_time       = 0;
+	 obj_cb                = NULL;
+	 associated_object     = NULL;
+  };
+};
+
+/************************************************************/
+/*                                                          */
+/*               Scrollbar class - JVK                      */
+/*                                                          */
+/************************************************************/
+ 
+class GLUI_Scrollbar : public GLUI_Control
+{
+public:
+  int           currently_inside;
+  int           state;
+  float         growth, growth_exp;
+  int           last_x, last_y;
+  int           data_type;
+  int           callback_count;
+  int           last_int_val;
+  float         last_float_val;
+  int           first_callback;
+  float         user_speed;
+  int           int_val;
+  int           int_min;
+  int           int_max;
+  int tab_length;
+  int tab_start_position;
+  int tab_end_position;
+  int bar_length;
+
+
+  /* Rather than directly access an Editbox or Textbox for 
+     changing variables, a pointer to some object is defined
+     along with a static callback in the form func(void *, int) -
+     the int is the new value, the void * must be cast to that
+     particular object type before use.
+  */
+  void *        associated_object; /* Let's the Spinner manage it's own callbacks */
+  void (*object_cb)(void *,int); /* function pointer to object call_back */
+
+  int  mouse_down_handler( int local_x, int local_y );
+  int  mouse_up_handler( int local_x, int local_y, int same );
+  int  mouse_held_down_handler( int local_x, int local_y, int inside );
+  int  key_handler( unsigned char key,int modifiers );
+  int  special_handler( int key,int modifiers );
+  
+  void draw( int x, int y );
+  void draw_pressed( void );
+  void draw_unpressed( void );
+  void draw_text( int sunken );
+
+  void update_size( void );
+
+  void set_int_limits( int low, int high,int limit_type=GLUI_LIMIT_CLAMP);
+  int  find_arrow( int local_x, int local_y );
+  void do_drag( int x, int y );
+  void do_callbacks( void );
+  void draw_arrows( void );
+  void draw_scroll( void );
+  void do_click( void );
+  void idle( void );
+  int  needs_idle( void );
+  void set_int_val( int new_val );
+  int  get_int_val( void );
+  void increase_growth( void );
+  void reset_growth( void );
+
+  void set_speed( float speed ) { user_speed = speed; };
+  void update_scroll_parameters();
+
+  GLUI_Scrollbar ( void ) {
+    type         = GLUI_CONTROL_SCROLL;
+    h            = GLUI_TEXTBOX_HEIGHT;
+    w            = GLUI_SPINNER_ARROW_WIDTH;
+    x_off        = 0;
+    y_off_top    = 0;
+    y_off_bot    = 0;
+    can_activate = true;
+    state        = GLUI_SPINNER_STATE_NONE;
+    growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
+    callback_count = 0;
+    first_callback = true;
+    user_speed   = 1.0;
+    int_val      = 0;
+    int_min      = 0;
+    int_max      = 0;
+    associated_object = NULL;
+    object_cb = NULL;
+    tab_length         = 0;
+    tab_start_position = 0;
+    tab_end_position   = 0;
+    bar_length         = 0;
+
+  };
+};
+
 
 /************************************************************/
 /*                                                          */

@@ -232,7 +232,7 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
     }
 
     /******** check whether we have space ******/
-    if ( (unsigned int)strlen( text ) + 2 >= sizeof( GLUI_String ))
+    if ( (unsigned int)strlen( text ) + 2 >= GLUI_STRING_SIZE)
       return false;
 
     /******** We insert the character into the string ***/
@@ -881,7 +881,7 @@ void   GLUI_EditText::update_size( void )
 
 void    GLUI_EditText::set_text( char *new_text )
 {
-  strncpy(text,new_text,sizeof(GLUI_String));
+  strncpy(text,new_text,GLUI_STRING_SIZE);
   substring_start = 0;
   substring_end   = (int)strlen( text ) - 1;
   insertion_pt    = -1;

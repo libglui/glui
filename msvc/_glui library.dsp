@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -49,7 +49,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"Release\glui.lib"
+# ADD LIB32 /nologo /out:"lib\glui32.lib"
 
 !ELSEIF  "$(CFG)" == "_glui library - Win32 Debug"
 
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /GX /Z7 /Od /I "..\.." /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /MDd /GR /GX /Z7 /Od /I "..\.." /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -72,7 +72,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"lib\glui32.lib"
+# ADD LIB32 /nologo /out:"lib\glui32d.lib"
 
 !ENDIF 
 
@@ -91,6 +91,10 @@ SOURCE=..\ARCBALL.CPP
 # Begin Source File
 
 SOURCE=..\glui.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui.h
 # End Source File
 # Begin Source File
 
@@ -126,11 +130,19 @@ SOURCE=..\glui_edittext.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\glui_filebrowser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_list.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\glui_listbox.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\Glui_mouse_iaction.cpp
+SOURCE=..\glui_mouse_iaction.cpp
 # End Source File
 # Begin Source File
 
@@ -146,11 +158,15 @@ SOURCE=..\glui_radio.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\Glui_rollout.cpp
+SOURCE=..\glui_rollout.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\glui_rotation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_scrollbar.cpp
 # End Source File
 # Begin Source File
 
@@ -166,7 +182,23 @@ SOURCE=..\glui_statictext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\Glui_translation.cpp
+SOURCE=..\glui_textbox.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_translation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_tree.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_treepanel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\glui_window.cpp
 # End Source File
 # Begin Source File
 

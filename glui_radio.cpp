@@ -87,7 +87,7 @@ void    GLUI_RadioGroup::draw_group( int translate )
 
 void    GLUI_RadioGroup::set_name( char *text )
 {
-  strncpy(name,text,sizeof(GLUI_String));
+  strncpy(name,text,GLUI_STRING_SIZE);
 
   if ( glui )
     glui->refresh();

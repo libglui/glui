@@ -48,7 +48,7 @@ GLUI::init(char *text, long flags, int x, int y, int parent_window)
 
   this->flags = flags;
 
-  strncpy( window_name.string, text, sizeof(GLUI_String));
+  strncpy( window_name, text, GLUI_STRING_SIZE);
 
   /*** We copy over the current window callthroughs ***/
   /*** (I think this might actually only be needed for subwindows) ***/
@@ -640,7 +640,8 @@ void    GLUI_Main::keyboard(unsigned char key, int x, int y)
 
   /*** If it's a tab or shift tab, we don't pass it on to the controls.
     Instead, we use it to cycle through active controls ***/
-  if ( key == '\t' AND mouse_button_down == false ) {
+  if ( key == '\t' AND mouse_button_down == false AND 
+       active_control->type != GLUI_CONTROL_TEXTBOX) {
     if ( curr_modifiers & GLUT_ACTIVE_SHIFT ) {
       new_control = find_prev_control( active_control );
     }

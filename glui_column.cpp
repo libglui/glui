@@ -62,7 +62,7 @@ void  GLUI_Column::draw( int x, int y )
       else {
 	glLineWidth(1.0);
 	glBegin( GL_LINES );
-	glColor3f( .5, .5, .5 );
+	glColor3f( red, green, blue );
 	glVertex2i( -2, 0 );
 	glVertex2i( -2, h );
 	/*glVertex2i( 0, -y_diff + GLUI_SEPARATOR_HEIGHT/2 );              */

@@ -94,7 +94,6 @@ void   GLUI_Node::link_this_to_parent_last( GLUI_Node *new_parent )
     new_parent->child_head = this;
     new_parent->child_tail = this;
     this->parent_node      = new_parent;
-    this->parent_node      = new_parent;
   }
   else {                                 /* parent has children */
     new_parent->child_tail->next_sibling = this;

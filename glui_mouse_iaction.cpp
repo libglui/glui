@@ -86,7 +86,7 @@ void    GLUI_Mouse_Interaction::draw( int x, int y )
     draw_name( x_left, h-4 );
     restore_window(orig);
 
-    draw_active_box( x_left-4, x_left+string_width( name.string )+4, 
+    draw_active_box( x_left-4, x_left+string_width( name )+4, 
 		     h, h-14 );
   }
 

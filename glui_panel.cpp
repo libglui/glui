@@ -81,7 +81,7 @@ void    GLUI_Panel::draw( int x, int y )
     **/    
       }
   else if ( int_val == GLUI_PANEL_EMBOSSED ) {
-    if ( name[0] == '\0' ) {
+    if ( parent_node == NULL || name[0] == '\0' ) {
       top = 0;
     }
     else {
@@ -107,7 +107,7 @@ void    GLUI_Panel::draw( int x, int y )
     glEnd();
 
     /**** Only display text in embossed panel ****/
-    if ( name[0] != '\0' ) { /* Only  draw non-null strings */
+    if ( parent_node != NULL && name[0] != '\0' ) { /* Only  draw non-null strings */
       int left = 7, height=GLUI_PANEL_NAME_DROP+1;
       int str_width;
 
@@ -135,7 +135,7 @@ void    GLUI_Panel::draw( int x, int y )
 
 void    GLUI_Panel::set_name( char *new_name )
 {
-  strncpy(name,new_name,sizeof(GLUI_String));
+  strncpy(name,new_name,GLUI_STRING_SIZE);
 
   update_size();
 

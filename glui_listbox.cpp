@@ -88,13 +88,13 @@ void    GLUI_Listbox::draw( int x, int y )
     else
       glColor3f( 0.0, 0.0, 0.0 );
     glRasterPos2i( text_x_offset+5, 13 );
-    draw_string( curr_text.string );
+    draw_string( curr_text );
   }
   else {
     draw_box( text_x_offset+3, w-2, 2, h-2, .0, .0, .6 );
     glColor3f( 1.0, 1.0, 1.0 );
     glRasterPos2i( text_x_offset+5, 13 );
-    draw_string( curr_text.string );
+    draw_string( curr_text );
   }
 
 
@@ -389,7 +389,7 @@ int    GLUI_Listbox::do_selection( int item_num )
   /*  printf( "-> %s\n", (char*) sel_item->text );              */
 
   int_val = item_num;
-  strcpy( curr_text.string, sel_item->text.string );
+  strcpy( curr_text , sel_item->text );
 
   translate_and_draw_front();
 

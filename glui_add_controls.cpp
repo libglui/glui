@@ -21,7 +21,6 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 */
 
 #include "glui.h"
@@ -147,6 +146,48 @@ GLUI_Panel     *GLUI::add_panel_to_panel( GLUI_Panel *parent_panel,
 }
 
 
+/********************************************* GLUI::add_panel() *************/
+
+GLUI_FileBrowser     *GLUI::add_filebrowser( char *name, int type, int user_id, 
+						      GLUI_Update_CB callback)
+{
+  return add_filebrowser_to_panel( main_panel, name, type, user_id, callback);
+}
+
+
+/**************************************** GLUI::add_panel_to_panel() *********/
+
+GLUI_FileBrowser     *GLUI::add_filebrowser_to_panel( GLUI_Panel *parent_panel,
+						      char *name, int type, int user_id, 
+						      GLUI_Update_CB callback)
+{
+  GLUI_FileBrowser *panel;
+  
+  panel = new GLUI_FileBrowser;
+
+  if ( panel ) {
+    panel->set_name( name );
+    panel->user_id    = user_id;
+    panel->int_val    = type;
+    panel->callback   = callback;
+
+    add_control( parent_panel, panel );
+    panel->list = add_list_to_panel(panel,
+				    NULL,
+				    true,
+				    1,
+				    NULL,
+				    panel,
+				    (GLUI_InterObject_CB)(GLUI_FileBrowser::dir_list_callback));
+    (panel->list)->set_click_type(GLUI_DOUBLE_CLICK);
+    panel->fbreaddir(panel->current_dir);
+    return panel;
+  }
+  else {
+    return NULL;
+  }  
+}
+
 /***************************** GLUI::add_radiogroup() ***************/
 
 GLUI_RadioGroup *GLUI::add_radiogroup( int *value_ptr,
@@ -249,8 +290,7 @@ GLUI_StaticText  *GLUI::add_statictext( char *name )
 
 /******************************* GLUI::add_statictext_to_panel() **********/
 
-GLUI_StaticText  *GLUI::
-add_statictext_to_panel( GLUI_Panel *panel, char *name )
+GLUI_StaticText  *GLUI::add_statictext_to_panel( GLUI_Panel *panel, char *name )
 {
   GLUI_StaticText *control;
 
@@ -344,8 +384,7 @@ GLUI_EditText  *GLUI::add_edittext( char *name,
 
 /******************************* GLUI::add_edittext_to_panel() **********/
 
-GLUI_EditText  *GLUI::
-add_edittext_to_panel( GLUI_Panel *panel, char *name, 
+GLUI_EditText  *GLUI::add_edittext_to_panel( GLUI_Panel *panel, char *name, 
 		       int data_type, void *data,
 		       int id, GLUI_Update_CB callback)
 {
@@ -385,12 +424,119 @@ add_edittext_to_panel( GLUI_Panel *panel, char *name,
 
     return control;
   }
+  return 0;
+}
+
+/********************************** GLUI::add_edittext() ************/
+
+GLUI_TextBox  *GLUI::add_textbox(char *data, int scroll,
+				 int id, GLUI_Update_CB callback)
+{
+  return add_textbox_to_panel( main_panel, data, scroll,
+			       id, callback );
+}
+
+
+/******************************* GLUI::add_edittext_to_panel() **********/
+
+GLUI_TextBox  *GLUI::add_textbox_to_panel( GLUI_Panel *panel, char *data,
+					   int scroll, int id, GLUI_Update_CB callback)
+{
+  GLUI_TextBox *control;
+  GLUI_Panel *tb_panel = panel;
+
+  control = new GLUI_TextBox;
+
+
+  if ( control ) {
+    if (scroll) {
+      tb_panel = add_panel_to_panel(panel,"",GLUI_PANEL_NONE);
+      tb_panel->x_off = 1;
+    }
+    control->ptr_val     = data;
+    control->user_id     = id;
+    control->callback    = callback;
+    control->name        = "textbox";
+    add_control( tb_panel, control );
+    if (scroll) {
+      add_column_to_panel(tb_panel, false);
+      control->scrollbar = add_scrollbar_to_panel(tb_panel,
+						  "scrollbar",
+						  GLUI_SPINNER_INT, 
+						  NULL, 
+						  -1,
+						  NULL,
+						  (GLUI_Control*) control,
+						  (GLUI_InterObject_CB )GLUI_TextBox::scrollbar_callback);
+    }
+    return control;
+  }
   else {
     return NULL;
   }
 
 }
 
+
+/********************************** GLUI::add_edittext() ************/
+
+GLUI_List  *GLUI::add_list(char *data, int scroll,
+			   int id, 
+			   GLUI_Update_CB callback, 
+			   GLUI_Control *object, 
+			   GLUI_InterObject_CB obj_cb)
+{
+  return add_list_to_panel( main_panel, data, scroll,
+			    id, callback , object, obj_cb);
+}
+
+
+/******************************* GLUI::add_edittext_to_panel() **********/
+
+GLUI_List  *GLUI::add_list_to_panel( GLUI_Panel *panel, char *data,
+				     int scroll, int id, 
+				     GLUI_Update_CB callback,  
+				     GLUI_Control *object, 
+				     GLUI_InterObject_CB obj_cb)
+{
+  GLUI_List *control;
+  GLUI_Panel *list_panel = panel;
+
+  control = new GLUI_List;
+
+  if ( control ) {
+    if (scroll) {
+      list_panel = add_panel_to_panel(panel,"",GLUI_PANEL_NONE);
+      list_panel->x_off = 1;
+    }
+    control->ptr_val     = data;
+    control->user_id     = id;
+    control->callback    = callback;
+    control->name        = "list";
+    add_control( list_panel, control );
+    if (scroll) {
+      add_column_to_panel(list_panel, false);
+      control->scrollbar = add_scrollbar_to_panel(list_panel,
+						  "scrollbar",
+						  GLUI_SPINNER_INT, 
+						  NULL, 
+						  -1,
+						  NULL,
+						  (GLUI_Control*) control,
+						  (GLUI_InterObject_CB )GLUI_List::scrollbar_callback);      
+
+    }
+    if (object) {
+      control->obj_cb    = obj_cb;
+      control->associated_object = object;
+    }
+    return control;
+  }
+  else {
+    return NULL;
+  }
+
+}
 
 /********************************** GLUI::add_spinner() ************/
 
@@ -460,18 +606,61 @@ add_spinner_to_panel( GLUI_Panel *panel, char *name,
 
 }
 
+/********************************** GLUI::add_scrollbar() ************/
+
+GLUI_Scrollbar  *GLUI::add_scrollbar( char *name, 
+                  int data_type, void *data,
+				      int id, GLUI_Update_CB callback, 
+				      GLUI_Control *object,
+				  GLUI_InterObject_CB obj_cb)
+{
+  return add_scrollbar_to_panel( main_panel, name, data_type, data,
+				 id, callback, object, obj_cb);
+}
+
+
+/******************************* GLUI::add_scrollbar_to_panel() **********/
+
+GLUI_Scrollbar  *GLUI::add_scrollbar_to_panel( GLUI_Panel *panel, char *name, 
+			int data_type, void *data,
+			int id, GLUI_Update_CB callback,
+			GLUI_Control *object,
+			GLUI_InterObject_CB obj_cb)
+{
+  GLUI_Scrollbar *control;
+  int           text_type;
+
+  control = new GLUI_Scrollbar;
+ 
+  if ( control ) {
+      control->set_int_limits(0,0,GLUI_LIMIT_CLAMP);
+      control->set_int_val(0);
+      control->data_type = GLUI_SPINNER_INT;
+      control->set_name(name);
+      control->user_id = id;
+      control->callback    = callback;
+      control->associated_object = object;
+      control->object_cb = obj_cb;
+      add_control( panel, control );
+      return control;
+  }
+  else {
+    return NULL;
+  }
+
+}
 
 /********************************** GLUI::add_column() ************/
 
-void   GLUI::add_column( int draw_bar )
+GLUI_Column *   GLUI::add_column( int draw_bar )
 {
-  add_column_to_panel( main_panel, draw_bar );
+  return add_column_to_panel( main_panel, draw_bar );
 }
 
 
 /******************************* GLUI::add_column_to_panel() **********/
 
-void   GLUI::add_column_to_panel( GLUI_Panel *panel, int draw_bar )
+GLUI_Column * GLUI::add_column_to_panel( GLUI_Panel *panel, int draw_bar )
 {
   GLUI_Column *control = new GLUI_Column;
 
@@ -482,6 +671,7 @@ void   GLUI::add_column_to_panel( GLUI_Panel *panel, int draw_bar )
   }
   else {
   }
+  return control;
 }
 
 
@@ -581,8 +771,7 @@ GLUI_Rotation   *GLUI::add_rotation_to_panel( GLUI_Panel *panel,
 
 /*********************************** GLUI:: add_translation() ************/
 
-GLUI_Translation   
-  *GLUI:: add_translation( char *name, int trans_type,
+GLUI_Translation *GLUI:: add_translation( char *name, int trans_type,
 			   float *value_ptr, int id, GLUI_Update_CB callback )
 {
   return add_translation_to_panel( main_panel,name,trans_type, 
@@ -592,8 +781,7 @@ GLUI_Translation
 
 /*********************************** GLUI:: add_translation_to_panel() **********/
 
-GLUI_Translation   
-   *GLUI::add_translation_to_panel( 
+GLUI_Translation *GLUI::add_translation_to_panel( 
 				   GLUI_Panel *panel, char *name, 
 				   int trans_type, float *value_ptr,
 				   int id, GLUI_Update_CB callback )
@@ -635,15 +823,15 @@ GLUI_Translation
 
 /********************************** GLUI::add_rollout() **************/
 
-GLUI_Rollout   *GLUI::add_rollout( char *name, int open )
+GLUI_Rollout   *GLUI::add_rollout( char *name, int open, int type)
 {
-  return add_rollout_to_panel( main_panel, name, open );
+  return add_rollout_to_panel( main_panel, name, open, type);
 }
 
 
 /****************************** GLUI::add_rollout_to_panel() *********/
 
-GLUI_Rollout *GLUI::add_rollout_to_panel(GLUI_Panel *panel,char *name,int open)
+GLUI_Rollout *GLUI::add_rollout_to_panel(GLUI_Panel *panel,char *name,int open, int type)
 {
   GLUI_Rollout     *rollout;
   
@@ -652,7 +840,7 @@ GLUI_Rollout *GLUI::add_rollout_to_panel(GLUI_Panel *panel,char *name,int open)
   if ( rollout ) {
     rollout->set_name( name );
     rollout->user_id    = -1;
-    rollout->int_val    = GLUI_PANEL_EMBOSSED;
+    rollout->int_val    = type;
 		
     if ( NOT open ) {
       rollout->is_open = false;
@@ -662,6 +850,79 @@ GLUI_Rollout *GLUI::add_rollout_to_panel(GLUI_Panel *panel,char *name,int open)
     add_control( panel, rollout );
 
     return rollout;
+  }
+  else {
+    return NULL;
+  }  
+}
+
+
+/********************************** GLUI::add_rollout() **************/
+
+GLUI_Tree   *GLUI::add_tree(char *name, int open, int inset)
+{
+  return add_tree_to_panel( main_panel, name, open, inset);
+}
+
+
+/****************************** GLUI::add_rollout_to_panel() *********/
+
+GLUI_Tree *GLUI::add_tree_to_panel(GLUI_Panel *panel,char *name,int open, int inset)
+{
+  GLUI_Tree       *tree;
+  GLUI_StaticText *inset_label;
+  GLUI_Column     *col;
+  tree = new GLUI_Tree;
+
+  if ( tree ) {
+    tree->set_name( name );
+    tree->user_id    = -1;
+        
+    if ( NOT open ) {
+      tree->is_open = false;
+      tree->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+    }
+
+    add_control( panel, tree );
+    inset_label = add_statictext_to_panel(tree,"");
+    inset_label->set_w(inset);
+    col = add_column_to_panel(tree,true);
+    tree->set_column(col);
+    tree->set_alignment(GLUI_ALIGN_LEFT);
+    return tree;
+  }
+  else {
+    return NULL;
+  }  
+}
+
+/********************************** GLUI::add_rollout() **************/
+
+GLUI_TreePanel   *GLUI::add_treepanel(char *name, int open, int inset)
+{
+  return add_treepanel_to_panel( main_panel, name, open, inset);
+}
+
+
+/****************************** GLUI::add_rollout_to_panel() *********/
+
+GLUI_TreePanel *GLUI::add_treepanel_to_panel(GLUI_Panel *panel,char *name,int open, int inset)
+{
+  GLUI_TreePanel       *tree;
+  GLUI_StaticText *inset_label;
+  tree = new GLUI_TreePanel;
+
+  if ( tree ) {
+    tree->set_name( name );
+    tree->user_id    = -1;
+        
+    if ( NOT open ) {
+      tree->is_open = false;
+      tree->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+    }
+
+    add_control( panel, tree );
+    return tree;
   }
   else {
     return NULL;

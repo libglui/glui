@@ -25,13 +25,13 @@ libs =     ${GLLIBS} -lXmu -lXext -lX11 -lXi -lm #-lmalloc
 
 LIBGLUI= -Llib -lglui
 
-All: Setup lib/libglui.a bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
+All: Setup lib/libglui.a bin/example1 bin/example2 bin/example3 bin/example4 bin/example5 bin/example6
 
 Setup:
 	mkdir -p bin
 	mkdir -p lib
 
-GLUI_OBJS = glui_add_controls.o glui.o glui_bitmap_img_data.o glui_bitmaps.o glui_button.o glui_edittext.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o glui_window.o arcball.o algebra3.o quaternion.o viewmodel.o
+GLUI_OBJS = glui_add_controls.o glui.o glui_bitmap_img_data.o glui_bitmaps.o glui_button.o glui_edittext.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o glui_window.o arcball.o algebra3.o quaternion.o viewmodel.o glui_treepanel.o glui_tree.o glui_textbox.o glui_scrollbar.o glui_list.o glui_filebrowser.o
 
 bin/example1: $(GLUI_OBJS) example1.o lib/libglui.a
 	@echo "Linking example1"
@@ -53,6 +53,10 @@ bin/example5: $(GLUI_OBJS) example5.o lib/libglui.a
 	@echo "Linking example5"
 	$(CC)  $(CFLAG) $(CPPFLAGS) $(LPATH) example5.o $(LIBGLUI) $(libs) -o bin/example5
 
+bin/example6: $(GLUI_OBJS) example6.o lib/libglui.a
+	@echo "Linking example6"
+	$(CC)  $(CFLAG) $(CPPFLAGS) $(LPATH) example6.o $(LIBGLUI) $(libs) -o bin/example6
+
 lib/libglui.a: $(GLUI_OBJS)
 	@echo "Creating library"
 	ar -r lib/libglui.a $(GLUI_OBJS)
@@ -73,7 +77,9 @@ example1.o: glui.h
 example2.o:   glui.h
 example3.o:   glui.h
 example4.o:   glui.h
+example6.o:   glui.h
 glui.o: glui.h  stdinc.h 
+glui_filebrowser.o: glui.h stdinc.h
 glui_add_controls.o: glui.h  stdinc.h 
 glui_bitmap_img_data.o: glui_img_checkbox_0.c glui_img_checkbox_1.c
 glui_bitmap_img_data.o: glui_img_radiobutton_0.c glui_img_radiobutton_1.c
@@ -104,3 +110,8 @@ glui_mouse_iaction.o: glui.h stdinc.h
 glui_listbox.o: glui.h stdinc.h  
 glui_rollout.o: glui.h stdinc.h 
 viewmodel.o: viewmodel.h glui.h stdinc.h
+glui_tree.o: glui.h stdinc.h
+glui_textbox.o: glui.h stdinc.h
+glui_scrollbar.o: glui.h stdinc.h
+glui_list.o: glui.h stdinc.h
+glui_treepanel.o: glui.h stdinc.h
