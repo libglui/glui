@@ -94,19 +94,15 @@ void    GLUI_RadioGroup::draw_group( int translate )
 
   button = (GLUI_RadioButton*) first_child();
   while( button != NULL ) {
-    
-    if ( translate ) {
-      glPushMatrix();
-      button->translate_to_origin();
-    }
+    glPushMatrix();
+    button->translate_to_origin();
 
     if ( button->int_val ) 
       button->draw_checked();
     else 
       button->draw_unchecked();
     
-    if ( translate )
-      glPopMatrix();
+    glPopMatrix();
 
     button = (GLUI_RadioButton*) button->next();
   }

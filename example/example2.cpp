@@ -64,12 +64,22 @@ void myGlutKeyboard(unsigned char Key, int x, int y)
 {
   switch(Key)
   {
+    // A few keys here to test the sync_live capability.
+  case 'o':
+    // Cycle through object types
+    ++obj %= 3;
+    GLUI_Master.sync_live_all();
+    break;
+  case 'w':
+    // Toggle wireframe mode
+    wireframe = !wireframe;
+    GLUI_Master.sync_live_all();
+    break;
   case 27: 
   case 'q':
     exit(0);
     break;
   };
-  
   glutPostRedisplay();
 }
 
@@ -162,6 +172,12 @@ void myGlutDisplay( void )
     else
       glutSolidTorus( .2,.5,16,segments );
   }
+  else if ( obj == 2 ) {
+    if ( wireframe )
+      glutWireTeapot( .5 );
+    else
+      glutSolidTeapot( .5 );
+  }
 
   glDisable( GL_LIGHTING );  /* Disable lighting while we render text */
   glMatrixMode( GL_PROJECTION );
@@ -240,6 +256,7 @@ int main(int argc, char* argv[])
   radio = new GLUI_RadioGroup( obj_panel,&obj,4,control_cb );
   new GLUI_RadioButton( radio, "Sphere" );
   new GLUI_RadioButton( radio, "Torus" );
+  new GLUI_RadioButton( radio, "Teapot" );
   new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
  
   glui->set_main_gfx_window( main_window );
