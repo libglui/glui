@@ -42,7 +42,6 @@ GLUI_CommandLine *cmd_line;
 GLUI_Panel       *obj_panel;
 
 /********** User IDs for callbacks ********/
-#define CMD_LINE_ID          100
 #define CMD_HIST_RESET_ID    101
 #define LIGHT0_ENABLED_ID    200
 #define LIGHT1_ENABLED_ID    201
@@ -64,17 +63,7 @@ GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
 
 void control_cb( int control )
 {
-  if ( control == CMD_LINE_ID ) {
-    /*** User typed text into the 'command line' window ***/
-    printf( "Command (%d): %s\n", counter, cmd_line->get_text() );
-    std::string text = cmd_line->get_text();
-    if (text =="exit" || text == "quit")
-      exit(0);
-  }
-  else if ( control == CMD_HIST_RESET_ID ) {
-    cmd_line->reset_history();
-  }
-  else if ( control == LIGHT0_ENABLED_ID ) {
+  if ( control == LIGHT0_ENABLED_ID ) {
     if ( light0_enabled ) {
       glEnable( GL_LIGHT0 );
       light0_spinner->enable();
@@ -114,6 +103,29 @@ void control_cb( int control )
 
     glLightfv(GL_LIGHT1, GL_DIFFUSE, v );
   }
+}
+
+/**************************************** pointer_cb() *******************/
+/* GLUI control pointer callback                                         */
+/* You can also use a function that takes a GLUI_Control pointer  as its */
+/* argument.  This can simplify things sometimes, and reduce the clutter */
+/* of global variables by giving you the control pointer directly.       */
+/* For instance here we didn't need an additional global ID for the      */
+/* cmd_line because we can just compare pointers directly.               */
+
+void pointer_cb( GLUI_Control* control )
+{
+  if ( control == cmd_line ) {
+    /*** User typed text into the 'command line' window ***/
+    printf( "Command (%d): %s\n", counter, cmd_line->get_text() );
+    std::string text = cmd_line->get_text();
+    if (text =="exit" || text == "quit")
+      exit(0);
+  }
+  else if ( control->get_id() == CMD_HIST_RESET_ID ) {
+    cmd_line->reset_history();
+  }
+
 }
 
 /**************************************** myGlutKeyboard() **********/
@@ -382,10 +394,10 @@ int main(int argc, char* argv[])
 					   0, 50, 500 );
   
   cmd_line = new GLUI_CommandLine( cmd_line_glui, "Command (try 'exit'):", NULL,
-                                   CMD_LINE_ID, control_cb );
+                                   -1, pointer_cb );
   cmd_line->set_w( 400 );  /** Widen 'command line' control **/
 
-  new GLUI_Button(cmd_line_glui, "Clear History", CMD_HIST_RESET_ID, control_cb);
+  new GLUI_Button(cmd_line_glui, "Clear History", CMD_HIST_RESET_ID, pointer_cb);
 
   /**** Link windows to GLUI, and register idle callback ******/
   
