@@ -30,12 +30,12 @@ quat::quat(const float x, const float y, const float z, const float w)
     s = w;
 }
 
-quat::quat(vec3 _v, float _s)
+quat::quat(const vec3 &_v, const float _s)
 {
     set( _v, _s );
 }
 
-quat::quat(float _s, vec3 _v)
+quat::quat(const float _s, const vec3 &_v)
 {
     set( _v, _s );
 }
@@ -63,7 +63,7 @@ quat::quat(const quat &q)
 }
 
 void 
-quat::set(vec3 _v, float _s)
+quat::set(const vec3 &_v, const float _s)
 {
     v = _v;
     s = _s;
@@ -110,7 +110,7 @@ quat operator * ( const float t, const quat &a )
 }
 
 mat4  
-quat::to_mat4()
+quat::to_mat4() const
 {
     float xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
 
@@ -133,7 +133,7 @@ quat::to_mat4()
 /************************************************* quat_identity() *****/
 /* Returns quaternion identity element                                 */
 
-quat quat_identity()
+quat quat_identity() 
 {
     return quat( vec3( 0.0, 0.0, 0.0 ), 1.0 );
 }
@@ -141,7 +141,7 @@ quat quat_identity()
 /************************************************ quat_slerp() ********/
 /* Quaternion spherical interpolation                                 */
 
-quat quat_slerp(quat from, quat to, float t)
+quat quat_slerp(const quat &from, const quat &to, const float t)
 {
     quat to1;
     float omega, cosom, sinom, scale0, scale1;
@@ -183,7 +183,7 @@ quat quat_slerp(quat from, quat to, float t)
 /* set rot angle (degrees)                                             */
 
 void  
-quat::set_angle(float f)
+quat::set_angle(const float f)
 {
     vec3 axis = get_axis();
 
@@ -196,7 +196,7 @@ quat::set_angle(float f)
 /* scale rot angle (degrees)                                             */
 
 void  
-quat::scale_angle(float f)
+quat::scale_angle(const float f)
 {
     set_angle( f * get_angle() );
 }
@@ -205,7 +205,7 @@ quat::scale_angle(float f)
 /* get rot angle (degrees).  Assumes s is between -1 and 1             */
 
 float 
-quat::get_angle()
+quat::get_angle() const
 {
     return (float) RAD2DEG( 2.0 * acos( s ) );
 }
@@ -213,7 +213,7 @@ quat::get_angle()
 /********************************************* get_axis() **************/
 
 vec3  
-quat::get_axis()
+quat::get_axis() const
 {
     float scale = (float) sin( acos( s ) );
 
@@ -226,7 +226,7 @@ quat::get_axis()
 /******************************************* quat::print() ************/
 
 void   
-quat::print(FILE *dest, char *name)
+quat::print(FILE *dest, const char *name) const
 {
     fprintf( dest, "%s:   v:<%3.2f %3.2f %3.2f>  s:%3.2f\n", 
         name, v[0], v[1], v[2], s );

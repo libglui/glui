@@ -95,61 +95,61 @@ public:
   /* This readjusts the distance from the eye to the lookat */
   /* (changing the eye point in the process)                */
   /* The lookat point is unaffected                         */
-  void set_distance(float new_distance);
+  void set_distance(const float new_distance);
 
   /******************************* set_up() ***************/
-  void set_up(vec3 new_up);
+  void set_up(const vec3 &new_up);
 
-  void set_up(float x, float y, float z);
+  void set_up(const float x, const float y, const float z);
 
   /******************************* set_eye() ***************/
-  void set_eye( vec3 new_eye );
+  void set_eye(const vec3 &new_eye );
 
-  void set_eye(float x, float y, float z);
+  void set_eye(const float x, const float y, const float z);
 
   /******************************* set_lookat() ***************/
-  void set_lookat(vec3 new_lookat);
+  void set_lookat(const vec3 &new_lookat);
 
-  void set_lookat(float x, float y, float z);
+  void set_lookat(const float x, const float y, const float z);
 
   /******************************* roll() *****************/
   /* Rotates about the forward vector                     */
   /* eye and lookat remain unchanged                      */
-  void roll(float angle);
+  void roll(const float angle);
 
   /******************************* eye_yaw() *********************/
   /* Rotates the eye about the lookat point, using the up vector */
   /* Lookat is unaffected                                        */
-  void eye_yaw(float angle);
+  void eye_yaw(const float angle);
 
   /******************************* eye_yaw_abs() ******************/
   /* Rotates the eye about the lookat point, with a specific axis */
   /* Lookat is unaffected                                         */
-  void eye_yaw_abs(float angle, vec3 axis);
+  void eye_yaw_abs(const float angle, const vec3 &axis);
 
 
   /******************************* eye_pitch() ************/
   /* Rotates the eye about the side vector                */
   /* Lookat is unaffected                                 */
-  void eye_pitch(float angle);
+  void eye_pitch(const float angle);
 
   /******************************* lookat_yaw()************/
   /* This assumes the up vector is correct.               */
   /* Rotates the lookat about the side vector             */
   /* Eye point is unaffected                              */
-  void lookat_yaw(float angle);
+  void lookat_yaw(const float angle);
 
   /******************************* lookat_pitch() *********/
   /* Rotates the lookat point about the side vector       */
   /* This assumes the side vector is correct.             */
   /* Eye point is unaffected                              */
-  void lookat_pitch(float angle);
+  void lookat_pitch(const float angle);
 
   /******************************* reset_up() ******************/
   /* Resets the up vector to a specified axis (0=X, 1=Y, 2=Z)  */
   /* Also sets the eye point level with the lookat point,      */
   /* along the specified axis                                  */
-  void reset_up(int axis_num);
+  void reset_up(const int axis_num);
 
   void reset_up();
 
@@ -158,33 +158,33 @@ public:
   /* directions.  This function does NOT move by world       */
   /* coordinates.  To move by world coords, use the move_abs */
   /* function.                                               */
-  void move(float side_move, float up_move, float forw_move);
+  void move(const float side_move, const float up_move, const float forw_move);
 
-  void move(vec3 v);
+  void move(const vec3 &v);
 
   /******************************* move_by_eye() ***********/
   /* Sets the eye point, AND moves the lookat point by the */
   /* same amount as the eye is moved.                      */
-  void move_by_eye(vec3 new_eye);
+  void move_by_eye(const vec3 &new_eye);
 
   /******************************* move_by_lookat() *********/
   /* Sets the lookat point, AND moves the eye point by the  */
   /* same amount as the lookat is moved.                    */
-  void move_by_lookat(vec3 new_lookat);
+  void move_by_lookat(const vec3 &new_lookat);
 
   /******************************* move_abs() *****************/
   /* Move the eye and lookat in world coordinates             */
-  void move_abs(vec3 v);
+  void move_abs(const vec3 &v);
 
   /****************************** rot_about_eye() ************/
   /* Rotates the lookat point about the eye, based on a 4x4  */
   /* (pure) rotation matrix                                  */
-  void rot_about_eye(mat4 rot);
+  void rot_about_eye(const mat4 &rot);
 
   /****************************** rot_about_lookat() ************/
   /* Rotates the lookat point about the lookat, based on a 4x4  */
   /* (pure) rotation matrix                                  */
-  void rot_about_lookat(mat4 rot);
+  void rot_about_lookat(const mat4 &rot);
 
   /******************************* make_mtx() *************/
   /* Constructs a 4x4 matrix - used by load_to_openGL()   */
@@ -214,11 +214,10 @@ public:
   /* direct changes to the vectors or points of this class */
   void update();
 
-
   /******************************* dump() *******************/
   /* Prints the contents of this class to a file, typically */
   /* stdin or stderr                                        */
-  void dump(FILE *output);
+  void dump(FILE *output) const;
 };
 
 #endif

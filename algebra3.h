@@ -61,48 +61,15 @@
 // float and takes as argument a float
 typedef float (*V_FCT_PTR)(float);
 
-// min-max macros
-#ifndef MIN
-#define MIN(A,B) ((A) < (B) ? (A) : (B))
-#define MAX(A,B) ((A) > (B) ? (A) : (B))
-#endif
-
-//#include <stream.h>
-// error handling macro
-//#define VEC_ERROR(E) { cerr << E; exit(1); }
-/*#define << 
-#define >>*/
-
-#ifdef VEC_ERROR_FATAL
-#ifndef VEC_ERROR
-#define VEC_ERROR(E) { printf( "VERROR %s\n", E ); exit(1); }
-#endif
-#else
-#ifndef VEC_ERROR
-#define VEC_ERROR(E) { printf( "VERROR %s\n", E ); }
-#endif
-#endif
-
 class vec2;
 class vec3;
 class vec4;
 class mat3;
 class mat4;
 
-/*#ifndef X
-enum {X,Y,Z,W};
-#endif
-*/
-
-/*#ifndef R
-enum {R,G,B,ALPHA};
-#endif
-*/
-
 #ifndef M_PI
 #define M_PI 3.141592654
 #endif
-
 
 enum {VX, VY, VZ, VW};           // axes
 enum {PA, PB, PC, PD};           // planes
@@ -136,20 +103,22 @@ public:
 
     // Assignment operators
 
-    vec2  &operator  = ( const vec2 &v );   // assignment of a vec2
-    vec2  &operator += ( const vec2 &v );   // incrementation by a vec2
-    vec2  &operator -= ( const vec2 &v );   // decrementation by a vec2
-    vec2  &operator *= ( const float d );   // multiplication by a constant
-    vec2  &operator /= ( const float d );   // division by a constant
-    float &operator [] ( int i);            // indexing
+    vec2  &operator  = (const vec2 &v);    // assignment of a vec2
+    vec2  &operator += (const vec2 &v);    // incrementation by a vec2
+    vec2  &operator -= (const vec2 &v);    // decrementation by a vec2
+    vec2  &operator *= (const float d);    // multiplication by a constant
+    vec2  &operator /= (const float d);    // division by a constant
 
     // special functions
 
-    float  length();                        // length of a vec2
-    float  length2();                       // squared length of a vec2
-    vec2  &normalize();                     // normalize a vec2
-    vec2  &apply(V_FCT_PTR fct);            // apply a func. to each component
-    void   set( float x, float y );         // set vector
+    float  length()  const;                   // length of a vec2
+    float  length2() const;                   // squared length of a vec2
+    vec2  &normalize();                       // normalize a vec2
+    vec2  &apply(V_FCT_PTR fct);              // apply a func. to each component
+    void   set(const float x, const float y); // set vector
+
+          float &operator [] (const int i);       // indexing
+    const float &operator [] (const int i) const; // indexing
 
     // friends
 
@@ -159,7 +128,7 @@ public:
     friend vec2  operator *  (const vec2 &a, const float d);    // v1 * 3.0
     friend vec2  operator *  (const float d, const vec2 &a);    // 3.0 * v1
     friend vec2  operator *  (const mat3 &a, const vec2 &v);    // M . v
-    friend vec2  operator *  (const vec2 &v, mat3 &a);          // v . M
+    friend vec2  operator *  (const vec2 &v, const mat3 &a);    // v . M
     friend float operator *  (const vec2 &a, const vec2 &b);    // dot product
     friend vec2  operator /  (const vec2 &a, const float d);    // v1 / 3.0
     friend vec3  operator ^  (const vec2 &a, const vec2 &b);    // cross product
@@ -170,7 +139,7 @@ public:
     friend void swap(vec2 &a, vec2 &b);                         // swap v1 & v2
     friend vec2 min_vec(const vec2 &a, const vec2 &b);          // min(v1, v2)
     friend vec2 max_vec(const vec2 &a, const vec2 &b);          // max(v1, v2)
-    friend vec2 prod(const vec2 &a, const vec2 &b);             // term by term *
+    friend vec2 prod   (const vec2 &a, const vec2 &b);          // term by term *
 };
 
 /****************************************************************
@@ -198,9 +167,9 @@ public:
     vec3(const float d);
     vec3(const vec3 &v);                     // copy constructor
     vec3(const vec2 &v);                     // cast v2 to v3
-    vec3(const vec2 &v, float d);            // cast v2 to v3
+    vec3(const vec2 &v, const float d);      // cast v2 to v3
     vec3(const vec4 &v);                     // cast v4 to v3
-    vec3(const vec4 &v, int dropAxis);       // cast v4 to v3
+    vec3(const vec4 &v, const int dropAxis); // cast v4 to v3
 
     // Assignment operators
 
@@ -209,17 +178,21 @@ public:
     vec3  &operator -= (const vec3 &v);      // decrementation by a vec3
     vec3  &operator *= (const float d);      // multiplication by a constant
     vec3  &operator /= (const float d);      // division by a constant
-    float &operator [] (int i);              // indexing
 
     // special functions
 
-    float  length();                         // length of a vec3
-    float  length2();                        // squared length of a vec3
-    vec3  &normalize();                      // normalize a vec3
-    vec3  &homogenize();                     // homogenize (div by Z)
-    vec3  &apply(V_FCT_PTR fct);             // apply a func. to each component
-    void   set(float x, float y, float z);   // set vector
-    void   print( FILE *file, char *name );  // print vector to a file
+    float  length()  const;                     // length of a vec3
+    float  length2() const;                     // squared length of a vec3
+    vec3  &normalize();                         // normalize a vec3
+    vec3  &homogenize();                        // homogenize (div by Z)
+    vec3  &apply(V_FCT_PTR fct);                // apply a func. to each component
+
+    void   print(FILE *file, const char *name) const; // print vector to a file
+
+    void   set(const float x, const float y, const float z);   // set vector
+
+          float &operator [] (const int i);       // indexing
+    const float &operator [] (const int i) const; // indexing
 
     // friends
 
@@ -229,7 +202,7 @@ public:
     friend vec3  operator *  (const vec3 &a, const float d);  // v1 * 3.0
     friend vec3  operator *  (const float d, const vec3 &a);  // 3.0 * v1
     friend vec3  operator *  (const mat4 &a, const vec3 &v);  // M . v
-    friend vec3  operator *  (const vec3 &v, mat4& a);        // v . M
+    friend vec3  operator *  (const vec3 &v, const mat4 &a);  // v . M
     friend float operator *  (const vec3 &a, const vec3 &b);  // dot product
     friend vec3  operator /  (const vec3 &a, const float d);  // v1 / 3.0
     friend vec3  operator ^  (const vec3 &a, const vec3 &b);  // cross product
@@ -246,7 +219,7 @@ public:
 
     friend vec2 operator * (const mat3 &a, const vec2 &v);    // linear transform
     friend vec3 operator * (const mat3 &a, const vec3 &v);    // linear transform
-    friend mat3 operator * (mat3 &a, mat3 &b);                // matrix 3 product
+    friend mat3 operator * (const mat3 &a, const mat3 &b);    // matrix 3 product
 };
 
 /****************************************************************
@@ -282,17 +255,21 @@ public:
     vec4  &operator -= (const vec4 &v);    // decrementation by a vec4
     vec4  &operator *= (const float d);    // multiplication by a constant
     vec4  &operator /= (const float d);    // division by a constant
-    float &operator [] (int i);            // indexing
 
     // special functions
 
-    float  length();                         // length of a vec4
-    float  length2();                        // squared length of a vec4
-    vec4  &normalize();                      // normalize a vec4
-    vec4  &apply(V_FCT_PTR fct);             // apply a func. to each component
+    float  length()  const;                     // length of a vec4
+    float  length2() const;                     // squared length of a vec4
+    vec4  &normalize();                         // normalize a vec4
+    vec4  &apply(V_FCT_PTR fct);                // apply a func. to each component
     vec4  &homogenize();
-    void   print(FILE *file, char *name);    // print vector to a file
-    void   set(float x, float y, float z, float a);                        
+
+    void   print(FILE *file, const char *name) const; // print vector to a file
+
+    void   set(const float x, const float y, const float z, const float a);                        
+
+          float &operator [] (const int i);       // indexing
+    const float &operator [] (const int i) const; // indexing
 
     // friends
 
@@ -302,7 +279,7 @@ public:
     friend vec4  operator *  (const vec4 &a, const float d);   // v1 * 3.0
     friend vec4  operator *  (const float d, const vec4 &a);   // 3.0 * v1
     friend vec4  operator *  (const mat4 &a, const vec4 &v);   // M . v
-    friend vec4  operator *  (const vec4 &v, mat4 &a);         // v . M
+    friend vec4  operator *  (const vec4 &v, const mat4 &a);   // v . M
     friend float operator *  (const vec4 &a, const vec4 &b);   // dot product
     friend vec4  operator /  (const vec4 &a, const float d);   // v1 / 3.0
     friend int   operator == (const vec4 &a, const vec4 &b);   // v1 == v2 ?
@@ -312,12 +289,12 @@ public:
     friend void swap(vec4 &a, vec4 &b);                        // swap v1 & v2
     friend vec4 min_vec(const vec4 &a, const vec4 &b);         // min(v1, v2)
     friend vec4 max_vec(const vec4 &a, const vec4 &b);         // max(v1, v2)
-    friend vec4 prod(const vec4 &a, const vec4 &b);            // term by term *
+    friend vec4 prod   (const vec4 &a, const vec4 &b);         // term by term *
 
     // necessary friend declarations
 
     friend vec3 operator * (const mat4 &a, const vec3 &v);     // linear transform
-    friend mat4 operator * (mat4 &a, mat4 &b);                 // matrix 4 product
+    friend mat4 operator * (const mat4 &a, const mat4 &b);     // matrix 4 product
 };
 
 /****************************************************************
@@ -348,23 +325,26 @@ public:
     mat3 &operator -= (const mat3  &m);        // decrementation by a mat3
     mat3 &operator *= (const float  d);        // multiplication by a constant
     mat3 &operator /= (const float  d);        // division by a constant
-    vec3 &operator [] (int i);                 // indexing
 
     // special functions
 
-    mat3  transpose();                         // transpose
-    mat3  inverse();                           // inverse
-    mat3 &apply(V_FCT_PTR fct);                // apply a func. to each element
-    void  print(FILE *file, char *name );      // print matrix to a file
+    mat3  transpose() const;                    // transpose
+    mat3  inverse() const;                      // inverse
+    mat3 &apply(V_FCT_PTR fct);                 // apply a func. to each element
+
+    void  print(FILE *file, const char *name ) const; // print matrix to a file
+
     void  set(const vec3 &v0, const vec3 &v1, const vec3 &v2);
 
+          vec3 &operator [] (const int i);       // indexing
+    const vec3 &operator [] (const int i) const; // indexing
 
     // friends
 
     friend mat3 operator -  (const mat3 &a);                     // -m1
     friend mat3 operator +  (const mat3 &a, const mat3 &b);      // m1 + m2
     friend mat3 operator -  (const mat3 &a, const mat3 &b);      // m1 - m2
-    friend mat3 operator *  (mat3 &a, mat3 &b);                  // m1 * m2
+    friend mat3 operator *  (const mat3 &a, const mat3 &b);      // m1 * m2
     friend mat3 operator *  (const mat3 &a, const float d);      // m1 * 3.0
     friend mat3 operator *  (const float d, const mat3 &a);      // 3.0 * m1
     friend mat3 operator /  (const mat3 &a, const float d);      // m1 / 3.0
@@ -413,23 +393,27 @@ public:
     mat4 &operator -= (const mat4 &m);        // decrementation by a mat4
     mat4 &operator *= (const float d);        // multiplication by a constant
     mat4 &operator /= (const float d);        // division by a constant
-    vec4 &operator [] (int i);                // indexing
 
     // special functions
 
-    mat4  transpose();                        // transpose
-    mat4  inverse();                          // inverse
-    mat4 &apply(V_FCT_PTR fct);               // apply a func. to each element
-    void  print(FILE *file, char *name);      // print matrix to a file
-    void  swap_rows(int i, int j);            // swap rows i and j
-    void  swap_cols(int i, int j);            // swap cols i and j
+    mat4  transpose() const;                   // transpose
+    mat4  inverse() const;                     // inverse
+    mat4 &apply(V_FCT_PTR fct);                // apply a func. to each element
+
+    void  print(FILE *file, const char *name) const; // print matrix to a file
+    
+          vec4 &operator [] (const int i);       // indexing
+    const vec4 &operator [] (const int i) const; // indexing
+
+    void  swap_rows(const int i, const int j); // swap rows i and j
+    void  swap_cols(const int i, const int j); // swap cols i and j
 
     // friends
 
     friend mat4 operator -  (const mat4 &a);                     // -m1
     friend mat4 operator +  (const mat4 &a, const mat4 &b);      // m1 + m2
     friend mat4 operator -  (const mat4 &a, const mat4 &b);      // m1 - m2
-    friend mat4 operator *  (mat4 &a, mat4 &b);                  // m1 * m2
+    friend mat4 operator *  (const mat4 &a, const mat4 &b);      // m1 * m2
     friend mat4 operator *  (const mat4 &a, const float d);      // m1 * 4.0
     friend mat4 operator *  (const float d, const mat4 &a);      // 4.0 * m1
     friend mat4 operator /  (const mat4 &a, const float d);      // m1 / 3.0
@@ -453,20 +437,20 @@ public:
  *                                                              *
  ****************************************************************/
 
-mat3 identity2D();                                      // identity 2D
-mat3 translation2D(vec2 &v);                            // translation 2D
-mat3 rotation2D(vec2 &Center, const float angleDeg);    // rotation 2D
-mat3 scaling2D(vec2 &scaleVector);                      // scaling 2D
-mat4 identity3D();                                      // identity 3D
-mat4 translation3D(vec3 &v);                            // translation 3D
-mat4 rotation3D(vec3 &Axis, const float angleDeg);      // rotation 3D
-mat4 rotation3Drad(vec3 &Axis, const float angleRad);   // rotation 3D
-mat4 scaling3D(vec3 &scaleVector);                      // scaling 3D
-mat4 perspective3D(const float d);                      // perspective 3D
+mat3 identity2D   ();                                         // identity 2D
+mat3 translation2D(const vec2 &v);                            // translation 2D
+mat3 rotation2D   (const vec2 &Center, const float angleDeg); // rotation 2D
+mat3 scaling2D    (const vec2 &scaleVector);                  // scaling 2D
+mat4 identity3D   ();                                         // identity 3D
+mat4 translation3D(const vec3 &v);                            // translation 3D
+mat4 rotation3D   (const vec3 &Axis, const float angleDeg);   // rotation 3D
+mat4 rotation3Drad(const vec3 &Axis, const float angleRad);   // rotation 3D
+mat4 scaling3D    (const vec3 &scaleVector);                  // scaling 3D
+mat4 perspective3D(const float d);                            // perspective 3D
 
-vec3 operator * (const vec3 &v, mat3 &a);
-vec2 operator * (const vec2 &v, mat3 &a);
-vec3 operator * (const vec3 &v, mat4 &a);
-vec4 operator * (const vec4 &v, mat4 &a);
+vec3 operator * (const vec3 &v, const mat3 &a);
+vec2 operator * (const vec2 &v, const mat3 &a);
+vec3 operator * (const vec3 &v, const mat4 &a);
+vec4 operator * (const vec4 &v, const mat4 &a);
 
 #endif

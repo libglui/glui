@@ -43,7 +43,7 @@ Arcball::Arcball(mat4 *mtx)
 /**************************************** Arcball::Arcball() ****/
 /* A constructor that accepts the screen center and arcball radius*/
 
-Arcball::Arcball(vec2 _center, float _radius)
+Arcball::Arcball(const vec2 &_center, float _radius)
 {
     rot_ptr = &rot;
     init();
@@ -54,7 +54,7 @@ Arcball::Arcball(vec2 _center, float _radius)
 /************************************** Arcball::set_params() ****/
 
 void 
-Arcball::set_params(vec2 _center, float _radius)
+Arcball::set_params(const vec2 &_center, float _radius)
 {
     center      = _center;
     radius      = _radius;
@@ -80,7 +80,7 @@ Arcball::init()
 /*********************************** Arcball::mouse_to_sphere() ****/
 
 vec3 
-Arcball::mouse_to_sphere(vec2 p)
+Arcball::mouse_to_sphere(const vec2 &p)
 {
     float mag;
     vec2  v2 = (p - center) / radius;
@@ -110,7 +110,7 @@ Arcball::mouse_to_sphere(vec2 p)
 /************************************ Arcball::constrain_vector() ****/
 
 vec3 
-Arcball::constrain_vector(vec3 vector, vec3 axis)
+Arcball::constrain_vector(const vec3 &vector, const vec3 &axis)
 {
     return (vector-(vector*axis)*axis).normalize();
 }
@@ -118,7 +118,7 @@ Arcball::constrain_vector(vec3 vector, vec3 axis)
 /************************************ Arcball::mouse_down() **********/
 
 void 
-Arcball::mouse_down(int x, int y)
+Arcball::mouse_down(const int x, const int y)
 {
     down_pt.set( (float)x, (float) y );
     is_mouse_down = true;
@@ -142,7 +142,7 @@ Arcball::mouse_up()
 /********************************** Arcball::mouse_motion() **********/
 
 void 
-Arcball::mouse_motion(int x, int y, int shift, int ctrl, int alt)
+Arcball::mouse_motion(const int x, const int y, const int shift, const int ctrl, const int alt)
 {
     /* Set the X constraint if CONTROL key is pressed, Y if ALT key */
     set_constraints( ctrl != 0, alt != 0 );
@@ -183,7 +183,7 @@ Arcball::mouse_motion(int x, int y, int shift, int ctrl, int alt)
 /********************************** Arcball::mouse_motion() **********/
 
 void 
-Arcball::mouse_motion( int x, int y )
+Arcball::mouse_motion(const int x, const int y)
 {
     mouse_motion(x, y, 0, 0, 0);
 }
@@ -192,7 +192,7 @@ Arcball::mouse_motion( int x, int y )
 /***************************** Arcball::set_constraints() **********/
 
 void 
-Arcball::set_constraints(Bool _constraint_x, Bool _constraint_y)
+Arcball::set_constraints(const bool _constraint_x, const bool _constraint_y)
 {
     constraint_x = _constraint_x;
     constraint_y = _constraint_y;
@@ -203,18 +203,18 @@ Arcball::set_constraints(Bool _constraint_x, Bool _constraint_y)
 void  
 Arcball::idle()
 {
-    if ( is_mouse_down ) 
+    if (is_mouse_down) 
     {
         is_spinning = false;
         zero_increment = true;
     }
 
-    if ( damp_factor < 1.0f ) 
-        q_increment.scale_angle( 1.0f - damp_factor );
+    if (damp_factor < 1.0f) 
+        q_increment.scale_angle(1.0f - damp_factor);
 
     rot_increment = q_increment.to_mat4();
 
-    if ( q_increment.s >= .999999f ) 
+    if (q_increment.s >= .999999f) 
     {
         is_spinning = false;
         zero_increment = true;
@@ -225,7 +225,7 @@ Arcball::idle()
 /************************ Arcball::set_damping() *********************/
 
 void  
-Arcball::set_damping(float d)
+Arcball::set_damping(const float d)
 {
     damp_factor = d;
 }

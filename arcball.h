@@ -44,21 +44,21 @@ class Arcball
 public:
     Arcball();
     Arcball(mat4 *mtx);
-    Arcball(vec2 center, float radius);
+    Arcball(const vec2 &center, float radius);
 
-    void  set_damping(float d);
+    void  set_damping(const float d);
     void  idle();
-    void  mouse_down(int x, int y);
+    void  mouse_down(const int x, const int y);
     void  mouse_up();
-    void  mouse_motion(int x, int y, int shift, int ctrl, int alt);
-    void  mouse_motion(int x, int y);
-    void  set_constraints( Bool constrain_x, Bool constrain_y);
-    void  set_params( vec2 center, float radius);  
+    void  mouse_motion(const int x, const int y, const int shift, const int ctrl, const int alt);
+    void  mouse_motion(const int x, const int y);
+    void  set_constraints(const bool constrain_x, const bool constrain_y);
+    void  set_params(const vec2 &center, const float radius);  
     void  reset_mouse();
     void  init();
 
-    vec3  constrain_vector(vec3 vector, vec3 axis);
-    vec3  mouse_to_sphere(vec2 p);
+    vec3  constrain_vector(const vec3 &vector, const vec3 &axis);
+    vec3  mouse_to_sphere(const vec2 &p);
  
   //public:
     int   is_mouse_down;  /* true for down, false for up */
@@ -68,7 +68,7 @@ public:
     mat4  rot, rot_increment;
     mat4  *rot_ptr;
 
-    Bool  constraint_x, constraint_y;
+    bool  constraint_x, constraint_y;
     vec2  center;
     float radius, damp_factor;
     int   zero_increment;

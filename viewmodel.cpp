@@ -13,7 +13,7 @@
 #include <cstdlib>
 
 void 
-ViewModel::set_distance(float new_distance) 
+ViewModel::set_distance(const float new_distance) 
 {
     if ( new_distance <= 0.0 )  /* Distance has to be positive */
         return;
@@ -30,47 +30,47 @@ ViewModel::set_distance(float new_distance)
 }
 
 void 
-ViewModel::set_up(vec3 new_up) 
+ViewModel::set_up(const vec3 &new_up) 
 {
     up = new_up;
     update();
 }
 
 void 
-ViewModel::set_up(float x, float y, float z) 
+ViewModel::set_up(const float x, const float y, const float z) 
 {
     set_up(vec3(x,y,z));
 }
 
 void 
-ViewModel::set_eye(vec3 new_eye) 
+ViewModel::set_eye(const vec3 &new_eye) 
 {
     eye = new_eye;
     update();
 }
 
 void 
-ViewModel::set_eye(float x, float y, float z) 
+ViewModel::set_eye(const float x, const float y, const float z) 
 {
     set_eye(vec3(x,y,z));
 }
 
 void 
-ViewModel::set_lookat(vec3 new_lookat) 
+ViewModel::set_lookat(const vec3 &new_lookat) 
 {
     lookat = new_lookat;
     update();
 }
 
 void 
-ViewModel::set_lookat(float x, float y, float z) 
+ViewModel::set_lookat(const float x, const float y, const float z) 
 {
     set_lookat(vec3(x,y,z));
 }
 
 
 void 
-ViewModel::roll(float angle) 
+ViewModel::roll(const float angle) 
 {
     mat4 rot = rotation3D( forward, angle );
     up = rot * up;
@@ -78,7 +78,7 @@ ViewModel::roll(float angle)
 }
 
 void 
-ViewModel::eye_yaw(float angle)
+ViewModel::eye_yaw(const float angle)
 {
     vec3 eye_pt = eye - lookat; /* eye w/lookat at center */
     mat4 rot    = rotation3D( up, angle );
@@ -90,7 +90,7 @@ ViewModel::eye_yaw(float angle)
 }
 
 void 
-ViewModel::eye_yaw_abs(float angle, vec3 axis) 
+ViewModel::eye_yaw_abs(const float angle, const vec3 &axis) 
 {
     vec3 eye_pt   = eye  - lookat;   /* eye w/lookat at center */
     mat4 rot      = rotation3D( axis, angle );
@@ -105,7 +105,7 @@ ViewModel::eye_yaw_abs(float angle, vec3 axis)
 
 
 void 
-ViewModel::eye_pitch(float angle) 
+ViewModel::eye_pitch(const float angle) 
 {
     vec3 eye_pt = eye - lookat; /* eye w/lookat at center */
     mat4 rot    = rotation3D( side, angle );
@@ -119,7 +119,7 @@ ViewModel::eye_pitch(float angle)
 }
 
 void 
-ViewModel::lookat_yaw( float angle ) 
+ViewModel::lookat_yaw(const float angle) 
 {
     vec3 lookat_pt = lookat - eye;   /* lookat w/eye at center */
     mat4 rot = rotation3D( up, -angle );
@@ -131,7 +131,7 @@ ViewModel::lookat_yaw( float angle )
 }
 
 void 
-ViewModel::lookat_pitch(float angle) 
+ViewModel::lookat_pitch(const float angle) 
 {
     vec3 lookat_pt = lookat - eye;   /* lookat w/eye at center */
     mat4 rot = rotation3D( side, -angle );
@@ -145,7 +145,7 @@ ViewModel::lookat_pitch(float angle)
 }
 
 void 
-ViewModel::reset_up(int axis_num) 
+ViewModel::reset_up(const int axis_num) 
 {
     float eye_distance = (lookat - eye).length();
     eye[axis_num] = lookat[axis_num]; 
@@ -169,7 +169,7 @@ ViewModel::reset_up()
 }
 
 void 
-ViewModel::move(float side_move, float up_move, float forw_move) 
+ViewModel::move(const float side_move, const float up_move, const float forw_move) 
 {
     eye    += forward * forw_move;
     eye    += side    * side_move;
@@ -181,13 +181,13 @@ ViewModel::move(float side_move, float up_move, float forw_move)
 }
 
 void 
-ViewModel::move(vec3 v) /* A vector version of the above command */
+ViewModel::move(const vec3 &v) /* A vector version of the above command */
 { 
     move( v[VX], v[VY], v[VZ] );
 }
 
 void 
-ViewModel::move_by_eye(vec3 new_eye) 
+ViewModel::move_by_eye(const vec3 &new_eye) 
 {
     vec3 diff = new_eye - eye;
 
@@ -198,7 +198,7 @@ ViewModel::move_by_eye(vec3 new_eye)
 }
 
 void 
-ViewModel::move_by_lookat(vec3 new_lookat) 
+ViewModel::move_by_lookat(const vec3 &new_lookat) 
 {
     vec3 diff = new_lookat - lookat;
 
@@ -209,7 +209,7 @@ ViewModel::move_by_lookat(vec3 new_lookat)
 }
 
 void 
-ViewModel::move_abs(vec3 v) 
+ViewModel::move_abs(const vec3 &v) 
 {
     eye    += v;
     lookat += v;
@@ -218,7 +218,7 @@ ViewModel::move_abs(vec3 v)
 }
 
 void 
-ViewModel::rot_about_eye(mat4 rot) 
+ViewModel::rot_about_eye(const mat4 &rot) 
 {
     vec3  view = lookat - eye;
 
@@ -231,7 +231,7 @@ ViewModel::rot_about_eye(mat4 rot)
 }
 
 void 
-ViewModel::rot_about_lookat(mat4 rot) 
+ViewModel::rot_about_lookat(const mat4 &rot) 
 {
     // NOT QUITE RIGHT YET
 
@@ -317,7 +317,7 @@ ViewModel::update()
 
 
 void 
-ViewModel::dump(FILE *output) 
+ViewModel::dump(FILE *output) const 
 {
     fprintf( output, "Viewmodel: \n" );
     eye.print(    output, "  eye"    );

@@ -40,8 +40,8 @@ public:
 
   quat();
   quat(const float x, const float y, const float z, const float w);
-  quat(vec3 v, float s); 
-  quat(float s, vec3 v);
+  quat(const vec3 &v, const float s); 
+  quat(const float   s, const vec3 &v);
   quat(const float  *d);     /* copy from four-element float array  */
   quat(const double *f);     /* copy from four-element double array */
   quat(const quat   &q);     /* copy from other quat                */
@@ -53,23 +53,27 @@ public:
   quat  &operator -= (const quat &v);      /* decrementation by a quat        */
   quat  &operator *= (const float d);      /* multiplication by a constant    */
   quat  &operator /= (const float d);      /* division by a constant          */
-  float &operator [] (int i);              /* indexing                        */
   
   /* special functions */
   
-  float  length();                         /* length of a quat                */
-  float  length2();                        /* squared length of a quat        */
+  float  length() const;                   /* length of a quat                */
+  float  length2() const;                  /* squared length of a quat        */
   quat  &normalize();                      /* normalize a quat                */
   quat  &apply(V_FCT_PTR fct);             /* apply a func. to each component */
-  void   set(float x, float y, float z);   /* set quat                        */
-  void   set(vec3 v, float s );            /* set quat                        */
-  void   print( FILE *file, char *name );  /* print quat to a file            */
-  vec3   xform( const vec3 &v );           /* q*v*q-1                         */
-  mat4   to_mat4();
-  void   set_angle( float f );             /* set rot angle (degrees)         */
-  void   scale_angle( float f );           /* scale rot angle (degrees)       */
-  float  get_angle();                      /* set rot angle (degrees)         */
-  vec3   get_axis();                       /* get axis                        */
+  vec3   xform(const vec3 &v );            /* q*v*q-1                         */
+  mat4   to_mat4() const;
+  void   set_angle(const float f);         /* set rot angle (degrees)         */
+  void   scale_angle(const float f);       /* scale rot angle (degrees)       */
+  float  get_angle() const;                /* set rot angle (degrees)         */
+  vec3   get_axis()  const;                /* get axis                        */
+
+  void   print( FILE *file, const char *name ) const;  /* print quat to a file            */
+
+        float &operator [] (const int i);       /* indexing                        */
+  const float &operator [] (const int i) const; /* indexing                        */
+
+  void   set(const float x, const float y, const float z);   /* set quat                        */
+  void   set(const vec3 &v, const float s);                  /* set quat                        */
 
   /* friends */
 
@@ -91,6 +95,6 @@ public:
 /* Utility functions */
 
 quat quat_identity();        /* Returns quaternion identity element */
-quat quat_slerp(quat from, quat to, float t);
+quat quat_slerp(const quat &from, const quat &to, const float t);
 
 #endif
