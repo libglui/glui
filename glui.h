@@ -244,9 +244,6 @@ enum GLUI_Control_Types
 #define  GLUI_SCROLL_HORIZONTAL       1
 
 
-/* Default String Size for Dynamic String Class - JVK */
-#define GLUI_STRING_SIZE            300
-
 /* Size of the character width hash table for faster lookups */
 #define CHAR_WIDTH_HASH_SIZE 126
 
@@ -270,38 +267,20 @@ enum TranslationCodes
 typedef std::string GLUI_String;
 GLUI_String& glui_format_str(GLUI_String &str, const char* fmt, ...);
 
-/********* Pre-declare the various classes *********/
+/********* Pre-declare classes as needed *********/
 
 class GLUI;
 class GLUI_Control;
 class GLUI_Listbox;
-class GLUI_Rotation;
-class GLUI_Translation;
-class GLUI_Mouse_Interaction;
-class GLUI_Checkbox;
-class GLUI_Slider;
-class GLUI_Button;
 class GLUI_StaticText;
-class GLUI_Bitmap;
 class GLUI_EditText;
-class GLUI_CommandLine;
-class GLUI_Node;
-class GLUI_Main;
 class GLUI_Panel;
 class GLUI_Spinner;
 class GLUI_RadioButton;
 class GLUI_RadioGroup;
-class GLUI_Separator;
-class GLUI_Column;
-class GLUI_Master;
 class GLUI_Glut_Window;
-class GLUI_Rollout;
-class GLUI_FileBrowser;  /* New Widgets - JVK */
-class GLUI_Tree;
-class GLUI_TreeNode;
 class GLUI_TreePanel;
 class GLUI_Scrollbar;
-class GLUI_TextBox;
 class GLUI_List;
 
 class Arcball;
@@ -697,23 +676,24 @@ public:
     /* if this is a container control (e.g., 
        radiogroup or panel) this indicated dimensions
        of inner area in which controls reside */
-    int             active, active_type, can_activate;
+    int             active_type;
+    bool            active, can_activate;
     int             spacebar_mouse_click;
     long            user_id, type;
-    int             is_container;  /* Is this a container class (e.g., panel) */
+    bool            is_container;  /* Is this a container class (e.g., panel) */
     int             alignment;
     GLUI_Update_CB  callback;
-    void            *ptr_val;                              /* A pointer value */
+    void           *ptr_val;          /* A pointer to the live variable value */
     float           float_val;                               /* A float value */
-    int             enabled;                   /* Is this control grayed out? */
+    bool            enabled;                   /* Is this control grayed out? */
     int             int_val;                              /* An integer value */
     float           float_array_val[GLUI_DEF_MAX_ARRAY];
-    int             state;
     GLUI_String     name;                         /* The name of this control */
     GLUI_String     text;              
     GLUI           *glui;
     void           *font;
-    int             live_type, live_inited;
+    int             live_type;
+    bool            live_inited;
     int             last_live_int;   /* last value that live var known to have */
     float           last_live_float;
     GLUI_String     last_live_text;
@@ -722,7 +702,7 @@ public:
 
     bool            collapsible, is_open;
     GLUI_Node       collapsed_node;
-    int             hidden; /* Collapsed controls (and children) are hidden */
+    bool            hidden; /* Collapsed controls (and children) are hidden */
     int             char_widths[CHAR_WIDTH_HASH_SIZE][2]; /* Character width hash table */
     /*** Get/Set values ***/
 
@@ -807,7 +787,6 @@ public:
         y_off_bot      = GLUI_YOFF;
         x_abs          = GLUI_XOFF;
         y_abs          = GLUI_YOFF;
-        state          = 0;
         active         = false;
         enabled        = true;
         int_val        = 0;
@@ -2109,6 +2088,7 @@ protected:
         horizontal   = true;
         h            = GLUI_SCROLL_ARROW_HEIGHT;
         w            = GLUI_TEXTBOX_WIDTH;
+        alignment    = GLUI_ALIGN_CENTER;
         x_off        = 0;
         y_off_top    = 0;
         y_off_bot    = 0;
