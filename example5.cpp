@@ -95,11 +95,10 @@ void control_cb( int control )
       light1_spinner->disable();
     }
   }
-  else if ( control == LIGHT0_INTENSITY_ID) 
-  {
+  else if ( control == LIGHT0_INTENSITY_ID ) {
     float v[] = { 
       light0_diffuse[0],  light0_diffuse[1],
-		  light0_diffuse[2],  light0_diffuse[3] };
+      light0_diffuse[2],  light0_diffuse[3] };
     
     v[0] *= light0_intensity;
     v[1] *= light0_intensity;
@@ -110,7 +109,7 @@ void control_cb( int control )
   else if ( control == LIGHT1_INTENSITY_ID ) {
     float v[] = { 
       light1_diffuse[0],  light1_diffuse[1],
-		  light1_diffuse[2],  light1_diffuse[3] };
+      light1_diffuse[2],  light1_diffuse[3] };
     
     v[0] *= light1_intensity;
     v[1] *= light1_intensity;
@@ -364,97 +363,91 @@ int main(int argc, char* argv[])
   glui = GLUI_Master.create_glui_subwindow( main_window, 
 					    GLUI_SUBWINDOW_RIGHT );
 
-  obj_panel = glui->add_rollout( "Properties", false );
+  obj_panel = new GLUI_Rollout(glui, "Properties", false );
 
   /***** Control for object params *****/
 
   checkbox = 
-    glui->add_checkbox_to_panel( obj_panel, "Wireframe", &wireframe, 1, 
-				 control_cb );
-  spinner  = glui->add_spinner_to_panel( obj_panel, "Segments:",
-					 GLUI_SPINNER_INT, &segments);
+    new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
+  spinner  = new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
   GLUI_Spinner *scale_spinner = 
-    glui->add_spinner_to_panel( obj_panel, "Scale:",
-				GLUI_SPINNER_FLOAT, &scale);
+    new GLUI_Spinner( obj_panel, "Scale:", &scale);
   scale_spinner->set_float_limits( .2f, 4.0 );
   scale_spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
 
   /******** Add some controls for lights ********/
 
-  GLUI_Rollout *roll_lights = glui->add_rollout( "Lights", false );
+  GLUI_Rollout *roll_lights = new GLUI_Rollout(glui, "Lights", false );
 
-  GLUI_Panel *light0 = glui->add_panel_to_panel( roll_lights, "Light 1" );
-  GLUI_Panel *light1 = glui->add_panel_to_panel( roll_lights, "Light 2" );
+  GLUI_Panel *light0 = new GLUI_Panel( roll_lights, "Light 1" );
+  GLUI_Panel *light1 = new GLUI_Panel( roll_lights, "Light 2" );
 
-  glui->add_checkbox_to_panel( light0, "Enabled", &light0_enabled,
-			       LIGHT0_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
+                     LIGHT0_ENABLED_ID, control_cb );
   light0_spinner = 
-    glui->add_spinner_to_panel( light0, "Intensity:", GLUI_SPINNER_FLOAT,
-				&light0_intensity, LIGHT0_INTENSITY_ID, control_cb );
+    new GLUI_Spinner( light0, "Intensity:", 
+                      &light0_intensity, LIGHT0_INTENSITY_ID,
+                      control_cb );
   light0_spinner->set_float_limits( 0.0, 1.0 );
   GLUI_Scrollbar *sb;
-  sb = glui->add_scrollbar_to_panel( light0, "Red",GLUI_SCROLL_HORIZONTAL,
-    GLUI_SCROLL_FLOAT,&light0_diffuse[0],LIGHT0_INTENSITY_ID,control_cb);
+  sb = new GLUI_Scrollbar( light0, "Red",GLUI_SCROLL_HORIZONTAL,
+                           &light0_diffuse[0],LIGHT0_INTENSITY_ID,control_cb);
   sb->set_int_limits(0,255);
-  sb = glui->add_scrollbar_to_panel( light0, "Green",GLUI_SCROLL_HORIZONTAL,
-    GLUI_SCROLL_FLOAT,&light0_diffuse[1],LIGHT0_INTENSITY_ID,control_cb);
+  sb = new GLUI_Scrollbar( light0, "Green",GLUI_SCROLL_HORIZONTAL,
+                           &light0_diffuse[1],LIGHT0_INTENSITY_ID,control_cb);
   sb->set_float_limits(0,1);
-  sb = glui->add_scrollbar_to_panel( light0, "Blue",GLUI_SCROLL_HORIZONTAL,
-    GLUI_SCROLL_FLOAT,&light0_diffuse[2],LIGHT0_INTENSITY_ID,control_cb);
+  sb = new GLUI_Scrollbar( light0, "Blue",GLUI_SCROLL_HORIZONTAL,
+                           &light0_diffuse[2],LIGHT0_INTENSITY_ID,control_cb);
   sb->set_float_limits(0,1);
-  glui->add_checkbox_to_panel( light1, "Enabled", &light1_enabled,
-			       LIGHT1_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
+                     LIGHT1_ENABLED_ID, control_cb );
   light1_spinner = 
-    glui->add_spinner_to_panel( light1, "Intensity:", GLUI_SPINNER_FLOAT,
-				&light1_intensity, LIGHT1_INTENSITY_ID,
-				control_cb );
+    new GLUI_Spinner( light1, "Intensity:",
+                      &light1_intensity, LIGHT1_INTENSITY_ID,
+                      control_cb );
   light1_spinner->set_float_limits( 0.0, 1.0 );
-  sb = glui->add_scrollbar_to_panel( light1, "Red",GLUI_SCROLL_HORIZONTAL,
-    GLUI_SCROLL_FLOAT,&light1_diffuse[0],LIGHT1_INTENSITY_ID,control_cb);
+  sb = new GLUI_Scrollbar( light1, "Red",GLUI_SCROLL_HORIZONTAL,
+                           &light1_diffuse[0],LIGHT1_INTENSITY_ID,control_cb);
   sb->set_int_limits(0,255);
-  sb = glui->add_scrollbar_to_panel( light1, "Green",GLUI_SCROLL_HORIZONTAL,
-    GLUI_SCROLL_FLOAT,&light1_diffuse[1],LIGHT1_INTENSITY_ID,control_cb);
+  sb = new GLUI_Scrollbar( light1, "Green",GLUI_SCROLL_HORIZONTAL,
+                           &light1_diffuse[1],LIGHT1_INTENSITY_ID,control_cb);
   sb->set_float_limits(0,1);
-  sb = glui->add_scrollbar_to_panel( light1, "Blue",GLUI_SCROLL_HORIZONTAL,
-    GLUI_SCROLL_FLOAT,&light1_diffuse[2],LIGHT1_INTENSITY_ID,control_cb);
+  sb = new GLUI_Scrollbar( light1, "Blue",GLUI_SCROLL_HORIZONTAL,
+                           &light1_diffuse[2],LIGHT1_INTENSITY_ID,control_cb);
   sb->set_float_limits(0,1);
 
 
   /*** Add another rollout ***/
-  GLUI_Rollout *options = glui->add_rollout( "Options", true );
-  glui->add_checkbox_to_panel( options, "Draw sphere", &show_sphere );
-  glui->add_checkbox_to_panel( options, "Draw torus", &show_torus );
-  glui->add_checkbox_to_panel( options, "Draw axes", &show_axes );
-  glui->add_checkbox_to_panel( options, "Draw text", &show_text );
-
-  options->close();
-//  options->open();
-  options->set_w(180);
+  GLUI_Rollout *options = new GLUI_Rollout(glui, "Options", true );
+  new GLUI_Checkbox( options, "Draw sphere", &show_sphere );
+  new GLUI_Checkbox( options, "Draw torus", &show_torus );
+  new GLUI_Checkbox( options, "Draw axes", &show_axes );
+  new GLUI_Checkbox( options, "Draw text", &show_text );
 
   /**** Add listbox ****/
-  glui->add_statictext( "" );
-  GLUI_Listbox *list = glui->add_listbox( "Text:", &curr_string );
+  new GLUI_StaticText( glui, "" );
+  GLUI_Listbox *list = new GLUI_Listbox( glui, "Text:", &curr_string );
   int i;
   for( i=0; i<4; i++ )
     list->add_item( i, string_list[i] );
 
-  glui->add_statictext( "" );
+  new GLUI_StaticText( glui, "" );
 
 
   /*** Disable/Enable buttons ***/
-  glui->add_button( "Disable movement", DISABLE_ID, control_cb );
-  glui->add_button( "Enable movement", ENABLE_ID, control_cb );
-  glui->add_button( "Hide", HIDE_ID, control_cb );
-  glui->add_button( "Show", SHOW_ID, control_cb );
+  new GLUI_Button( glui, "Disable movement", DISABLE_ID, control_cb );
+  new GLUI_Button( glui, "Enable movement", ENABLE_ID, control_cb );
+  new GLUI_Button( glui, "Hide", HIDE_ID, control_cb );
+  new GLUI_Button( glui, "Show", SHOW_ID, control_cb );
 
-  glui->add_statictext( "" );
+  new GLUI_StaticText( glui, "" );
 
   /****** A 'quit' button *****/
-  glui->add_button( "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
 
 
   /**** Link windows to GLUI, and register idle callback ******/
@@ -464,35 +457,35 @@ int main(int argc, char* argv[])
 
   /*** Create the bottom subwindow ***/
   glui2 = GLUI_Master.create_glui_subwindow( main_window, 
-					     GLUI_SUBWINDOW_BOTTOM );
+                                             GLUI_SUBWINDOW_BOTTOM );
   glui2->set_main_gfx_window( main_window );
 
-  GLUI_Rotation *view_rot = glui2->add_rotation( "Objects", view_rotate );
+  GLUI_Rotation *view_rot = new GLUI_Rotation(glui2, "Objects", view_rotate );
   view_rot->set_spin( 1.0 );
-  glui2->add_column( false );
-  GLUI_Rotation *sph_rot = glui2->add_rotation( "Sphere", sphere_rotate );
+  new GLUI_Column( glui2, false );
+  GLUI_Rotation *sph_rot = new GLUI_Rotation(glui2, "Sphere", sphere_rotate );
   sph_rot->set_spin( .98 );
-  glui2->add_column( false );
-  GLUI_Rotation *tor_rot = glui2->add_rotation( "Torus", torus_rotate );
+  new GLUI_Column( glui2, false );
+  GLUI_Rotation *tor_rot = new GLUI_Rotation(glui2, "Torus", torus_rotate );
   tor_rot->set_spin( .98 );
-  glui2->add_column( false );
-  GLUI_Rotation *lights_rot = glui2->add_rotation( "Blue Light", lights_rotation );
+  new GLUI_Column( glui2, false );
+  GLUI_Rotation *lights_rot = new GLUI_Rotation(glui2, "Blue Light", lights_rotation );
   lights_rot->set_spin( .82 );
-  glui2->add_column( false );
+  new GLUI_Column( glui2, false );
   GLUI_Translation *trans_xy = 
-    glui2->add_translation( "Objects XY", GLUI_TRANSLATION_XY, obj_pos );
+    new GLUI_Translation(glui2, "Objects XY", GLUI_TRANSLATION_XY, obj_pos );
   trans_xy->set_speed( .005 );
-  glui2->add_column( false );
+  new GLUI_Column( glui2, false );
   GLUI_Translation *trans_x = 
-    glui2->add_translation( "Objects X", GLUI_TRANSLATION_X, obj_pos );
+    new GLUI_Translation(glui2, "Objects X", GLUI_TRANSLATION_X, obj_pos );
   trans_x->set_speed( .005 );
-  glui2->add_column( false );
+  new GLUI_Column( glui2, false );
   GLUI_Translation *trans_y = 
-    glui2->add_translation( "Objects Y", GLUI_TRANSLATION_Y, &obj_pos[1] );
+    new GLUI_Translation( glui2, "Objects Y", GLUI_TRANSLATION_Y, &obj_pos[1] );
   trans_y->set_speed( .005 );
-  glui2->add_column( false );
+  new GLUI_Column( glui2, false );
   GLUI_Translation *trans_z = 
-    glui2->add_translation( "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
+    new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
   trans_z->set_speed( .005 );
 
   /**** We register the idle callback with GLUI, *not* with GLUT ****/

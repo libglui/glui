@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_rotation - GLUI_Rotation control class
+     glui_rotation - GLUI_Rotation control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,7 +27,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "arcball.h"
@@ -53,7 +58,7 @@ int    GLUI_Rotation::iaction_mouse_down_handler( int local_x, int local_y )
 /*********************** GLUI_Rotation::iaction_mouse_up_handler() **********/
 
 int    GLUI_Rotation::iaction_mouse_up_handler( int local_x, int local_y, 
-						int inside )
+						bool inside )
 {
   copy_float_array_to_ball();
 
@@ -66,7 +71,7 @@ int    GLUI_Rotation::iaction_mouse_up_handler( int local_x, int local_y,
 /******************* GLUI_Rotation::iaction_mouse_held_down_handler() ******/
 
 int    GLUI_Rotation::iaction_mouse_held_down_handler( int local_x, int local_y,
-						       int inside)
+						       bool inside)
 {  
   if ( NOT glui )
     return 0;
@@ -180,8 +185,7 @@ int    GLUI_Rotation::iaction_special_handler( int key,int modifiers )
 
 /********************************** GLUI_Rotation::init_ball() **********/
 
-void  
-GLUI_Rotation::init_ball( void )
+void  GLUI_Rotation::init_ball( void )
 {
   /*printf( "%f %f %f", float( MIN(w/2,h/2)), (float) w/2, (float) h/2 );              */
 
@@ -195,52 +199,51 @@ GLUI_Rotation::init_ball( void )
 
 /****************************** GLUI_Rotation::setup_texture() *********/
 
-void 
-GLUI_Rotation::setup_texture( void )
+void GLUI_Rotation::setup_texture( void )
 {
   int i, j;
   int dark, light;   /*** Dark and light colors for ball checkerboard  ***/
 
 #define CHECKBOARD_SIZE 64
-	unsigned char texture_image[CHECKBOARD_SIZE] [CHECKBOARD_SIZE] [3];
-	unsigned char c;
-	for( i=0; i<CHECKBOARD_SIZE; i++ ) 
-	{
-		for( j=0; j<CHECKBOARD_SIZE; j++ ) 
-		{
-			if (enabled) 
-			{
-				dark = 110;
-				light = 220;
-			}
-			else 
-			{
-				dark = glui->bkgd_color.r - 30;
-				light = glui->bkgd_color.r;
-			}
+  unsigned char texture_image[CHECKBOARD_SIZE] [CHECKBOARD_SIZE] [3];
+  unsigned char c;
+  for( i=0; i<CHECKBOARD_SIZE; i++ ) 
+  {
+    for( j=0; j<CHECKBOARD_SIZE; j++ ) 
+    {
+      if (enabled) 
+      {
+        dark = 110;
+        light = 220;
+      }
+      else 
+      {
+        dark = glui->bkgd_color.r - 30;
+        light = glui->bkgd_color.r;
+      }
 
-		  if (((i&0x8)==0) ^ ((j&0x8)==0))
-			  c = light;
-		  else
-			  c = dark;
+      if (((i&0x8)==0) ^ ((j&0x8)==0))
+        c = light;
+      else
+        c = dark;
 
-		  texture_image[i][j][0] = c;
-		  texture_image[i][j][1] = c;
-		  texture_image[i][j][2] = c;
-		}    
-	}
+      texture_image[i][j][0] = c;
+      texture_image[i][j][1] = c;
+      texture_image[i][j][2] = c;
+    }    
+  }
   
-	glColor3f( 1.0, 1.0, 1.0 );
-	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-	glEnable( GL_TEXTURE_2D);
-	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, CHECKBOARD_SIZE, 
-		CHECKBOARD_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		texture_image );
+  glColor3f( 1.0, 1.0, 1.0 );
+  glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+  glEnable( GL_TEXTURE_2D);
+  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+  glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, CHECKBOARD_SIZE, 
+                CHECKBOARD_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                texture_image );
 }
 
 /****************************** GLUI_Rotation::setup_lights() ***********/
@@ -313,7 +316,7 @@ void        GLUI_Rotation::idle( void )
 {
   spinning = ball->is_spinning;
 
-  if ( can_spin == true AND spinning == true ) {
+  if ( can_spin AND spinning ) {
     copy_float_array_to_ball();
     ball->idle();
 
@@ -382,10 +385,48 @@ void   GLUI_Rotation::set_spin( float damp_factor )
 
 /************** GLUI_Rotation::GLUI_Rotation() ********************/
 
-
-GLUI_Rotation::GLUI_Rotation( void ) 
+GLUI_Rotation::GLUI_Rotation( GLUI_Node *parent,
+                              const char *name, float *value_ptr,
+                              int id, 
+                              GLUI_Update_CB cb )
 {
-  sprintf( name, "Rotation: %p", (void *) this );
+  common_init();
+  set_ptr_val( value_ptr );
+  user_id    = id;
+  set_name( name );
+  callback    = cb;
+  parent->add_control( this );
+  init_live();
+  
+  /*** Init the live 4x4 matrix.  This is different than the standard
+       live variable behavior, since the original value of the 4x4 matrix
+       is ignored and reset to Identity  ***/
+/*
+NO! WVB
+    if ( value_ptr != NULL ) {
+      int i, j, index;
+      for( i=0; i<4; i++ ) {
+	for( j=0; j<4; j++ ) {
+	  index = i*4+j;
+	  if ( i==j )
+	    value_ptr[index] = 1.0;
+	  else
+	    value_ptr[index] = 0.0;
+	}
+      }
+    }
+*/
+    /*init_ball();              */
+		
+
+}
+
+
+/************** GLUI_Rotation::common_init() ********************/
+
+void GLUI_Rotation::common_init( void ) 
+{
+  glui_format_str( name, "Rotation: %p", this );
   type                = GLUI_CONTROL_ROTATION;
   w                   = GLUI_ROTATION_WIDTH;
   h                   = GLUI_ROTATION_HEIGHT;

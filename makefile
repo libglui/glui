@@ -31,7 +31,7 @@ Setup:
 	mkdir -p bin
 	mkdir -p lib
 
-GLUI_OBJS = glui_add_controls.o glui.o glui_bitmap_img_data.o glui_bitmaps.o glui_button.o glui_edittext.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o glui_window.o arcball.o algebra3.o quaternion.o viewmodel.o glui_treepanel.o glui_tree.o glui_textbox.o glui_scrollbar.o glui_list.o glui_filebrowser.o
+GLUI_OBJS = glui_add_controls.o glui_string.o glui.o glui_bitmap_img_data.o glui_bitmaps.o glui_button.o glui_edittext.o glui_commandline.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o glui_window.o arcball.o algebra3.o quaternion.o viewmodel.o glui_treepanel.o glui_tree.o glui_textbox.o glui_scrollbar.o glui_list.o glui_filebrowser.o
 
 bin/example1: $(GLUI_OBJS) example1.o lib/libglui.a
 	@echo "Linking example1"
@@ -91,12 +91,14 @@ glui_bitmap_img_data.o: glui_img_checkbox_0_dis.c glui_img_checkbox_1_dis.c
 glui_bitmap_img_data.o: glui_img_radiobutton_0_dis.c
 glui_bitmap_img_data.o: glui_img_radiobutton_1_dis.c glui_img_spinup_dis.c
 glui_bitmap_img_data.o: glui_img_spindown_dis.c
+glui_string.o: glui.h stdinc.h 
 glui_bitmaps.o: glui.h stdinc.h 
 glui_button.o: glui.h stdinc.h 
 glui_checkbox.o: glui.h stdinc.h 
 glui_column.o: glui.h stdinc.h 
 glui_control.o: glui.h stdinc.h 
 glui_edittext.o: glui.h stdinc.h 
+glui_commandline.o: glui.h stdinc.h 
 glui_node.o: glui.h stdinc.h 
 glui_panel.o: glui.h stdinc.h 
 glui_radio.o: glui.h stdinc.h 

@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_panel.cpp - GLUI_Panel control class
+     glui_panel.cpp - GLUI_Panel control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,20 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+
+GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const char *name, int type )
+{
+  common_init();
+  set_name( name );
+  user_id    = -1;
+  int_val    = type;
+
+  parent->add_control( this );
+}
 
 /****************************** GLUI_Panel::draw() **********/
 
@@ -81,7 +96,7 @@ void    GLUI_Panel::draw( int x, int y )
     **/    
       }
   else if ( int_val == GLUI_PANEL_EMBOSSED ) {
-    if ( parent_node == NULL || name[0] == '\0' ) {
+    if ( parent_node == NULL || name == "" ) {
       top = 0;
     }
     else {
@@ -107,7 +122,7 @@ void    GLUI_Panel::draw( int x, int y )
     glEnd();
 
     /**** Only display text in embossed panel ****/
-    if ( parent_node != NULL && name[0] != '\0' ) { /* Only  draw non-null strings */
+    if ( parent_node != NULL && name != "" ) { /* Only  draw non-null strings */
       int left = 7, height=GLUI_PANEL_NAME_DROP+1;
       int str_width;
 
@@ -133,9 +148,9 @@ void    GLUI_Panel::draw( int x, int y )
 
 /****************************** GLUI_Panel::set_name() **********/
 
-void    GLUI_Panel::set_name( char *new_name )
+void    GLUI_Panel::set_name( const char *new_name )
 {
-  strncpy(name,new_name,GLUI_STRING_SIZE);
+  name = new_name;
 
   update_size();
 
@@ -177,7 +192,7 @@ void   GLUI_Panel::update_size( void )
   if ( w < text_size + 16 )
     w = text_size + 16 ;
 
-  if ( name[0] != '\0' AND int_val == GLUI_PANEL_EMBOSSED ) {
+  if ( name != "" AND int_val == GLUI_PANEL_EMBOSSED ) {
     this->y_off_top = GLUI_YOFF + 8;
   }
   else {

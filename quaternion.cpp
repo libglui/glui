@@ -1,6 +1,8 @@
-/*
+/***********************************************************************
 
   quaternion.cpp - A quaternion class
+
+  -------------------------------------------------------------------
 
   GLUI User Interface Toolkit (LGPL)
   Copyright (c) 1998 Paul Rademacher
@@ -22,9 +24,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
-
-/***********************************************************************
+************************************************************************
 
   Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
   Oct 2003, Nigel Stewart - GLUI Code Cleaning
@@ -32,9 +32,7 @@
 ************************************************************************/
 
 #include "quaternion.h"
-
 #include <cmath>
-
 #include "stdinc.h"
 
 /******************************************* constructors **************/
@@ -82,15 +80,13 @@ quat::quat(const quat &q)
     s = q.s;
 }
 
-void 
-quat::set(const vec3 &_v, const float _s)
+void quat::set(const vec3 &_v, const float _s)
 {
     v = _v;
     s = _s;
 }
 
-quat &
-quat::operator=(const quat &q)
+quat &quat::operator=(const quat &q)
 { 
     v = q.v;  
     s = q.s; 
@@ -129,8 +125,7 @@ quat operator * ( const float t, const quat &a )
     return quat( a.v * t, a.s * t );
 }
 
-mat4  
-quat::to_mat4() const
+mat4 quat::to_mat4() const
 {
     float xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
 
@@ -161,7 +156,7 @@ quat quat_identity()
 /************************************************ quat_slerp() ********/
 /* Quaternion spherical interpolation                                 */
 
-quat quat_slerp(const quat &from, const quat &to, const float t)
+quat quat_slerp(const quat &from, const quat &to, float t)
 {
     quat to1;
     float omega, cosom, sinom, scale0, scale1;
@@ -202,8 +197,7 @@ quat quat_slerp(const quat &from, const quat &to, const float t)
 /********************************************** set_angle() ************/
 /* set rot angle (degrees)                                             */
 
-void  
-quat::set_angle(const float f)
+void quat::set_angle(float f)
 {
     vec3 axis = get_axis();
 
@@ -215,8 +209,7 @@ quat::set_angle(const float f)
 /********************************************** scale_angle() ************/
 /* scale rot angle (degrees)                                             */
 
-void  
-quat::scale_angle(const float f)
+void quat::scale_angle(float f)
 {
     set_angle( f * get_angle() );
 }
@@ -224,16 +217,14 @@ quat::scale_angle(const float f)
 /********************************************** get_angle() ************/
 /* get rot angle (degrees).  Assumes s is between -1 and 1             */
 
-float 
-quat::get_angle() const
+float quat::get_angle() const
 {
     return (float) RAD2DEG( 2.0 * acos( s ) );
 }
 
 /********************************************* get_axis() **************/
 
-vec3  
-quat::get_axis() const
+vec3 quat::get_axis() const
 {
     float scale = (float) sin( acos( s ) );
 
@@ -245,8 +236,7 @@ quat::get_axis() const
 
 /******************************************* quat::print() ************/
 
-void   
-quat::print(FILE *dest, const char *name) const
+void quat::print(FILE *dest, const char *name) const
 {
     fprintf( dest, "%s:   v:<%3.2f %3.2f %3.2f>  s:%3.2f\n", 
         name, v[0], v[1], v[2], s );

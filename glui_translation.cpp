@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_translation - GLUI_Translation control class
+     glui_translation - GLUI_Translation control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,11 +27,44 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
 #include "algebra3.h"
+
+/********************** GLUI_Translation::GLUI_Translation() ***/
+
+GLUI_Translation::GLUI_Translation(
+  GLUI_Node *parent, const char *name, 
+  int trans_t, float *value_ptr,
+  int id, GLUI_Update_CB cb )
+{
+  common_init();
+
+  set_ptr_val( value_ptr );
+  user_id    = id;
+  set_name( name );
+  callback    = cb;
+  parent->add_control( this );
+  //init_live();
+
+  trans_type = trans_t;
+
+  if ( trans_type == GLUI_TRANSLATION_XY ) {
+    float_array_size = 2;
+  }
+  else if ( trans_type == GLUI_TRANSLATION_X ) {
+    float_array_size = 1;
+  }
+  else if ( trans_type == GLUI_TRANSLATION_Y ) {
+    float_array_size = 1;
+  }
+  else if ( trans_type == GLUI_TRANSLATION_Z ) {
+    float_array_size = 1;
+  }
+  init_live();
+}
 
 /********************** GLUI_Translation::iaction_mouse_down_handler() ***/
 /*  These are really in local coords (5/10/99)                            */
@@ -50,12 +88,12 @@ int    GLUI_Translation::iaction_mouse_down_handler( int local_x,
 
     if ( glui->curr_modifiers & GLUT_ACTIVE_ALT ) {
       if ( ABS(local_y-center_y) > ABS(local_x-center_x) ) {
-	locked = GLUI_TRANSLATION_LOCK_Y;
-	glutSetCursor( GLUT_CURSOR_UP_DOWN );
+        locked = GLUI_TRANSLATION_LOCK_Y;
+        glutSetCursor( GLUT_CURSOR_UP_DOWN );
       }
       else {
-	locked = GLUI_TRANSLATION_LOCK_X;
-	glutSetCursor( GLUT_CURSOR_LEFT_RIGHT );
+        locked = GLUI_TRANSLATION_LOCK_X;
+        glutSetCursor( GLUT_CURSOR_LEFT_RIGHT );
       }
     }
     else {
@@ -86,7 +124,7 @@ int    GLUI_Translation::iaction_mouse_down_handler( int local_x,
 /*********************** GLUI_Translation::iaction_mouse_up_handler() **********/
 
 int    GLUI_Translation::iaction_mouse_up_handler( int local_x, int local_y, 
-						   int inside )
+						   bool inside )
 {
   trans_mouse_code = GLUI_TRANSLATION_MOUSE_NONE;
   locked = GLUI_TRANSLATION_LOCK_NONE;
@@ -100,7 +138,7 @@ int    GLUI_Translation::iaction_mouse_up_handler( int local_x, int local_y,
 /******************* GLUI_Translation::iaction_mouse_held_down_handler() ******/
 
 int    GLUI_Translation::iaction_mouse_held_down_handler( int local_x, int local_y,
-							  int inside)
+							  bool inside)
 {  
   float x_off, y_off;
   float off_array[2];

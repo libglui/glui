@@ -1,8 +1,21 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_spinner.cpp - GLUI_Spinner class
+     glui_spinner.cpp - GLUI_Spinner class
 
-  GLUI User Interface Toolkit (LGPL)
+
+  notes: 
+     spinner does not explicitly keep track of the current value - this is all
+        handled by the underlying edittext control
+        -> thus, spinner->sync_live() has no meaning, nor spinner->output_live
+	-> BUT, edittext will alter this spinner's float_val and int_val,
+	   so that spinner->get/set will work
+
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,23 +35,13 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
-
-/****************************************************************************
-  
-  notes: 
-     spinner does not explicitly keep track of the current value - this is all
-        handled by the underlying edittext control
-        -> thus, spinner->sync_live() has no meaning, nor spinner->output_live
-	-> BUT, edittext will alter this spinner's float_val and int_val,
-	   so that spinner->get/set will work
-
 *****************************************************************************/
 
   
 #include "glui.h"
 #include "stdinc.h"
-#include <math.h>
+#include <cmath>
+#include <cassert>
 
 /*static int __debug=0;              */
 
@@ -66,6 +69,79 @@ void  spinner_edittext_callback( int id )
 }
 
 
+/****************************** GLUI_Spinner::GLUI_Spinner() ****************/
+
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
+                            int data_type, int id, GLUI_Update_CB callback )
+{
+  common_construct(parent, name, data_type, NULL, id, callback);
+}
+
+/****************************** GLUI_Spinner::GLUI_Spinner() ****************/
+
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
+                            int *live_var, int id, GLUI_Update_CB callback )
+{
+  common_construct(parent, name, GLUI_SPINNER_INT, live_var, id, callback);
+}
+
+/****************************** GLUI_Spinner::GLUI_Spinner() ****************/
+
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
+             float *live_var, int id, GLUI_Update_CB callback )
+{
+  common_construct(parent, name, GLUI_SPINNER_FLOAT, live_var, id, callback);
+}
+
+/****************************** GLUI_Spinner::GLUI_Spinner() ****************/
+
+GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name, 
+                            int data_t, void *live_var,
+                            int id, GLUI_Update_CB callback )
+{
+  common_construct(parent, name, data_t, live_var, id, callback);
+}
+
+/****************************** GLUI_Spinner::common_construct() ************/
+
+void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name, 
+                                     int data_t, void *data, 
+                                     int id, GLUI_Update_CB cb )
+{
+  common_init();
+
+  if ( NOT strcmp( name, "Spinner Test" ))
+    id=id;
+
+  int text_type;
+  if ( data_t == GLUI_SPINNER_INT ) {
+    text_type = GLUI_EDITTEXT_INT;
+  }
+  else if ( data_t == GLUI_SPINNER_FLOAT ) {
+    text_type = GLUI_EDITTEXT_FLOAT;
+  }
+  else {
+    assert(0); /* Did not pass in a valid data type */
+  }
+
+  user_id     = id;
+  data_type   = data_t;
+  callback    = cb;
+  set_name( name );
+  //glui        = parent->get_glui();
+
+  parent->add_control( this );
+
+  GLUI_EditText *txt = 
+    new GLUI_EditText( this, name, text_type, data, id, cb);
+
+  edittext    = txt;  /* Link the edittext to the spinner */
+  /*      control->ptr_val     = data;               */
+    
+  edittext->spinner    = this; /* Link the spinner to the edittext */
+            
+}
+ 
 /****************************** GLUI_Spinner::mouse_down_handler() **********/
 
 int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
@@ -102,7 +178,7 @@ int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
 
 /******************************** GLUI_Spinner::mouse_up_handler() **********/
 
-int    GLUI_Spinner::mouse_up_handler( int local_x, int local_y, int inside )
+int    GLUI_Spinner::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   state = GLUI_SPINNER_STATE_NONE;
 
@@ -124,7 +200,7 @@ int    GLUI_Spinner::mouse_up_handler( int local_x, int local_y, int inside )
 /***************************** GLUI_Spinner::mouse_held_down_handler() ******/
 
 int    GLUI_Spinner::mouse_held_down_handler( int local_x, int local_y,
-					      int new_inside)
+					      bool new_inside)
 {
   int new_state;
 
@@ -312,6 +388,7 @@ void   GLUI_Spinner::set_int_val( int new_val )
 
 void   GLUI_Spinner::update_size( void )
 {
+  if (!edittext) return;
   /*edittext->w = this->w - GLUI_SPINNER_ARROW_WIDTH-3;              */
   this->w = edittext->w + GLUI_SPINNER_ARROW_WIDTH + 3;
 }
@@ -557,10 +634,10 @@ void    GLUI_Spinner::increase_growth( void )
 
 /*************************************** GLUI_Spinner:get_text() *************/
 
-char    *GLUI_Spinner::get_text( void )
+const char    *GLUI_Spinner::get_text( void )
 { 
   if (edittext) 
-    return edittext->text; 
+    return edittext->text.c_str(); 
   else 
     return ""; 
 }

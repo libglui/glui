@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_radio.cpp - GLUI_RadioGroup and GLUI_RadioButton control classes
+     glui_radio.cpp - GLUI_RadioGroup and GLUI_RadioButton control classes
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,40 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+#include <cassert>
+
+/****************************** GLUI_RadioGroup::GLUI_RadioGroup() **********/
+
+GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
+                                 int *value_ptr,
+                                 int user_id, GLUI_Update_CB cb)
+{
+  common_init();
+  GLUI_String      buf;
+
+  set_ptr_val( value_ptr );
+  if ( value_ptr ) {
+    int_val = *value_ptr;  /** Can't call set_int_val(), b/c that 
+                               function will try to call the 
+                               callback, etc */
+    /** Actually, maybe not **/
+    last_live_int = *value_ptr;
+  }
+
+  user_id    = user_id;
+  glui_format_str( buf, "RadioGroup: %p", this );
+  set_name( buf.c_str() );
+  callback   = cb;
+
+  parent->add_control( this );
+
+  init_live();
+}
+
 
 /****************************** GLUI_RadioGroup::draw() **********/
 
@@ -85,9 +120,9 @@ void    GLUI_RadioGroup::draw_group( int translate )
 
 /****************************** GLUI_RadioGroup::set_name() **********/
 
-void    GLUI_RadioGroup::set_name( char *text )
+void    GLUI_RadioGroup::set_name( const char *text )
 {
-  strncpy(name,text,GLUI_STRING_SIZE);
+  name = text;
 
   if ( glui )
     glui->refresh();
@@ -120,6 +155,31 @@ void    GLUI_RadioGroup::set_selected( int int_val )
 }
 
 
+/************************ GLUI_RadioButton::GLUI_RadioButton() **********/
+
+GLUI_RadioButton::GLUI_RadioButton( GLUI_RadioGroup *grp, const char *name )
+{
+  common_init();
+
+  set_int_val( 0 );
+
+  /** A radio button's user id is always its ordinal number (zero-indexed)
+      within the group */
+  user_id    = grp->num_buttons;
+  set_name( name );
+  group = grp;
+  
+  group->num_buttons++;   /* Increments radiogroup's button count */
+  group->add_control( this );
+
+  /*** Now update button states ***/
+  group->set_int_val( group->int_val ); /* This tells the group to
+                                           reset itself to its
+                                           current value, thereby
+                                           updating all its buttons */
+}
+
+
 /************************ GLUI_RadioButton::mouse_down_handler() **********/
 
 int    GLUI_RadioButton::mouse_down_handler( int local_x, int local_y )
@@ -141,7 +201,7 @@ int    GLUI_RadioButton::mouse_down_handler( int local_x, int local_y )
 /*************************** GLUI_RadioButton::mouse_up_handler() **********/
 
 int    GLUI_RadioButton::mouse_up_handler( int local_x, int local_y, 
-					   int inside )
+					   bool inside )
 {
   if ( NOT group )
     return false;
@@ -174,7 +234,7 @@ int    GLUI_RadioButton::mouse_up_handler( int local_x, int local_y,
 /********************** GLUI_RadioButton::mouse_held_down_handler() ******/
 
 int    GLUI_RadioButton::mouse_held_down_handler( int local_x, int local_y,
-						  int inside)
+						  bool inside)
 {
   if ( NOT inside AND currently_inside == true ) {
     group->set_selected( orig_value );
@@ -293,7 +353,7 @@ void   GLUI_RadioButton::update_size( void )
   if ( NOT glui )
     return;
 
-  text_size = _glutBitmapWidthString( glui->font, name );
+  text_size = _glutBitmapWidthString( glui->font, name.c_str() );
 
   /*  if ( w < text_x_offset + text_size + 6 )              */
   w = text_x_offset + text_size + 6 ;
@@ -311,7 +371,7 @@ void    GLUI_RadioButton::draw_active_area( void )
 
   orig = set_to_glut_window();
 
-  text_width = _glutBitmapWidthString( glui->font, name );
+  text_width = _glutBitmapWidthString( glui->font, name.c_str() );
   left       = text_x_offset-3;
   right      = left + 7 + text_width;
 

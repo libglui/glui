@@ -1,9 +1,14 @@
-/*
+/**********************************************************************
 
   arcball.cpp
 
+
+          --------------------------------------------------
+
   GLUI User Interface Toolkit (LGPL)
   Copyright (c) 1998 Paul Rademacher
+     Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
+     Oct 2003, Nigel Stewart - GLUI Code Cleaning
 
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
@@ -21,13 +26,6 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-*/
-
-/**********************************************************************
-
-  Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
-  Oct 2003, Nigel Stewart - GLUI Code Cleaning
 
 **********************************************************************/
 
@@ -67,8 +65,7 @@ Arcball::Arcball(const vec2 &_center, float _radius)
 
 /************************************** Arcball::set_params() ****/
 
-void 
-Arcball::set_params(const vec2 &_center, float _radius)
+void Arcball::set_params(const vec2 &_center, float _radius)
 {
     center      = _center;
     radius      = _radius;
@@ -76,8 +73,7 @@ Arcball::set_params(const vec2 &_center, float _radius)
 
 /*************************************** Arcball::init() **********/
 
-void 
-Arcball::init()
+void Arcball::init()
 {
     center.set( 0.0, 0.0 );
     radius         = 1.0;
@@ -93,8 +89,7 @@ Arcball::init()
 
 /*********************************** Arcball::mouse_to_sphere() ****/
 
-vec3 
-Arcball::mouse_to_sphere(const vec2 &p)
+vec3 Arcball::mouse_to_sphere(const vec2 &p)
 {
     float mag;
     vec2  v2 = (p - center) / radius;
@@ -123,16 +118,14 @@ Arcball::mouse_to_sphere(const vec2 &p)
 
 /************************************ Arcball::constrain_vector() ****/
 
-vec3 
-Arcball::constrain_vector(const vec3 &vector, const vec3 &axis)
+vec3 Arcball::constrain_vector(const vec3 &vector, const vec3 &axis)
 {
     return (vector-(vector*axis)*axis).normalize();
 }
 
 /************************************ Arcball::mouse_down() **********/
 
-void 
-Arcball::mouse_down(const int x, const int y)
+void Arcball::mouse_down(int x, int y)
 {
     down_pt.set( (float)x, (float) y );
     is_mouse_down = true;
@@ -145,8 +138,7 @@ Arcball::mouse_down(const int x, const int y)
 
 /************************************ Arcball::mouse_up() **********/
 
-void 
-Arcball::mouse_up()
+void Arcball::mouse_up()
 {
     q_now = q_drag * q_now;
     is_mouse_down = false;
@@ -155,8 +147,7 @@ Arcball::mouse_up()
 
 /********************************** Arcball::mouse_motion() **********/
 
-void 
-Arcball::mouse_motion(const int x, const int y, const int shift, const int ctrl, const int alt)
+void Arcball::mouse_motion(int x, int y, int shift, int ctrl, int alt)
 {
     /* Set the X constraint if CONTROL key is pressed, Y if ALT key */
     set_constraints( ctrl != 0, alt != 0 );
@@ -196,8 +187,7 @@ Arcball::mouse_motion(const int x, const int y, const int shift, const int ctrl,
 
 /********************************** Arcball::mouse_motion() **********/
 
-void 
-Arcball::mouse_motion(const int x, const int y)
+void Arcball::mouse_motion(int x, int y)
 {
     mouse_motion(x, y, 0, 0, 0);
 }
@@ -205,8 +195,7 @@ Arcball::mouse_motion(const int x, const int y)
 
 /***************************** Arcball::set_constraints() **********/
 
-void 
-Arcball::set_constraints(const bool _constraint_x, const bool _constraint_y)
+void Arcball::set_constraints(bool _constraint_x, bool _constraint_y)
 {
     constraint_x = _constraint_x;
     constraint_y = _constraint_y;
@@ -214,8 +203,7 @@ Arcball::set_constraints(const bool _constraint_x, const bool _constraint_y)
 
 /***************************** Arcball::idle() *********************/
 
-void  
-Arcball::idle()
+void Arcball::idle()
 {
     if (is_mouse_down) 
     {
@@ -238,8 +226,7 @@ Arcball::idle()
 
 /************************ Arcball::set_damping() *********************/
 
-void  
-Arcball::set_damping(const float d)
+void Arcball::set_damping(float d)
 {
     damp_factor = d;
 }

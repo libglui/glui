@@ -302,63 +302,59 @@ int main(int argc, char* argv[])
 							   x, and y */
 
   /*** Add invisible panel to hold rest of controls ***/
-  GLUI_Panel *panel1 = glui->add_panel( "", GLUI_PANEL_NONE );
+  GLUI_Panel *panel1 = new GLUI_Panel(glui, "", GLUI_PANEL_NONE );
 
-  obj_panel = glui->add_panel_to_panel( panel1, "Objects" );
+  obj_panel = new GLUI_Panel( panel1, "Objects" );
 
   /***** Control for object params *****/
 
   checkbox = 
-    glui->add_checkbox_to_panel( obj_panel, "Wireframe", &wireframe, 1, 
-				 control_cb );
-  spinner  = glui->add_spinner_to_panel( obj_panel, "Segments:",
-					 GLUI_SPINNER_INT, &segments);
+    new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
+  spinner  = new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
   GLUI_Spinner *scale_spinner = 
-    glui->add_spinner_to_panel( obj_panel, "Scale:",
-				GLUI_SPINNER_FLOAT, &scale);
+    new GLUI_Spinner( obj_panel, "Scale:", &scale);
   scale_spinner->set_float_limits( .2f, 4.0 );
   scale_spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
-  GLUI_Panel *panel2 = glui->add_panel_to_panel( obj_panel, "",
-						 GLUI_PANEL_NONE );
-  glui->add_checkbox_to_panel( panel2, "Sphere", &show_sphere );
-  glui->add_column_to_panel( panel2 );
-  glui->add_checkbox_to_panel( panel2, "Torus", &show_torus );
+  GLUI_Panel *panel2 = new GLUI_Panel( obj_panel, "", GLUI_PANEL_NONE );
+  new GLUI_Checkbox( panel2, "Sphere", &show_sphere );
+  new GLUI_Column( panel2 );
+  new GLUI_Checkbox( panel2, "Torus", &show_torus );
 
 
   /*** Start a new column in this panel ***/
-  glui->add_column_to_panel(panel1, false); /* 'false' means don't draw bar */
+  new GLUI_Column( panel1, false ); /* 'false' means don't draw bar */
 
 
   /******** Add some controls for lights ********/
 
-  GLUI_Panel *light0 = glui->add_panel_to_panel( panel1, "Light 1" );
-  GLUI_Panel *light1 = glui->add_panel_to_panel( panel1, "Light 2" );
+  GLUI_Panel *light0 = new GLUI_Panel( panel1, "Light 1" );
+  GLUI_Panel *light1 = new GLUI_Panel( panel1, "Light 2" );
 
-  glui->add_checkbox_to_panel( light0, "Enabled", &light0_enabled,
-			       LIGHT0_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
+                     LIGHT0_ENABLED_ID, control_cb );
   light0_spinner = 
-    glui->add_spinner_to_panel( light0, "Intensity:", GLUI_SPINNER_FLOAT,
-				&light0_intensity, LIGHT0_INTENSITY_ID,
-				control_cb );
+    new GLUI_Spinner( light0, "Intensity:", 
+                      &light0_intensity, LIGHT0_INTENSITY_ID,
+                      control_cb );
   light0_spinner->set_float_limits( 0.0, 1.0 );
 
-  glui->add_checkbox_to_panel( light1, "Enabled", &light1_enabled,
-			       LIGHT1_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
+                     LIGHT1_ENABLED_ID, control_cb );
   light1_spinner = 
-    glui->add_spinner_to_panel( light1, "Intensity:", GLUI_SPINNER_FLOAT,
-				&light1_intensity, LIGHT1_INTENSITY_ID,
-				control_cb );
+    new GLUI_Spinner( light1, "Intensity:",
+                      &light1_intensity, LIGHT1_INTENSITY_ID,
+                      control_cb );
   light1_spinner->set_float_limits( 0.0, 1.0 );
   light1_spinner->disable();   /* Disable this light initially */
 
   
   /****** A 'quit' button *****/
 
-  glui->add_button( "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
 
 
   /**** Link windows to GLUI, and register idle callback ******/

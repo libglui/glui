@@ -1,8 +1,13 @@
-/*
-
-  glui_checkbox - GLUI_Checkbox control class
-
+/****************************************************************************
+  
   GLUI User Interface Toolkit (LGPL)
+  ---------------------------
+
+     glui_checkbox - GLUI_Checkbox control class
+
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,29 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+
+/****************************** GLUI_Checkbox::GLUI_Checkbox() **********/
+
+GLUI_Checkbox::GLUI_Checkbox( GLUI_Node *parent,
+                              const char *name, int *value_ptr,
+                              int id, 
+                              GLUI_Update_CB cb )
+{
+  common_init();
+
+  set_ptr_val( value_ptr );
+  set_name( name );
+  user_id    = id;
+  callback   = cb;
+
+  parent->add_control( this );
+
+  init_live();
+}
 
 /****************************** GLUI_Checkbox::mouse_down_handler() **********/
 
@@ -48,7 +72,7 @@ int    GLUI_Checkbox::mouse_down_handler( int local_x, int local_y )
 
 /****************************** GLUI_Checkbox::mouse_up_handler() **********/
 
-int    GLUI_Checkbox::mouse_up_handler( int local_x, int local_y, int inside )
+int    GLUI_Checkbox::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   if ( NOT inside ) {
     int_val = orig_value;    
@@ -72,7 +96,7 @@ int    GLUI_Checkbox::mouse_up_handler( int local_x, int local_y, int inside )
 /****************************** GLUI_Checkbox::mouse_held_down_handler() ******/
 
 int    GLUI_Checkbox::mouse_held_down_handler( int local_x, int local_y,
-					       int inside)
+					       bool inside)
 {
   /********** Toggle checked and unchecked bitmap if we're entering or
     leaving the checkbox area **********/
@@ -262,7 +286,7 @@ void   GLUI_Checkbox::update_size( void )
   if ( NOT glui )
     return;
 
-  text_size = _glutBitmapWidthString( glui->font, name );
+  text_size = _glutBitmapWidthString( glui->font, name.c_str() );
 
   /*  if ( w < text_x_offset + text_size + 6 )              */
   w = text_x_offset + text_size + 6 ;
@@ -280,7 +304,7 @@ void    GLUI_Checkbox::draw_active_area( void )
 
   orig = set_to_glut_window();
 
-  text_width = _glutBitmapWidthString( glui->font, name );
+  text_width = _glutBitmapWidthString( glui->font, name.c_str() );
   left       = text_x_offset-3;
   right      = left + 7 + text_width;
 

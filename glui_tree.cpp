@@ -20,6 +20,31 @@
 #include "stdinc.h"
 
 
+/****************************** GLUI_Tree::GLUI_Tree() **********/
+GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name, 
+                     int open, int inset)
+{
+  common_init();
+  GLUI_StaticText *inset_label;
+  GLUI_Column     *col;
+
+  this->set_name( name );
+  this->user_id    = -1;
+        
+  if ( NOT open ) {
+    this->is_open = false;
+    this->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+  }
+
+  parent->add_control( this );
+  inset_label = new GLUI_StaticText(this,"");
+  inset_label->set_w(inset);
+  col = new GLUI_Column(this,true);
+  this->set_column(col);
+  this->set_alignment(GLUI_ALIGN_LEFT);
+}
+
+
 /****************************** GLUI_Tree::open() **********/
 
 void    GLUI_Tree::open( void )
@@ -107,7 +132,7 @@ int   GLUI_Tree::mouse_down_handler( int local_x, int local_y )
 
 /**************************** GLUI_Tree::mouse_down_handler() **********/
 
-int   GLUI_Tree::mouse_up_handler( int local_x, int local_y, int inside )
+int   GLUI_Tree::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   draw_unpressed();
 
@@ -286,7 +311,7 @@ void   GLUI_Tree::draw_unpressed( void )
 
 int  GLUI_Tree::mouse_held_down_handler( 
                        int local_x, int local_y, 
-                       int new_inside )
+                       bool new_inside )
 {
   if ( NOT initially_inside )
     return false;
@@ -294,10 +319,10 @@ int  GLUI_Tree::mouse_held_down_handler(
   if ( local_y - y_abs> 18 )
     new_inside = false;
 
-  if ( NOT new_inside AND currently_inside == true ) {
+  if ( NOT new_inside AND currently_inside ) {
     draw_unpressed();
   } 
-  else if ( new_inside AND currently_inside == false ) {
+  else if ( new_inside AND !currently_inside ) {
     draw_pressed();
   }
 

@@ -18,61 +18,124 @@
 #include "glui.h"
 
 /** These are the live variables passed into GLUI ***/
-int   main_window;
-int   dirty;
+int main_window;
+int dirty;
 int num_display  = 0;
 int num_format  = 0;
-int disable_textbox = 0;
-GLUI_StaticText *text;
-GLUI_List *hah;
-GLUI_TextBox *moo;
-GLUI *tree;
-GLUI_TreePanel *tp;
+int enable_textbox = 0;
+GLUI_StaticText  *text;
+GLUI_List        *hah;
+GLUI_TextBox     *moo;
+GLUI             *tree;
+GLUI_TreePanel   *tp;
 GLUI_FileBrowser *fb;
-GLUI_EditText * bedit;
+GLUI_EditText    *bedit;
 
-char scroll[] = "Scrollbar Widget";
+char general[] = "GLUI 2.3 Widgets\n\
+\n\
+A number of widgets have been introduced in GLUI 2.3\n\
+\n\
+\t* GLUI_Scrollbar \t- A scrollbar slider widget\n\
+\t* GLUI_TextBox \t- A multi-line text widget\n\
+\t* GLUI_List \t- A static choice list\n\
+\t* GLUI_FileBrowser \t- A simple filebrowser based on GLUI_List\n\
+\t* GLUI_Tree \t- Hierarchical tree widget\n\
+\t* GLUI_TreePanel \t- Manager for the tree widget\n\
+";
 
-char general[] = "GLUI 2.3 Widgets";
+char scroll[] = "Scrollbar Widget\n\
+\n\
+The GLUI_Scrollbar can be used more or less like a GLUI_Spinner.\n\
+It can be horizontal or vertical, and have float or int values.\n\
+\n\
+The set_int_limits and set_float_limits functions work properly even\n\
+if the min and max values are reversed.  In this way you can choose\n\
+whether the left/right or top/bottom is the minimum value.  \n\
+\n\
+For instance, with set_int_limits(0, 100) you get a normal slider with\n\
+0 corresponding to the left (bottom) end, and 100 corresponding to the\n\
+right (top) end.\n\
+\n\
+By calling set_int_limits(100,0) instead, the right (top) end becomes 0,\n\
+and the left (bottom) end is 100.\n\
+";
 
 char tree_txt[] = "Tree Widget";
 
-char rollout[] = "Rollout Widget";
+char commandline[] = "CommandLine Widget\n\
+\n\
+The GLUI_CommandLine is a GLUI_EditText with some special functionality\n\
+useful for implementing a simple command-line style input widget.  \n\
+The main feature is that it maintains a command history buffer so that\n\
+users can recall previous commands.\n\
+";
 
-char string[] = "GLUI_String";
+char gstring[] = "GLUI_String\n\
+\n\
+The GLUI string class used to be wrapper class around \n\
+a fixed 300 char buffer.\n\
+Now GLUI_String is just a typedef for std::string.\n\
+\n\
+One new function has been introduced, which is a sprintf() equivalent\n\
+for std::string/GLUI_String.  \n\
+\n\
+\tglui_format_str(GLUI_String& str, const char *format_str, ...);\n\
+\n\
+Other than the fact that it takes a GLUI_String as the first argument,\n\
+it works just like sprintf().\n\
+";
 
-char list[] = "List Widget";
+char list[] = "List Widget\n\
+\n\
+As seen on the left side of this window.";
+
+char filebrowser[] = "FileBrowserWidget\n\
+\n\
+As seen in the lower left corner of this window.\n\
+\n\
+The GLUI_FileBrowser is a subclass of GLUI_List and provides,\n\
+a simple file browsing and selecting interface under Windows and Unix.\n\
+\n\
+Go ahead and give it a try!  Navigate and select files by double-clicking.\n\
+If you pick a text file it will be displayed in this GLUI_TextBox.\n\
+";
 
 char text_box[] = "TextBox w/ optional Scrollbar\n\
 \n\
-A TextBox is a multiline editing box that supports basic navigation, formatting, and editing capabilities. These are text block selection, tabs, new lines, arrow key navigation, as well as an optional scrollbar. The scrollbar is actually a distinct widget and can exist by itself, or be associated with objects that have a specified callback routine.\n\
+A TextBox is a multiline editing box that supports basic navigation, \
+formatting, and editing capabilities. These are text block selection, \
+tabs, new lines, arrow key navigation, as well as an optional scrollbar. \
+The scrollbar is actually a distinct widget and can exist by itself, or \
+be associated with objects that have a specified callback routine.\n\
 \n\
-add_textbox, add_textbox_to_panel\n\
-Adds a new textbox to a GLUI window, optionally nested within another rollout or panel.\n\
+new GLUI_TextBox\n\
+Adds a new textbox to a GLUI window, optionally nested within another \n\
+rollout or panel.\n\
 \n\
 Usage:\n\
-GLUI_TextBox  *add_textbox(char *live_var=NULL,\n\
-\tint scroll = false,\n\
-\tint id=-1,\n\
-\tGLUI_Update_CB callback=NULL );\n\
-GLUI_TextBox  *add_textbox_to_panel( GLUI_Panel *panel, \n\
-\tchar *live_var=NULL,\n\
+new GLUI_TextBox(GLUI_Node *glui_or_panel, char *live_var=NULL,\n\
 \tint scroll = false,\n\
 \tint id=-1,\n\
 \tGLUI_Update_CB callback=NULL );\n\
 \n\
 \tpanel\t- Name of panel to place the TextBox in.\n\
-\tlive_var\t - Currently unimplemented, this might be used\n\t \tin future iterations.\n\
+\tlive_var\t - Currently unimplemented, this might be used\n\t \t\
+in future iterations.\n\
 \tscroll\t - set to \"true\" if you want a scrollbar on the left side\n\
-\tid\t - If callback is defined, it will be passed this integer\n\t \twhen the value is modified.\n\
+\tid\t - If callback is defined, it will be passed this integer\n\t \t\
+when the value is modified.\n\
 \tcallback\t - Pointer to callback function of type (*)(int)\n\
 \n\
 Notes:\n\
-The scrollbar widget uses a different callback scheme to communicate with the textbox. Any object wishing to utilize a scrollbar in some way should implement a static function in the object with the signature:\n\
+The scrollbar widget uses a different callback scheme to communicate with \
+the textbox. Any object wishing to utilize a scrollbar in some way should \
+implement a static function in the object with the signature:\n\
 \n\
 (*)(GLUI_Control *, int)\n\
 \n\
-Where the first parameter is the object the scrollbar is associated with and the second is the int_val passed into the object by the scrollbar. Refer to glui_textbox.cpp and glui_scrollbar.cpp for implementation details.\n\
+Where the first parameter is the object the scrollbar is associated with \
+and the second is the int_val passed into the object by the scrollbar.\
+Refer to glui_textbox.cpp and glui_scrollbar.cpp for implementation details.\n\
 \n\
 Wishlist:\n\
 * Word Wrap\n\
@@ -83,14 +146,15 @@ Wishlist:\n\
 \n\
 ";
 /*Bugs:\n\
-* fewer Mouse Drag calls  with large texts\n\
-* Insertion Pt sometimes drawn on wrong line.\n\
-* The scrollbar tab does not exactly match mouse position.\n\
-* Two tabs cannot be placed next to each other in a string without a space between them.\n\
-* Occasional horizontal drawing overruns.\n\
-* set_text seems to like being called after all the windows are open for large amounts of text. If you try it with a string longer than 195 characters it seems to trucate it to 195.\n\
-\n\
-";*/
+ * fewer Mouse Drag calls  with large texts\n\
+ * Insertion Pt sometimes drawn on wrong line.\n\
+ * The scrollbar tab does not exactly match mouse position.\n\
+ * Two tabs cannot be placed next to each other in a string without a space between them.\n\
+ * Occasional horizontal drawing overruns.\n\
+ * set_text seems to like being called after all the windows are open for large amounts of text. If you try it with a string longer than 195 characters it seems to trucate it to 195.\n\
+ \n\
+ ";
+*/
 
 /***************************************** myGlutIdle() ***********/
 
@@ -114,7 +178,7 @@ void myGlutIdle( void )
 void control_cb(int control) {
   int item;
   GLUI_String text;
-  char file_name[100];
+  std::string file_name;
   FILE  *file;
   char c;
   int i;
@@ -124,21 +188,21 @@ void control_cb(int control) {
   
   if (control == 7) {
     i = 0;
-    memset(file_name, '\0', 100);
-    strncpy(file_name, fb->get_file(), 100);
-    file = fopen(file_name,"r"); 
+    file_name = "";
+    file_name = fb->get_file();
+    file = fopen(file_name.c_str(),"r"); 
     if (file == NULL) 
       printf("Error opening file\n");
-    else {  
+    else {
       do {
-	c = getc(file);
-	text[i] = c;
-	i++;
+        c = getc(file);
+        text += c;
+        i++;
       } while (c != EOF);
-    fclose(file);
+      fclose(file);
     } 
 
-    moo->set_text(text);
+    moo->set_text(text.c_str());
   }
 
 
@@ -154,10 +218,10 @@ void control_cb(int control) {
       moo->set_text(scroll);
     }
     if (item==3) {
-      moo->set_text(string);
+      moo->set_text(gstring);
     }
     if (item==4) {
-      moo->set_text(rollout);
+      moo->set_text(commandline);
     }
     if (item==5) {
       tree->show();
@@ -165,6 +229,9 @@ void control_cb(int control) {
     }
     if (item==6) {
       moo->set_text(list);
+    }
+    if (item==7) {
+      moo->set_text(filebrowser);
     }
   }
   if ( control == 2) {
@@ -206,10 +273,10 @@ void control_cb(int control) {
     tp->update_all();
   }
   if (control == 12) {
-    if (disable_textbox) {
-      moo->disable();
-    } else {
+    if (enable_textbox) {
       moo->enable();
+    } else {
+      moo->disable();
     }
   }
 }
@@ -223,62 +290,54 @@ void control_cb(int control) {
 int main(int argc, char* argv[])
 {
   dirty = 1;
-//  set_new_handler(out_of_memory);
-  /**************************  cmd_line = cmd_line_glui->add_edittext( "Command:",
-					  GLUI_EDITTEXT_TEXT, NULL,
-					  CMD_LINE_ID, control_cb )**************/
-  /*         Here's the GLUI code         */
-  /****************************************/
+
   GLUI *edit = GLUI_Master.create_glui("Help on GLUI Widgets", 0);
   main_window = edit->get_glut_window_id();
-  GLUI_Panel *ep = edit->add_panel("",true);
-  edit->add_statictext_to_panel(ep,"Widget Information:");
-  hah = edit->add_list_to_panel(ep,NULL,true,1,control_cb);
+  GLUI_Panel *ep = new GLUI_Panel(edit,"",true);
+  new GLUI_StaticText(ep,"Widget Information:");
+  hah = new GLUI_List(ep,true,1,control_cb);
   hah->add_item(0,"GLUI 2.3");
   hah->add_item(1,"TextBox");
   hah->add_item(2,"Scrollbar");
   hah->add_item(3,"GLUI_String");
-  hah->add_item(4,"Rollout");
+  hah->add_item(4,"CommandLine");
   hah->add_item(5,"Tree");
   hah->add_item(6,"List");
-  edit->add_statictext_to_panel(ep,"Open Text File:");
-  fb = edit->add_filebrowser_to_panel(ep, "", false, 7, control_cb);
+  hah->add_item(7,"FileBrowser");
+  new GLUI_StaticText(ep,"Open Text File:");
+  fb = new GLUI_FileBrowser(ep, "", false, 7, control_cb);
   fb->set_h(180);
   hah->set_h(180);
-  edit->add_column_to_panel(ep,false); 
+  new GLUI_Column(ep,false); 
 
-
-  moo = edit->add_textbox_to_panel(ep,NULL,true);
+  moo = new GLUI_TextBox(ep,true);
   moo->set_text(general);
   moo->set_h(400);
   moo->set_w(410);
   moo->disable();
-  disable_textbox=1;
-  edit->add_checkbox_to_panel(ep, "Disable text box:",&disable_textbox,12,control_cb);
-
-
-
+  enable_textbox=0;
+  new GLUI_Checkbox(ep, "Enable text box:",&enable_textbox,12,control_cb);
 
   tree = GLUI_Master.create_glui("Tree Test", 0);
-  ep = tree->add_panel("Tree Controls");
-  bedit = tree->add_edittext_to_panel(ep, "New Branch Name:");
-  tree->add_checkbox_to_panel(ep, "Display Numbers", &num_display);
-  tree->add_statictext_to_panel(ep, "Number format:");
-  GLUI_RadioGroup *rg = tree->add_radiogroup_to_panel(ep, &num_format);
-  tree->add_radiobutton_to_group(rg, "Level Only");
-  tree->add_radiobutton_to_group(rg, "Hierarchal");
-  tree->add_button_to_panel(ep, "Update Format", 11, control_cb); 
-  tree->add_column_to_panel(ep);
-  tree->add_button_to_panel(ep, "Add Branch", 2, control_cb); 
-  tree->add_button_to_panel(ep, "Del Branch", 3, control_cb);
-  tree->add_button_to_panel(ep, "Up Branch", 4, control_cb); 
-  tree->add_button_to_panel(ep, "Goto Root", 5, control_cb);
-  tree->add_column_to_panel(ep);
-  tree->add_button_to_panel(ep, "Descend to Leaf", 6, control_cb); 
-  tree->add_button_to_panel(ep, "Next Branch", 8, control_cb); 
-  tree->add_button_to_panel(ep, "Expand All", 9, control_cb); 
-  tree->add_button_to_panel(ep, "Collapse All", 10, control_cb); 
-  tp = tree->add_treepanel("Tree Test");
+  ep = new GLUI_Panel(tree, "Tree Controls");
+  bedit = new GLUI_EditText(ep, "New Branch Name:");
+  new GLUI_Checkbox(ep, "Display Numbers", &num_display);
+  new GLUI_StaticText(ep, "Number format:");
+  GLUI_RadioGroup *rg = new GLUI_RadioGroup(ep, &num_format);
+  new GLUI_RadioButton(rg, "Level Only");
+  new GLUI_RadioButton(rg, "Hierarchal");
+  new GLUI_Button(ep, "Update Format", 11, control_cb); 
+  new GLUI_Column(ep);
+  new GLUI_Button(ep, "Add Branch", 2, control_cb); 
+  new GLUI_Button(ep, "Del Branch", 3, control_cb);
+  new GLUI_Button(ep, "Up Branch", 4, control_cb); 
+  new GLUI_Button(ep, "Goto Root", 5, control_cb);
+  new GLUI_Column(ep);
+  new GLUI_Button(ep, "Descend to Leaf", 6, control_cb); 
+  new GLUI_Button(ep, "Next Branch", 8, control_cb); 
+  new GLUI_Button(ep, "Expand All", 9, control_cb); 
+  new GLUI_Button(ep, "Collapse All", 10, control_cb); 
+  tp = new GLUI_TreePanel(tree,"Tree Test");
   tp->set_format(GLUI_TREEPANEL_ALTERNATE_COLOR | 
                  GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY |
                  GLUI_TREEPANEL_DISPLAY_HIERARCHY | 

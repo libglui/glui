@@ -18,9 +18,76 @@
 
 #include "glui.h"
 #include "stdinc.h"
-#include <math.h>
+#include <cmath>
 #include <sys/timeb.h>
 
+/****************************** GLUI_List::GLUI_List() **********/
+
+GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
+                      int id, GLUI_Update_CB callback,
+                      GLUI_Control *object , 
+                      GLUI_InterObject_CB obj_cb)
+{
+  common_construct(parent, NULL, scroll, id, callback, object, obj_cb);
+}
+
+/****************************** GLUI_List::GLUI_List() **********/
+
+GLUI_List::GLUI_List( GLUI_Node *parent,
+                      GLUI_String& live_var, bool scroll, 
+                      int id, 
+                      GLUI_Update_CB callback, 
+                      GLUI_Control *object , 
+                      GLUI_InterObject_CB obj_cb )
+{
+  common_construct(parent, &live_var, scroll, id, callback, object, obj_cb);
+}
+
+/****************************** GLUI_List::common_construct() **********/
+
+void GLUI_List::common_construct(
+  GLUI_Node *parent,
+  GLUI_String* data, bool scroll, 
+  int id, 
+  GLUI_Update_CB callback, 
+  GLUI_Control *object, 
+  GLUI_InterObject_CB obj_cb)
+{
+  common_init();
+  GLUI_Node *list_panel = parent;
+
+  if (scroll) {
+    GLUI_Panel *p = new GLUI_Panel(parent,"",GLUI_PANEL_NONE);
+    p->x_off = 1;
+    list_panel = p;
+  }
+  this->ptr_val     = data;
+  if (data) {
+    this->live_type = GLUI_LIVE_STRING;
+  }
+  this->user_id     = id;
+  this->callback    = callback;
+  this->name        = "list";
+  list_panel->add_control( this );
+  if (scroll) 
+  {
+    new GLUI_Column(list_panel, false);
+    this->scrollbar = 
+      new GLUI_Scrollbar(list_panel,
+                         "scrollbar",
+                         GLUI_SCROLL_VERTICAL,
+                         GLUI_SCROLL_INT, 
+                         -1,
+                         NULL,
+                         (GLUI_Control*) this,
+                         (GLUI_InterObject_CB )GLUI_List::scrollbar_callback);
+  }
+  if (object) {
+    this->obj_cb    = obj_cb;
+    this->associated_object = object;
+  }
+  init_live();
+}
 
 /****************************** GLUI_List::mouse_down_handler() **********/
 int    GLUI_List::mouse_down_handler( int local_x, int local_y )
@@ -68,7 +135,7 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
 
 /******************************** GLUI_List::mouse_up_handler() **********/
 
-int    GLUI_List::mouse_up_handler( int local_x, int local_y, int inside )
+int    GLUI_List::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   return false;
 }
@@ -77,7 +144,7 @@ int    GLUI_List::mouse_up_handler( int local_x, int local_y, int inside )
 /***************************** GLUI_List::mouse_held_down_handler() ******/
 
 int    GLUI_List::mouse_held_down_handler( int local_x, int local_y,
-                           int new_inside)
+                           bool new_inside)
 {
   return false;
 }
@@ -199,16 +266,16 @@ void    GLUI_List::draw( int x, int y )
     }
     if (line >= start_line && line <= (start_line+visible_lines)) {
       if (curr_line == line)
-	draw_text((char *)item->text,1,0,(line - start_line)*15);
+	draw_text(item->text.c_str(),1,0,(line - start_line)*15);
       else
-	draw_text((char *)item->text,0,0,(line - start_line)*15);
+	draw_text(item->text.c_str(),0,0,(line - start_line)*15);
     }
     line++;
     item = (GLUI_List_Item *) item->next();
   }
 
   if (scrollbar) {
-    scrollbar->set_int_limits(num_lines, 0);
+    scrollbar->set_int_limits(MAX(0,num_lines-visible_lines), 0);
     glPushMatrix();
     glTranslatef(scrollbar->x_abs-x_abs, scrollbar->y_abs-y_abs,0.0);
     scrollbar->draw_scroll();
@@ -219,7 +286,7 @@ void    GLUI_List::draw( int x, int y )
 
 /********************************* GLUI_List::draw_text() ****************/
 
-void    GLUI_List::draw_text(char *t, int selected, int x, int y )
+void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
 {
   int text_x, i, j, sel_lo, sel_hi, x_pos;
   int orig;
@@ -290,7 +357,7 @@ int      GLUI_List::get_box_width() {
 }
 
 /******************************** GLUI_List::substring_width() *********/
-int  GLUI_List::substring_width( char *t, int start, int end )
+int  GLUI_List::substring_width( const char *t, int start, int end )
 {
   int i, width;
 
@@ -361,12 +428,12 @@ void   GLUI_List::update_size( void )
 
 /**************************************** GLUI_Listbox::add_item() **********/
 
-int  GLUI_List::add_item( int id, char *new_text )
+int  GLUI_List::add_item( int id, const char *new_text )
 {
   GLUI_List_Item *new_node = new GLUI_List_Item;
   GLUI_List_Item *head;
 
-  strcpy( new_node->text, new_text);
+  new_node->text = new_text;
   new_node->id = id;
 
   head = (GLUI_List_Item*) items_list.first_child();
@@ -384,7 +451,7 @@ int  GLUI_List::add_item( int id, char *new_text )
   }
   num_lines++;
   if (scrollbar)
-    scrollbar->set_int_limits(num_lines, 0);
+    scrollbar->set_int_limits(MAX(num_lines-visible_lines,0), 0);
 
   return true;
 }
@@ -411,7 +478,7 @@ int  GLUI_List::delete_all()
 
 /************************************** GLUI_Listbox::delete_item() **********/
 
-int  GLUI_List::delete_item( char *text )
+int  GLUI_List::delete_item( const char *text )
 {
   GLUI_List_Item *node = get_item_ptr( text );
 
@@ -447,13 +514,13 @@ int  GLUI_List::delete_item( int id )
 
 /************************************ GLUI_Listbox::get_item_ptr() **********/
 
-GLUI_List_Item *GLUI_List::get_item_ptr( char *text )
+GLUI_List_Item *GLUI_List::get_item_ptr( const char *text )
 {
   GLUI_List_Item *item;
 
   item = (GLUI_List_Item *) items_list.first_child();
   while( item ) {
-    if ( NOT strcmp( item->text, text ))
+    if ( item->text == text )
       return item;
     
     item = (GLUI_List_Item *) item->next();

@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_panel.cpp - GLUI_Panel control class
+     glui_panel.cpp - GLUI_Panel control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,29 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+
+/****************************** GLUI_Rollout::GLUI_Rollout() **********/
+
+GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const char *name, 
+                            int open, int type )
+{
+  common_init();
+  set_name( name );
+  user_id    = -1;
+  int_val    = type;
+		
+  if ( NOT open ) {
+    is_open = false;
+    h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+  }
+
+  parent->add_control( this );
+
+}
 
 /****************************** GLUI_Rollout::open() **********/
 
@@ -114,7 +138,7 @@ int   GLUI_Rollout::mouse_down_handler( int local_x, int local_y )
 
 /**************************** GLUI_Rollout::mouse_down_handler() **********/
 
-int   GLUI_Rollout::mouse_up_handler( int local_x, int local_y, int inside )
+int   GLUI_Rollout::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   draw_unpressed();
 
@@ -165,7 +189,7 @@ void   GLUI_Rollout::draw( int x, int y )
   draw_name( left+8, top+11 );
 
   if ( active ) 
-    /*draw_active_box( left+4, left+string_width( name.string )+12,       */
+    /*draw_active_box( left+4, left+string_width( name.c_str() )+12,       */
     draw_active_box( left+4, right-17, 
 		     top+2, bottom-2 );
 
@@ -273,7 +297,7 @@ void   GLUI_Rollout::draw_unpressed( void )
 
 int  GLUI_Rollout::mouse_held_down_handler( 
 					   int local_x, int local_y, 
-					   int new_inside )
+					   bool new_inside )
 {
   if ( NOT initially_inside )
     return false;

@@ -31,40 +31,59 @@
 
 #include <sys/stat.h>
 
+GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent, 
+                                    const char *name,
+                                    int type,
+                                    int user_id,
+                                    GLUI_Update_CB callback)
+{
+  common_init();
+
+  this->set_name( name );
+  this->user_id    = user_id;
+  this->int_val    = type;
+  this->callback   = callback;
+
+  parent->add_control( this );
+  this->list = new GLUI_List(this, true, 1, NULL, this,
+                              (GLUI_InterObject_CB)(GLUI_FileBrowser::dir_list_callback));
+  (this->list)->set_click_type(GLUI_DOUBLE_CLICK);
+  this->fbreaddir(this->current_dir.c_str());
+}
 
 /****************************** GLUI_FileBrowser::draw() **********/
 
 void GLUI_FileBrowser::dir_list_callback(void *glui_object, int id) {
   GLUI_FileBrowser* me = (GLUI_FileBrowser*) glui_object;
   int this_item;
-  char *selected;
+  const char *selected;
   int i;
   if (me == NULL)
     return;
   if (me->list) {
     this_item = (me->list)->get_current_item();
     if (this_item > 0) { /* file or directory selected */
-      selected = ((me->list)->get_item_ptr( this_item ))->text;
+      selected = ((me->list)->get_item_ptr( this_item ))->text.c_str();
       if (selected[0] == '/' || selected[0] == '\\') {
         if (me->allow_change_dir) {
 #ifdef __GNUC__
 	      chdir(selected+1);
 #endif
 #ifdef _WIN32
-			SetCurrentDirectory(selected+1);
+          SetCurrentDirectory(selected+1);
 #endif
-       	me->fbreaddir(".");
+          me->fbreaddir(".");
         }
       } else {
-	me->file = selected;
-	me->execute_callback();
+        me->file = selected;
+        me->execute_callback();
       }
     }
   }
 }
 
 
-void GLUI_FileBrowser::fbreaddir(char *d) {
+void GLUI_FileBrowser::fbreaddir(const char *d) {
   GLUI_String item;
   int i = 0;
 	
@@ -85,14 +104,12 @@ void GLUI_FileBrowser::fbreaddir(char *d) {
       do {
         int len = strlen(FN.cFileName);
         if (FN.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-          item[0] = '\\';
-          strncpy(item+sizeof(char), FN.cFileName, len+1);
-          item[len+1] = '\0';
+          item = '\\';
+          item += FN.cFileName;
         } else {
-          strncpy(item, FN.cFileName, len);
-          item[len] = '\0';
+          item = FN.cFileName;
         }
-        list->add_item(i,item);
+        list->add_item(i,item.c_str());
         i++;
       } while (FindNextFile(hFind, &FN) != 0);
       

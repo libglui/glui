@@ -125,10 +125,9 @@ int main(int argc, char* argv[])
   /****************************************/
   
   GLUI *glui = GLUI_Master.create_glui( "GLUI" );
-  glui->add_checkbox( "Wireframe", &wireframe );
-  GLUI_Spinner *segment_spinner = 
-    glui->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
-  segment_spinner->set_int_limits( 3, 60 ); 
+  new GLUI_Checkbox( glui, "Wireframe", &wireframe );
+  (new GLUI_Spinner( glui, "Segments:", &segments ))
+    ->set_int_limits( 3, 60 ); 
    
   glui->set_main_gfx_window( main_window );
 

@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_listbox - GLUI_ListBox control class
+     glui_listbox - GLUI_ListBox control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,28 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+
+/****************************** GLUI_Listbox::GLUI_Listbox() **********/
+GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
+                            const char *name, int *value_ptr,
+                            int id, 
+                            GLUI_Update_CB cb)
+{
+  common_init();
+  set_ptr_val( value_ptr );
+  user_id    = id;
+  set_name( name );
+  callback    = cb;
+
+  parent->add_control( this );
+
+  init_live();
+}
+
 
 /****************************** GLUI_Listbox::mouse_down_handler() **********/
 
@@ -37,7 +60,7 @@ int    GLUI_Listbox::mouse_down_handler( int local_x, int local_y )
 
 /****************************** GLUI_Listbox::mouse_up_handler() **********/
 
-int    GLUI_Listbox::mouse_up_handler( int local_x, int local_y, int inside )
+int    GLUI_Listbox::mouse_up_handler( int local_x, int local_y, bool inside )
 {
 
   return false;
@@ -47,7 +70,7 @@ int    GLUI_Listbox::mouse_up_handler( int local_x, int local_y, int inside )
 /****************************** GLUI_Listbox::mouse_held_down_handler() ******/
 
 int    GLUI_Listbox::mouse_held_down_handler( int local_x, int local_y,
-					      int inside)
+					      bool inside)
 {
   
   return false;
@@ -171,12 +194,12 @@ void    GLUI_Listbox::draw_active_area( void )
 
 /**************************************** GLUI_Listbox::add_item() **********/
 
-int  GLUI_Listbox::add_item( int id, char *new_text )
+int  GLUI_Listbox::add_item( int id, const char *new_text )
 {
   GLUI_Listbox_Item *new_node = new GLUI_Listbox_Item;
   GLUI_Listbox_Item *head;
 
-  strcpy( new_node->text, new_text );
+  new_node->text = new_text;
   new_node->id = id;
 
   head = (GLUI_Listbox_Item*) items_list.first_child();
@@ -210,18 +233,18 @@ int  GLUI_Listbox::add_item( int id, char *new_text )
 
 /************************************** GLUI_Listbox::delete_item() **********/
 
-int  GLUI_Listbox::delete_item(char *text)
+int  GLUI_Listbox::delete_item( const char *text )
 {
-	GLUI_Listbox_Item *node = get_item_ptr(text);
+  GLUI_Listbox_Item *node = get_item_ptr(text);
 
-	if (node) 
-	{
-		node->unlink();
-		delete node;
-		return true;
-	}
+  if (node) 
+  {
+    node->unlink();
+    delete node;
+    return true;
+  }
 
-	return false;
+  return false;
 }
 
 
@@ -229,16 +252,16 @@ int  GLUI_Listbox::delete_item(char *text)
 
 int  GLUI_Listbox::delete_item(int id)
 {
-	GLUI_Listbox_Item *node = get_item_ptr(id);
+  GLUI_Listbox_Item *node = get_item_ptr(id);
 
-	if (node) 
-	{
-		node->unlink();
-		delete node;
-		return true;
-	}
+  if (node) 
+  {
+    node->unlink();
+    delete node;
+    return true;
+  }
 
-    return false;
+  return false;
 }
 
 
@@ -258,11 +281,11 @@ void     GLUI_Listbox::dump( FILE *output )
 
   /*  printf( "%p\n", (char*) name );              */
 
-  fprintf( output, "Listbox: %s\n", (char*) name );
+  fprintf( output, "Listbox: %s\n", name.c_str() );
 
   item = (GLUI_Listbox_Item *) items_list.first_child();
   while( item ) {
-    fprintf( output, "         %3d : %s\n", item->id, (char*) item->text );
+    fprintf( output, "         %3d : %s\n", item->id, item->text.c_str() );
     
     item = (GLUI_Listbox_Item *) item->next();
   }
@@ -271,13 +294,13 @@ void     GLUI_Listbox::dump( FILE *output )
 
 /************************************ GLUI_Listbox::get_item_ptr() **********/
 
-GLUI_Listbox_Item *GLUI_Listbox::get_item_ptr( char *text )
+GLUI_Listbox_Item *GLUI_Listbox::get_item_ptr( const char *text )
 {
   GLUI_Listbox_Item *item;
 
   item = (GLUI_Listbox_Item *) items_list.first_child();
   while( item ) {
-    if ( NOT strcmp( item->text, text ))
+    if ( item->text == text )
       return item;
     
     item = (GLUI_Listbox_Item *) item->next();
@@ -343,7 +366,7 @@ int     GLUI_Listbox::mouse_over( int state, int x, int y )
 
     item = (GLUI_Listbox_Item *) items_list.first_child();
     while( item ) {
-      glutAddMenuEntry( item->text, item->id );
+      glutAddMenuEntry( item->text.c_str(), item->id );
       item = (GLUI_Listbox_Item *) item->next();
     }
 
@@ -389,7 +412,7 @@ int    GLUI_Listbox::do_selection( int item_num )
   /*  printf( "-> %s\n", (char*) sel_item->text );              */
 
   int_val = item_num;
-  strcpy( curr_text , sel_item->text );
+  curr_text = sel_item->text;
 
   translate_and_draw_front();
 
@@ -401,14 +424,14 @@ int    GLUI_Listbox::do_selection( int item_num )
 
 GLUI_Listbox::~GLUI_Listbox()
 {
-	GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
+  GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
 
-	while (item) 
-	{
-		GLUI_Listbox_Item *tmp = item;
-		item = (GLUI_Listbox_Item *) item->next();
-		delete tmp;
-	}
+  while (item) 
+  {
+    GLUI_Listbox_Item *tmp = item;
+    item = (GLUI_Listbox_Item *) item->next();
+    delete tmp;
+  }
 }
 
 /****************************** GLUI_Listbox::special_handler() **********/

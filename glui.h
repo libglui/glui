@@ -1,8 +1,12 @@
-/*
-
-  glui.h - Main header for GLUI User Interface Toolkit
+/****************************************************************************
 
   GLUI User Interface Toolkit (LGPL)
+  ----------------------------------
+
+     glui.h - Main header for GLUI User Interface Toolkit
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,12 +26,27 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #ifndef GLUI_GLUI_H
 #define GLUI_GLUI_H
 
-#if 1
+#if defined(USE_FREEGLUT)
+
+  // GLUI does not yet work perfectly     
+  // with FreeGLUT - use at your own risk.
+  
+  #include <GL/freeglut.h>
+  #include <GL/freeglut_ext.h>
+
+#elif defined(USE_OPENGLUT)
+
+  // GLUI is untested with OpenGLUT
+  //  - use at your own risk.
+  #include <GL/openglut.h>
+  #include <GL/openglut_ext.h>
+
+#else 
 
   #ifdef __APPLE__
   #include <GLUT/glut.h>
@@ -35,24 +54,20 @@
   #include <GL/glut.h>
   #endif
 
-#else
-
-  /* GLUI does not yet work perfectly      */
-  /* with FreeGLUT - use at your own risk. */
-  
-  #include <GL/freeglut.h>
-  #include <GL/freeglut_ext.h>
-
 #endif
 
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <string>
+#include <vector>
 
-#define GLUI_VERSION 2.2f    /********** Current version **********/
+#define GLUI_VERSION 2.3f    /********** Current version **********/
 
-#if defined(MSC_VER)
-#pragma comment(lib, "glui32.lib")  // Link against GLUI library  
+#if defined(_WIN32)
+#if !defined(GLUI_NO_LIB_PRAGMA)
+#pragma comment(lib, "glui32.lib")  // Link automatically with GLUI library
+#endif
 #endif
 
 /********** Do some basic defines *******/
@@ -100,6 +115,7 @@ enum GLUI_Control_Types
     GLUI_CONTROL_SLIDER,
     GLUI_CONTROL_STATICTEXT,
     GLUI_CONTROL_EDITTEXT,
+    GLUI_CONTROL_COMMANDLINE,
     GLUI_CONTROL_BITMAP,
     GLUI_CONTROL_PANEL,
     GLUI_CONTROL_SPINNER,
@@ -186,46 +202,47 @@ enum GLUI_Control_Types
 #define GLUI_LIVE_INT           1
 #define GLUI_LIVE_FLOAT         2
 #define GLUI_LIVE_TEXT          3
+#define GLUI_LIVE_STRING        6
 #define GLUI_LIVE_DOUBLE        4
 #define GLUI_LIVE_FLOAT_ARRAY   5
 
 /************* Textbox and List Defaults - JVK ******************/
-#define GLUI_TEXTBOX_HEIGHT           130
-#define GLUI_TEXTBOX_WIDTH             130
-#define GLUI_LIST_HEIGHT           130
-#define GLUI_LIST_WIDTH             130
-#define GLUI_DOUBLE_CLICK             1
-#define GLUI_SINGLE_CLICK             0
+#define GLUI_TEXTBOX_HEIGHT          130
+#define GLUI_TEXTBOX_WIDTH           130
+#define GLUI_LIST_HEIGHT             130
+#define GLUI_LIST_WIDTH              130
+#define GLUI_DOUBLE_CLICK              1
+#define GLUI_SINGLE_CLICK              0
 #define GLUI_TAB_WIDTH                50 /* In pixels */
 #define GLUI_TEXTBOX_BOXINNERMARGINX   3
 #define GLUI_TEXTBOX_MIN_TEXT_WIDTH   50
-#define GLUI_LIST_BOXINNERMARGINX   3
-#define GLUI_LIST_MIN_TEXT_WIDTH   50
+#define GLUI_LIST_BOXINNERMARGINX      3
+#define GLUI_LIST_MIN_TEXT_WIDTH      50
 
 /*********************** TreePanel Defaults - JVK *****************************/
-#define GLUI_TREEPANEL_DEFAULTS 0                /* bar, standard bar color */        
-#define GLUI_TREEPANEL_ALTERNATE_COLOR 1         /* Alternate between 8 different bar colors */
-#define GLUI_TREEPANEL_ENABLE_BAR  2             /* enable the bar */
-#define GLUI_TREEPANEL_DISABLE_BAR  4            /* disable the bar */
-#define GLUI_TREEPANEL_DISABLE_DEEPEST_BAR 8     /* disable only the deepest bar */
-#define GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY  16 /* disable only the bar of the last child of each root */
-#define GLUI_TREEPANEL_DISPLAY_HIERARCHY  32     /* display some sort of hierachy in the tree node title */
-#define GLUI_TREEPANEL_HIERARCHY_NUMERICDOT  64  /* display hierarchy in 1.3.2 (etc... ) format */
-#define GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY  128 /* display hierarchy as only the level depth */
+#define GLUI_TREEPANEL_DEFAULTS               0 // bar, standard bar color
+#define GLUI_TREEPANEL_ALTERNATE_COLOR        1 // Alternate between 8 different bar colors
+#define GLUI_TREEPANEL_ENABLE_BAR             2 // enable the bar
+#define GLUI_TREEPANEL_DISABLE_BAR            4 // disable the bar
+#define GLUI_TREEPANEL_DISABLE_DEEPEST_BAR    8 // disable only the deepest bar
+#define GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY 16 // disable only the bar of the last child of each root
+#define GLUI_TREEPANEL_DISPLAY_HIERARCHY     32 // display some sort of hierachy in the tree node title
+#define GLUI_TREEPANEL_HIERARCHY_NUMERICDOT  64 // display hierarchy in 1.3.2 (etc... ) format
+#define GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY 128 // display hierarchy as only the level depth
  
 /******************* GLUI Scrollbar Defaults - JVK ***************************/
-#define  GLUI_SCROLL_ARROW_WIDTH  16
-#define  GLUI_SCROLL_ARROW_HEIGHT 16
-#define  GLUI_SCROLL_BOX_MIN_HEIGHT 5
-#define  GLUI_SCROLL_BOX_STD_HEIGHT 16
-#define  GLUI_SCROLL_STATE_NONE   0
-#define  GLUI_SCROLL_STATE_UP     1
-#define  GLUI_SCROLL_STATE_DOWN   2
-#define  GLUI_SCROLL_STATE_BOTH   3
-#define  GLUI_SCROLL_STATE_SCROLL 4
+#define  GLUI_SCROLL_ARROW_WIDTH     16
+#define  GLUI_SCROLL_ARROW_HEIGHT    16
+#define  GLUI_SCROLL_BOX_MIN_HEIGHT   5
+#define  GLUI_SCROLL_BOX_STD_HEIGHT  16
+#define  GLUI_SCROLL_STATE_NONE       0
+#define  GLUI_SCROLL_STATE_UP         1
+#define  GLUI_SCROLL_STATE_DOWN       2
+#define  GLUI_SCROLL_STATE_BOTH       3
+#define  GLUI_SCROLL_STATE_SCROLL     4
 #define  GLUI_SCROLL_DEFAULT_GROWTH_EXP   1.05f
-#define  GLUI_SCROLL_VERTICAL           0
-#define  GLUI_SCROLL_HORIZONTAL         1
+#define  GLUI_SCROLL_VERTICAL         0
+#define  GLUI_SCROLL_HORIZONTAL       1
 
 
 /* Default String Size for Dynamic String Class - JVK */
@@ -249,59 +266,10 @@ enum TranslationCodes
     GLUI_TRANSLATION_MOUSE_DOWN_RIGHT
 };
 
-/************ A string type for us to use **********
-   This is a dynamically sized string class. It's
-   necessary for the TextBox which can have very
-   large strings.
-*/
+/************ A string type for us to use **********/
 
-class GLUI_String
-{
-private:
-  char *string;
-
-public:
-  unsigned int size;
-  char &operator[]( int i ) {
-    char *temp;
-    if (i >= int(size)) {
-      temp = string;
-      if (i < int(size)*2) { // double the size of the string
-        string = (char *)malloc(sizeof(char)*size*2); 
-        size = size*2;
-        string[size-1] = '\0'; /* safety */
-      } else { // If i is really big compared to size, allocate up to i
-        string = (char *)malloc(sizeof(char)*(i+1)); 
-        size = i + 1;
-        string[size-1] = '\0'; /* safety */
-      }
-      strcpy(string, temp);
-      free(temp);
-    }
-    return string[i];
-  }
-
-  operator char*() { return (char*) string; };
-  /*    operator void*() { return (void*) &string[0]; }; */
-
-  GLUI_String( void ) {
-    string = (char *)malloc(sizeof(char)*GLUI_STRING_SIZE);
-    size = GLUI_STRING_SIZE;
-    string[0] = '\0'; /* Safety */
-    string[size-1] = '\0';
-  }
-
-  GLUI_String( char *text ) {
-    string = (char *)malloc(sizeof(char)*GLUI_STRING_SIZE);
-    size = GLUI_STRING_SIZE;
-    string[0] = '\0'; /* Safety */
-    string[size-1] = '\0';
-    if (text[0] == '\0' || strlen(text) < size) {
-      strcpy( string, text );
-    }
-  }
-  ~GLUI_String() {if (string != NULL) free(string);}
-};
+typedef std::string GLUI_String;
+GLUI_String& glui_format_str(GLUI_String &str, const char* fmt, ...);
 
 /********* Pre-declare the various classes *********/
 
@@ -317,6 +285,7 @@ class GLUI_Button;
 class GLUI_StaticText;
 class GLUI_Bitmap;
 class GLUI_EditText;
+class GLUI_CommandLine;
 class GLUI_Node;
 class GLUI_Main;
 class GLUI_Panel;
@@ -353,6 +322,8 @@ class Arcball;
 #define GLUI_SPINNER_FLOAT             GLUI_EDITTEXT_FLOAT
 #define GLUI_SCROLL_INT                GLUI_EDITTEXT_INT
 #define GLUI_SCROLL_FLOAT              GLUI_EDITTEXT_FLOAT
+// This is only for deprecated interface
+#define GLUI_EDITTEXT_STRING           4
 
 /*** Definition of callbacks ***/
 typedef void (*GLUI_Update_CB) (int id);
@@ -377,7 +348,7 @@ class GLUI_Node
 
 public:
     GLUI_Node();
-    ~GLUI_Node();
+    virtual ~GLUI_Node() {}
 
     GLUI_Node *first_sibling();
     GLUI_Node *last_sibling();
@@ -388,13 +359,15 @@ public:
     GLUI_Node *last_child()    { return child_tail; }
     GLUI_Node *parent()        { return parent_node; }
 
+    virtual int  add_control( GLUI_Control *control );
+
     void link_this_to_parent_last (GLUI_Node *parent  );
     void link_this_to_parent_first(GLUI_Node *parent  );
     void link_this_to_sibling_next(GLUI_Node *sibling );
     void link_this_to_sibling_prev(GLUI_Node *sibling );
     void unlink();
 
-    void dump( FILE *out, char *name );
+    void dump( FILE *out, const char *name );
 
 protected:
 
@@ -546,7 +519,7 @@ public:
     void set_glutDialsFunc(Int2_CB f)                      {glutDialsFunc(f);}  
   
 
-    GLUI          *create_glui( char *name, long flags=0, int x=-1, int y=-1 ); 
+    GLUI          *create_glui( const char *name, long flags=0, int x=-1, int y=-1 ); 
     GLUI          *create_glui_subwindow( int parent_window, long flags=0 );
     GLUI          *find_glui_by_window_id( int window_id );
     void           get_viewport_area( int *x, int *y, int *w, int *h );
@@ -576,8 +549,7 @@ extern GLUI_Master_Object GLUI_Master;
 class GLUI_Glut_Window : public GLUI_Node 
 {
 public:
-    GLUI_Glut_Window(); 
-	~GLUI_Glut_Window();
+    GLUI_Glut_Window() : glut_window_id(0) {} 
 
     int    glut_window_id;
 
@@ -639,7 +611,7 @@ protected:
     int           curr_cursor;
     int           w, h;
     long          flags; 
-    int           closing;
+    bool          closing;
     int           parent_window;
     int           glui_id;
 
@@ -650,7 +622,7 @@ protected:
     GLUI_Control  *find_next_control_rec( GLUI_Control *control );
     GLUI_Control  *find_next_control_( GLUI_Control *control );
     GLUI_Control  *find_prev_control( GLUI_Control *control );
-    void           create_standalone_window( char *name, int x=-1, int y=-1 );
+    void           create_standalone_window( const char *name, int x=-1, int y=-1 );
     void           create_subwindow( int parent,int window_alignment );
     void           setup_default_glut_callbacks( void );
 
@@ -673,12 +645,7 @@ protected:
 
     /*********** Controls ************/
 
-/* These are no longer used, it seems */
-
-//    GLUI_Control *controls;
-//    int           num_controls;
-
-    int           add_control( GLUI_Node *parent, GLUI_Control *control );
+    virtual int    add_control( GLUI_Node *parent, GLUI_Control *control );
 
 
     /********** Constructors and Destructors ***********/
@@ -724,13 +691,13 @@ public:
 
     int             w, h;                        /* dimensions of control */
     int             x_abs, y_abs;
-    int             x_off, y_off_top, y_off_bot; /* INNER margins, by which
-                          child controls are indented */
+    int             x_off, y_off_top, y_off_bot; /* INNER margins, by which child
+                                                    controls are indented */
     int             contain_x, contain_y; 
     int             contain_w, contain_h;
     /* if this is a container control (e.g., 
-     radiogroup or panel) this indicated dimensions
-     of inner area in which controls reside */
+       radiogroup or panel) this indicated dimensions
+       of inner area in which controls reside */
     int             active, active_type, can_activate;
     int             spacebar_mouse_click;
     long            user_id, type;
@@ -754,13 +721,13 @@ public:
     float           last_live_float_array[GLUI_DEF_MAX_ARRAY];
     int             float_array_size;
 
-    int             collapsible, is_open;
+    bool            collapsible, is_open;
     GLUI_Node       collapsed_node;
     int             hidden; /* Collapsed controls (and children) are hidden */
     int             char_widths[CHAR_WIDTH_HASH_SIZE][2]; /* Character width hash table */
     /*** Get/Set values ***/
 
-    virtual void   set_name( char *string );
+    virtual void   set_name( const char *string );
     virtual void   set_int_val( int new_int )         { int_val = new_int; output_live(true); }
     virtual void   set_float_val( float new_float )   { float_val = new_float; output_live(true); }
     virtual void   set_ptr_val( void *new_ptr )       { ptr_val = new_ptr; output_live(true); }
@@ -771,8 +738,8 @@ public:
     virtual void   get_float_array_val( float *array_ptr );
 
     virtual int mouse_down_handler( int local_x, int local_y )                 { return false; }
-    virtual int mouse_up_handler( int local_x, int local_y, int inside )       { return false; }
-    virtual int mouse_held_down_handler( int local_x, int local_y, int inside) { return false; }
+    virtual int mouse_up_handler( int local_x, int local_y, bool inside )       { return false; }
+    virtual int mouse_held_down_handler( int local_x, int local_y, bool inside) { return false; }
     virtual int key_handler( unsigned char key, int modifiers )                { return false; }
     virtual int special_handler( int key,int modifiers )                       { return false; }
 
@@ -802,17 +769,21 @@ public:
     virtual void draw( int x, int y )=0;
     void         set_font( void *new_font );
     void        *get_font( void );
-    int          string_width( char *text );
+    int          string_width( const char *text );
+    int          string_width( const GLUI_String &str ) 
+    { return string_width(str.c_str()); }
     int          char_width( char c );
 
     void         draw_name( int x, int y );
     void         draw_box_inwards_outline( int x_min, int x_max, 
-                     int y_min, int y_max );
+                                           int y_min, int y_max );
     void         draw_box( int x_min, int x_max, int y_min, int y_max,
-             float r, float g, float b );
+                           float r, float g, float b );
     void         draw_bkgd_box( int x_min, int x_max, int y_min, int y_max );
     void         draw_emboss_box( int x_min, int x_max,int y_min,int y_max);
-    void         draw_string( char *text );
+    void         draw_string( const char *text );
+    void         draw_string( const GLUI_String &s ) 
+    { draw_string(s.c_str()); }
     void         draw_char( char c );
     void         draw_active_box( int x_min, int x_max, int y_min, int y_max );
     void         set_to_bkgd_color( void );
@@ -823,11 +794,11 @@ public:
     void         sync_live( int recurse, int draw );  /* Reads live variable */
     void         init_live( void );
     void         output_live( int update_main_gfx );        /** Writes live variable **/
-    virtual void set_text( char *t )   {}
+    virtual void set_text( const char *t )   {}
     void         execute_callback( void );
     void         get_this_column_dims( int *col_x, int *col_y, 
-                     int *col_w, int *col_h, 
-                     int *col_x_off, int *col_y_off );
+                                       int *col_w, int *col_h, 
+                                       int *col_x_off, int *col_y_off );
     virtual int  needs_idle( void );
 
     GLUI_Control(void) 
@@ -843,7 +814,7 @@ public:
         int_val        = 0;
         last_live_int  = 0;
         float_array_size = 0;
-        sprintf( (char*)name, "Control: %p", (void *) this );
+        glui_format_str(name, "Control: %p", this);
         float_val      = 0.0;
         last_live_float = 0.0;
         ptr_val        = NULL;
@@ -857,8 +828,8 @@ public:
         can_activate   = true;         /* By default, you can activate a control */
         spacebar_mouse_click = true;    /* Does spacebar simulate a mouse click? */
         live_type      = GLUI_LIVE_NONE;
-        strcpy( (char*)text, "" );
-        strcpy( (char*)last_live_text, "" );
+        text = "";
+        last_live_text == "";
         live_inited    = false;
         collapsible    = false;
         is_open        = true;
@@ -881,11 +852,11 @@ public:
 class GLUI_Button : public GLUI_Control
 {
 public:
-    int currently_inside;
+    bool currently_inside;
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int same );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  key_handler( unsigned char key,int modifiers );
 
     void draw( int x, int y );
@@ -895,18 +866,21 @@ public:
 
     void update_size( void );
 
-    GLUI_Button( void ) 
-    {
-        sprintf( name, "Button: %p", (void *) this );
+    GLUI_Button( GLUI_Node *parent, const char *name, 
+                 int id=-1, GLUI_Update_CB cb=NULL );
+    GLUI_Button( void ) { common_init(); };
+
+protected:
+    void common_init(void) {
+        glui_format_str(name, "Button: %p", this );
         type         = GLUI_CONTROL_BUTTON;
         h            = GLUI_BUTTON_SIZE;
         w            = 100;
         alignment    = GLUI_ALIGN_CENTER;
         can_activate = true;
     }
-
-    virtual ~GLUI_Button() {}
 };
+
 
 /************************************************************/
 /*                                                          */
@@ -917,12 +891,13 @@ public:
 class GLUI_Checkbox : public GLUI_Control
 {
 public:
-    int  orig_value, currently_inside;
+    int  orig_value;
+    bool currently_inside;
     int  text_x_offset;
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int inside );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  key_handler( unsigned char key,int modifiers );
 
     void update_size( void );
@@ -936,9 +911,13 @@ public:
     void draw_empty_box( void );
     void set_int_val( int new_val );
 
-    GLUI_Checkbox() 
-    {
-        sprintf( name, "Checkbox: %p", (void *) this );
+    GLUI_Checkbox(GLUI_Node *parent, const char *name, int *value_ptr=NULL,
+                  int id=-1, GLUI_Update_CB callback=NULL);
+    GLUI_Checkbox( void ) { common_init(); }
+
+protected:
+    void common_init(void) {
+        glui_format_str( name, "Checkbox: %p", this );
         type           = GLUI_CONTROL_CHECKBOX;
         w              = 100;
         h              = GLUI_CHECKBOX_SIZE;
@@ -947,8 +926,6 @@ public:
         can_activate   = true;
         live_type      = GLUI_LIVE_INT;   /* This control has an 'int' live var */
     }
-  
-    virtual ~GLUI_Checkbox() {}
 };
 
 /************************************************************/
@@ -960,25 +937,21 @@ public:
 class GLUI_Column : public GLUI_Control
 {
 public:
-    float red;    /* Color of the column line - JVK */
-    float green;  /* Column colors are used bby the tree panel to */
-    float blue;   /* clearly denote the hierarchy */ 
     void draw( int x, int y );
 
-    GLUI_Column() 
-    {
-        red          = .5; /* Column Colors default to grey - JVK */
-        green        = .5;
-        blue         = .5;
+    GLUI_Column( GLUI_Node *parent, int draw_bar = true );
+    GLUI_Column( void ) { common_init(); }
+
+protected:
+    void common_init() {
         type         = GLUI_CONTROL_COLUMN;
         w            = 0;
         h            = 0;
         int_val      = 0;
         can_activate = false;
     }
-
-    virtual ~GLUI_Column() {}
 };
+
 
 /************************************************************/
 /*                                                          */
@@ -989,8 +962,18 @@ public:
 class GLUI_Panel : public GLUI_Control
 {
 public:
-    GLUI_Panel() 
-    {
+    GLUI_Panel( GLUI_Node *parent, const char *name, 
+                int type=GLUI_PANEL_EMBOSSED );
+    GLUI_Panel() { common_init(); }
+
+    void draw( int x, int y );
+    void set_name( const char *text );
+    void set_type( int new_type );
+
+    void update_size( void );
+
+protected:
+    void common_init( void ) {
         type         = GLUI_CONTROL_PANEL;
         w            = 300;
         h            = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
@@ -998,16 +981,8 @@ public:
         alignment    = GLUI_ALIGN_CENTER;
         is_container = true; 
         can_activate = false;
-        strcpy( name, "" );
-    }
-
-    virtual ~GLUI_Panel() {}
-
-    void draw( int x, int y );
-    void set_name( char *text );
-    void set_type( int new_type );
-
-    void update_size( void );
+        name="";
+    };
 };
 
 /************************************************************/
@@ -1018,39 +993,47 @@ public:
 
 class GLUI_FileBrowser : public GLUI_Panel
 {
- private:
-  int last_item;
-  char *file;
-  int allow_change_dir;
- public:
-  GLUI_List *list;
-  GLUI_String current_dir;
+public:
+    GLUI_FileBrowser( GLUI_Node *parent, 
+                      const char *name,
+                      int frame_type=GLUI_PANEL_EMBOSSED,
+                      int user_id = -1,
+                      GLUI_Update_CB callback = NULL);
 
-  void fbreaddir(char *);
-  static void dir_list_callback(void *, int);
+    GLUI_List *list;
+    GLUI_String current_dir;
 
-  void set_w(int w);// { if (list) list->set_w(w) }
-  void set_h(int h);// { if (list) list->set_h(h) }
-  char* get_file() { return file; }
-  void set_allow_change_dir(int c) { allow_change_dir = c; }
+    void fbreaddir(const char *);
+    static void dir_list_callback(void *, int);
 
-  GLUI_FileBrowser( void ) {
-    type         = GLUI_CONTROL_FILEBROWSER;
-    w            = GLUI_DEFAULT_CONTROL_WIDTH;
-    h            = GLUI_DEFAULT_CONTROL_HEIGHT;
-    int_val      = GLUI_PANEL_EMBOSSED;
-    alignment    = GLUI_ALIGN_CENTER;
-    is_container = true; 
-    can_activate = false;
-    allow_change_dir = true;
-    last_item    = -1;
-    user_id      = -1;
-    strcpy( name, "" );
-    strcpy( current_dir, "." );
-    file = NULL;
-  };
+    void set_w(int w);
+    void set_h(int h);
+    const char* get_file() { return file.c_str(); }
+    void set_allow_change_dir(int c) { allow_change_dir = c; }
 
-  virtual ~GLUI_FileBrowser() {};
+protected:
+    void common_init() 
+    {
+        type         = GLUI_CONTROL_FILEBROWSER;
+        w            = GLUI_DEFAULT_CONTROL_WIDTH;
+        h            = GLUI_DEFAULT_CONTROL_HEIGHT;
+        int_val      = GLUI_PANEL_EMBOSSED;
+        alignment    = GLUI_ALIGN_CENTER;
+        is_container = true; 
+        can_activate = false;
+        allow_change_dir = true;
+        last_item    = -1;
+        user_id      = -1;
+        name         = "";
+        current_dir  = ".";
+        file         = "";
+    };
+
+private:
+    int last_item;
+    GLUI_String file;
+    int allow_change_dir;
+
 };
 
 /************************************************************/
@@ -1061,27 +1044,29 @@ class GLUI_FileBrowser : public GLUI_Panel
 
 class GLUI_Rollout : public GLUI_Panel
 {
-  /*  private: */
-  /*    GLUI_Panel panel; */
 public:
-    int          currently_inside, initially_inside;
+    bool        currently_inside, initially_inside;
     GLUI_Button  button;
 
     void draw( int x, int y );
     void draw_pressed( void );
     void draw_unpressed( void );
     int mouse_down_handler( int local_x, int local_y );
-    int mouse_up_handler( int local_x, int local_y, int inside );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
         
     void  open( void ); 
     void  close( void );
 
-    /*   void set_name( char *text )   { panel.set_name( text ); } */
+    /*   void set_name( const char *text )   { panel.set_name( text ); } */
     void update_size( void );
 
-    GLUI_Rollout( void ) 
-    {
+    GLUI_Rollout( GLUI_Node *parent, const char *name, int open=true, 
+                  int type=GLUI_PANEL_EMBOSSED );
+    GLUI_Rollout( void ) { common_init(); }
+
+protected:
+    void common_init() {
         currently_inside = false;
         initially_inside = false;
         can_activate     = true;
@@ -1091,10 +1076,8 @@ public:
         w                = GLUI_DEFAULT_CONTROL_WIDTH;
         y_off_top        = 21;
         collapsible      = true;
-        strcpy( name, "" );
+        name = "";
     }
- 
-    virtual ~GLUI_Rollout() {}
 };
 
 /************************************************************/
@@ -1105,94 +1088,90 @@ public:
 
 class GLUI_Tree : public GLUI_Panel
 {
+public:
+    GLUI_Tree(GLUI_Node *parent, const char *name, 
+              int open=false, int inset=0);
 
- private:
-  int level;   // how deep is this node
-  float red;   //Color coding of column line
-  float green;
-  float blue;
-  float lred;   //Color coding of level name
-  float lgreen;
-  float lblue;
-  int id;
-  GLUI_Column *column;
-  int is_current;          // Whether this tree is the
-                           // current root in a treePanel
-  int child_number;
-  int format;
+private:
+    int level;   // how deep is this node
+    float red;   //Color coding of column line
+    float green;
+    float blue;
+    float lred;   //Color coding of level name
+    float lgreen;
+    float lblue;
+    int id;
+    GLUI_Column *column;
+    int is_current;          // Whether this tree is the
+    // current root in a treePanel
+    int child_number;
+    int format;
 
- public:
-  int          currently_inside, initially_inside;
-  GLUI_Button  button;
-  char         level_name[100]; // level name, eg: 1.1.2, III, or 3
-  GLUI_TreePanel *panel; 
+public:
+    bool        currently_inside, initially_inside;
+    GLUI_Button  button;
+    GLUI_String  level_name; // level name, eg: 1.1.2, III, or 3
+    GLUI_TreePanel *panel; 
 
-  void draw( int x, int y );
-  void draw_pressed( void );
-  void draw_unpressed( void );
-  int mouse_down_handler( int local_x, int local_y );
-  int mouse_up_handler( int local_x, int local_y, int inside );
-  int  mouse_held_down_handler( int local_x, int local_y, int inside );
-  void set_column(GLUI_Column *c) { column = c; }
-  void  open( void ); 
-  void  close( void );
+    void draw( int x, int y );
+    void draw_pressed( void );
+    void draw_unpressed( void );
+    int mouse_down_handler( int local_x, int local_y );
+    int mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    void set_column(GLUI_Column *c) { column = c; }
+    void  open( void ); 
+    void  close( void );
 
-    /*   void set_name( char *text )   { panel.set_name( text ); }; */
-  void update_size( void );
-  void set_id(int i) { id = i; }
-  void set_level(int l) { level = l; }
-  void set_format(int f) { format = f; }
-  void set_current(int c) { is_current = c; }
-  int get_id() { return id; }
-  int get_level() { return level; }
-  int get_child_number() { return child_number; }
-  void enable_bar() { if (column) { column->int_val = 1;  set_color(red, green, blue); } }
-  void disable_bar() { if (column) { column->int_val = 0;  } } 
-  void set_child_number(int c) { child_number = c; } 
-  void set_level_color(float r, float g, float b) { 
-    lred = r;
-    lgreen = g;
-    lblue  = b;
-  }
-
-  void set_color(float r, float g, float b) { 
-    red = r;
-    green = g;
-    blue  = b;
-    if (column) {
-      column->red = r;
-      column->green = g;
-      column->blue = b;
+    /*   void set_name( const char *text )   { panel.set_name( text ); }; */
+    void update_size( void );
+    void set_id(int i) { id = i; }
+    void set_level(int l) { level = l; }
+    void set_format(int f) { format = f; }
+    void set_current(int c) { is_current = c; }
+    int get_id() { return id; }
+    int get_level() { return level; }
+    int get_child_number() { return child_number; }
+    void enable_bar() { if (column) { column->int_val = 1;  set_color(red, green, blue); } }
+    void disable_bar() { if (column) { column->int_val = 0;  } } 
+    void set_child_number(int c) { child_number = c; } 
+    void set_level_color(float r, float g, float b) { 
+        lred = r;
+        lgreen = g;
+        lblue  = b;
     }
-  }
-
-  GLUI_Tree( void ) {
-    currently_inside = false;
-    initially_inside = false;
-    can_activate     = true;
-    is_container     = true;
-    type             = GLUI_CONTROL_TREE;
-    h                = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
-    w                = GLUI_DEFAULT_CONTROL_WIDTH;
-    y_off_top        = 21;
-    collapsible      = true;
-    red              = .5;
-    green            = .5;
-    blue             = .5;
-    lred              = 0;
-    lgreen            = 0;
-    lblue             = 0;
-    column           = NULL;
-    is_current       = 0;
-    child_number     = 0;
-    panel         = NULL;
-    strcpy( name, "" );
-    strcpy( level_name, "" );
-    level            = 0;
+    void set_color(float r, float g, float b) { 
+        red = r;
+        green = g;
+        blue  = b;
+    }
+protected:
+    void common_init()
+    {
+        currently_inside = false;
+        initially_inside = false;
+        can_activate     = true;
+        is_container     = true;
+        type             = GLUI_CONTROL_TREE;
+        h                = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+        w                = GLUI_DEFAULT_CONTROL_WIDTH;
+        y_off_top        = 21;
+        collapsible      = true;
+        red              = .5;
+        green            = .5;
+        blue             = .5;
+        lred             = 0;
+        lgreen           = 0;
+        lblue            = 0;
+        column           = NULL;
+        is_current       = 0;
+        child_number     = 0;
+        panel            = NULL;
+        name             = "";
+        level_name       = "";
+        level            = 0;
     
-  };
- 
-  virtual ~GLUI_Tree() {};
+    };
 };
 
 
@@ -1201,72 +1180,66 @@ class GLUI_Tree : public GLUI_Panel
 /*               TreePanel class (container) JVK            */
 /*     Manages, maintains, and formats entire trees         */
 /************************************************************/
-class GLUI_TreePanel : public GLUI_Panel {
-   int max_levels;
-   int next_id;
-   int format;
-   float red;
-   float green;
-   float blue;
-   float lred;
-   float lgreen;
-   float lblue;
-   int root_children;
-   /* These variables allow the tree panel to traverse the tree
-      using only two function calls. (Well, four, if you count 
-      going in reverse */
+class GLUI_TreePanel : public GLUI_Panel 
+{
+public:
+    GLUI_TreePanel(GLUI_Node *parent, const char *name,
+                   bool open=false, int inset=0);
 
-   GLUI_Tree    *curr_branch; /* Current Branch */
-   GLUI_Panel *curr_root;   /* Current Root */
+    int max_levels;
+    int next_id;
+    int format;
+    float red;
+    float green;
+    float blue;
+    float lred;
+    float lgreen;
+    float lblue;
+    int root_children;
+    /* These variables allow the tree panel to traverse the tree
+       using only two function calls. (Well, four, if you count 
+       going in reverse */
 
- protected:
-   int uniqueID( void ) { next_id++; return next_id - 1; }
- public:
-   void            set_color(float r, float g, float b) {
-                                     red = r;
-                                     green = g;
-                                     blue = b;
-                                    }
-   void            set_level_color(float r, float g, float b) {
-                                     lred = r;
-                                     lgreen = g;
-                                     lblue = b;
-                                    }
-   void            set_format(int f) { format = f; }
+    GLUI_Tree    *curr_branch; /* Current Branch */
+    GLUI_Panel *curr_root;   /* Current Root */
 
-   /* Adds branch to curr_root */
-   GLUI_Tree *     ab(char *name, GLUI_Tree *root = NULL);
-   /* Goes up one level, resets curr_root and curr_branch to parents*/
-   void            fb(GLUI_Tree *branch= NULL);
-   /* Deletes the curr_branch, goes up one level using fb */
-   void            db(GLUI_Tree *branch = NULL);
-   /* Finds the very last branch of curr_root, resets vars */
-   void            descendBranch(GLUI_Panel *root = NULL);
-   /* Resets curr_root and curr branch to TreePanel and lastChild */
-   void            resetToRoot(GLUI_Panel *new_root = NULL);
-   void            next( void );
-   void            refresh( void );
-   void            expand_all( void );
-   void            collapse_all( void );
-   void            update_all( void );
-   void            initNode(GLUI_Tree *temp);
-   void            formatNode(GLUI_Tree *temp);
+public:
+    void            set_color(float r, float g, float b); 
+    void            set_level_color(float r, float g, float b);
+    void            set_format(int f) { format = f; }
 
-   GLUI_TreePanel() {
-     GLUI_Panel();
-     type = GLUI_CONTROL_TREEPANEL;
-     next_id = 0;
-     curr_root = this;
-     curr_branch = NULL;
-     red = .5;
-     green = .5;
-     blue = .5;
-     root_children = 0;
-   }
+    /* Adds branch to curr_root */
+    GLUI_Tree *     ab(const char *name, GLUI_Tree *root = NULL);
+    /* Goes up one level, resets curr_root and curr_branch to parents*/
+    void            fb(GLUI_Tree *branch= NULL);
+    /* Deletes the curr_branch, goes up one level using fb */
+    void            db(GLUI_Tree *branch = NULL);
+    /* Finds the very last branch of curr_root, resets vars */
+    void            descendBranch(GLUI_Panel *root = NULL);
+    /* Resets curr_root and curr branch to TreePanel and lastChild */
+    void            resetToRoot(GLUI_Panel *new_root = NULL);
+    void            next( void );
+    void            refresh( void );
+    void            expand_all( void );
+    void            collapse_all( void );
+    void            update_all( void );
+    void            initNode(GLUI_Tree *temp);
+    void            formatNode(GLUI_Tree *temp);
 
-   ~GLUI_TreePanel() {
-   }
-
+protected:
+    int uniqueID( void ) { next_id++; return next_id - 1; }
+    void common_init() 
+    {
+        GLUI_Panel();
+        type = GLUI_CONTROL_TREEPANEL;
+        next_id = 0;
+        curr_root = this;
+        curr_branch = NULL;
+        red = .5;
+        green = .5;
+        blue = .5;
+        root_children = 0;
+    }
 };
 
 /************************************************************/
@@ -1277,147 +1250,98 @@ class GLUI_TreePanel : public GLUI_Panel {
 
 class GLUI : public GLUI_Main 
 {
-private:
 public:
-   /* Add Column returns a pointer so the tree can later change
-      the column color - JVK */
-    GLUI_Column *  add_column( int draw_bar = true );
-    GLUI_Column *  add_column_to_panel( GLUI_Panel *panel, int draw_bar = true );
+    int   add_control( GLUI_Control *control ) { return main_panel->add_control(control); }
+
+    void  add_column( int draw_bar = true );
+    void  add_column_to_panel( GLUI_Panel *panel, int draw_bar = true );
 
     void  add_separator( void );
     void  add_separator_to_panel( GLUI_Panel *panel );
 
     GLUI_RadioGroup 
     *add_radiogroup( int *live_var=NULL,
-             int user_id=-1,GLUI_Update_CB callback=NULL);
+                     int user_id=-1,GLUI_Update_CB callback=NULL);
 
     GLUI_RadioGroup 
     *add_radiogroup_to_panel(  GLUI_Panel *panel,
-                   int *live_var=NULL,
-                   int user_id=-1, GLUI_Update_CB callback=NULL );
+                               int *live_var=NULL,
+                               int user_id=-1, GLUI_Update_CB callback=NULL );
     GLUI_RadioButton
     *add_radiobutton_to_group(  GLUI_RadioGroup *group,
-                char *name );
+                                const char *name );
 
-    GLUI_Listbox *add_listbox( char *name, int *live_var=NULL,
-                 int id=-1, GLUI_Update_CB callback=NULL    );
+    GLUI_Listbox *add_listbox( const char *name, int *live_var=NULL,
+                               int id=-1, GLUI_Update_CB callback=NULL	);
     GLUI_Listbox *add_listbox_to_panel( GLUI_Panel *panel,
-                      char *name, int *live_var=NULL,
-                      int id=-1, GLUI_Update_CB callback=NULL);
+                                        const char *name, int *live_var=NULL,
+                                        int id=-1, GLUI_Update_CB callback=NULL);
 
-    GLUI_Rotation *add_rotation( char *name, float *live_var=NULL,
-                   int id=-1, GLUI_Update_CB callback=NULL  );
+    GLUI_Rotation *add_rotation( const char *name, float *live_var=NULL,
+                                 int id=-1, GLUI_Update_CB callback=NULL	);
     GLUI_Rotation *add_rotation_to_panel( GLUI_Panel *panel,
-                    char *name, float *live_var=NULL,
-                    int id=-1, GLUI_Update_CB callback=NULL);
-
-    GLUI_Translation *add_translation( char *name,
-                     int trans_type, float *live_var=NULL,
-                     int id=-1, GLUI_Update_CB callback=NULL    );
+                                          const char *name, float *live_var=NULL,
+                                          int id=-1, GLUI_Update_CB callback=NULL);
+  
+    GLUI_Translation *add_translation( const char *name,
+                                       int trans_type, float *live_var=NULL,
+                                       int id=-1, GLUI_Update_CB callback=NULL	);
     GLUI_Translation *add_translation_to_panel( 
-                         GLUI_Panel *panel, char *name, 
-                         int trans_type, float *live_var=NULL,
-                         int id=-1, GLUI_Update_CB callback=NULL);
+        GLUI_Panel *panel, const char *name, 
+        int trans_type, float *live_var=NULL,
+        int id=-1, GLUI_Update_CB callback=NULL);
+  
+    GLUI_Checkbox  *add_checkbox( const char *name, 
+                                  int *live_var=NULL,
+                                  int id=-1, GLUI_Update_CB callback=NULL);
+    GLUI_Checkbox  *add_checkbox_to_panel( GLUI_Panel *panel, const char *name, 
+                                           int *live_var=NULL, int id=-1, 
+                                           GLUI_Update_CB callback=NULL);
 
-    GLUI_Checkbox  *add_checkbox( char *name, 
-                int *live_var=NULL,
-                int id=-1, GLUI_Update_CB callback=NULL);
-    GLUI_Checkbox  *add_checkbox_to_panel( GLUI_Panel *panel, char *name, 
-                     int *live_var=NULL, int id=-1, 
-                     GLUI_Update_CB callback=NULL);
+    GLUI_Button  *add_button( const char *name, int id=-1, 
+                              GLUI_Update_CB callback=NULL);
+    GLUI_Button  *add_button_to_panel( GLUI_Panel *panel, const char *name, 
+                                       int id=-1, GLUI_Update_CB callback=NULL );
 
-    GLUI_Button  *add_button( char *name, int id=-1, 
-                GLUI_Update_CB callback=NULL);
-    GLUI_Button  *add_button_to_panel( GLUI_Panel *panel, char *name, 
-                     int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_StaticText  *add_statictext( const char *name );
+    GLUI_StaticText  *add_statictext_to_panel( GLUI_Panel *panel, const char *name );
 
-    GLUI_StaticText  *add_statictext( char *name );
-    GLUI_StaticText  *add_statictext_to_panel( GLUI_Panel *panel, char *name );
-
-    GLUI_EditText  *add_edittext( char *name, 
-                int data_type=GLUI_EDITTEXT_TEXT,
-                void *live_var=NULL,
-                int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_EditText  *add_edittext( const char *name, 
+                                  int data_type=GLUI_EDITTEXT_TEXT,
+                                  void*live_var=NULL,
+                                  int id=-1, GLUI_Update_CB callback=NULL	);
     GLUI_EditText  *add_edittext_to_panel( GLUI_Panel *panel, 
-                     char *name,
-                     int data_type=GLUI_EDITTEXT_TEXT,
-                     void *live_var=NULL, int id=-1, 
-                     GLUI_Update_CB callback=NULL );
+                                           const char *name,
+                                           int data_type=GLUI_EDITTEXT_TEXT,
+                                           void *live_var=NULL, int id=-1, 
+                                           GLUI_Update_CB callback=NULL );
+    GLUI_EditText  *add_edittext( const char *name, GLUI_String& live_var, 
+                                  int id=-1, GLUI_Update_CB callback=NULL	);
+    GLUI_EditText  *add_edittext_to_panel( GLUI_Panel *panel, const char *name, 
+                                           GLUI_String& live_var, int id=-1,
+                                           GLUI_Update_CB callback=NULL );
 
-    /* GLUI Textbox - JVK */
-    GLUI_TextBox  *add_textbox(char *live_var=NULL, int scroll = false,
-		     int id=-1, GLUI_Update_CB callback=NULL );
-    GLUI_TextBox  *add_textbox_to_panel( GLUI_Panel *panel, 
-		     char *live_var=NULL, int scroll = false, int id=-1, 
-		     GLUI_Update_CB callback=NULL );
-
-    /* GLUI List - JVK */
-    GLUI_List  *add_list(char *live_var=NULL, int scroll = false,
-		         int id=-1, GLUI_Update_CB callback=NULL,
-		         GLUI_Control *object = NULL, 
-		         GLUI_InterObject_CB obj_cb = NULL);
-    GLUI_List  *add_list_to_panel( GLUI_Panel *panel, 
-				   char *live_var=NULL, int scroll = false, 
-				   int id=-1, 
-				   GLUI_Update_CB callback=NULL, 
-				   GLUI_Control *object = NULL, 
-				   GLUI_InterObject_CB obj_cb = NULL);
-
-    GLUI_Spinner  *add_spinner( char *name, 
-                  int data_type=GLUI_SPINNER_INT,
-                  void *live_var=NULL,
-                  int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_Spinner  *add_spinner( const char *name, 
+                                int data_type=GLUI_SPINNER_INT,
+                                void *live_var=NULL,
+                                int id=-1, GLUI_Update_CB callback=NULL );
     GLUI_Spinner  *add_spinner_to_panel( GLUI_Panel *panel, 
-                       char *name,
-                       int data_type=GLUI_SPINNER_INT,
-                       void *live_var=NULL,
-                       int id=-1,
-                       GLUI_Update_CB callback=NULL );
+                                         const char *name,
+                                         int data_type=GLUI_SPINNER_INT,
+                                         void *live_var=NULL,
+                                         int id=-1,
+                                         GLUI_Update_CB callback=NULL );
 
-    /* GLUI Scrollbar - JVK (Very Similar to Spinner) */
-    GLUI_Scrollbar  *add_scrollbar( char *name, 
-            int horz_vert=GLUI_SCROLL_HORIZONTAL,
-				    int data_type=GLUI_SCROLL_INT,
-				    void *live_var=NULL,
-				    int id=-1, GLUI_Update_CB callback=NULL , 
-				    GLUI_Control *object = NULL,
-				    GLUI_InterObject_CB obj_cb = NULL);
-    GLUI_Scrollbar  *add_scrollbar_to_panel( GLUI_Panel *panel, 
-					     char *name,
-               int horz_vert=GLUI_SCROLL_HORIZONTAL,
-					     int data_type=GLUI_SCROLL_INT,
-					     void *live_var=NULL,
-					     int id=-1,
-					     GLUI_Update_CB callback=NULL,
-					     GLUI_Control *object = NULL,
-					     GLUI_InterObject_CB obj_cb = NULL);
+    GLUI_Panel     *add_panel( const char *name, int type=GLUI_PANEL_EMBOSSED );
+    GLUI_Panel     *add_panel_to_panel( GLUI_Panel *panel, const char *name, 
+                                        int type=GLUI_PANEL_EMBOSSED );
 
-    GLUI_Panel     *add_panel( char *name, int type=GLUI_PANEL_EMBOSSED );
-    GLUI_Panel     *add_panel_to_panel( GLUI_Panel *panel, char *name, 
-                      int type=GLUI_PANEL_EMBOSSED );
 
-    GLUI_FileBrowser  *add_filebrowser( char *name, 
-				        int type=GLUI_PANEL_EMBOSSED, 
-				        int user_id = -1, 
-				        GLUI_Update_CB callback = NULL);
-    GLUI_FileBrowser  *add_filebrowser_to_panel( GLUI_Panel *panel, 
-					         char *name, 
-					         int type=GLUI_PANEL_EMBOSSED, 
-					         int user_id = -1, 
-					         GLUI_Update_CB callback = NULL);
-
-    GLUI_Tree      *add_tree( char *name, int open=false, int inset=0);
-    GLUI_Tree      *add_tree_to_panel( GLUI_Panel *panel, char *name, 
-                        	       int open=false, int inset=0);
-
-    GLUI_TreePanel      *add_treepanel( char *name, int open=false, int inset=0);
-    GLUI_TreePanel      *add_treepanel_to_panel( GLUI_Panel *panel, char *name, 
-				                 int open=false, int inset=0);
-
-    GLUI_Rollout   *add_rollout( char *name, int open=true, int type=GLUI_PANEL_EMBOSSED);
-    GLUI_Rollout   *add_rollout_to_panel( GLUI_Panel *panel, char *name, 
-					  int open=true, 
-					  int type=GLUI_PANEL_EMBOSSED);
+    GLUI_Rollout   *add_rollout( const char *name, int open=true,
+                                 int type=GLUI_PANEL_EMBOSSED);
+    GLUI_Rollout   *add_rollout_to_panel( GLUI_Panel *panel, const char *name, 
+                                          int open=true,
+                                          int type=GLUI_PANEL_EMBOSSED);
 
     void            set_main_gfx_window( int window_id );
     int             get_glut_window_id( void ) { return glut_window_id; }
@@ -1434,25 +1358,29 @@ public:
 
     /***** GLUT callback setup functions *****/
     /*
-    void set_glutDisplayFunc(void (*f)(void));
-    void set_glutReshapeFunc(void (*f)(int width, int height));
-    void set_glutKeyboardFunc(void (*f)(unsigned char key, int x, int y));
-    void set_glutSpecialFunc(void (*f)(int key, int x, int y));
-    void set_glutMouseFunc(void (*f)(int button, int state, int x, int y));
-    void set_glutMotionFunc(void (*f)(int x, int y));
-    void set_glutPassiveMotionFunc(void (*f)(int x, int y));
-    void set_glutEntryFunc(void (*f)(int state));
-    void set_glutVisibilityFunc(void (*f)(int state));
-    void set_glutInit( int *argcp, char **argv );
-    void set_glutInitWindowSize(int width, int height);
-    void set_glutInitWindowPosition(int x, int y);
-    void set_glutInitDisplayMode(unsigned int mode);
-    int  set_glutCreateWindow(char *name);
+      void set_glutDisplayFunc(void (*f)(void));
+      void set_glutReshapeFunc(void (*f)(int width, int height));
+      void set_glutKeyboardFunc(void (*f)(unsigned char key, int x, int y));
+      void set_glutSpecialFunc(void (*f)(int key, int x, int y));
+      void set_glutMouseFunc(void (*f)(int button, int state, int x, int y));
+      void set_glutMotionFunc(void (*f)(int x, int y));
+      void set_glutPassiveMotionFunc(void (*f)(int x, int y));
+      void set_glutEntryFunc(void (*f)(int state));
+      void set_glutVisibilityFunc(void (*f)(int state));
+      void set_glutInit( int *argcp, const char **argv );
+      void set_glutInitWindowSize(int width, int height);
+      void set_glutInitWindowPosition(int x, int y);
+      void set_glutInitDisplayMode(unsigned int mode);
+      int  set_glutCreateWindow(const char *name);
     */
 
     /***** Constructors and desctructors *****/
 
-    int init( char *name, long flags, int x, int y, int parent_window );
+    int init( const char *name, long flags, int x, int y, int parent_window );
+protected:
+    virtual int add_control( GLUI_Node *parent, GLUI_Control *control ) {
+        return GLUI_Main::add_control( parent, control );
+    }
 };
 
 /************************************************************/
@@ -1483,10 +1411,10 @@ public:
 
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int same );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  key_handler( unsigned char key,int modifiers );
-    int  special_handler(   int key,int modifiers );
+    int  special_handler( int key, int modifiers );
 
     void activate( int how );
     void disactivate( void );
@@ -1511,13 +1439,42 @@ public:
     void set_int_limits( int low, int high, int limit_type=GLUI_LIMIT_CLAMP );
     void set_float_val( float new_val );
     void set_int_val( int new_val );
-    void set_text( char *text );
-    char *get_text( void )         { return text; }  
+    void set_text( const char *text );
+    void set_text( const GLUI_String &s) { set_text(s.c_str()); }
+    const char *get_text()               { return text.c_str(); }
 
-    void dump( FILE *out, char *text );
+    void dump( FILE *out, const char *text );
 
-    GLUI_EditText( void ) 
-    {
+    // Constructor, no live variable
+    GLUI_EditText( GLUI_Node *parent, const char *name,
+                   int text_type=GLUI_EDITTEXT_TEXT,
+                   int id=-1, GLUI_Update_CB callback=NULL );
+    // Constructor, int live variable
+    GLUI_EditText( GLUI_Node *parent, const char *name,
+                   int *live_var,
+                   int id=-1, GLUI_Update_CB callback=NULL );
+    // Constructor, float live variable
+    GLUI_EditText( GLUI_Node *parent, const char *name,
+                   float *live_var,
+                   int id=-1, GLUI_Update_CB callback=NULL );
+    // Constructor, char* live variable
+    GLUI_EditText( GLUI_Node *parent, const char *name, 
+                   char *live_var,
+                   int id=-1, GLUI_Update_CB callback=NULL );
+    // Constructor, std::string live variable
+    GLUI_EditText( GLUI_Node *parent, const char *name, 
+                   std::string &live_var,
+                   int id=-1, GLUI_Update_CB callback=NULL );
+
+    // Deprecated constructor, only called internally
+    GLUI_EditText( GLUI_Node *parent, const char *name,
+                   int text_type, void *live_var,
+                   int id, GLUI_Update_CB callback );
+    // Deprecated constructor, only called internally
+    GLUI_EditText( void ) { common_init(); }
+
+protected:
+    void common_init( void ) {
         type                  = GLUI_CONTROL_EDITTEXT;
         h                     = GLUI_EDITTEXT_HEIGHT;
         w                     = GLUI_EDITTEXT_WIDTH;
@@ -1525,7 +1482,7 @@ public:
         text_x_offset         = 55;
         insertion_pt          = -1;
         last_insertion_pt     = -1;
-        name[0]               = '\0';
+        name                  = "";
         substring_start       = 0;
         data_type             = GLUI_EDITTEXT_TEXT;
         substring_end         = 2;
@@ -1539,6 +1496,59 @@ public:
         spinner               = NULL;
         debug                 = false;
         draw_text_only        = false;
+    }
+    void common_construct( GLUI_Node *parent, const char *name, 
+                           int data_type, int live_type, void *live_var,
+                           int id, GLUI_Update_CB callback );
+};
+
+/************************************************************/
+/*                                                          */
+/*               CommandLine class                          */
+/*                                                          */
+/************************************************************/
+
+class GLUI_CommandLine : public GLUI_EditText
+{
+public:
+    typedef GLUI_EditText Super;
+
+    enum { HIST_SIZE = 100 };
+    std::vector<GLUI_String> hist_list;
+    int  curr_hist;
+    int  oldest_hist;
+    int  newest_hist;
+    bool commit_flag;
+
+public:
+    int  key_handler( unsigned char key,int modifiers );
+    int  special_handler(	int key,int modifiers );
+    void disactivate( void );
+
+    virtual const char *get_history( int command_number ) const
+    { return hist_list[command_number - oldest_hist].c_str(); }
+    virtual GLUI_String& get_history_str( int command_number )
+    { return hist_list[command_number - oldest_hist]; }
+    virtual const GLUI_String& get_history_str( int command_number ) const
+    { return hist_list[command_number - oldest_hist]; }
+    virtual void recall_history( int history_number );
+    virtual void scroll_history( int direction );
+    virtual void add_to_history( const char *text );
+    virtual void reset_history( void );
+
+    void dump( FILE *out, const char *text );
+
+
+    GLUI_CommandLine( GLUI_Node *parent, const char *name, void *live_var=NULL,
+                      int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_CommandLine( void ) { common_init(); }
+protected:
+    void common_init() {
+        hist_list.resize(HIST_SIZE);
+        curr_hist = 0;
+        oldest_hist = 0;
+        newest_hist = 0;
+        commit_flag = false;
     }
 };
 
@@ -1554,14 +1564,18 @@ public:
     int  num_buttons;
 
     void draw( int x, int y );
-    void set_name( char *text );
+    void set_name( const char *text );
     void set_int_val( int int_val ); 
     void set_selected( int int_val );
 
     void draw_group( int translate );
 
-    GLUI_RadioGroup( void ) 
-    {
+    GLUI_RadioGroup( GLUI_Node *parent, int *live_var=NULL,
+                     int user_id=-1,GLUI_Update_CB callback=NULL );
+    GLUI_RadioGroup( void ) { common_init(); }
+
+protected:
+    void common_init( void ) {
         type          = GLUI_CONTROL_RADIOGROUP;
         x_off         = 0;
         y_off_top     = 0;
@@ -1570,7 +1584,7 @@ public:
         w             = 300;
         h             = 300;
         num_buttons   = 0;
-        name[0]       = '\0';
+        name          = "";
         can_activate  = false;
         live_type     = GLUI_LIVE_INT;
     }
@@ -1585,12 +1599,13 @@ public:
 class GLUI_RadioButton : public GLUI_Control
 {
 public:
-    int orig_value, currently_inside;
+    int orig_value;
+    bool currently_inside;
     int text_x_offset;
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int inside );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
 
     void draw( int x, int y );
     void update_size( void );
@@ -1600,11 +1615,13 @@ public:
     void draw_unchecked( void );
     void draw_O( void );
 
+    GLUI_RadioButton( GLUI_RadioGroup *group, const char *name );
     GLUI_RadioGroup *group;
 
-    GLUI_RadioButton( void ) 
+protected:
+    void common_init()
     {
-        sprintf( name, "RadioButton: %p", (void *) this );
+        glui_format_str( name, "RadioButton: %p", (void *) this );
         type           = GLUI_CONTROL_RADIOBUTTON;
         h              = GLUI_RADIOBUTTON_SIZE;
         group          = NULL;
@@ -1626,8 +1643,11 @@ class GLUI_Separator : public GLUI_Control
 public:
     void draw( int x, int y );
 
-    GLUI_Separator() 
-    {
+    GLUI_Separator( GLUI_Node *parent );
+    GLUI_Separator( void ) { common_init(); }
+
+protected:
+    void common_init() {
         type         = GLUI_CONTROL_SEPARATOR;
         w            = 100;
         h            = GLUI_SEPARATOR_HEIGHT;
@@ -1655,29 +1675,24 @@ public:
 class GLUI_Spinner : public GLUI_Control
 {
 public:
-    GLUI_Spinner() 
-    {
-        sprintf( name, "Spinner: %p", (void *) this );
-        type         = GLUI_CONTROL_SPINNER;
-        h            = GLUI_EDITTEXT_HEIGHT;
-        w            = GLUI_EDITTEXT_WIDTH;
-        x_off        = 0;
-        y_off_top    = 0;
-        y_off_bot    = 0;
-        can_activate = true;
-        state        = GLUI_SPINNER_STATE_NONE;
-        edittext     = NULL;
-        growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
-        callback_count = 0;
-        first_callback = true;
-        user_speed   = 1.0;
-    }
+    // Constructor, no live var
+    GLUI_Spinner( GLUI_Node* parent, const char *name, 
+                  int data_type=GLUI_SPINNER_INT, int id=-1, GLUI_Update_CB callback=NULL );
+    // Constructor, int live var
+    GLUI_Spinner( GLUI_Node* parent, const char *name, 
+                  int *live_var, int id=-1, GLUI_Update_CB callback=NULL );
+    // Constructor, float live var
+    GLUI_Spinner( GLUI_Node* parent, const char *name, 
+                  float *live_var, int id=-1, GLUI_Update_CB callback=NULL );
+    // Deprecated constructor
+    GLUI_Spinner( GLUI_Node* parent, const char *name, 
+                  int data_type,
+                  void *live_var,
+                  int id=-1, GLUI_Update_CB callback=NULL );
+    // Deprecated constructor
+    GLUI_Spinner( void ) { common_init(); }
 
-    ~GLUI_Spinner()
-    {
-    }
-
-    int           currently_inside;
+    bool          currently_inside;
     int           state;
     float         growth, growth_exp;
     int           last_x, last_y;
@@ -1691,8 +1706,8 @@ public:
     GLUI_EditText *edittext;
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int same );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  key_handler( unsigned char key,int modifiers );
     int  special_handler(   int key,int modifiers );
 
@@ -1713,7 +1728,7 @@ public:
     void idle( void );
     int  needs_idle( void );
 
-    char *get_text( void );
+    const char *get_text( void );
 
     void set_float_val( float new_val );
     void set_int_val( int new_val );
@@ -1723,10 +1738,30 @@ public:
     void reset_growth( void );
 
     void set_speed( float speed ) { user_speed = speed; }
+
+protected:
+    void common_init() {
+        glui_format_str( name, "Spinner: %p", this );
+        type         = GLUI_CONTROL_SPINNER;
+        h            = GLUI_EDITTEXT_HEIGHT;
+        w            = GLUI_EDITTEXT_WIDTH;
+        x_off        = 0;
+        y_off_top    = 0;
+        y_off_bot    = 0;
+        can_activate = true;
+        state        = GLUI_SPINNER_STATE_NONE;
+        edittext     = NULL;
+        growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
+        callback_count = 0;
+        first_callback = true;
+        user_speed   = 1.0;
+    }
+    void common_construct( GLUI_Node* parent, const char *name, 
+                           int data_type, void *live_var,
+                           int id, GLUI_Update_CB callback );
 };
 
 /************************************************************/
-
 /*                                                          */
 /*               StaticText class                           */
 /*                                                          */
@@ -1735,17 +1770,20 @@ public:
 class GLUI_StaticText : public GLUI_Control
 {
 public:
-    void set_text( char *text );
+    void set_text( const char *text );
     void draw( int x, int y );
     void draw_text( void );
     void update_size( void );
     void erase_text( void );
 
-    GLUI_StaticText() 
-    {
+    GLUI_StaticText(GLUI_Node *parent, const char *name);
+    GLUI_StaticText( void ) { common_init(); }
+
+protected:
+    void common_init() {
         type    = GLUI_CONTROL_STATICTEXT;
         h       = GLUI_STATICTEXT_SIZE;
-        name[0] = '\0';
+        name    = "";
         can_activate  = false;
     }
 };
@@ -1759,98 +1797,110 @@ public:
 class GLUI_TextBox : public GLUI_Control
 {
 public:
-  GLUI_String         orig_text;
-  int                 insertion_pt;
-  int                 substring_start; /*substring that gets displayed in box*/
-  int                 substring_end;  
-  int                 sel_start, sel_end;  /* current selection */
-  int                 last_insertion_pt;
-  int                 debug;
-  int                 draw_text_only;
-  int                 tab_width;
-  int                 start_line;
-  int                 num_lines;
-  int                 curr_line;
-  int                 visible_lines;
-  int                 insert_x;        /* Similar to "insertion_pt", these variables keep */
-  int                 insert_y;        /* track of where the ptr is, but in pixels */
-  int                 keygoal_x;       /* where up down keys would like to put insertion pt*/
-  GLUI_Scrollbar     *scrollbar;
+    /* GLUI Textbox - JVK */
+    GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
+                 bool scroll = false, int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_TextBox( GLUI_Node *parent,
+                  bool scroll = false, int id=-1,
+                  GLUI_Update_CB callback=NULL );
 
-  int  mouse_down_handler( int local_x, int local_y );
-  int  mouse_up_handler( int local_x, int local_y, int same );
-  int  mouse_held_down_handler( int local_x, int local_y, int inside );
-  int  key_handler( unsigned char key,int modifiers );
-  int  special_handler( int key,int modifiers );
+    GLUI_String         orig_text;
+    int                 insertion_pt;
+    int                 substring_start; /*substring that gets displayed in box*/
+    int                 substring_end;  
+    int                 sel_start, sel_end;  /* current selection */
+    int                 last_insertion_pt;
+    int                 debug;
+    int                 draw_text_only;
+    int                 tab_width;
+    int                 start_line;
+    int                 num_lines;
+    int                 curr_line;
+    int                 visible_lines;
+    int                 insert_x;        /* Similar to "insertion_pt", these variables keep */
+    int                 insert_y;        /* track of where the ptr is, but in pixels */
+    int                 keygoal_x;       /* where up down keys would like to put insertion pt*/
+    GLUI_Scrollbar     *scrollbar;
+
+    int  mouse_down_handler( int local_x, int local_y );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    int  key_handler( unsigned char key,int modifiers );
+    int  special_handler( int key,int modifiers );
   
-  void activate( int how );
-  void disactivate( void );
+    void activate( int how );
+    void disactivate( void );
 
-  void enable( void );
-  void disable( void );
+    void enable( void );
+    void disable( void );
 
-  void draw( int x, int y );
+    void draw( int x, int y );
 
-  int  mouse_over( int state, int x, int y );
+    int  mouse_over( int state, int x, int y );
 
-  int get_box_width();
-  int  find_word_break( int start, int direction );
-  int  substring_width( int start, int end, int initial_width=0 );
-  void clear_substring( int start, int end );
-  int  find_insertion_pt( int x, int y );
-  int  update_substring_bounds( void );
-  void update_and_draw_text( void );
-  void draw_text( int x, int y );
-  void draw_insertion_pt( void );
-  void update_x_offsets( void );
-  void update_size( void );
+    int get_box_width();
+    int  find_word_break( int start, int direction );
+    int  substring_width( int start, int end, int initial_width=0 );
+    void clear_substring( int start, int end );
+    int  find_insertion_pt( int x, int y );
+    int  update_substring_bounds( void );
+    void update_and_draw_text( void );
+    void draw_text( int x, int y );
+    void draw_insertion_pt( void );
+    void update_x_offsets( void );
+    void update_size( void );
 
-  void set_text( char *text );
-  char *get_text( void )         { return text; };  
+    void set_text( const char *text );
+    const char *get_text( void )         { return text.c_str(); }
 
-  void dump( FILE *out, char *text );
-  void set_tab_w(int w) { tab_width = w; }
-  void set_start_line(int l) { start_line = l; }
-  static void scrollbar_callback(void *, int id);
+    void dump( FILE *out, char *text );
+    void set_tab_w(int w) { tab_width = w; }
+    void set_start_line(int l) { start_line = l; }
+    static void scrollbar_callback(void *, int id);
 
-  GLUI_TextBox( void ) {
-    type                  = GLUI_CONTROL_TEXTBOX;
-    h                     = GLUI_TEXTBOX_HEIGHT;
-    w                     = GLUI_TEXTBOX_WIDTH;
-    tab_width             = GLUI_TAB_WIDTH;
-    num_lines             = 0;
-    visible_lines         = 0;
-    start_line            = 0;
-    curr_line             = 0;
-    insert_y              = -1;
-    insert_x              = -1;
-    insertion_pt          = -1;
-    last_insertion_pt     = -1;
-    name[0]               = '\0';
-    substring_start       = 0;
-    substring_end         = 2;
-    sel_start             = 0;
-    sel_end               = 0;
-    active_type           = GLUI_CONTROL_ACTIVE_PERMANENT;
-    can_activate          = true;
-    spacebar_mouse_click  = false;
-    scrollbar             = NULL;
-    debug                 = false;
-    draw_text_only        = false;
-  };
+protected:
+    void common_init()
+    {
+        type                  = GLUI_CONTROL_TEXTBOX;
+        h                     = GLUI_TEXTBOX_HEIGHT;
+        w                     = GLUI_TEXTBOX_WIDTH;
+        tab_width             = GLUI_TAB_WIDTH;
+        num_lines             = 0;
+        visible_lines         = 0;
+        start_line            = 0;
+        curr_line             = 0;
+        insert_y              = -1;
+        insert_x              = -1;
+        insertion_pt          = -1;
+        last_insertion_pt     = -1;
+        name[0]               = '\0';
+        substring_start       = 0;
+        substring_end         = 2;
+        sel_start             = 0;
+        sel_end               = 0;
+        active_type           = GLUI_CONTROL_ACTIVE_PERMANENT;
+        can_activate          = true;
+        spacebar_mouse_click  = false;
+        scrollbar             = NULL;
+        debug                 = false;
+        draw_text_only        = false;
+    }
+    void common_construct(
+        GLUI_Node *parent, GLUI_String *live_var, 
+        bool scroll, int id, GLUI_Update_CB callback); 
 };
 
 /************************************************************/
 /*                                                          */
-/*                   Listbox class - JVK                    */
+/*                   List class - JVK                       */
 /*                                                          */
 /************************************************************/
 
 class GLUI_List_Item : public GLUI_Node 
 {
 public:
-  GLUI_String text;
-  int         id;
+    GLUI_String text;
+    int         id;
 };
 
 /************************************************************/
@@ -1862,79 +1912,102 @@ public:
 class GLUI_List : public GLUI_Control
 {
 public:
-  GLUI_String         orig_text;
-  int                 debug;
-  int                 draw_text_only;
-  int                 start_line;
-  int                 num_lines;
-  int                 curr_line;
-  int                 visible_lines;
-  GLUI_Scrollbar      *scrollbar;
-  GLUI_List_Item      items_list;
-  GLUI_Control        *associated_object;
-  GLUI_InterObject_CB obj_cb;
-  int                 cb_click_type;
-  int                 last_line;
-  int                 last_click_time;
+    /* GLUI List - JVK */
+    GLUI_List( GLUI_Node *parent, bool scroll = false,
+               int id=-1, GLUI_Update_CB callback=NULL,
+               GLUI_Control *object = NULL, 
+               GLUI_InterObject_CB obj_cb = NULL);
 
-  int  mouse_down_handler( int local_x, int local_y );
-  int  mouse_up_handler( int local_x, int local_y, int same );
-  int  mouse_held_down_handler( int local_x, int local_y, int inside );
-  int  key_handler( unsigned char key,int modifiers );
-  int  special_handler( int key,int modifiers );
+    GLUI_List( GLUI_Node *parent,
+               GLUI_String& live_var, bool scroll = false, 
+               int id=-1, 
+               GLUI_Update_CB callback=NULL, 
+               GLUI_Control *object = NULL, 
+               GLUI_InterObject_CB obj_cb = NULL);
+
+
+    GLUI_String         orig_text;
+    int                 debug;
+    int                 draw_text_only;
+    int                 start_line;
+    int                 num_lines;
+    int                 curr_line;
+    int                 visible_lines;
+    GLUI_Scrollbar      *scrollbar;
+    GLUI_List_Item      items_list;
+    GLUI_Control        *associated_object;
+    GLUI_InterObject_CB obj_cb;
+    int                 cb_click_type;
+    int                 last_line;
+    int                 last_click_time;
+
+    int  mouse_down_handler( int local_x, int local_y );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    int  key_handler( unsigned char key,int modifiers );
+    int  special_handler( int key,int modifiers );
   
-  void activate( int how );
-  void disactivate( void );
+    void activate( int how );
+    void disactivate( void );
 
-  void draw( int x, int y );
+    void draw( int x, int y );
 
-  int  mouse_over( int state, int x, int y );
+    int  mouse_over( int state, int x, int y );
 
-  int get_box_width();
-  int  find_word_break( int start, int direction );
-  int  substring_width( char *t, int start, int end );
-  int  find_line( int x, int y );
-  void update_and_draw_text( void );
-  void draw_text( char *t, int selected, int x, int y );
-  void update_size( void );
+    int get_box_width();
+    int  find_word_break( int start, int direction );
+    int  substring_width( const char *t, int start, int end );
+    int  find_line( int x, int y );
+    void update_and_draw_text( void );
+    void draw_text( const char *t, int selected, int x, int y );
+    void update_size( void );
 
 
-  int  add_item( int id, char *text );
-  int  delete_item( char *text );
-  int  delete_item( int id );
-  int  delete_all();
+    int  add_item( int id, const char *text );
+    int  delete_item( const char *text );
+    int  delete_item( int id );
+    int  delete_all();
 
-  GLUI_List_Item *get_item_ptr( char *text );
-  GLUI_List_Item *get_item_ptr( int id );
+    GLUI_List_Item *get_item_ptr( const char *text );
+    GLUI_List_Item *get_item_ptr( int id );
 
-  void dump( FILE *out, char *text );
-  void set_start_line(int l) { start_line = l; }
-  static void scrollbar_callback(void *, int id);
-  int get_current_item() { return curr_line; }
-  void set_click_type(int d) {
-    cb_click_type = d; }
-  
-  GLUI_List( void ) {
-    type                  = GLUI_CONTROL_LIST;
-    h                     = GLUI_LIST_HEIGHT;
-    w                     = GLUI_LIST_WIDTH;
-    num_lines             = 0;
-    visible_lines         = 0;
-    start_line            = 0;
-    curr_line             = 0;
-    name[0]               = '\0';
-    active_type           = GLUI_CONTROL_ACTIVE_PERMANENT;
-    can_activate          = true;
-    spacebar_mouse_click  = false;
-    scrollbar             = NULL;
-    debug                 = false;
-    draw_text_only        = false;
-    cb_click_type         = GLUI_SINGLE_CLICK;
-    last_line             = -1;
-    last_click_time       = 0;
-	 obj_cb                = NULL;
-	 associated_object     = NULL;
-  };
+    void dump( FILE *out, const char *text );
+    void set_start_line(int l) { start_line = l; }
+    static void scrollbar_callback(void *, int id);
+    int get_current_item() { return curr_line; }
+    void set_click_type(int d) {
+        cb_click_type = d; }
+
+protected:
+    void common_init()
+    {
+        type                  = GLUI_CONTROL_LIST;
+        h                     = GLUI_LIST_HEIGHT;
+        w                     = GLUI_LIST_WIDTH;
+        num_lines             = 0;
+        visible_lines         = 0;
+        start_line            = 0;
+        curr_line             = 0;
+        name[0]               = '\0';
+        active_type           = GLUI_CONTROL_ACTIVE_PERMANENT;
+        can_activate          = true;
+        spacebar_mouse_click  = false;
+        scrollbar             = NULL;
+        debug                 = false;
+        draw_text_only        = false;
+        cb_click_type         = GLUI_SINGLE_CLICK;
+        last_line             = -1;
+        last_click_time       = 0;
+        obj_cb                = NULL;
+        associated_object     = NULL;
+    };
+    void common_construct(
+        GLUI_Node *parent,
+        GLUI_String* live_var, bool scroll, 
+        int id, 
+        GLUI_Update_CB callback, 
+        GLUI_Control *object, 
+        GLUI_InterObject_CB obj_cb);
 };
 
 /************************************************************/
@@ -1946,96 +2019,130 @@ public:
 class GLUI_Scrollbar : public GLUI_Control
 {
 public:
-  int           currently_inside;
-  int           state;
-  float         growth, growth_exp;
-  int           last_x, last_y;
-  int           data_type;
-  int           callback_count;
-  int           last_int_val;
-  float         last_float_val;
-  int           first_callback;
-  float         user_speed;
-  float         float_min, float_max;
-  int           int_min, int_max;
-  int           horizontal;
-  int box_length;
-  int box_start_position;
-  int box_end_position;
-  int track_length;
+    // Constructor, no live var
+    GLUI_Scrollbar( GLUI_Node *parent,
+                    const char *name, 
+                    int horz_vert=GLUI_SCROLL_HORIZONTAL,
+                    int data_type=GLUI_SCROLL_INT,
+                    int id=-1, GLUI_Update_CB callback=NULL, 
+                    GLUI_Control *object = NULL,
+                    GLUI_InterObject_CB obj_cb = NULL
+                    );
+
+    // Constructor, int live var
+    GLUI_Scrollbar( GLUI_Node *parent, const char *name, int horz_vert,
+                    int *live_var,
+                    int id=-1, GLUI_Update_CB callback=NULL, 
+                    GLUI_Control *object = NULL,
+                    GLUI_InterObject_CB obj_cb = NULL
+                    );
+
+    // Constructor, float live var
+    GLUI_Scrollbar( GLUI_Node *parent, const char *name, int horz_vert,
+                    float *live_var,
+                    int id=-1, GLUI_Update_CB callback=NULL, 
+                    GLUI_Control *object = NULL,
+                    GLUI_InterObject_CB obj_cb = NULL
+                    );
+
+    bool          currently_inside;
+    int           state;
+    float         growth, growth_exp;
+    int           last_x, last_y;
+    int           data_type;
+    int           callback_count;
+    int           last_int_val;
+    float         last_float_val;
+    int           first_callback;
+    float         user_speed;
+    float         float_min, float_max;
+    int           int_min, int_max;
+    int           horizontal;
+    int box_length;
+    int box_start_position;
+    int box_end_position;
+    int track_length;
 
 
-  /* Rather than directly access an Editbox or Textbox for 
-     changing variables, a pointer to some object is defined
-     along with a static callback in the form func(void *, int) -
-     the int is the new value, the void * must be cast to that
-     particular object type before use.
-  */
-  void *        associated_object; /* Let's the Spinner manage it's own callbacks */
-  void (*object_cb)(void *,int); /* function pointer to object call_back */
+    /* Rather than directly access an Editbox or Textbox for 
+       changing variables, a pointer to some object is defined
+       along with a static callback in the form func(void *, int) -
+       the int is the new value, the void * must be cast to that
+       particular object type before use.
+    */
+    void *        associated_object; /* Let's the Spinner manage it's own callbacks */
+    void (*object_cb)(void *,int); /* function pointer to object call_back */
 
-  int  mouse_down_handler( int local_x, int local_y );
-  int  mouse_up_handler( int local_x, int local_y, int same );
-  int  mouse_held_down_handler( int local_x, int local_y, int inside );
-  int  key_handler( unsigned char key,int modifiers );
-  int  special_handler( int key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    int  key_handler( unsigned char key,int modifiers );
+    int  special_handler( int key,int modifiers );
   
-  void draw( int x, int y );
-  void draw_pressed( void );
-  void draw_unpressed( void );
-  void draw_text( int sunken );
+    void draw( int x, int y );
+    void draw_pressed( void );
+    void draw_unpressed( void );
+    void draw_text( int sunken );
 
-  void update_size( void );
+    void update_size( void );
 
-  void set_int_limits( int low, int high,int limit_type=GLUI_LIMIT_CLAMP);
-  void set_float_limits( float low,float high,int limit_type=GLUI_LIMIT_CLAMP);
-  int  find_arrow( int local_x, int local_y );
-  void do_drag( int x, int y );
-  void do_callbacks( void );
-  void draw_arrows( void );
-  void draw_scroll( void );
-  void do_click( void );
-  void idle( void );
-  int  needs_idle( void );
-  void set_int_val( int new_val );
-  void set_float_val( float new_val );
-  void increase_growth( void );
-  void reset_growth( void );
+    void set_int_limits( int low, int high,int limit_type=GLUI_LIMIT_CLAMP);
+    void set_float_limits( float low,float high,int limit_type=GLUI_LIMIT_CLAMP);
+    int  find_arrow( int local_x, int local_y );
+    void do_drag( int x, int y );
+    void do_callbacks( void );
+    void draw_arrows( void );
+    void draw_scroll( void );
+    void do_click( void );
+    void idle( void );
+    int  needs_idle( void );
+    void set_int_val( int new_val );
+    void set_float_val( float new_val );
+    void increase_growth( void );
+    void reset_growth( void );
 
-  void set_speed( float speed ) { user_speed = speed; };
-  void update_scroll_parameters();
+    void set_speed( float speed ) { user_speed = speed; };
+    void update_scroll_parameters();
 
-  GLUI_Scrollbar ( void ) {
-    type         = GLUI_CONTROL_SCROLL;
-    horizontal   = true;
-    h            = GLUI_SCROLL_ARROW_HEIGHT;
-    w            = GLUI_TEXTBOX_WIDTH;
-    x_off        = 0;
-    y_off_top    = 0;
-    y_off_bot    = 0;
-    can_activate = true;
-    state        = GLUI_SCROLL_STATE_NONE;
-    growth_exp   = GLUI_SCROLL_DEFAULT_GROWTH_EXP;
-    callback_count = 0;
-    first_callback = true;
-    user_speed   = 1.0;
-    int_val      = 0;
-    int_min      = 0;
-    int_max      = 0;
-    associated_object = NULL;
-    object_cb = NULL;
-    box_length         = 0;
-    box_start_position = 0;
-    box_end_position   = 0;
-    track_length       = 0;
-
-  };
 protected:
-  virtual void draw_scroll_arrow(int arrowtype, int x, int y);
-  virtual void draw_scroll_box(int x, int y, int w, int h);
-  
-};
+    void common_init ( void ) {
+        type         = GLUI_CONTROL_SCROLL;
+        horizontal   = true;
+        h            = GLUI_SCROLL_ARROW_HEIGHT;
+        w            = GLUI_TEXTBOX_WIDTH;
+        x_off        = 0;
+        y_off_top    = 0;
+        y_off_bot    = 0;
+        can_activate = true;
+        state        = GLUI_SCROLL_STATE_NONE;
+        growth_exp   = GLUI_SCROLL_DEFAULT_GROWTH_EXP;
+        callback_count = 0;
+        first_callback = true;
+        user_speed   = 1.0;
+        int_val      = 0;
+        int_min      = 0;
+        int_max      = 0;
+        associated_object = NULL;
+        object_cb = NULL;
+        box_length         = 0;
+        box_start_position = 0;
+        box_end_position   = 0;
+        track_length       = 0;
 
+    };
+    void common_construct(
+        GLUI_Node *parent,
+        const char *name, 
+        int horz_vert,
+        int data_type, void* live_var,
+        int id, GLUI_Update_CB callback,
+        GLUI_Control *object,
+        GLUI_InterObject_CB obj_cb
+        );
+
+    virtual void draw_scroll_arrow(int arrowtype, int x, int y);
+    virtual void draw_scroll_box(int x, int y, int w, int h);
+};
 
 /************************************************************/
 /*                                                          */
@@ -2057,15 +2164,16 @@ public:
     GLUI_Listbox_Item items_list;
     int               depressed;
 
-    int  orig_value, currently_inside;
+    int  orig_value;
+    bool currently_inside;
     int  text_x_offset, title_x_offset;
     int  glut_menu_id;
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int inside );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  key_handler( unsigned char key,int modifiers );
-    int  special_handler(   int key,int modifiers );
+    int  special_handler( int key,int modifiers );
 
     void update_size( void );
     void draw( int x, int y );
@@ -2075,8 +2183,8 @@ public:
     void set_int_val( int new_val );
     void dump( FILE *output );
 
-    int  add_item( int id, char *text );
-    int  delete_item( char *text );
+    int  add_item( int id, const char *text );
+    int  delete_item( const char *text );
     int  delete_item( int id );
     int  sort_items( void );
 
@@ -2084,12 +2192,18 @@ public:
 
     void increase_width( void );
 
-    GLUI_Listbox_Item *get_item_ptr( char *text );
+    GLUI_Listbox_Item *get_item_ptr( const char *text );
     GLUI_Listbox_Item *get_item_ptr( int id );
   
-    GLUI_Listbox() 
-    {
-        sprintf( name, "Listbox: %p", (void *) this );
+
+    GLUI_Listbox( GLUI_Node *parent,
+                  const char *name, int *live_var=NULL,
+                  int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_Listbox( void ) { common_init(); }
+
+protected:
+    void common_init() {
+        glui_format_str( name, "Listbox: %p", this );
         type           = GLUI_CONTROL_LISTBOX;
         w              = GLUI_EDITTEXT_WIDTH;
         h              = GLUI_EDITTEXT_HEIGHT;
@@ -2097,7 +2211,7 @@ public:
         title_x_offset = 0;
         text_x_offset  = 55;
         can_activate   = true;
-        curr_text[0]   = '\0';
+        curr_text      = "";
         live_type      = GLUI_LIVE_INT;  /* This has an integer live var */
         depressed      = false;
         glut_menu_id   = -1;
@@ -2119,27 +2233,26 @@ public:
     int            draw_active_area_only;
 
     int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, int inside );
-    int  mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  mouse_up_handler( int local_x, int local_y, bool inside );
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  special_handler( int key, int modifiers );
     void update_size( void );
     void draw( int x, int y );
     void draw_active_area( void );
 
     /***  The following methods (starting with "iaction_") need to
-    be overloaded  ***/
+          be overloaded  ***/
     virtual int  iaction_mouse_down_handler( int local_x, int local_y ) = 0;
-    virtual int  iaction_mouse_up_handler( int local_x, int local_y, int inside )=0;
-    virtual int  iaction_mouse_held_down_handler( int local_x, int local_y, int inside )=0;
+    virtual int  iaction_mouse_up_handler( int local_x, int local_y, bool inside )=0;
+    virtual int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside )=0;
     virtual int  iaction_special_handler( int key, int modifiers )=0;
     virtual void iaction_draw_active_area_persp( void )=0;
     virtual void iaction_draw_active_area_ortho( void )=0;
     virtual void iaction_dump( FILE *output )=0;
     virtual void iaction_init( void ) = 0;
   
-    GLUI_Mouse_Interaction() 
-    {
-        sprintf( name, "Mouse_Interaction: %p", (void *) this );
+    GLUI_Mouse_Interaction( void ) {
+        glui_format_str( name, "Mouse_Interaction: %p", this );
         type           = GLUI_CONTROL_MOUSE_INTERACTION;
         w              = GLUI_MOUSE_INTERACTION_WIDTH;
         h              = GLUI_MOUSE_INTERACTION_HEIGHT;
@@ -2161,12 +2274,12 @@ class GLUI_Rotation : public GLUI_Mouse_Interaction
 public:
     Arcball        *ball;
     GLUquadricObj *quadObj;
-    int            can_spin, spinning;
+    bool           can_spin, spinning;
     float          damping;
   
     int  iaction_mouse_down_handler( int local_x, int local_y );
-    int  iaction_mouse_up_handler( int local_x, int local_y, int inside );
-    int  iaction_mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  iaction_mouse_up_handler( int local_x, int local_y, bool inside );
+    int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  iaction_special_handler( int key, int modifiers );
     void iaction_init( void ) { init_ball(); }
     void iaction_draw_active_area_persp( void );
@@ -2193,7 +2306,12 @@ public:
 
     void set_spin( float damp_factor );
 
-    GLUI_Rotation(void);
+    GLUI_Rotation( GLUI_Node *parent, const char *name, float *live_var=NULL,
+                   int id=-1, GLUI_Update_CB callback=NULL );
+    GLUI_Rotation(void) { common_init(); }
+
+protected:
+    void common_init();
 };
 
 /************************************************************/
@@ -2214,8 +2332,8 @@ public:
     int   locked;
 
     int  iaction_mouse_down_handler( int local_x, int local_y );
-    int  iaction_mouse_up_handler( int local_x, int local_y, int inside );
-    int  iaction_mouse_held_down_handler( int local_x, int local_y, int inside );
+    int  iaction_mouse_up_handler( int local_x, int local_y, bool inside );
+    int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside );
     int  iaction_special_handler( int key, int modifiers );
     void iaction_init( void ) { }
     void iaction_draw_active_area_persp( void );
@@ -2235,13 +2353,13 @@ public:
     int  get_mouse_code( int x, int y );
 
     /* Float array is either a single float (for single-axis controls),
-     or two floats for X and Y (if an XY controller) */
+       or two floats for X and Y (if an XY controller) */
 
     float get_z( void ) {       return float_array_val[0];  }
     float get_x( void ) {       return float_array_val[0];  }
     float get_y( void ) {
-    if ( trans_type == GLUI_TRANSLATION_XY )    return float_array_val[1];
-    else                    return float_array_val[0];
+        if ( trans_type == GLUI_TRANSLATION_XY )    return float_array_val[1];
+        else					return float_array_val[0];
     }
 
     void  set_z( float val );
@@ -2249,10 +2367,15 @@ public:
     void  set_y( float val );
     void  set_one_val( float val, int index );
 
-    GLUI_Translation( void ) 
-    {
+    GLUI_Translation( GLUI_Node *parent, const char *name,
+                      int trans_type, float *live_var=NULL,
+                      int id=-1, GLUI_Update_CB callback=NULL	);
+    GLUI_Translation( void ) { common_init(); }
+
+protected:
+    void common_init() {
         locked              = GLUI_TRANSLATION_LOCK_NONE;
-        sprintf( name, "Translation: %p", (void *) this );
+        glui_format_str( name, "Translation: %p", this );
         type                = GLUI_CONTROL_TRANSLATION;
         w                   = GLUI_MOUSE_INTERACTION_WIDTH;
         h                   = GLUI_MOUSE_INTERACTION_HEIGHT;
@@ -2268,8 +2391,8 @@ public:
 };
 
 /********** Misc functions *********************/
-int _glutBitmapWidthString( void *font, char *s );
-void _glutBitmapString( void *font, char *s );
+int _glutBitmapWidthString( void *font, const char *s );
+void _glutBitmapString( void *font, const char *s );
 
 /********** Our own callbacks for glut *********/
 /* These are the callbacks that we pass to glut.  They take

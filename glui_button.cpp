@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_button.cpp - GLUI_Button control class
+     glui_button.cpp - GLUI_Button control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,23 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+/****************************** GLUI_Button::GLUI_Button() **********/
+
+GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
+                          int id, GLUI_Update_CB cb )
+{
+  common_init();
+  user_id     = id;
+  callback    = cb;
+  set_name( name );
+    
+  parent->add_control( this );
+}
+
 
 /****************************** GLUI_Button::mouse_down_handler() **********/
 
@@ -44,7 +62,7 @@ int    GLUI_Button::mouse_down_handler( int local_x, int local_y )
 
 /****************************** GLUI_Button::mouse_up_handler() **********/
 
-int    GLUI_Button::mouse_up_handler( int local_x, int local_y, int inside )
+int    GLUI_Button::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   set_int_val( 0 );   /** A button always turns off after you press it **/
 
@@ -68,7 +86,7 @@ int    GLUI_Button::mouse_up_handler( int local_x, int local_y, int inside )
 /****************************** GLUI_Button::mouse_held_down_handler() ******/
 
 int    GLUI_Button::mouse_held_down_handler( int local_x, int local_y,
-					     int new_inside)
+					     bool new_inside)
 {
   if ( NOT new_inside AND currently_inside == true ) {
     draw_unpressed();
@@ -174,7 +192,7 @@ void     GLUI_Button::draw_text( int sunken )
   glColor3ub( 0,0,0 );
   
   string_width = _glutBitmapWidthString( glui->font,
-					 this->name );
+					 this->name.c_str() );
   if ( NOT sunken ) {
     draw_name( MAX((w-string_width),0)/2, 13);
   }

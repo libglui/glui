@@ -1,8 +1,12 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_bitmaps.cpp
+     glui_bitmaps.cpp
 
-  GLUI User Interface Toolkit (LGPL)
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,11 +26,10 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
-
 #include <cassert>
 
 /************ Image Bitmap arrays **********/
@@ -98,8 +101,7 @@ GLUI_Bitmap::~GLUI_Bitmap()
 	}
 }
 
-void 
-GLUI_Bitmap::init(int *array)
+void GLUI_Bitmap::init(int *array)
 {
 	w = 0;
 	h = 0;
@@ -133,22 +135,19 @@ GLUI_StdBitmaps::~GLUI_StdBitmaps()
 {
 }
 
-int 
-GLUI_StdBitmaps::width(int i) const
+int GLUI_StdBitmaps::width(int i) const
 {
 	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
 	return bitmaps[i].w;
 }
 
-int
-GLUI_StdBitmaps::height(int i) const
+int GLUI_StdBitmaps::height(int i) const
 {
 	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
 	return bitmaps[i].h;
 }
 
-void 
-GLUI_StdBitmaps::draw(int i, int x, int y) const
+void GLUI_StdBitmaps::draw(int i, int x, int y) const
 {
 	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
 

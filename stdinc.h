@@ -10,11 +10,6 @@
 #define NOT !
 #endif
 
-#ifndef true
-#define true 1
-#define false 0
-#endif
-
 #ifndef MAX
 #define MAX(a,b)  ((a)>(b) ? (a) : (b))
 #define MIN(a,b)  ((a)<(b) ? (a) : (b))
@@ -112,6 +107,10 @@ typedef  char String[81];
 #endif
 
 #define VEC3_TO_ARRAY(v,a)  a[0]=v[0], a[1]=v[1], a[2]=v[2]
+
+/**** Return the ASCII control code given the non-control ASCII character */
+#define CTRL(c) ( (c>=('a'-1)) ? (c-'a'+1) : (c-'A'+1) )
+
 
 #endif /* _STDINC_H_ */
 

@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_separator.cpp - GLUI_Separator control class
+     glui_separator.cpp - GLUI_Separator control class
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,18 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+
+/****************************** GLUI_Separator::GLUI_Separator() **********/
+
+GLUI_Separator::GLUI_Separator( GLUI_Node *parent )
+{
+  common_init();
+  parent->add_control( this );
+}
 
 /****************************** GLUI_Separator::draw() **********/
 

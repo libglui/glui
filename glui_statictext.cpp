@@ -1,8 +1,13 @@
-/*
+/****************************************************************************
+  
+  GLUI User Interface Toolkit
+  ---------------------------
 
-  glui_statictext.cpp - GLUI_StaticText Control
+     glui_statictext.cpp - GLUI_StaticText Control
 
-  GLUI User Interface Toolkit (LGPL)
+
+          --------------------------------------------------
+
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
@@ -22,10 +27,18 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
+*****************************************************************************/
 
 #include "glui.h"
 #include "stdinc.h"
+
+/****************************** GLUI_StaticText::GLUI_StaticText() **********/
+GLUI_StaticText::GLUI_StaticText( GLUI_Node *parent, const char *name )
+{
+  common_init();
+  set_name( name );
+  parent->add_control( this );
+}
 
 /****************************** GLUI_StaticText::draw() **********/
 
@@ -46,7 +59,7 @@ void    GLUI_StaticText::draw( int x, int y )
 
 /****************************** GLUI_StaticText::set_text() **********/
 
-void    GLUI_StaticText::set_text( char *text )
+void    GLUI_StaticText::set_text( const char *text )
 {
   int orig;
 

@@ -20,4 +20,3 @@
 #include "glui_img_listbox_up.c"
 #include "glui_img_listbox_down.c"
 #include "glui_img_listbox_up_dis.c"
-#include "glui_img_scrollbar.c"

@@ -1,9 +1,12 @@
-/*
+/**********************************************************************
 
   arcball.h
 
   GLUI User Interface Toolkit (LGPL)
   Copyright (c) 1998 Paul Rademacher
+     Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
+     Oct 2003, Nigel Stewart - GLUI Code Cleaning
+
 
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
@@ -22,9 +25,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-*/
-
-/**********************************************************************
+ ---------------------------------------------------------------------
 
   A C++ class that implements the Arcball, as described by Ken
   Shoemake in Graphics Gems IV.  
@@ -49,11 +50,6 @@
   The current rotation is stored in the 4x4 float matrix 'rot'.
   It is also stored in the quaternion 'q_now'.  
 
-  ------------------------------------------------------------------
-
-  Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
-  Oct 2003, Nigel Stewart - GLUI Code Cleaning
-
 **********************************************************************/
 
 #ifndef GLUI_ARCBALL_H
@@ -70,14 +66,14 @@ public:
     Arcball(mat4 *mtx);
     Arcball(const vec2 &center, float radius);
 
-    void  set_damping(const float d);
+    void  set_damping(float d);
     void  idle();
-    void  mouse_down(const int x, const int y);
+    void  mouse_down(int x, int y);
     void  mouse_up();
-    void  mouse_motion(const int x, const int y, const int shift, const int ctrl, const int alt);
-    void  mouse_motion(const int x, const int y);
-    void  set_constraints(const bool constrain_x, const bool constrain_y);
-    void  set_params(const vec2 &center, const float radius);  
+    void  mouse_motion(int x, int y, int shift, int ctrl, int alt);
+    void  mouse_motion(int x, int y);
+    void  set_constraints(bool constrain_x, bool constrain_y);
+    void  set_params(const vec2 &center, float radius);  
     void  reset_mouse();
     void  init();
 

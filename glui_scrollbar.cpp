@@ -34,6 +34,102 @@ enum {
   GLUI_SCROLL_ARROW_RIGHT
 };
   
+
+/****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
+// Constructor, no live var
+GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
+                                const char *name, 
+                                int horz_vert,
+                                int data_type,
+                                int id, GLUI_Update_CB callback, 
+                                GLUI_Control *object,
+                                GLUI_InterObject_CB obj_cb
+                                )
+{
+  common_construct(parent, name, horz_vert, data_type, NULL, id, callback, object, obj_cb);
+}
+
+/****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
+// Constructor, int live var
+GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name, 
+                                int horz_vert,
+                                int *live_var,
+                                int id, GLUI_Update_CB callback, 
+                                GLUI_Control *object,
+                                GLUI_InterObject_CB obj_cb
+                                )
+{
+  common_construct(parent, name, horz_vert, GLUI_SCROLL_INT, live_var, id, callback, object, obj_cb);
+}
+
+/****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
+// Constructor, float live var
+GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
+                                int horz_vert,
+                                float *live_var,
+                                int id, GLUI_Update_CB callback, 
+                                GLUI_Control *object,
+                                GLUI_InterObject_CB obj_cb
+                                )
+{
+  common_construct(parent, name, horz_vert, GLUI_SCROLL_FLOAT, live_var, id, callback, object, obj_cb);
+}
+
+/****************************** GLUI_Scrollbar::common_construct() **********/
+void GLUI_Scrollbar::common_construct(
+  GLUI_Node *parent,
+  const char *name, 
+  int horz_vert,
+  int data_type,
+  void *data,
+  int id, GLUI_Update_CB callback, 
+  GLUI_Control *object,
+  GLUI_InterObject_CB obj_cb
+  )
+{
+  common_init();
+  int           text_type;
+
+  // make sure limits are wide enough to hold live value
+  if (data_type==GLUI_SCROLL_FLOAT) {
+    float lo = 0.0f, hi=1.0f;
+    if (data) {
+      float d = *(float*)(data);
+      lo = MIN(lo, d);
+      hi = MAX(hi, d);
+    }
+    this->set_float_limits(lo,hi);
+    this->set_float_val(lo);
+    this->live_type = GLUI_LIVE_FLOAT;
+  } else {
+    int lo = 0, hi=100;
+    if (data) {
+      int d = *(int*)(data);
+      lo = MIN(lo, d);
+      hi = MAX(hi, d);
+    }
+    this->set_int_limits(lo,hi);
+    this->set_int_val(0);
+    this->live_type = GLUI_LIVE_INT;
+  }
+  this->data_type = data_type;
+  this->set_ptr_val( data );
+  this->set_name(name);
+  this->user_id = id;
+  this->callback    = callback;
+  this->associated_object = object;
+  this->object_cb = obj_cb;
+  this->horizontal=(horz_vert==GLUI_SCROLL_HORIZONTAL);
+  if (this->horizontal) {
+    this->h = GLUI_SCROLL_ARROW_HEIGHT;
+    this->w = GLUI_TEXTBOX_WIDTH;
+  } else {
+    this->h = GLUI_TEXTBOX_HEIGHT;
+    this->w = GLUI_SCROLL_ARROW_WIDTH;
+  }
+  parent->add_control( this );
+  this->init_live();
+}
  
 /****************************** GLUI_Scrollbar::mouse_down_handler() **********/
 
@@ -82,7 +178,7 @@ int    GLUI_Scrollbar::mouse_down_handler( int local_x, int local_y )
 
 /******************************** GLUI_Scrollbar::mouse_up_handler() **********/
 
-int    GLUI_Scrollbar::mouse_up_handler( int local_x, int local_y, int inside )
+int    GLUI_Scrollbar::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   state = GLUI_SCROLL_STATE_NONE;
 
@@ -104,7 +200,7 @@ int    GLUI_Scrollbar::mouse_up_handler( int local_x, int local_y, int inside )
 /***************************** GLUI_Scrollbar::mouse_held_down_handler() ******/
 
 int    GLUI_Scrollbar::mouse_held_down_handler( int local_x, int local_y,
-                                                int new_inside)
+                                                bool new_inside)
 {
   int new_state;
   if ( state == GLUI_SCROLL_STATE_NONE )
@@ -678,7 +774,7 @@ void   GLUI_Scrollbar::set_int_limits( int low, int high, int limit_type )
 void    GLUI_Scrollbar::reset_growth( void )
 {
   if (data_type==GLUI_SCROLL_INT)
-    growth = fabs(int_max - int_min) / float(GLUI_SCROLL_GROWTH_STEPS);
+    growth = fabs(float(int_max - int_min)) / float(GLUI_SCROLL_GROWTH_STEPS);
   else  
     growth = fabs(float_max - float_min) / float(GLUI_SCROLL_GROWTH_STEPS);
 }
@@ -692,7 +788,7 @@ void    GLUI_Scrollbar::increase_growth( void )
   if (data_type==GLUI_SCROLL_FLOAT)
     range = fabs(float_max-float_min);
   else 
-    range = fabs(int_max-int_min);
+    range = fabs(float(int_max-int_min));
   if ( growth < (range / float(GLUI_SCROLL_MIN_GROWTH_STEPS)) )
     growth *= growth_exp;
 
