@@ -33,18 +33,17 @@
 
 #if defined(USE_FREEGLUT)
 
-  // GLUI does not yet work perfectly     
-  // with FreeGLUT - use at your own risk.
+  // FreeGLUT does not yet work perfectly with GLUI
+  //  - use at your own risk.
   
   #include <GL/freeglut.h>
   #include <GL/freeglut_ext.h>
 
 #elif defined(USE_OPENGLUT)
 
-  // GLUI is untested with OpenGLUT
+  // OpenGLUT does not yet work properly with GLUI
   //  - use at your own risk.
   #include <GL/openglut.h>
-  #include <GL/openglut_ext.h>
 
 #else 
 
