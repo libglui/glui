@@ -134,10 +134,6 @@ SOURCE=..\glui_filebrowser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\glui_img_scrollbar.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\glui_list.cpp
 # End Source File
 # Begin Source File
