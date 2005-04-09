@@ -515,22 +515,33 @@ void GLUI_Scrollbar::draw_scroll_arrow(int arrowtype, int x, int y)
     { R-2,T,       R-2, B,        L+1,  VC   }, // left arrow
     { L+2,T,       L+2, B,        R-1,  VC   }  // right arrow
   };
-  const float *tri;
-  if (arrowtype==GLUI_SCROLL_ARROW_UP) {
-    tri=verts[0];
-    if (state & GLUI_SCROLL_STATE_UP) offset = 1;
-  }
-  else if (arrowtype==GLUI_SCROLL_ARROW_DOWN) {
-    tri=verts[1];
-    if (state & GLUI_SCROLL_STATE_DOWN) offset = 1;
-  }
-  else if (arrowtype==GLUI_SCROLL_ARROW_LEFT) {
-    tri=verts[2];
-    if (state & GLUI_SCROLL_STATE_DOWN) offset = 1;
-  }
-  else if (arrowtype==GLUI_SCROLL_ARROW_RIGHT) {
-    tri=verts[3];
-    if (state & GLUI_SCROLL_STATE_UP) offset = 1;
+
+  const float *tri = NULL;
+
+  switch (arrowtype)
+  {
+    case GLUI_SCROLL_ARROW_UP:
+      tri = verts[0];
+      if (state & GLUI_SCROLL_STATE_UP) offset = 1;
+      break;
+
+    case GLUI_SCROLL_ARROW_DOWN:
+      tri = verts[1];
+      if (state & GLUI_SCROLL_STATE_DOWN) offset = 1;
+      break;
+
+    case GLUI_SCROLL_ARROW_LEFT:
+      tri = verts[2];
+      if (state & GLUI_SCROLL_STATE_DOWN) offset = 1;
+      break;
+
+    case GLUI_SCROLL_ARROW_RIGHT:
+      tri = verts[3];
+      if (state & GLUI_SCROLL_STATE_UP) offset = 1;
+      break;
+
+    default:
+      return; /* tri is NULL */
   }
 
   if (glui) {
