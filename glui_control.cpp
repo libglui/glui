@@ -888,7 +888,7 @@ void GLUI_Control::init_live()
 bool GLUI_Control::needs_idle() const
 { 
   return false; 
-};
+}
 
 
 /*********************************** GLUI_Control::~GLUI_Control() **********/
@@ -1047,7 +1047,7 @@ void   GLUI_Control::set_name( const char *str )
 
   if ( glui) 
     glui->refresh(); 
-};
+}
 
 
 
