@@ -132,20 +132,18 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
     if ((dir = opendir(d)) == NULL)
       perror("fbreaddir:");
     else {
-      while ((dirp = readdir(dir)) != NULL) { /* open directory     */
-        if (!lstat(dirp->d_name,&dr)       /* dir can be stated  */
-            && S_ISDIR(dr.st_mode)) {         /* dir is directory   */
-          item[0] = '/';
-          item += dirp->d_name;
-        } else {
+      while ((dirp = readdir(dir)) != NULL)   /* open directory     */
+      { 
+        if (!lstat(dirp->d_name,&dr) && S_ISDIR(dr.st_mode)) /* dir is directory   */
+          item = dirp->d_name + GLUI_String("/");
+        else
           item = dirp->d_name;
-        }
+
         list->add_item(i,item.c_str());
         i++;
       }
       closedir(dir);
     }
-
   }
 #endif
 }
