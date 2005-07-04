@@ -8,13 +8,13 @@ UNAME = $(shell uname)
 
 ifeq ($(UNAME), Linux)
 CXX       = g++
-#CPPFLAGS += -g -Wall
-CPPFLAGS += -O3 -Wall
+#CPPFLAGS += -g -Wall -pedantic
+CPPFLAGS += -O3 -Wall -pedantic
 endif
 
 #######################################
 
-CPPFLAGS += -I./
+CPPFLAGS += -I./ -I./include
 
 LIBGLUI = -L./lib -lglui
 LIBGL   = -lGLU -lGL
@@ -44,7 +44,7 @@ GLUI_EXAMPLES = bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
 
 GLUI_TOOLS = bin/ppm2array
 
-.PHONY: all setup examples tools clean
+.PHONY: all setup examples tools clean depend dist
 
 all: setup $(GLUI_LIB) examples tools
 
@@ -56,7 +56,7 @@ examples: $(GLUI_EXAMPLES)
 
 tools: $(GLUI_TOOLS)
 
-bin/ppm2array: ppm2array.cpp ppm.cpp
+bin/ppm2array: tools/ppm2array.cpp tools/ppm.cpp
 	$(CXX) $(CPPFLAGS) -o $@ $^
 
 bin/%: example/%.cpp $(GLUI_LIB)
@@ -74,51 +74,72 @@ $(GLUI_LIB): $(GLUI_OBJS)
 clean:
 	rm -f *.o $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS)
 
-############################################################################
+depend:
+	makedepend -Y./include `find -name "*.cpp"` `find -name "*.c"`
 
-algebra3.o: algebra3.h
-arcball.o: arcball.h algebra3.h quaternion.h glui_internal.h
-example1.o: glui.h
-example2.o:   glui.h
-example3.o:   glui.h
-example4.o:   glui.h
-example6.o:   glui.h
-glui.o: glui.h  glui_internal.h 
-glui_filebrowser.o: glui.h glui_internal.h
-glui_add_controls.o: glui.h  glui_internal.h 
-glui_bitmap_img_data.o: glui_img_checkbox_0.c glui_img_checkbox_1.c
-glui_bitmap_img_data.o: glui_img_radiobutton_0.c glui_img_radiobutton_1.c
-glui_bitmap_img_data.o: glui_img_uparrow.c glui_img_downarrow.c
-glui_bitmap_img_data.o: glui_img_leftarrow.c glui_img_rightarrow.c
-glui_bitmap_img_data.o: glui_img_spinup_1.c glui_img_spinup_0.c
-glui_bitmap_img_data.o: glui_img_spindown_1.c glui_img_spindown_0.c
-glui_bitmap_img_data.o: glui_img_checkbox_0_dis.c glui_img_checkbox_1_dis.c
-glui_bitmap_img_data.o: glui_img_radiobutton_0_dis.c
-glui_bitmap_img_data.o: glui_img_radiobutton_1_dis.c glui_img_spinup_dis.c
-glui_bitmap_img_data.o: glui_img_spindown_dis.c
-glui_string.o: glui.h glui_internal.h 
-glui_bitmaps.o: glui.h glui_internal.h 
-glui_button.o: glui.h glui_internal.h 
-glui_checkbox.o: glui.h glui_internal.h 
-glui_column.o: glui.h glui_internal.h 
-glui_control.o: glui.h glui_internal.h 
-glui_edittext.o: glui.h glui_internal.h 
-glui_commandline.o: glui.h glui_internal.h 
-glui_node.o: glui.h glui_internal.h 
-glui_panel.o: glui.h glui_internal.h 
-glui_radio.o: glui.h glui_internal.h 
-glui_separator.o: glui.h glui_internal.h 
-glui_spinner.o: glui.h glui_internal.h 
-glui_statictext.o: glui.h glui_internal.h 
-quaternion.o: quaternion.h algebra3.h glui_internal.h
-glui_translation.o: glui.h glui_internal.h  
-glui_rotation.o: glui.h glui_internal.h  
-glui_mouse_iaction.o: glui.h glui_internal.h  
-glui_listbox.o: glui.h glui_internal.h  
-glui_rollout.o: glui.h glui_internal.h 
-viewmodel.o: viewmodel.h glui.h glui_internal.h
-glui_tree.o: glui.h glui_internal.h
-glui_textbox.o: glui.h glui_internal.h
-glui_scrollbar.o: glui.h glui_internal.h
-glui_list.o: glui.h glui_internal.h
-glui_treepanel.o: glui.h glui_internal.h
+dist: clean
+	tar cvzf glui-2.3.0.tgz \
+		`find -name "*.cpp"` \
+		`find -name "*.c"` \
+		`find -name "*.h"` \
+		`find -name "*.dev"` \
+		`find -name "*.dsp"` \
+		`find -name "*.dsw"` \
+		`find -name "*.vcproj"` \
+		`find -name "*.sln"` \
+		`find -name "*.txt"` \
+		makefile
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+./algebra3.o: algebra3.h glui_internal.h
+./arcball.o: arcball.h glui_internal.h algebra3.h quaternion.h
+./glui_bitmap_img_data.o: glui_img_checkbox_0.c glui_img_checkbox_1.c
+./glui_bitmap_img_data.o: glui_img_radiobutton_0.c glui_img_radiobutton_1.c
+./glui_bitmap_img_data.o: glui_img_uparrow.c glui_img_downarrow.c
+./glui_bitmap_img_data.o: glui_img_leftarrow.c glui_img_rightarrow.c
+./glui_bitmap_img_data.o: glui_img_spinup_1.c glui_img_spinup_0.c
+./glui_bitmap_img_data.o: glui_img_spindown_1.c glui_img_spindown_0.c
+./glui_bitmap_img_data.o: glui_img_checkbox_0_dis.c glui_img_checkbox_1_dis.c
+./glui_bitmap_img_data.o: glui_img_radiobutton_0_dis.c
+./glui_bitmap_img_data.o: glui_img_radiobutton_1_dis.c glui_img_spinup_dis.c
+./glui_bitmap_img_data.o: glui_img_spindown_dis.c glui_img_listbox_up.c
+./glui_bitmap_img_data.o: glui_img_listbox_down.c glui_img_listbox_up_dis.c
+./glui_button.o: GL/glui.h glui_internal.h
+./glui_checkbox.o: GL/glui.h glui_internal.h
+./glui_column.o: GL/glui.h glui_internal.h
+./glui_control.o: GL/glui.h glui_internal.h
+./glui_edittext.o: GL/glui.h glui_internal.h
+./glui_listbox.o: GL/glui.h glui_internal.h
+./glui_mouse_iaction.o: GL/glui.h glui_internal.h
+./glui_node.o: GL/glui.h glui_internal.h
+./glui_panel.o: GL/glui.h glui_internal.h
+./glui_radio.o: GL/glui.h glui_internal.h
+./glui_rollout.o: GL/glui.h glui_internal.h
+./glui_rotation.o: GL/glui.h arcball.h glui_internal.h algebra3.h
+./glui_rotation.o: quaternion.h
+./glui_separator.o: GL/glui.h glui_internal.h
+./glui_spinner.o: GL/glui.h glui_internal.h
+./glui_translation.o: GL/glui.h glui_internal.h algebra3.h
+./glui_window.o: GL/glui.h glui_internal.h
+./quaternion.o: quaternion.h algebra3.h glui_internal.h
+./viewmodel.o: viewmodel.h algebra3.h GL/glui.h
+./glui_bitmaps.o: GL/glui.h glui_internal.h
+./glui_statictext.o: GL/glui.h glui_internal.h
+./glui.o: GL/glui.h glui_internal.h
+./glui_add_controls.o: GL/glui.h glui_internal.h
+./glui_commandline.o: GL/glui.h glui_internal.h
+./glui_list.o: GL/glui.h glui_internal.h
+./glui_scrollbar.o: GL/glui.h glui_internal.h
+./glui_string.o: GL/glui.h
+./glui_textbox.o: GL/glui.h glui_internal.h
+./glui_tree.o: GL/glui.h glui_internal.h
+./glui_treepanel.o: GL/glui.h
+./example/example1.o: GL/glui.h
+./example/example2.o: GL/glui.h
+./example/example3.o: GL/glui.h
+./example/example4.o: GL/glui.h
+./example/example5.o: GL/glui.h
+./example/example6.o: GL/glui.h
+./tools/ppm2array.o: ./tools/ppm.hpp
+./glui_filebrowser.o: GL/glui.h glui_internal.h
