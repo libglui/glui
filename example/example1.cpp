@@ -12,7 +12,7 @@
 ****************************************************************************/
 
 #include <string.h>
-#include <glui.h>
+#include <GL/glui.h>
 
 /** These are the live variables passed into GLUI ***/
 int   wireframe = 0;

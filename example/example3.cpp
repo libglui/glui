@@ -12,7 +12,7 @@
 ****************************************************************************/
 
 #include <string.h>
-#include "glui.h"
+#include <GL/glui.h>
 
 float xy_aspect;
 int   last_x, last_y;
