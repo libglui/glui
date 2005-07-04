@@ -29,7 +29,7 @@
 
 *****************************************************************************/
 
-#include "glui.h"
+#include "GL/glui.h"
 #include <stdarg.h>
 
 #ifdef _MSC_VER

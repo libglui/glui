@@ -29,7 +29,7 @@
 
 *****************************************************************************/
 
-#include "glui.h"
+#include "GL/glui.h"
 #include "arcball.h"
 #include "algebra3.h"
 

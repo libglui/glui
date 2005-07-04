@@ -33,7 +33,7 @@
 
 #include "viewmodel.h" 
 
-#include "glui.h"
+#include "GL/glui.h"
 
 #include <cstdio>
 #include <cstdlib>

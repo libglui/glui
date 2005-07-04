@@ -29,7 +29,7 @@
 
 *****************************************************************************/
 
-#include "glui.h"
+#include "GL/glui.h"
 #include "glui_internal.h"
 
 int _glui_draw_border_only = 0;

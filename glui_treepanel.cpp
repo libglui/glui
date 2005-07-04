@@ -1,4 +1,4 @@
-#include "glui.h"
+#include "GL/glui.h"
 
 
 /****************************** GLUI_TreePanel::GLUI_TreePanel() *********/

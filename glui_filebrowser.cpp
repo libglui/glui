@@ -16,7 +16,7 @@
 
 *****************************************************************************/
 
-#include "glui.h"
+#include "GL/glui.h"
 #include "glui_internal.h"
 #include <sys/types.h>
 
