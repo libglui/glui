@@ -105,41 +105,41 @@ dist: clean
 ./glui_bitmap_img_data.o: glui_img_radiobutton_1_dis.c glui_img_spinup_dis.c
 ./glui_bitmap_img_data.o: glui_img_spindown_dis.c glui_img_listbox_up.c
 ./glui_bitmap_img_data.o: glui_img_listbox_down.c glui_img_listbox_up_dis.c
-./glui_button.o: GL/glui.h glui_internal.h
-./glui_checkbox.o: GL/glui.h glui_internal.h
-./glui_column.o: GL/glui.h glui_internal.h
-./glui_control.o: GL/glui.h glui_internal.h
-./glui_edittext.o: GL/glui.h glui_internal.h
-./glui_listbox.o: GL/glui.h glui_internal.h
-./glui_mouse_iaction.o: GL/glui.h glui_internal.h
-./glui_node.o: GL/glui.h glui_internal.h
-./glui_panel.o: GL/glui.h glui_internal.h
-./glui_radio.o: GL/glui.h glui_internal.h
-./glui_rollout.o: GL/glui.h glui_internal.h
-./glui_rotation.o: GL/glui.h arcball.h glui_internal.h algebra3.h
+./glui_button.o: ./include/GL/glui.h glui_internal.h
+./glui_checkbox.o: ./include/GL/glui.h glui_internal.h
+./glui_column.o: ./include/GL/glui.h glui_internal.h
+./glui_control.o: ./include/GL/glui.h glui_internal.h
+./glui_edittext.o: ./include/GL/glui.h glui_internal.h
+./glui_listbox.o: ./include/GL/glui.h glui_internal.h
+./glui_mouse_iaction.o: ./include/GL/glui.h glui_internal.h
+./glui_node.o: ./include/GL/glui.h glui_internal.h
+./glui_panel.o: ./include/GL/glui.h glui_internal.h
+./glui_radio.o: ./include/GL/glui.h glui_internal.h
+./glui_rollout.o: ./include/GL/glui.h glui_internal.h
+./glui_rotation.o: ./include/GL/glui.h arcball.h glui_internal.h algebra3.h
 ./glui_rotation.o: quaternion.h
-./glui_separator.o: GL/glui.h glui_internal.h
-./glui_spinner.o: GL/glui.h glui_internal.h
-./glui_translation.o: GL/glui.h glui_internal.h algebra3.h
-./glui_window.o: GL/glui.h glui_internal.h
+./glui_separator.o: ./include/GL/glui.h glui_internal.h
+./glui_spinner.o: ./include/GL/glui.h glui_internal.h
+./glui_translation.o: ./include/GL/glui.h glui_internal.h algebra3.h
+./glui_window.o: ./include/GL/glui.h glui_internal.h
 ./quaternion.o: quaternion.h algebra3.h glui_internal.h
-./viewmodel.o: viewmodel.h algebra3.h GL/glui.h
-./glui_bitmaps.o: GL/glui.h glui_internal.h
-./glui_statictext.o: GL/glui.h glui_internal.h
-./glui.o: GL/glui.h glui_internal.h
-./glui_add_controls.o: GL/glui.h glui_internal.h
-./glui_commandline.o: GL/glui.h glui_internal.h
-./glui_list.o: GL/glui.h glui_internal.h
-./glui_scrollbar.o: GL/glui.h glui_internal.h
-./glui_string.o: GL/glui.h
-./glui_textbox.o: GL/glui.h glui_internal.h
-./glui_tree.o: GL/glui.h glui_internal.h
-./glui_treepanel.o: GL/glui.h
-./example/example1.o: GL/glui.h
-./example/example2.o: GL/glui.h
-./example/example3.o: GL/glui.h
-./example/example4.o: GL/glui.h
-./example/example5.o: GL/glui.h
-./example/example6.o: GL/glui.h
+./viewmodel.o: viewmodel.h algebra3.h ./include/GL/glui.h
+./glui_bitmaps.o: ./include/GL/glui.h glui_internal.h
+./glui_statictext.o: ./include/GL/glui.h glui_internal.h
+./glui.o: ./include/GL/glui.h glui_internal.h
+./glui_add_controls.o: ./include/GL/glui.h glui_internal.h
+./glui_commandline.o: ./include/GL/glui.h glui_internal.h
+./glui_list.o: ./include/GL/glui.h glui_internal.h
+./glui_scrollbar.o: ./include/GL/glui.h glui_internal.h
+./glui_string.o: ./include/GL/glui.h
+./glui_textbox.o: ./include/GL/glui.h glui_internal.h
+./glui_tree.o: ./include/GL/glui.h glui_internal.h
+./glui_treepanel.o: ./include/GL/glui.h
+./example/example1.o: ./include/GL/glui.h
+./example/example2.o: ./include/GL/glui.h
+./example/example3.o: ./include/GL/glui.h
+./example/example4.o: ./include/GL/glui.h
+./example/example5.o: ./include/GL/glui.h
+./example/example6.o: ./include/GL/glui.h
 ./tools/ppm2array.o: ./tools/ppm.hpp
-./glui_filebrowser.o: GL/glui.h glui_internal.h
+./glui_filebrowser.o: ./include/GL/glui.h glui_internal.h
