@@ -84,15 +84,15 @@ LINK32=link.exe
 # Name "ppm2array - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\ppm.cpp
+SOURCE=..\tools\ppm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\ppm.hpp
+SOURCE=..\tools\ppm.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\ppm2array.cpp
+SOURCE=..\tools\ppm2array.cpp
 # End Source File
 # End Target
 # End Project
