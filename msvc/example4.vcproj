@@ -22,7 +22,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".."
+				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="GLUI_NO_LIB_PRAGMA"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -80,6 +80,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				AdditionalIncludeDirectories="../include"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="GLUI_NO_LIB_PRAGMA"
 				StringPooling="TRUE"
