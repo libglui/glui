@@ -77,18 +77,24 @@ clean:
 depend:
 	makedepend -Y./include `find -name "*.cpp"` `find -name "*.c"`
 
+DIST = glui-2.3.0
+
 dist: clean
-	tar cvzf glui-2.3.0.tgz \
-		`find -name "*.cpp"` \
-		`find -name "*.c"` \
-		`find -name "*.h"` \
-		`find -name "*.dev"` \
-		`find -name "*.dsp"` \
-		`find -name "*.dsw"` \
-		`find -name "*.vcproj"` \
-		`find -name "*.sln"` \
-		`find -name "*.txt"` \
-		makefile
+	mkdir -p $(DIST) 
+	cp --parents \
+		`find -type f -name "*.cpp"` \
+		`find -type f -name "*.c"` \
+		`find -type f -name "*.h"` \
+		`find -type f -name "*.dev"` \
+		`find -type f -name "*.dsp"` \
+		`find -type f -name "*.dsw"` \
+		`find -type f -name "*.vcproj"` \
+		`find -type f -name "*.sln"` \
+		`find -type f -name "*.txt"` \
+		makefile \
+		$(DIST)
+	tar cv $(DIST) | gzip -9 - > $(DIST).tgz
+	rm -Rf $(DIST)
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
