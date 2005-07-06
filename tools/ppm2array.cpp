@@ -1,4 +1,5 @@
-#include "ppm.hpp"
+#include "ppm.h"
+
 #include <cstdio>
 #include <cstring>
 
