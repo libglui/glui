@@ -1213,6 +1213,9 @@ protected:
 /*                                                          */
 /************************************************************/
 
+class GLUI_Rotation;
+class GLUI_Translation;
+
 class GLUI : public GLUI_Main 
 {
 public:
