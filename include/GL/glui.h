@@ -62,7 +62,7 @@
 #include <string>
 #include <vector>
 
-#define GLUI_VERSION 2.3f    /********** Current version **********/
+#define GLUI_VERSION 2.35f    /********** Current version **********/
 
 #if defined(_WIN32)
 #if !defined(GLUI_NO_LIB_PRAGMA)
