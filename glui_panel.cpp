@@ -29,8 +29,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 
 GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const char *name, int type )
 {
@@ -46,12 +45,8 @@ GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const char *name, int type )
 
 void    GLUI_Panel::draw( int x, int y )
 {
-  int top, orig;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
+  int top;
+  GLUI_DRAWINGSENTINAL_IDIOM
 
   if ( int_val == GLUI_PANEL_RAISED ) {
     top = 0;
@@ -141,10 +136,7 @@ void    GLUI_Panel::draw( int x, int y )
   }
 
   glLineWidth( 1.0 );
-
-  restore_window(orig);
 }
-
 
 /****************************** GLUI_Panel::set_name() **********/
 
@@ -163,17 +155,10 @@ void    GLUI_Panel::set_name( const char *new_name )
 
 void    GLUI_Panel::set_type( int new_type )
 {
-  int old_window;
-
   if ( new_type != int_val ) {
     int_val = new_type;
-
-    /*    translate_and_draw_front();             */
     update_size();
-
-    old_window = set_to_glut_window();
-    glutPostRedisplay( );
-    restore_window( old_window );
+    redraw();
   }
 }
 

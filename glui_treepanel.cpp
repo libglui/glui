@@ -26,6 +26,7 @@ void GLUI_TreePanel::set_color(float r, float g, float b)
   red = r;
   green = g;
   blue = b;
+  redraw();
 }
 
 /************************ GLUI_TreePanel::set_level_color() *********/
@@ -35,6 +36,7 @@ void GLUI_TreePanel::set_level_color(float r, float g, float b)
   lred = r;
   lgreen = g;
   lblue = b;
+  redraw();
 }
 
 /****************************** GLUI_TreePanel::ab() *********/
@@ -59,7 +61,7 @@ GLUI_Tree *GLUI_TreePanel::ab(const char *name, GLUI_Tree *root)
   if (dynamic_cast<GLUI_Tree*>(temp))
     ((GLUI_Tree *)temp)->set_current(true);
   //refresh();
-  //  glui->disactivate_current_control();
+  //  glui->deactivate_current_control();
   //glui->activate_control( temp, GLUI_ACTIVATE_TAB );
   return temp;
 
@@ -122,12 +124,10 @@ void GLUI_TreePanel::fb(GLUI_Tree *branch)
 
 void GLUI_TreePanel::refresh() 
 {
-  glui->disactivate_current_control();
+  glui->deactivate_current_control();
   glui->activate_control( curr_root, GLUI_ACTIVATE_TAB );
 
-  if (can_draw()) {
-    translate_and_draw_front();
-  }
+  redraw();
 }
 
 /****************************** GLUI_TreePanel::initNode() *********/

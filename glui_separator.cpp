@@ -29,8 +29,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 
 /****************************** GLUI_Separator::GLUI_Separator() **********/
 
@@ -44,13 +43,10 @@ GLUI_Separator::GLUI_Separator( GLUI_Node *parent )
 
 void    GLUI_Separator::draw( int x, int y )
 {
-  int width, indent, orig;
+  GLUI_DRAWINGSENTINAL_IDIOM
+  
+  int width, indent;
   int           cont_x, cont_y, cont_w, cont_h, cont_x_off, cont_y_off;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
 
   if ( parent() != NULL ) {
     get_this_column_dims(&cont_x, &cont_y, &cont_w, &cont_h, 
@@ -74,8 +70,6 @@ void    GLUI_Separator::draw( int x, int y )
   glVertex2i( indent,       GLUI_SEPARATOR_HEIGHT/2 );    
   glVertex2i( width-indent, GLUI_SEPARATOR_HEIGHT/2 );    
   glEnd();
-
-  restore_window(orig);
 }
 
 

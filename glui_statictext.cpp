@@ -29,8 +29,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 
 /****************************** GLUI_StaticText::GLUI_StaticText() **********/
 GLUI_StaticText::GLUI_StaticText( GLUI_Node *parent, const char *name )
@@ -44,16 +43,9 @@ GLUI_StaticText::GLUI_StaticText( GLUI_Node *parent, const char *name )
 
 void    GLUI_StaticText::draw( int x, int y )
 {
-  int orig;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
+  GLUI_DRAWINGSENTINAL_IDIOM
 
   draw_text();
-
-  restore_window( orig );
 }
 
 
@@ -61,29 +53,8 @@ void    GLUI_StaticText::draw( int x, int y )
 
 void    GLUI_StaticText::set_text( const char *text )
 {
-  int orig;
-
-  /**** Erase old text first *****/
-  glMatrixMode( GL_MODELVIEW );
-  glPushMatrix();
-  translate_to_origin();
-  erase_text();
-  glPopMatrix();
-
   set_name( text );
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
-  /**** Redraw the text in the window ****/
-  glMatrixMode( GL_MODELVIEW );
-  glPushMatrix();
-  translate_to_origin();
-  draw_text();
-  glPopMatrix();
-
-  restore_window( orig );
+  redraw();
 }
 
 

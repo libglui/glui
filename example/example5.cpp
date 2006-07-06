@@ -395,7 +395,7 @@ int main(int argc, char* argv[])
   GLUI_Scrollbar *sb;
   sb = new GLUI_Scrollbar( light0, "Red",GLUI_SCROLL_HORIZONTAL,
                            &light0_diffuse[0],LIGHT0_INTENSITY_ID,control_cb);
-  sb->set_int_limits(0,255);
+  sb->set_float_limits(0,1);
   sb = new GLUI_Scrollbar( light0, "Green",GLUI_SCROLL_HORIZONTAL,
                            &light0_diffuse[1],LIGHT0_INTENSITY_ID,control_cb);
   sb->set_float_limits(0,1);
@@ -411,7 +411,7 @@ int main(int argc, char* argv[])
   light1_spinner->set_float_limits( 0.0, 1.0 );
   sb = new GLUI_Scrollbar( light1, "Red",GLUI_SCROLL_HORIZONTAL,
                            &light1_diffuse[0],LIGHT1_INTENSITY_ID,control_cb);
-  sb->set_int_limits(0,255);
+  sb->set_float_limits(0,1);
   sb = new GLUI_Scrollbar( light1, "Green",GLUI_SCROLL_HORIZONTAL,
                            &light1_diffuse[1],LIGHT1_INTENSITY_ID,control_cb);
   sb->set_float_limits(0,1);
@@ -487,8 +487,10 @@ int main(int argc, char* argv[])
     new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
   trans_z->set_speed( .005 );
 
+#if 0
   /**** We register the idle callback with GLUI, *not* with GLUT ****/
   GLUI_Master.set_glutIdleFunc( myGlutIdle );
+#endif
 
   /**** Regular GLUT main loop ****/
   

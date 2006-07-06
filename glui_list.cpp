@@ -16,8 +16,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 #include <cmath>
 #include <sys/timeb.h>
 
@@ -96,7 +95,7 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
   tmp_line = find_line( local_x-x_abs, local_y-y_abs-5 );  
   if ( tmp_line == -1 ) {
     if ( glui )
-      glui->disactivate_current_control(  );
+      glui->deactivate_current_control(  );
     return false;
   }
 
@@ -175,30 +174,23 @@ void    GLUI_List::activate( int how )
 }
 
 
-/****************************** GLUI_List::disactivate() **********/
+/****************************** GLUI_List::deactivate() **********/
 
-void    GLUI_List::disactivate( void )
+void    GLUI_List::deactivate( void )
 {
   active = false;
-
-  if ( NOT glui )
-    return;
-  translate_and_draw_front();
-
+  redraw();
 }
 
 /****************************** GLUI_List::draw() **********/
 
 void    GLUI_List::draw( int x, int y )
 {
-  int orig;
   int line = 0;
   int box_width;
   GLUI_List_Item *item;
  
-  if ( NOT can_draw() )
-    return;
-  orig = set_to_glut_window();
+  GLUI_DRAWINGSENTINAL_IDIOM
 
   /* Bevelled Border */
   glBegin( GL_LINES );
@@ -272,7 +264,6 @@ void    GLUI_List::draw( int x, int y )
     scrollbar->draw_scroll();
     glPopMatrix();
   }
-  restore_window(orig);
 }
 
 /********************************* GLUI_List::draw_text() ****************/
@@ -280,13 +271,9 @@ void    GLUI_List::draw( int x, int y )
 void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
 {
   int text_x, i, x_pos;
-  int orig;
   int box_width;
 
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
+  GLUI_DRAWINGSENTINAL_IDIOM
 
   /** Find where to draw the text **/
 
@@ -328,9 +315,6 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
       i++;
     }
   }
-
-  restore_window( orig );
-
 }
 
 
@@ -369,8 +353,7 @@ void   GLUI_List::update_and_draw_text( void )
   //update_substring_bounds();
   /*  printf( "ss: %d/%d\n", substring_start, substring_end );                  */
 
-  translate_and_draw_front();
-
+  redraw();
 }
 
 
@@ -397,9 +380,7 @@ int    GLUI_List::special_handler( int key,int modifiers )
 
   if (scrollbar)
     scrollbar->set_int_val(curr_line);
-
-  if ( can_draw())
-    update_and_draw_text();
+  redraw();
   return true;
 }
 

@@ -3,7 +3,8 @@
   GLUI User Interface Toolkit (LGPL)
   ----------------------------------
 
-     glui.h - Main header for GLUI User Interface Toolkit
+     glui.h - Main (and only) external header for 
+        GLUI User Interface Toolkit
 
           --------------------------------------------------
 
@@ -213,8 +214,11 @@ enum GLUI_Glut_CB_Types
 #define  GLUI_SCROLL_HORIZONTAL       1
 
 
-/* Size of the character width hash table for faster lookups */
-#define CHAR_WIDTH_HASH_SIZE 126
+/** Size of the character width hash table for faster lookups. 
+  Make sure to keep this a power of two to avoid the slow divide.
+  This is also a speed/memory tradeoff; 128 is enough for low ASCII.
+*/
+#define CHAR_WIDTH_HASH_SIZE 128
 
 /**********  Translation codes  **********/
 
@@ -281,12 +285,12 @@ typedef void (*Int3_CB)        (int, int, int);
 typedef void (*Int4_CB)        (int, int, int, int);
 
 /************************************************************/
-/*                                                          */
-/*     Callback Adapter Class                               */
-/*       Allows us to support different types of callbacks  */
-/*                                                          */
-/************************************************************/
-
+/**
+ Callback Adapter Class                            
+    Allows us to support different types of callbacks;
+    like a GLUI_Update_CB function pointer--which takes an int;
+    and a GLUI_Control_CB function pointer--which takes a GUI_Control object.
+*/
 class GLUI_CB
 {
 public:
@@ -295,7 +299,8 @@ public:
   GLUI_CB(GLUI_Control_CB cb) : idCB(0),objCB(cb) {}
   // (Compiler generated copy constructor)
 
-  void operator()(GLUI_Control*ctrl) const;
+  /** This control just activated.  Fire our callback.*/
+  void operator()(GLUI_Control *ctrl) const;
   bool operator!() const { return !idCB && !objCB; }
   operator bool() const { return !(!(*this)); }
 private:
@@ -309,6 +314,16 @@ private:
 /*                                                          */
 /************************************************************/
 
+class GLUI_Control;
+
+/**
+ GLUI_Node is a node in a sort of tree of GLUI controls.
+ Each GLUI_Node has a list of siblings (in a circular list)
+ and a linked list of children.
+ 
+ Everything onscreen is a GLUI_Node--windows, buttons, etc.
+ The nodes are traversed for event processing, sizing, redraws, etc.
+*/
 class GLUI_Node 
 {
     friend class GLUI_Tree;     /* JVK */
@@ -328,6 +343,7 @@ public:
     GLUI_Node *last_child()    { return child_tail; }
     GLUI_Node *parent()        { return parent_node; }
 
+    /** Link in a new child control */
     virtual int  add_control( GLUI_Control *control );
 
     void link_this_to_parent_last (GLUI_Node *parent  );
@@ -339,7 +355,7 @@ public:
     void dump( FILE *out, const char *name );
 
 protected:
-
+    static void add_child_to_control(GLUI_Node *parent,GLUI_Control *child);
     GLUI_Node *parent_node;
     GLUI_Node *child_head;
     GLUI_Node *child_tail;
@@ -368,7 +384,6 @@ enum GLUI_StdBitmaps_Codes
     GLUI_STDBITMAP_SPINNER_UP_ON,
     GLUI_STDBITMAP_SPINNER_DOWN_OFF,
     GLUI_STDBITMAP_SPINNER_DOWN_ON,
-
     GLUI_STDBITMAP_CHECKBOX_OFF_DIS,    /*** Disactivated control bitmaps ***/
     GLUI_STDBITMAP_CHECKBOX_ON_DIS,
     GLUI_STDBITMAP_RADIOBUTTON_OFF_DIS,
@@ -387,17 +402,27 @@ enum GLUI_StdBitmaps_Codes
 /*                                                          */
 /************************************************************/
 
+/**
+ GLUI_Bitmap is a simple 2D texture map.  It's used
+ to represent small textures like checkboxes, arrows, etc.
+ via the GLUI_StdBitmaps class.
+*/
 class GLUI_Bitmap 
 {
-	friend class GLUI_StdBitmaps;
+    friend class GLUI_StdBitmaps;
 
 public:
     GLUI_Bitmap();
     ~GLUI_Bitmap();
 
+    /** Create bitmap from greyscale byte image */
+    void init_grey(unsigned char *array);
+    
+    /** Create bitmap from color int image */
     void init(int *array);
 
 private:
+    /** RGB pixel data */
     unsigned char *pixels;
     int            w, h;
 };
@@ -409,15 +434,24 @@ private:
 /*                                                          */
 /************************************************************/
 
+/**
+ Keeps an array of GLUI_Bitmap objects to represent all the 
+ images used in the UI: checkboxes, arrows, etc.
+*/
 class GLUI_StdBitmaps
 {
 public:
     GLUI_StdBitmaps(); 
-	~GLUI_StdBitmaps();
+    ~GLUI_StdBitmaps();
 
-	int  width (int n) const;
-	int  height(int n) const;
+    /** Return the width (in pixels) of the n'th standard bitmap. */
+    int  width (int n) const;
+    /** Return the height (in pixels) of the n'th standard bitmap. */
+    int  height(int n) const;
 
+    /** Draw the n'th standard bitmap (one of the enums
+       listed in GLUI_StdBitmaps_Codes) at pixel corner (x,y). 
+    */
     void draw(int n, int x, int y) const;
 
 private:
@@ -430,6 +464,10 @@ private:
 /*                                                          */
 /************************************************************/
 
+/**
+ The master manages our interaction with GLUT.
+ There's only one GLUI_Master_Object.
+*/
 class GLUI_Master_Object 
 {
 
@@ -500,6 +538,8 @@ public:
 
     float          get_version() { return GLUI_VERSION; }
 
+    void glui_setIdleFuncIfNecessary(void);
+
 private:
     GLUI_Node     glut_windows;
     void (*glut_idle_CB)(void);
@@ -507,6 +547,9 @@ private:
     void          add_cb_to_glut_window(int window,int cb_type,void *cb);
 };
 
+/**
+ This is the only GLUI_Master_Object in existence.
+*/
 extern GLUI_Master_Object GLUI_Master;
 
 /************************************************************/
@@ -515,6 +558,14 @@ extern GLUI_Master_Object GLUI_Master;
 /*                                                          */
 /************************************************************/
 
+/**
+ A top-level window.  The GLUI_Master GLUT callback can route events
+ to the callbacks in this class, for arbitrary use by external users.
+ (see GLUI_Master_Object::set_glutKeyboardFunc).
+ 
+ This entire approach seems to be superceded by the "subwindow" flavor
+ of GLUI.
+*/
 class GLUI_Glut_Window : public GLUI_Node 
 {
 public:
@@ -536,10 +587,23 @@ public:
 
 /************************************************************/
 /*                                                          */
-/*              Main GLUI class (not user-level)            */
+/*       Main Window GLUI class (not user-level)            */
 /*                                                          */
 /************************************************************/
 
+/**
+  A GLUI_Main handles GLUT events for one window, routing them to the 
+  appropriate controls.  The central user-visible "GLUI" class 
+  inherits from this class; users should not allocate GLUT_Main objects.
+  
+  There's a separate GLUI_Main object for:
+  	- Each top-level window with GUI stuff in it.
+	- Each "subwindow" of another top-level window.
+
+  All the GLUI_Main objects are listed in GLUI_Master.gluis.
+  A better name for this class might be "GLUI_Environment";
+  this class provides the window-level context for every control.
+*/
 class GLUI_Main : public GLUI_Node 
 {
     /********** Friend classes *************/
@@ -577,6 +641,11 @@ protected:
     GLUI_Control *active_control;
     GLUI_Control *mouse_over_control;
     GLUI_Panel   *main_panel;
+    enum buffer_mode_t {
+      buffer_front=1, ///< Draw updated controls directly to screen.
+      buffer_back=2   ///< Double buffering: postpone updates until next redraw.
+    };
+    buffer_mode_t buffer_mode; ///< Current drawing mode
     int           curr_cursor;
     int           w, h;
     long          flags; 
@@ -605,6 +674,7 @@ protected:
     void           entry(int state);
     void           display( void );
     void           idle(void);
+    int            needs_idle(void);
 
     void (*glut_mouse_CB)(int, int, int, int);
     void (*glut_keyboard_CB)(unsigned char, int, int);
@@ -633,18 +703,39 @@ public:
     void         adjust_glut_xy( int &x, int &y ) { y = h-y; }
     void         activate_control( GLUI_Control *control, int how );
     void         align_controls( GLUI_Control *control );
-    void         restore_draw_buffer( int buffer_state );
-    void         disactivate_current_control( void );
+    void         deactivate_current_control( void );
+    
+    /** Draw a 3D-look pushed-out box around this rectangle */
     void         draw_raised_box( int x, int y, int w, int h );
+    /** Draw a 3D-look pushed-in box around this rectangle */
     void         draw_lowered_box( int x, int y, int w, int h );
-    int          set_front_draw_buffer();
+    
+    /** Return true if this control should redraw itself immediately (front buffer);
+       Or queue up a redraw and return false if it shouldn't (back buffer).
+    */
+    bool         should_redraw_now(GLUI_Control *ctl);
+    
+    /** Switch to the appropriate draw buffer now.  Returns the old draw buffer. 
+       This routine should probably only be called from inside the GLUI_DrawingSentinal,
+       in glui_internal_control.h
+    */
+    int          set_current_draw_buffer();
+    /** Go back to using this draw buffer.  Undoes set_current_draw_buffer. */
+    void         restore_draw_buffer( int buffer_state );
+    
+    /** Pack, resize the window, and redraw all the controls. */
+    void         refresh();
+    
+    /** Redraw the main graphics window */
     void         post_update_main_gfx();
+  
+    /** Recompute the sizes and positions of all controls */
     void         pack_controls();
+    
     void         close_internal();
     void         check_subwindow_position();
     void         set_ortho_projection();
     void         set_viewport();
-    void         refresh();
     int          get_glut_window_id( void ) { return glut_window_id; } /* JVK */
 };
 
@@ -654,10 +745,22 @@ public:
 /*                                                          */
 /************************************************************/
 
+/**
+ All the GUI objects inherit from GLUI_Control: buttons,
+ checkboxes, labels, edit boxes, scrollbars, etc.
+ Most of the work of this class is in routing events,
+ like keystrokes, mouseclicks, redraws, and sizing events.
+ 
+ Yes, this is a huge and hideous class.  It needs to be 
+ split up into simpler subobjects.  None of the data members
+ should be directly accessed by users (they should be protected,
+ not public); only subclasses.
+*/
 class GLUI_Control : public GLUI_Node 
 {
 public:
 
+/** Onscreen coordinates */
     int             w, h;                        /* dimensions of control */
     int             x_abs, y_abs;
     int             x_off, y_off_top, y_off_bot; /* INNER margins, by which child
@@ -667,36 +770,48 @@ public:
     /* if this is a container control (e.g., 
        radiogroup or panel) this indicated dimensions
        of inner area in which controls reside */
-    int             active_type;
-    bool            active, can_activate;
-    int             spacebar_mouse_click;
-    long            user_id;
-    bool            is_container;  /* Is this a container class (e.g., panel) */
-    int             alignment;
-    GLUI_CB         callback;
-    void           *ptr_val;          /* A pointer to the live variable value */
-    float           float_val;                               /* A float value */
-    bool            enabled;                   /* Is this control grayed out? */
-    int             int_val;                              /* An integer value */
+
+/** "activation" for tabbing between controls. */
+    int             active_type; ///< "GLUI_CONTROL_ACTIVE_..."
+    bool            active;       ///< If true, we've got the focus
+    bool            can_activate; ///< If false, remove from tab order.
+    bool            spacebar_mouse_click; ///< Spacebar simulates click.
+    
+/** Callbacks */
+    long            user_id;  ///< Integer to pass to callback function.
+    GLUI_CB         callback; ///< User callback function, or NULL.
+
+/** Variable value storage */
+    float           float_val;        /**< Our float value */
+    int             int_val;          /**< Our integer value */
     float           float_array_val[GLUI_DEF_MAX_ARRAY];
-    GLUI_String     name;                         /* The name of this control */
-    GLUI_String     text;              
-    GLUI           *glui;
-    void           *font;
+    int             float_array_size;
+    GLUI_String     text;       /**< The text inside this control */
+    
+/** "Live variable" updating */
+    void           *ptr_val;          /**< A pointer to the user's live variable value */
     int             live_type;
     bool            live_inited;
-    int             last_live_int;   /* last value that live var known to have */
+    /* These variables store the last value that live variable was known to have. */
+    int             last_live_int;  
     float           last_live_float;
     GLUI_String     last_live_text;
     float           last_live_float_array[GLUI_DEF_MAX_ARRAY];
-    int             float_array_size;
-
+    
+/** Properties of our control */    
+    GLUI           *glui;       /**< Our containing event handler (NEVER NULL during event processing!) */
+    bool            is_container;  /**< Is this a container class (e.g., panel) */
+    int             alignment;
+    bool            enabled;    /**< Is this control grayed out? */
+    GLUI_String     name;       /**< The name of this control */
+    void           *font;       /**< Our glutbitmap font */
     bool            collapsible, is_open;
     GLUI_Node       collapsed_node;
     bool            hidden; /* Collapsed controls (and children) are hidden */
     int             char_widths[CHAR_WIDTH_HASH_SIZE][2]; /* Character width hash table */
-    /*** Get/Set values ***/
 
+public:
+    /*** Get/Set values ***/
     virtual void   set_name( const char *string );
     virtual void   set_int_val( int new_int )         { int_val = new_int; output_live(true); }
     virtual void   set_float_val( float new_float )   { float_val = new_float; output_live(true); }
@@ -722,12 +837,25 @@ public:
     virtual void enable( void ); 
     virtual void disable( void );
     virtual void activate( int how )     { active = true; }
-    virtual void disactivate( void )     { active = false; }
+    virtual void deactivate( void )     { active = false; }
 
+    /** Hide (shrink into a rollout) and unhide (expose from a rollout) */
     void         hide_internal( int recurse );
     void         unhide_internal( int recurse );
 
+    /** Return true if it currently makes sense to draw this class. */
     int          can_draw( void ) { return (glui != NULL && hidden == false); }
+
+    /** Redraw this control.
+       In single-buffering mode (drawing to GL_FRONT), this is just 
+           a call to translate_and_draw_front (after a can_draw() check).
+       In double-buffering mode (drawing to GL_BACK), this queues up 
+          a redraw and returns false, since you shouldn't draw yet.
+    */
+    void          redraw(void);
+    
+    /** Redraw everybody in our window. */
+    void         redraw_window(void);
 
     virtual void align( void );
     void         pack( int x, int y );    /* Recalculate positions and offsets */
@@ -820,7 +948,11 @@ public:
 /*               Button class (container)                   */
 /*                                                          */
 /************************************************************/
-
+/**
+  An onscreen, clickable button--an outlined label that 
+  can be clicked.  When clicked, a button
+  calls its GLUI_CB callback with its ID.
+*/
 class GLUI_Button : public GLUI_Control
 {
 public:
@@ -833,11 +965,18 @@ public:
 
     void draw( int x, int y );
     void draw_pressed( void );
-    void draw_unpressed( void );
     void draw_text( int sunken );
 
     void update_size( void );
 
+/**
+ Create a new button.
+ 
+  @param parent The panel our object is inside; or the main GLUI object.
+  @param name The text inside the button.
+  @param id Optional ID number, to pass to the optional callback function.
+  @param callback Optional callback function, taking either the int ID or control.
+*/
     GLUI_Button( GLUI_Node *parent, const char *name, 
                  int id=-1, GLUI_CB cb=GLUI_CB() );
     GLUI_Button( void ) { common_init(); };
@@ -859,6 +998,10 @@ protected:
 /*                                                          */
 /************************************************************/
 
+/**
+ A checkbox, which can be checked on or off.  Can be linked
+ to an int value, which gets 1 for on and 0 for off.
+*/
 class GLUI_Checkbox : public GLUI_Control
 {
 public:
@@ -876,12 +1019,19 @@ public:
     void draw( int x, int y );
 
     void draw_active_area( void );
-    void draw_checked( void );
-    void draw_unchecked( void );
-    void draw_X( void );
     void draw_empty_box( void );
     void set_int_val( int new_val );
 
+/**
+ Create a new checkbox object.
+ 
+  @param parent The panel our object is inside; or the main GLUI object.
+  @param name Label next to our checkbox.
+  @param value_ptr Optional integer value to attach to this checkbox.  When the 
+     checkbox is checked or unchecked, *value_ptr will also be changed. ("Live Vars").
+  @param id Optional ID number, to pass to the optional callback function.
+  @param callback Optional callback function, taking either the int ID or control.
+*/
     GLUI_Checkbox(GLUI_Node *parent, const char *name, int *value_ptr=NULL,
                   int id=-1, GLUI_CB callback=GLUI_CB());
     GLUI_Checkbox( void ) { common_init(); }
@@ -904,11 +1054,22 @@ protected:
 /*                                                          */
 /************************************************************/
 
+/**
+ A GLUI_Column object separates all previous controls
+ from subsequent controls with a vertical bar.
+*/
 class GLUI_Column : public GLUI_Control
 {
 public:
     void draw( int x, int y );
 
+/**
+ Create a new column, which separates the previous controls
+ from subsequent controls.
+ 
+  @param parent The panel our object is inside; or the main GLUI object.
+  @param draw_bar If true, draw a visible bar between new and old controls.
+*/
     GLUI_Column( GLUI_Node *parent, int draw_bar = true );
     GLUI_Column( void ) { common_init(); }
 
@@ -928,9 +1089,22 @@ protected:
 /*                                                          */
 /************************************************************/
 
+/**
+ A GLUI_Panel contains a group of related controls.
+*/
 class GLUI_Panel : public GLUI_Control
 {
 public:
+
+/**
+ Create a new panel.  A panel groups together a set of related controls.
+ 
+  @param parent The outer panel our panel is inside; or the main GLUI object.
+  @param name The string name at the top of our panel.
+  @param type Optional style to display the panel with--GLUI_PANEL_EMBOSSED by default.
+      GLUI_PANEL_RAISED causes the panel to appear higher than the surroundings.
+      GLUI_PANEL_NONE causes the panel's outline to be invisible.
+*/
     GLUI_Panel( GLUI_Node *parent, const char *name, 
                 int type=GLUI_PANEL_EMBOSSED );
     GLUI_Panel() { common_init(); }
@@ -959,9 +1133,23 @@ protected:
 /*                         JVK                              */
 /************************************************************/
 
+/**
+ A list of files the user can select from.
+*/
 class GLUI_FileBrowser : public GLUI_Panel
 {
 public:
+/**
+ Create a new list of files the user can select from.
+ 
+  @param parent The panel our object is inside; or the main GLUI object.
+  @param name Prompt to give to the user at the top of the file browser.
+  @param frame_type Optional style to display the panel with--GLUI_PANEL_EMBOSSED by default.
+      GLUI_PANEL_RAISED causes the panel to appear higher than the surroundings.
+      GLUI_PANEL_NONE causes the panel's outline to be invisible.
+  @param id Optional ID number, to pass to the optional callback function.
+  @param callback Optional callback function, taking either the int ID or control.
+*/
     GLUI_FileBrowser( GLUI_Node *parent, 
                       const char *name,
                       int frame_type = GLUI_PANEL_EMBOSSED,
@@ -1008,16 +1196,36 @@ private:
 /*               Rollout class (container)                  */
 /*                                                          */
 /************************************************************/
-
+/**
+ A rollout contains a set of controls,
+ like a panel, but can be collapsed to just the name.
+*/
 class GLUI_Rollout : public GLUI_Panel
 {
 public:
+
+/**
+ Create a new rollout.  A rollout contains a set of controls,
+ like a panel, but can be collapsed to just the name.
+ 
+  @param parent The panel our object is inside; or the main GLUI object.
+  @param name String to show at the top of the rollout.
+  @param open Optional boolean.  If true (the default), the rollout's controls are displayed.
+    If false, the rollout is closed to display only the name.
+  @param type Optional style to display the panel with--GLUI_PANEL_EMBOSSED by default.
+      GLUI_PANEL_RAISED causes the panel to appear higher than the surroundings.
+      GLUI_PANEL_NONE causes the panel's outline to be invisible.
+*/
+    GLUI_Rollout( GLUI_Node *parent, const char *name, int open=true, 
+                  int type=GLUI_PANEL_EMBOSSED );
+    GLUI_Rollout( void ) { common_init(); }
+    
+    
     bool        currently_inside, initially_inside;
     GLUI_Button  button;
 
     void draw( int x, int y );
     void draw_pressed( void );
-    void draw_unpressed( void );
     int mouse_down_handler( int local_x, int local_y );
     int mouse_up_handler( int local_x, int local_y, bool inside );
     int  mouse_held_down_handler( int local_x, int local_y, bool inside );
@@ -1025,12 +1233,7 @@ public:
     void  open( void ); 
     void  close( void );
 
-    /*   void set_name( const char *text )   { panel.set_name( text ); } */
     void update_size( void );
-
-    GLUI_Rollout( GLUI_Node *parent, const char *name, int open=true, 
-                  int type=GLUI_PANEL_EMBOSSED );
-    GLUI_Rollout( void ) { common_init(); }
 
 protected:
     void common_init() {
@@ -1052,6 +1255,9 @@ protected:
 /*                         JVK                              */
 /************************************************************/
 
+/**
+  One collapsible entry in a GLUI_TreePanel.
+*/
 class GLUI_Tree : public GLUI_Panel
 {
 public:
@@ -1081,7 +1287,6 @@ public:
 
     void draw( int x, int y );
     void draw_pressed( void );
-    void draw_unpressed( void );
     int mouse_down_handler( int local_x, int local_y );
     int mouse_up_handler( int local_x, int local_y, bool inside );
     int  mouse_held_down_handler( int local_x, int local_y, bool inside );
@@ -1144,8 +1349,15 @@ protected:
 /************************************************************/
 /*                                                          */
 /*               TreePanel class (container) JVK            */
-/*     Manages, maintains, and formats entire trees         */
+/*                                                          */
 /************************************************************/
+
+/**
+  Manages, maintains, and formats a tree of GLUI_Tree objects.
+  These are shown in a heirarchical, collapsible display.
+  
+  FIXME: There's an infinite loop in the traversal code (OSL 2006/06)
+*/
 class GLUI_TreePanel : public GLUI_Panel 
 {
 public:
@@ -1216,9 +1428,14 @@ protected:
 class GLUI_Rotation;
 class GLUI_Translation;
 
+/**
+ The main user-visible interface object to GLUI.
+ 
+*/
 class GLUI : public GLUI_Main 
 {
 public:
+/** DEPRECATED interface for creating new GLUI objects */
     int   add_control( GLUI_Control *control ) { return main_panel->add_control(control); }
 
     void  add_column( int draw_bar = true );
@@ -1311,6 +1528,8 @@ public:
                                           int open=true,
                                           int type=GLUI_PANEL_EMBOSSED);
 
+
+/** Set the window where our widgets should be displayed. */
     void            set_main_gfx_window( int window_id );
     int             get_glut_window_id( void ) { return glut_window_id; }
 
@@ -1385,7 +1604,7 @@ public:
     int  special_handler( int key, int modifiers );
 
     void activate( int how );
-    void disactivate( void );
+    void deactivate( void );
 
     void draw( int x, int y );
 
@@ -1490,7 +1709,7 @@ public:
 public:
     int  key_handler( unsigned char key,int modifiers );
     int  special_handler(	int key,int modifiers );
-    void disactivate( void );
+    void deactivate( void );
 
     virtual const char *get_history( int command_number ) const
     { return hist_list[command_number - oldest_hist].c_str(); }
@@ -1687,7 +1906,6 @@ public:
     int  find_arrow( int local_x, int local_y );
     void do_drag( int x, int y );
     void do_callbacks( void );
-    void draw_arrows( void );
     void do_click( void );
     void idle( void );
     bool needs_idle( void ) const;
@@ -1791,7 +2009,7 @@ public:
     int  special_handler( int key,int modifiers );
   
     void activate( int how );
-    void disactivate( void );
+    void deactivate( void );
 
     void enable( void );
     void disable( void );
@@ -1911,7 +2129,7 @@ public:
     int  special_handler( int key,int modifiers );
   
     void activate( int how );
-    void disactivate( void );
+    void deactivate( void );
 
     void draw( int x, int y );
 
@@ -2014,13 +2232,15 @@ public:
     int           last_x, last_y;
     int           data_type;
     int           callback_count;
-    int           last_int_val;
+    int           last_int_val;  ///< Used to prevent repeated callbacks.
     float         last_float_val;
     int           first_callback;
     float         user_speed;
     float         float_min, float_max;
     int           int_min, int_max;
     int           horizontal;
+    double     last_update_time; ///< GLUI_Time() we last advanced scrollbar.
+    double     velocity_limit; ///< Maximum distance to advance per second.
     int box_length;
     int box_start_position;
     int box_end_position;
@@ -2033,7 +2253,7 @@ public:
        the int is the new value, the void * must be cast to that
        particular object type before use.
     */
-    void *        associated_object; /* Let's the Spinner manage it's own callbacks */
+    void *        associated_object; /* Lets the Spinner manage it's own callbacks */
     GLUI_CB       object_cb; /* function pointer to object call_back */
 
     int  mouse_down_handler( int local_x, int local_y );
@@ -2054,7 +2274,6 @@ public:
     int  find_arrow( int local_x, int local_y );
     void do_drag( int x, int y );
     void do_callbacks( void );
-    void draw_arrows( void );
     void draw_scroll( void );
     void do_click( void );
     void idle( void );
@@ -2070,31 +2289,7 @@ public:
     { object_cb=cb; associated_object=obj; }
 
 protected:
-    void common_init ( void ) {
-        horizontal   = true;
-        h            = GLUI_SCROLL_ARROW_HEIGHT;
-        w            = GLUI_TEXTBOX_WIDTH;
-        alignment    = GLUI_ALIGN_CENTER;
-        x_off        = 0;
-        y_off_top    = 0;
-        y_off_bot    = 0;
-        can_activate = true;
-        state        = GLUI_SCROLL_STATE_NONE;
-        growth_exp   = GLUI_SCROLL_DEFAULT_GROWTH_EXP;
-        callback_count = 0;
-        first_callback = true;
-        user_speed   = 1.0;
-        float_min    = 0.0;
-        float_max    = 0.0;
-        int_min      = 0;
-        int_max      = 0;
-        associated_object = NULL;
-        box_length         = 0;
-        box_start_position = 0;
-        box_end_position   = 0;
-        track_length       = 0;
-
-    };
+    void common_init ( void );
     void common_construct(
         GLUI_Node *parent,
         const char *name, 
@@ -2144,7 +2339,6 @@ public:
     void draw( int x, int y );
     int  mouse_over( int state, int x, int y );
 
-    void draw_active_area( void );
     void set_int_val( int new_val );
     void dump( FILE *output );
 
@@ -2154,8 +2348,6 @@ public:
     int  sort_items( void );
 
     int  do_selection( int item );
-
-    void increase_width( void );
 
     GLUI_Listbox_Item *get_item_ptr( const char *text );
     GLUI_Listbox_Item *get_item_ptr( int id );
@@ -2167,6 +2359,8 @@ public:
     GLUI_Listbox( void ) { common_init(); }
 
 protected:
+    /** Change w and return true if we need to be widened to fit the current item. */
+    bool recalculate_item_width( void );
     void common_init() {
         glui_format_str( name, "Listbox: %p", this );
         w              = GLUI_EDITTEXT_WIDTH;
@@ -2190,6 +2384,9 @@ protected:
 /*                                                          */
 /************************************************************/
 
+/**
+  This is the superclass of translation and rotation widgets.
+*/
 class GLUI_Mouse_Interaction : public GLUI_Control
 {
 public:
@@ -2232,6 +2429,10 @@ public:
 /*                                                          */
 /************************************************************/
 
+/**
+  An onscreen rotation controller--allows the user to interact with
+  a 3D rotation via a spaceball-like interface.
+*/
 class GLUI_Rotation : public GLUI_Mouse_Interaction
 {
 public:
@@ -2283,6 +2484,10 @@ protected:
 /*                                                          */
 /************************************************************/
 
+/**
+  An onscreen translation controller--allows the user to interact with
+  a 3D translation.
+*/
 class GLUI_Translation : public GLUI_Mouse_Interaction
 {
 public:
@@ -2360,7 +2565,7 @@ void _glutBitmapString( void *font, const char *s );
 /* These are the callbacks that we pass to glut.  They take
    some action if necessary, then (possibly) call the user-level
    glut callbacks.  
-   */
+*/
 
 void glui_display_func( void );
 void glui_reshape_func( int w, int h );

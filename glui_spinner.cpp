@@ -14,6 +14,10 @@
 	   so that spinner->get/set will work
 
 
+FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cpp. 
+  (OSL, 2006/06)
+
+
           --------------------------------------------------
 
   Copyright (c) 1998 Paul Rademacher
@@ -37,9 +41,7 @@
 
 *****************************************************************************/
 
-  
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 #include <cmath>
 #include <cassert>
 
@@ -147,6 +149,7 @@ void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name,
 int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
 {
   this->state = find_arrow( local_x, local_y );
+  GLUI_Master.glui_setIdleFuncIfNecessary();
 
   /*  printf( "spinner: mouse down  : %d/%d   arrow:%d\n", local_x, local_y,
       find_arrow( local_x, local_y ));
@@ -156,8 +159,7 @@ int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
     return true;
 
   reset_growth();
-  if ( can_draw() )
-    draw_arrows();  
+  redraw();  
 
   /*** ints and floats behave a bit differently.  When you click on
     an int spinner, you expect the value to immediately go up by 1, whereas
@@ -181,13 +183,13 @@ int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
 int    GLUI_Spinner::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   state = GLUI_SPINNER_STATE_NONE;
+  GLUI_Master.glui_setIdleFuncIfNecessary();
 
   /*  printf("spinner: mouse up  : %d/%d    inside: %d\n",local_x,local_y,inside);              */
 
   /*glutSetCursor( GLUT_CURSOR_INHERIT );              */
   glutSetCursor( GLUT_CURSOR_LEFT_ARROW );
-
-  draw_arrows();
+  redraw();
 
   /*  do_callbacks(); --- stub               */
   /*  if ( callback )               */
@@ -249,8 +251,7 @@ int    GLUI_Spinner::mouse_held_down_handler( int local_x, int local_y,
 	reset_growth();
     }
 
-    if ( can_draw() )
-      draw_arrows();
+    redraw();
   }
 
   return false;
@@ -271,12 +272,7 @@ int    GLUI_Spinner::key_handler( unsigned char key,int modifiers )
 
 void    GLUI_Spinner::draw( int x, int y )
 {
-  int orig;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
+  GLUI_DRAWINGSENTINAL_IDIOM
 
   if ( enabled ) {
     /*** Draw the up arrow either pressed or unrpessed ***/
@@ -327,12 +323,7 @@ void    GLUI_Spinner::draw( int x, int y )
   glEnd();
   glDisable( GL_LINE_STIPPLE );  
   glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-
-  restore_window( orig );
 }
-
-
-
 
 
 /********************************* GLUI_Spinner::special_handler() **********/
@@ -415,17 +406,6 @@ int    GLUI_Spinner::find_arrow( int local_x, int local_y )
   }
 
   return GLUI_SPINNER_STATE_NONE;
-}
-
-
-/****************************** GLUI_Spinner::draw_arrows() **********/
-
-void    GLUI_Spinner::draw_arrows( void )
-{
-  if ( NOT can_draw() )
-    return;
-
-  translate_and_draw_front();
 }
 
 

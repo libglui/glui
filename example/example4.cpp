@@ -124,20 +124,6 @@ void myGlutMenu( int value )
   myGlutKeyboard( value, 0, 0 );
 }
 
-
-/***************************************** myGlutIdle() ***********/
-
-void myGlutIdle( void )
-{
-  /* According to the GLUT specification, the current window is 
-     undefined during an idle callback.  So we need to explicitly change
-     it if necessary */
-  if ( glutGetWindow() != main_window ) 
-    glutSetWindow(main_window);  
-
-  glutPostRedisplay();
-}
-
 /***************************************** myGlutMouse() **********/
 
 void myGlutMouse(int button, int button_state, int x, int y )
@@ -357,12 +343,9 @@ int main(int argc, char* argv[])
   new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
 
 
-  /**** Link windows to GLUI, and register idle callback ******/
+  /**** Link windows to GLUI ******/
   
   glui->set_main_gfx_window( main_window );
-
-  /**** We register the idle callback with GLUI, *not* with GLUT ****/
-  GLUI_Master.set_glutIdleFunc( myGlutIdle );
 
   /**** Regular GLUT main loop ****/
   

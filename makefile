@@ -4,12 +4,16 @@
 #CC=CC -g0 -o32
 #CC=gcc
 
+# Compiler options
+OPTS=-g
+OPTS=-O0
+#OPTS=-O2
+
 UNAME = $(shell uname)
 
 ifeq ($(UNAME), Linux)
 CXX       = g++
-#CPPFLAGS += -g -Wall -pedantic
-CPPFLAGS += -O3 -Wall -pedantic
+CPPFLAGS += $(OPTS) -Wall -pedantic
 endif
 
 #######################################
@@ -71,8 +75,12 @@ $(GLUI_LIB): $(GLUI_OBJS)
 .c.o:
 	$(CXX) $(CPPFLAGS) -c $<
 
+docs:
+	doxygen doc/doxygen.cfg
+
 clean:
-	rm -f *.o $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS)
+	rm -f *.o $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS) 
+	rm -fr doc/html
 
 depend:
 	makedepend -Y./include `find -name "*.cpp"` `find -name "*.c"`
@@ -100,17 +108,6 @@ dist: clean
 
 ./algebra3.o: algebra3.h glui_internal.h
 ./arcball.o: arcball.h glui_internal.h algebra3.h quaternion.h
-./glui_bitmap_img_data.o: glui_img_checkbox_0.c glui_img_checkbox_1.c
-./glui_bitmap_img_data.o: glui_img_radiobutton_0.c glui_img_radiobutton_1.c
-./glui_bitmap_img_data.o: glui_img_uparrow.c glui_img_downarrow.c
-./glui_bitmap_img_data.o: glui_img_leftarrow.c glui_img_rightarrow.c
-./glui_bitmap_img_data.o: glui_img_spinup_1.c glui_img_spinup_0.c
-./glui_bitmap_img_data.o: glui_img_spindown_1.c glui_img_spindown_0.c
-./glui_bitmap_img_data.o: glui_img_checkbox_0_dis.c glui_img_checkbox_1_dis.c
-./glui_bitmap_img_data.o: glui_img_radiobutton_0_dis.c
-./glui_bitmap_img_data.o: glui_img_radiobutton_1_dis.c glui_img_spinup_dis.c
-./glui_bitmap_img_data.o: glui_img_spindown_dis.c glui_img_listbox_up.c
-./glui_bitmap_img_data.o: glui_img_listbox_down.c glui_img_listbox_up_dis.c
 ./glui_button.o: ./include/GL/glui.h glui_internal.h
 ./glui_checkbox.o: ./include/GL/glui.h glui_internal.h
 ./glui_column.o: ./include/GL/glui.h glui_internal.h

@@ -27,18 +27,84 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 *****************************************************************************/
+#include "glui_internal_control.h"
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+
+/**
+ Note: moving this routine here from glui_add_controls.cpp prevents the linker
+ from touching glui_add_controls.o in non-deprecated programs, which 
+ descreases the linked size of small GLUI programs substantially (100K+). (OSL 2006/06)
+*/
+void GLUI_Node::add_child_to_control(GLUI_Node *parent,GLUI_Control *child)
+{
+  GLUI_Control *parent_control;
+
+  /*** Collapsible nodes have to be handled differently, b/c the first and 
+    last children are swapped in and out  ***/
+  parent_control = ((GLUI_Control*)parent);
+  if ( parent_control->collapsible == true ) {
+    if ( NOT parent_control->is_open ) {
+      /** Swap in the original first and last children **/
+      parent_control->child_head  = parent_control->collapsed_node.child_head;
+      parent_control->child_tail  = parent_control->collapsed_node.child_tail;
+
+      /*** Link this control ***/
+      child->link_this_to_parent_last( parent_control );
+
+      /** Swap the children back out ***/
+      parent_control->collapsed_node.child_head = parent_control->child_head;
+      parent_control->collapsed_node.child_tail = parent_control->child_tail;
+      parent_control->child_head = NULL;
+      parent_control->child_tail = NULL;
+    }
+    else {
+      child->link_this_to_parent_last( parent_control );
+    }
+  }
+  else {
+    child->link_this_to_parent_last( parent_control );
+  }
+  child->glui = (GLUI*) parent_control->glui;
+  child->update_size();
+  child->enabled = parent_control->enabled;
+  child->glui->refresh();
+
+  /** Now set the 'hidden' var based on the parent **/
+  if ( parent_control->hidden OR 
+       (parent_control->collapsible AND NOT parent_control->is_open ) )
+  {
+    child->hidden = true;
+  }
+}
+
+
+/************************************ GLUI_Node::add_control() **************/
+
+int GLUI_Node::add_control( GLUI_Control *child )
+{
+  add_child_to_control(this,child);
+  return true;
+}
+
+/************************************ GLUI_Main::add_control() **************/
+ 
+int GLUI_Main::add_control( GLUI_Node *parent, GLUI_Control *control )
+{
+  add_child_to_control(parent,control);
+  return true;
+}
+
 
 
 /*** This object must be used to create a GLUI ***/
 
 GLUI_Master_Object GLUI_Master;
 
-/************************************ finish_drawing() ************/
+/************************************ finish_drawing() ***********
+  Probably a silly routine.  Called after all event handling callbacks.
+*/
 
-void finish_drawing(void)
+static void finish_drawing(void)
 {
 	glFinish();
 }
@@ -60,6 +126,9 @@ int GLUI::init( const char *text, long flags, int x, int y, int parent_window )
   this->flags = flags;
 
   window_name = text;
+  
+  buffer_mode = buffer_back;  ///< New smooth way
+  //buffer_mode = buffer_front; ///< Old flickery way (a bit faster).
 
   /*** We copy over the current window callthroughs ***/
   /*** (I think this might actually only be needed for subwindows) ***/
@@ -69,7 +138,7 @@ int GLUI::init( const char *text, long flags, int x, int y, int parent_window )
       glut_mouse_CB    = GLUI_Master.glut_mouse_CB;*/
 
 
-  if ( (flags & GLUI_SUBWINDOW) != GLUI_SUBWINDOW ) {
+  if ( (flags & GLUI_SUBWINDOW) != GLUI_SUBWINDOW ) {  /* not a subwindow, creating a new top-level window */
     old_glut_window = glutGetWindow();
 
     create_standalone_window( window_name.c_str(), x, y );
@@ -80,7 +149,8 @@ int GLUI::init( const char *text, long flags, int x, int y, int parent_window )
 
     top_level_glut_window_id = glut_window_id;
   } 
-  else {
+  else /* *is* a subwindow */
+  {
     old_glut_window = glutGetWindow();
 
     create_subwindow( parent_window, flags );
@@ -111,13 +181,8 @@ void GLUI_Main::create_standalone_window( const char *name, int x, int y )
   glutInitWindowSize( 100, 100 );
   if ( x >= 0 OR y >= 0 )
     glutInitWindowPosition( x, y );
-  glutInitDisplayMode( GLUT_RGB | GLUT_SINGLE ); /* | GLUT_DOUBLE );          */
+  glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE ); 
   glut_window_id = glutCreateWindow( name );
-  glDisable( GL_DEPTH_TEST );
-  glCullFace( GL_BACK );
-  glDisable( GL_CULL_FACE );
-  glDisable( GL_LIGHTING );
-  glDrawBuffer( GL_FRONT );
 }
 
 
@@ -126,12 +191,6 @@ void GLUI_Main::create_standalone_window( const char *name, int x, int y )
 void GLUI_Main::create_subwindow( int parent_window, int window_alignment )
 {
   glut_window_id = glutCreateSubWindow(parent_window, 0,0, 100, 100);
-  glDisable( GL_DEPTH_TEST );
-  glCullFace( GL_BACK );
-  glDisable( GL_CULL_FACE );
-  glDisable( GL_LIGHTING );  
-  glDrawBuffer( GL_FRONT );
-
   this->parent_window = parent_window;
 }
 
@@ -149,7 +208,7 @@ void GLUI_Main::setup_default_glut_callbacks( void )
   glutPassiveMotionFunc( glui_passive_motion_func );
   glutEntryFunc( glui_entry_func );
   glutVisibilityFunc( glui_visibility_func );
-  /*  glutIdleFunc( glui_idle_func );          */
+  /*  glutIdleFunc( glui_idle_func );    // FIXME!  100% CPU usage!      */
 }
 
 
@@ -304,7 +363,7 @@ void glui_mouse_func(int button, int state, int x, int y)
 
   if ( glut_window ) { /**  Was event in a GLUT window?  **/
     if ( GLUI_Master.active_control_glui != NULL ) 
-      GLUI_Master.active_control_glui->disactivate_current_control();
+      GLUI_Master.active_control_glui->deactivate_current_control();
 
     if (glut_window->glut_mouse_CB)
       glut_window->glut_mouse_CB( button, state, x, y );
@@ -438,45 +497,28 @@ GLUI_Master_Object::~GLUI_Master_Object()
 
 GLUI *GLUI_Master_Object::create_glui( const char *name, long flags,int x,int y )
 {
-  GLUI *new_glui;
-
-  new_glui = new GLUI;
-  
-  if ( new_glui ) {
-    new_glui->init( name, flags, x, y, -1 );
-    new_glui->link_this_to_parent_last( &this->gluis );
-    return new_glui;
-  }
-  else {
-    return NULL;
-  }
+  GLUI *new_glui = new GLUI;
+  new_glui->init( name, flags, x, y, -1 );
+  new_glui->link_this_to_parent_last( &this->gluis );
+  return new_glui;
 }
 
 
 /************************** GLUI_Master_Object::create_glui_subwindow() ******/
 
-GLUI   *GLUI_Master_Object::create_glui_subwindow( int parent_window, 
+GLUI *GLUI_Master_Object::create_glui_subwindow( int parent_window, 
 						   long flags )
 {
-  GLUI *new_glui;
+  GLUI *new_glui = new GLUI;
   GLUI_String new_name;
+  glui_format_str( new_name, "subwin_%p", this );
 
-  new_glui = new GLUI;
-
-  if ( new_glui ) {
-    glui_format_str( new_name, "subwin_%p", this );
-
-    new_glui->init( new_name.c_str(), flags | GLUI_SUBWINDOW, 0,0,
+  new_glui->init( new_name.c_str(), flags | GLUI_SUBWINDOW, 0,0,
 		    parent_window );
-    new_glui->main_panel->set_int_val( GLUI_PANEL_EMBOSSED );
-    new_glui->link_this_to_parent_last( &this->gluis );
-    return new_glui;
-  }
-  else {
-    return NULL;
-  }
+  new_glui->main_panel->set_int_val( GLUI_PANEL_EMBOSSED );
+  new_glui->link_this_to_parent_last( &this->gluis );
+  return new_glui;
 }
-
 
 
 /********************** GLUI_Master_Object::find_glui_by_window_id() ********/
@@ -502,7 +544,18 @@ void    GLUI_Main::display( void )
 {
   int       win_w, win_h;
 
-  /*glutSetWindow(1);///WOW WHAT A HACK          */
+  /* SUBTLE: on freeGLUT, the correct window is always already set.
+  But older versions of GLUT need this call, or else subwindows
+  don't update properly when resizing or damage-painting.
+  */
+  glutSetWindow( glut_window_id );
+  
+  /* Set up OpenGL state for widget drawing */
+  glDisable( GL_DEPTH_TEST );
+  glCullFace( GL_BACK );
+  glDisable( GL_CULL_FACE );
+  glDisable( GL_LIGHTING );
+  set_current_draw_buffer();
 
   /**** This function is used as a special place to do 'safe' processing,
     e.g., handling window close requests.
@@ -518,17 +571,6 @@ void    GLUI_Main::display( void )
       check_subwindow_position();
       */
 
-  /*******    Draw GLUI window     ******/
-
-  glClearColor( (float) bkgd_color.r / 255.0,
-		(float) bkgd_color.g / 255.0,
-		(float) bkgd_color.b / 255.0,
-		1.0 );
-  glClear( GL_COLOR_BUFFER_BIT ); /* | GL_DEPTH_BUFFER_BIT );          */
-
-  /*  glutSwapBuffers(); //performs flush also  // %%%%%%%%%%          */
-  /*  return;          */
-
   win_w = glutGet( GLUT_WINDOW_WIDTH );
   win_h = glutGet( GLUT_WINDOW_HEIGHT );
 
@@ -538,24 +580,37 @@ void    GLUI_Main::display( void )
     return;
   }
 
+  /*******    Draw GLUI window     ******/
+  glClearColor( (float) bkgd_color.r / 255.0,
+		(float) bkgd_color.g / 255.0,
+		(float) bkgd_color.b / 255.0,
+		1.0 );
+  glClear( GL_COLOR_BUFFER_BIT ); /* | GL_DEPTH_BUFFER_BIT );          */
+
   set_ortho_projection();
 
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
 
-  /*** Rotate image so y increases upwards, contrary to OpenGL axes ***/
+  /*** Rotate image so y increases downward.
+      In normal OpenGL, y increases upward. ***/
   glTranslatef( (float) win_w/2.0, (float) win_h/2.0, 0.0 );
   glRotatef( 180.0, 0.0, 1.0, 0.0 );
   glRotatef( 180.0, 0.0, 0.0, 1.0 );
   glTranslatef( (float) -win_w/2.0, (float) -win_h/2.0, 0.0 );
 
-  /*  glDrawBuffer( GL_BACK );  // Is there ever a need to draw to back buffer??           */
-
+  // Recursively draw the main panel
   //  main_panel->draw_bkgd_box( 0, 0, win_w, win_h );
   main_panel->draw_recursive( 0, 0 );
 
-  /*glutSwapBuffers(); //performs flush also            */
-  finish_drawing();
+  switch (buffer_mode) {
+  case buffer_front: /* Make sure drawing gets to screen */
+  	glFlush();
+	break;
+  case buffer_back: /* Bring back buffer to front */
+  	glutSwapBuffers();
+	break;
+  }
 }
 
 
@@ -630,7 +685,7 @@ void    GLUI_Main::reshape( int reshape_w, int reshape_h )
 
   /*  printf( "%d: %d\n", glutGetWindow(), this->flags );          */
 
-  /*  glutPostRedisplay();          */
+  glutPostRedisplay();
 }
 
 
@@ -657,7 +712,7 @@ void    GLUI_Main::keyboard(unsigned char key, int x, int y)
 	  printf( "new_control: %s\n", new_control->name );
 	  */
 
-    disactivate_current_control();
+    deactivate_current_control();
     activate_control( new_control, GLUI_ACTIVATE_TAB );
   }
   else if ( key == ' ' AND active_control 
@@ -719,9 +774,9 @@ void    GLUI_Main::mouse(int button, int state, int x, int y)
       if ( active_control AND 
            active_control->active_type == GLUI_CONTROL_ACTIVE_MOUSEDOWN AND 0)
       {
-        /*** This is a control that needs to be disactivated when the
+        /*** This is a control that needs to be deactivated when the
         mouse button is released ****/
-        disactivate_current_control();
+        deactivate_current_control();
       }
     }
     else {
@@ -731,8 +786,8 @@ void    GLUI_Main::mouse(int button, int state, int x, int y)
 
           if ( active_control != control ) {
             if ( active_control != NULL ) {
-              /** There is an active control still - disactivate it ***/
-              disactivate_current_control();
+              /** There is an active control still - deactivate it ***/
+              deactivate_current_control();
             }
           }
 
@@ -859,6 +914,11 @@ void    GLUI_Main::idle(void)
       active_control->idle();
     }
   }
+}
+
+int  GLUI_Main::needs_idle( void )
+{
+  return active_control != NULL && active_control->needs_idle();
 }
 
 
@@ -1004,17 +1064,38 @@ void   GLUI_Main::post_update_main_gfx( void )
   }
 }
 
-
-/********************************* GLUI_Main::set_front_draw_buffer() ********/
-
-int          GLUI_Main::set_front_draw_buffer( void )
+/********************************* GLUI_Main::should_redraw_now() ********/
+/** Return true if this control should redraw itself immediately (front buffer);
+   Or queue up a redraw and return false if it shouldn't (back buffer).
+   
+   Called from GLUI_Control::redraw.
+*/
+bool	     GLUI_Main::should_redraw_now(GLUI_Control *ctl)
 {
-  GLint state;
-  
-  glGetIntegerv( GL_DRAW_BUFFER, &state );
+  switch (buffer_mode) {
+  case buffer_front: return true; /* always draw in front-buffer mode */
+  case buffer_back: {
+    int orig = ctl->set_to_glut_window();
+    glutPostRedisplay(); /* redraw soon */
+    ctl->restore_window(orig);
+    return false; /* don't draw now. */
+   }
+  }
+  return false; /* never executed */
+}
 
-  glDrawBuffer( GL_FRONT );
-  
+/********************************* GLUI_Main::set_current_draw_buffer() ********/
+
+int          GLUI_Main::set_current_draw_buffer( void )
+{
+  /* Save old buffer */
+  GLint state;
+  glGetIntegerv( GL_DRAW_BUFFER, &state );
+  /* Switch to new buffer */
+  switch (buffer_mode) {
+  case buffer_front: glDrawBuffer(GL_FRONT); break;
+  case buffer_back:  glDrawBuffer(GL_BACK);  break; /* might not be needed... */
+  }
   return (int)state;
 }
  
@@ -1047,10 +1128,11 @@ GLUI_Main::GLUI_Main( void )
   font                    = GLUT_BITMAP_HELVETICA_12;
   curr_cursor             = GLUT_CURSOR_LEFT_ARROW;
 
-  bkgd_color.set( 200, 200, 200 );
-  bkgd_color_f[0] = 200.0 / 255.0;
-  bkgd_color_f[1] = 200.0 / 255.0;
-  bkgd_color_f[2] = 200.0 / 255.0;
+  int r=200, g=200, b=200;
+  bkgd_color.set( r,g,b );
+  bkgd_color_f[0] = r / 255.0;
+  bkgd_color_f[1] = g / 255.0;
+  bkgd_color_f[2] = b / 255.0;
 
   /*** Create the main panel ***/
   main_panel              = new GLUI_Panel;
@@ -1128,7 +1210,7 @@ void         GLUI_Main::activate_control( GLUI_Control *control, int how )
     previous active control? */
   if ( GLUI_Master.active_control_glui AND
        this != (GLUI_Main*) GLUI_Master.active_control_glui ) {
-    GLUI_Master.active_control_glui->disactivate_current_control();
+    GLUI_Master.active_control_glui->deactivate_current_control();
   }
 
   /*******      Now activate it      *****/
@@ -1139,7 +1221,7 @@ void         GLUI_Main::activate_control( GLUI_Control *control, int how )
 
     /*if ( NOT active_control->is_container OR           */
     /*		active_control->type == GLUI_CONTROL_ROLLOUT) {          */
-    active_control->translate_and_draw_front();
+    active_control->redraw();
     /*}          */
   }
   else {
@@ -1152,24 +1234,24 @@ void         GLUI_Main::activate_control( GLUI_Control *control, int how )
 }
 
 
-/************************* GLUI_Main::disactivate_current_control() **********/
+/************************* GLUI_Main::deactivate_current_control() **********/
 
-void         GLUI_Main::disactivate_current_control( void )
+void         GLUI_Main::deactivate_current_control( void )
 {
   int orig;
 
   if ( active_control != NULL ) {
     orig = active_control->set_to_glut_window();
 
-    active_control->disactivate();
+    active_control->deactivate();
     
     /** If this isn't a container control, then redraw it in its 
-      disactivated state.  Container controls, such as panels, look
+      deactivated state.  Container controls, such as panels, look
       the same activated or not **/
 
     /*if ( NOT active_control->is_container OR           */
     /*		active_control->type == GLUI_CONTROL_ROLLOUT ) {        */
-    active_control->translate_and_draw_front();
+    active_control->redraw();
     /*}          */
 
     active_control->restore_window( orig );
@@ -1177,7 +1259,7 @@ void         GLUI_Main::disactivate_current_control( void )
     active_control = NULL;
   }
 
-  /*  printf( "disactivate: %d\n", glutGetWindow() );          */
+  /*  printf( "deactivate: %d\n", glutGetWindow() );          */
   GLUI_Master.active_control      = NULL;
   GLUI_Master.active_control_glui = NULL;
 }
@@ -1343,7 +1425,7 @@ GLUI_Control  *GLUI_Main::find_prev_control( GLUI_Control *control )
 void    GLUI_Master_Object::set_glutIdleFunc(void (*f)(void))
 {
   glut_idle_CB = f;
-  glutIdleFunc( glui_idle_func );
+  GLUI_Master.glui_setIdleFuncIfNecessary();
 }
 
 
@@ -1351,7 +1433,7 @@ void    GLUI_Master_Object::set_glutIdleFunc(void (*f)(void))
 
 void   GLUI::disable( void )
 { 
-  disactivate_current_control();
+  deactivate_current_control();
   main_panel->disable(); 
 }
 
@@ -1679,9 +1761,9 @@ void glui_parent_window_special_func(int key, int x, int y)
   GLUI  *glui;
 
   /**  If clicking in the main area of a window w/subwindows, 
-    disactivate any current control  **/
+    deactivate any current control  **/
   if ( GLUI_Master.active_control_glui != NULL ) 
-    GLUI_Master.active_control_glui->disactivate_current_control();
+    GLUI_Master.active_control_glui->deactivate_current_control();
 
   /***   Now pass on the mouse event   ***/
 
@@ -1710,9 +1792,9 @@ void glui_parent_window_mouse_func(int button, int state, int x, int y)
   GLUI  *glui;
 
   /**  If clicking in the main area of a window w/subwindows, 
-    disactivate any current control  **/
+    deactivate any current control  **/
   if ( GLUI_Master.active_control_glui != NULL ) 
-    GLUI_Master.active_control_glui->disactivate_current_control();
+    GLUI_Master.active_control_glui->deactivate_current_control();
 
 
   /***   Now pass on the mouse event   ***/
@@ -1731,8 +1813,7 @@ void glui_parent_window_mouse_func(int button, int state, int x, int y)
     }
     
     glui = (GLUI*) glui->next();
-  }  
-  
+  } 
 }
 
 
@@ -1854,7 +1935,6 @@ void  GLUI_Main::set_viewport( void )
 void    GLUI_Main::refresh( void )
 {
   int orig;
-  int new_w, new_h;
 
   /******  GLUI_Glut_Window *glut_window;
     int              current_window;
@@ -1868,35 +1948,23 @@ void    GLUI_Main::refresh( void )
 
   pack_controls();
 
+  if ( glut_window_id > 0 )
+    glutSetWindow( glut_window_id );
+
+
   if ( TEST_AND( this->flags, GLUI_SUBWINDOW ) ) {
     /*** GLUI subwindow ***/
 
     check_subwindow_position();
-
-    if ( glut_window_id > 0 )
-      glutSetWindow( glut_window_id );
-    glutPostRedisplay();
-
-    /*	printf( "top_level: %d\n", top_level_glut_window_id );*/
-    glutSetWindow( top_level_glut_window_id );
   }
   else {
     /*** Standalone GLUI window ***/
 
-    if ( glut_window_id > 0 )
-      glutSetWindow( glut_window_id );
-  
-    new_h = glutGet( GLUT_WINDOW_HEIGHT );
-    new_w = glutGet( GLUT_WINDOW_WIDTH );
-    
-    new_h = this->h;
-    new_w = this->w;
+    glutReshapeWindow( this->h, this->w );
 
-    glutReshapeWindow( new_w, new_h );
-
-    glutPostRedisplay();
   }
 
+  glutPostRedisplay();
   glutSetWindow( orig);
 }
 
@@ -1989,11 +2057,49 @@ void            GLUI::hide( void )
 {
   int orig_window;
 
-  this->disactivate_current_control();
+  this->deactivate_current_control();
 
   orig_window = main_panel->set_to_glut_window();
 
   glutHideWindow();
 
   main_panel->restore_window(orig_window);
+}
+
+
+/**************** GLUI_DrawingSentinal **************/
+GLUI_DrawingSentinal::GLUI_DrawingSentinal(GLUI_Control *c_) 
+	:c(c_)
+{
+	orig_win = c->set_to_glut_window();
+	orig_buf = c->glui->set_current_draw_buffer();
+}
+GLUI_DrawingSentinal::~GLUI_DrawingSentinal() {
+	c->glui->restore_draw_buffer(orig_buf);
+	c->restore_window(orig_win);
+}
+
+
+void GLUI_Master_Object::glui_setIdleFuncIfNecessary( void )
+{
+  GLUI *glui;
+
+  glui = (GLUI*) GLUI_Master.gluis.first_child();
+  int necessary;
+  if (this->glut_idle_CB) 
+    necessary = true;
+  else {
+    necessary = false;
+    while( glui ) {
+      if( glui->needs_idle() ) {
+	necessary = true;
+	break;
+      }
+      glui = (GLUI*) glui->next();
+    }
+  }
+  if( necessary )
+    glutIdleFunc( glui_idle_func );  
+  else
+    glutIdleFunc( NULL );  
 }

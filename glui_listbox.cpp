@@ -29,8 +29,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
@@ -89,12 +88,8 @@ int    GLUI_Listbox::key_handler( unsigned char key,int modifiers )
 
 void    GLUI_Listbox::draw( int x, int y )
 {
-  int orig, name_x;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
+  GLUI_DRAWINGSENTINAL_IDIOM
+  int name_x;
 
   /*  draw_active_area();              */
 
@@ -102,7 +97,6 @@ void    GLUI_Listbox::draw( int x, int y )
   draw_name( name_x , 13);
   draw_box_inwards_outline( text_x_offset, w,
 			    0, h );
-
 
   if ( NOT active ) {
     draw_box( text_x_offset+3, w-2, 2, h-2, 1.0, 1.0, 1.0 );
@@ -133,36 +127,14 @@ void    GLUI_Listbox::draw( int x, int y )
 	   w-glui->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
 	   2 );
   }
-
-  restore_window(orig);
 }
 
 
 /************************************ GLUI_Listbox::update_si() **********/
-
 void   GLUI_Listbox::update_size( void )
 {
-  int text_size, delta;
-  int item_text_size;
-
-  if ( NOT glui )
-    return;
-
-  text_size = string_width( name );
-
-  /*** Find the longest item string ***/
-  item_text_size = 0;
-  delta = 0;
-
-  if ( text_x_offset < text_size +2 )
-    delta = text_size+2-text_x_offset;
-
-  text_x_offset += delta;
-  if ( w < text_x_offset+MAX(GLUI_EDITTEXT_MIN_TEXT_WIDTH,item_text_size)+20)
-    w = text_x_offset + MAX( GLUI_EDITTEXT_MIN_TEXT_WIDTH,item_text_size)+20;
+  recalculate_item_width();
 }
-
-
 
 /********************************* GLUI_Listbox::set_int_val() **************/
 
@@ -175,22 +147,6 @@ void    GLUI_Listbox::set_int_val( int new_val )
   /*** Update the variable we're (possibly) pointing to, and update the main gfx ***/
   output_live(true);
 }
-
-
-/**************************** GLUI_Listbox::draw_active_area() **************/
-
-void    GLUI_Listbox::draw_active_area( void )
-{
-  int orig;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
-
-  restore_window(orig);
-}
-
 
 /**************************************** GLUI_Listbox::add_item() **********/
 
@@ -215,17 +171,7 @@ int  GLUI_Listbox::add_item( int id, const char *new_text )
     if( glui )
       glui->post_update_main_gfx();
   }
-
-  /*** Check if we need to increase control size ***/
-  if ( w < text_x_offset + MAX( GLUI_EDITTEXT_MIN_TEXT_WIDTH, string_width( new_text ) ) + 20 ) {
-    w = text_x_offset + MAX( GLUI_EDITTEXT_MIN_TEXT_WIDTH, string_width( new_text ) ) + 20;
-
-    if ( glui )
-      glui->refresh();
-
-    /*		printf( "%s\n", new_text );              */
-  }
-
+  if (recalculate_item_width()) glui->refresh();
 
   return true;
 }
@@ -243,6 +189,7 @@ int  GLUI_Listbox::delete_item( const char *text )
     delete node;
     return true;
   }
+  if (recalculate_item_width()) glui->refresh();
 
   return false;
 }
@@ -260,7 +207,8 @@ int  GLUI_Listbox::delete_item(int id)
     delete node;
     return true;
   }
-
+  if (recalculate_item_width()) glui->refresh();
+  
   return false;
 }
 
@@ -413,8 +361,7 @@ int    GLUI_Listbox::do_selection( int item_num )
 
   int_val = item_num;
   curr_text = sel_item->text;
-
-  translate_and_draw_front();
+  redraw();
 
   return true;
 }
@@ -468,8 +415,34 @@ int    GLUI_Listbox::special_handler( int key,int modifiers )
 }
 
 
-/************************* GLUI_Listbox::increase_width( void ) ***********/
-
-void    GLUI_Listbox::increase_width( void )
+/************************* GLUI_Listbox::recalculate_item_width( void ) ***********/
+/** Change w and return true if we need to be widened to fit the current items. */
+bool    GLUI_Listbox::recalculate_item_width( void )
 {
+  int item_text_size;
+
+  if ( NOT glui )
+    return false;
+
+  /* Find the title size */
+  text_x_offset = string_width( name );
+
+  /* Find the longest item string ***/
+  item_text_size = 0;   
+ 
+  GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
+  while( item ) {
+    item_text_size = MAX(item_text_size,string_width(item->text));
+    item = (GLUI_Listbox_Item *) item->next();
+  }
+  
+  /* Sum up our layout: name, item, and drop-down marker */
+  int new_wid=text_x_offset+MAX(GLUI_EDITTEXT_MIN_TEXT_WIDTH,item_text_size)+20;
+  if ( w != new_wid) {
+    w = new_wid;
+    return true; /* we gotta be shortened or widened */
+  }
+  else {
+    return false; /* our current width is OK */
+  }
 }

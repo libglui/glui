@@ -115,7 +115,7 @@ int    GLUI_Translation::iaction_mouse_down_handler( int local_x,
   }
 
   trans_mouse_code = 1;
-  translate_and_draw_front();
+  redraw();
 
   return false;
 }
@@ -129,7 +129,7 @@ int    GLUI_Translation::iaction_mouse_up_handler( int local_x, int local_y,
   trans_mouse_code = GLUI_TRANSLATION_MOUSE_NONE;
   locked = GLUI_TRANSLATION_LOCK_NONE;
 
-  translate_and_draw_front();
+  redraw();
 
   return false;
 }
@@ -186,8 +186,6 @@ int    GLUI_Translation::iaction_mouse_held_down_handler( int local_x, int local
 
 void    GLUI_Translation::iaction_draw_active_area_persp( void )
 {
-  if ( NOT can_draw() )
-    return;
 }
 
 
@@ -195,9 +193,6 @@ void    GLUI_Translation::iaction_draw_active_area_persp( void )
 
 void    GLUI_Translation::iaction_draw_active_area_ortho( void )
 {
-  if ( NOT can_draw() )
-    return;
-
   /********* Draw emboss circles around arcball control *********/
   float radius;
   radius = (float)(h-22)/2.0;  /*  MIN((float)w/2.0, (float)h/2.0); */

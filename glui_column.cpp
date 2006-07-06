@@ -28,8 +28,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 
 /******************************** GLUI_Column::GLUI_Column() ************/
 
@@ -45,16 +44,11 @@ GLUI_Column::GLUI_Column( GLUI_Node *parent, int draw_bar )
 
 void  GLUI_Column::draw( int x, int y )
 {
-  int   orig;
   int   panel_x, panel_y, panel_w, panel_h, panel_x_off, panel_y_off;
   int   y_diff;
-  
-  if ( NOT can_draw() )
-    return;
 
   if ( int_val == 1 ) {  /* Draw a vertical bar */
-    orig = set_to_glut_window();
-
+    GLUI_DRAWINGSENTINAL_IDIOM
     if ( parent() != NULL ) {
       get_this_column_dims(&panel_x, &panel_y, &panel_w, &panel_h, 
 			   &panel_x_off, &panel_y_off);
@@ -88,11 +82,8 @@ void  GLUI_Column::draw( int x, int y )
 	/*glVertex2i( 1, -y_diff + GLUI_SEPARATOR_HEIGHT/2 );              */
 	/*glVertex2i( 1, -y_diff + panel_h - GLUI_SEPARATOR_HEIGHT/2);              */
 	glEnd();
-      }
-			
-    }    
-
-    restore_window(orig);
+      }		
+    } 
   }
 }
 

@@ -16,7 +16,6 @@
 
 /** These are the live variables passed into GLUI ***/
 int main_window;
-int dirty;
 int num_display  = 0;
 int num_format  = 0;
 int enable_textbox = 0;
@@ -154,23 +153,6 @@ const char text_box[] =
  ";
 */
 
-/***************************************** myGlutIdle() ***********/
-
-void myGlutIdle( void )
-{
-  /* According to the GLUT specification, the current window is 
-     undefined during an idle callback.  So we need to explicitly change
-     it if necessary */
-  if (!dirty)
-    ;//;usleep(1000);
-  else if ( glutGetWindow() != main_window ) {
-    glutSetWindow(main_window); 
-    glutPostRedisplay();
-    dirty = 0;
-  }
-}
-
-
 /***************************************** myGlutDisplay() *****************/
 
 void control_cb(int control) {
@@ -181,7 +163,7 @@ void control_cb(int control) {
   char c;
   int i;
   int format;
-  dirty = 1;
+  glutPostRedisplay();
   item = hah->get_current_item();
   
   if (control == 7) {
@@ -288,8 +270,6 @@ void control_cb(int control) {
 int main(int argc, char* argv[])
 {
   glutInit(&argc, argv);
-  
-  dirty = 1;
 
   GLUI *edit = GLUI_Master.create_glui("Help on GLUI Widgets", 0);
   main_window = edit->get_glut_window_id();
@@ -348,7 +328,6 @@ int main(int argc, char* argv[])
  
   edit->set_main_gfx_window(main_window); 
   tree->set_main_gfx_window(main_window); 
-  GLUI_Master.set_glutIdleFunc( myGlutIdle );
 
   glutMainLoop();
   return 0;

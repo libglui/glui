@@ -5,7 +5,14 @@
 
      glui_bitmaps.cpp
 
-          --------------------------------------------------
+Draws the hardcoded images listed in glui_bitmap_img_data with OpenGL.
+
+FIXME: upload the images to a texture.  This will allow them to be:
+	- Drawn with alpha blending
+	- Drawn at random sizes and angles onscreen
+	- Drawn much faster than with glDrawPixels
+
+ --------------------------------------------------
 
   Copyright (c) 1998 Paul Rademacher
 
@@ -34,31 +41,31 @@
 
 /************ Image Bitmap arrays **********/
 
-extern int glui_img_checkbox_0[];
-extern int glui_img_checkbox_1[];
-extern int glui_img_radiobutton_0[];
-extern int glui_img_radiobutton_1[];
-extern int glui_img_uparrow[];
-extern int glui_img_downarrow[];
-extern int glui_img_leftarrow[];
-extern int glui_img_rightarrow[];
-extern int glui_img_spinup_0[];
-extern int glui_img_spinup_1[];
-extern int glui_img_spindown_0[];
-extern int glui_img_spindown_1[];
-extern int glui_img_checkbox_0_dis[];
-extern int glui_img_checkbox_1_dis[];
-extern int glui_img_radiobutton_0_dis[];
-extern int glui_img_radiobutton_1_dis[];
-extern int glui_img_spinup_dis[];
-extern int glui_img_spindown_dis[];
-extern int glui_img_listbox_up[];
-extern int glui_img_listbox_down[];
-extern int glui_img_listbox_up_dis[];
+extern unsigned char glui_img_checkbox_0[];
+extern unsigned char glui_img_checkbox_1[];
+extern unsigned char glui_img_radiobutton_0[];
+extern unsigned char glui_img_radiobutton_1[];
+extern unsigned char glui_img_uparrow[];
+extern unsigned char glui_img_downarrow[];
+extern unsigned char glui_img_leftarrow[];
+extern unsigned char glui_img_rightarrow[];
+extern unsigned char glui_img_spinup_0[];
+extern unsigned char glui_img_spinup_1[];
+extern unsigned char glui_img_spindown_0[];
+extern unsigned char glui_img_spindown_1[];
+extern unsigned char glui_img_checkbox_0_dis[];
+extern unsigned char glui_img_checkbox_1_dis[];
+extern unsigned char glui_img_radiobutton_0_dis[];
+extern unsigned char glui_img_radiobutton_1_dis[];
+extern unsigned char glui_img_spinup_dis[];
+extern unsigned char glui_img_spindown_dis[];
+extern unsigned char glui_img_listbox_up[];
+extern unsigned char glui_img_listbox_down[];
+extern unsigned char glui_img_listbox_up_dis[];
 
 
 // These must be in the same order as the GLUI_STDBITMAP enums from glui.h!
-int *bitmap_arrays[] = {  
+unsigned char *bitmap_arrays[] = {  
   glui_img_checkbox_0,
   glui_img_checkbox_1,
   glui_img_radiobutton_0,
@@ -101,21 +108,27 @@ GLUI_Bitmap::~GLUI_Bitmap()
 	}
 }
 
+/* Create bitmap from greyscale byte array */
+void GLUI_Bitmap::init_grey(unsigned char *array)
+{
+	w = array[0]; h = array[1];
+	pixels = (unsigned char *) malloc(w*h*3);
+	assert(pixels);
+
+	for(int i = 0; i<w*h; i++ ) 
+		for (int j = 0; j<3; j++) /* copy grey to r,g,b channels */
+			pixels[i*3+j] = (unsigned char) array[i+2];
+}
+
+
+/* Create bitmap from color int array.
+  (OSL) This used to be how all GLUI bitmaps were stored, which was horribly
+  inefficient--three ints per pixel, or 12 bytes per pixel!
+*/
 void GLUI_Bitmap::init(int *array)
 {
-	w = 0;
-	h = 0;
-	pixels = NULL;
-
-	assert(array);
-	if (!array)
-		return;
-
-	w = array[0];
-	h = array[1];
-
+	w = array[0]; h = array[1];
 	pixels = (unsigned char *) malloc(w*h*3);
-
 	assert(pixels);
 
 	for (int i = 0; i<w*h*3; i++)
@@ -128,7 +141,7 @@ void GLUI_Bitmap::init(int *array)
 GLUI_StdBitmaps::GLUI_StdBitmaps() 
 {
     for (int i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++) 
-        bitmaps[i].init(bitmap_arrays[i]);
+        bitmaps[i].init_grey(bitmap_arrays[i]);
 }
 
 GLUI_StdBitmaps::~GLUI_StdBitmaps()

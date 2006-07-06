@@ -1,3 +1,8 @@
+/**
+Converts a PPM source image into a byte array, for use in 
+glui_bitmap_img_data.cpp.
+
+*/
 #include "ppm.h"
 
 #include <cstdio>

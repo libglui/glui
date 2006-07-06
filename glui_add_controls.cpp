@@ -5,6 +5,10 @@
 
      glui_add_controls.cpp - Routines for adding controls to a GLUI window
 
+Note: these routines are all deprecated.  Keeping them all here
+prevents the linker from dragging in all the .o files, even for controls
+that aren't used.
+
           --------------------------------------------------
 
   Copyright (c) 1998 Paul Rademacher
@@ -51,100 +55,6 @@ GLUI_Checkbox   *GLUI::add_checkbox_to_panel( GLUI_Panel *panel,
 {
   return new GLUI_Checkbox( panel, name, value_ptr, id, callback );
 }
-
-
-/************************************ GLUI_Node::add_control() **************/
-
-int GLUI_Node::add_control( GLUI_Control *child )
-{
-  GLUI_Control *parent_control;
-
-  /*** Collapsible nodes have to be handled differently, b/c the first and 
-    last children are swapped in and out  ***/
-  parent_control = ((GLUI_Control*)this);
-  if ( parent_control->collapsible == true ) {
-    if ( NOT parent_control->is_open ) {
-      /** Swap in the original first and last children **/
-      parent_control->child_head  = parent_control->collapsed_node.child_head;
-      parent_control->child_tail  = parent_control->collapsed_node.child_tail;
-
-      /*** Link this control ***/
-      child->link_this_to_parent_last( parent_control );
-
-      /** Swap the children back out ***/
-      parent_control->collapsed_node.child_head = parent_control->child_head;
-      parent_control->collapsed_node.child_tail = parent_control->child_tail;
-      parent_control->child_head = NULL;
-      parent_control->child_tail = NULL;
-    }
-    else {
-      child->link_this_to_parent_last( parent_control );
-    }
-  }
-  else {
-    child->link_this_to_parent_last( parent_control );
-  }
-  child->glui = (GLUI*) parent_control->glui;
-  child->update_size();
-  child->enabled = parent_control->enabled;
-  child->glui->refresh();
-
-  /** Now set the 'hidden' var based on the parent **/
-  if ( parent_control->hidden OR 
-       (parent_control->collapsible AND NOT parent_control->is_open ) )
-  {
-    child->hidden = true;
-  }
-
-  return true;
-}
-
-/************************************ GLUI_Main::add_control() **************/
- 
-int    GLUI_Main::add_control( GLUI_Node *parent, GLUI_Control *control )
-{
-  GLUI_Control *parent_control;
-
-  /*** Collapsible nodes have to be handled differently, b/c the first and 
-    last children are swapped in and out  ***/
-  parent_control = ((GLUI_Control*)parent);
-  if ( parent_control->collapsible == true ) {
-    if ( NOT parent_control->is_open ) {
-      /** Swap in the original first and last children **/
-      parent_control->child_head  = parent_control->collapsed_node.child_head;
-      parent_control->child_tail  = parent_control->collapsed_node.child_tail;
-
-      /*** Link this control ***/
-      control->link_this_to_parent_last( parent );
-
-      /** Swap the children back out ***/
-      parent_control->collapsed_node.child_head = parent_control->child_head;
-      parent_control->collapsed_node.child_tail = parent_control->child_tail;
-      parent_control->child_head = NULL;
-      parent_control->child_tail = NULL;
-    }
-    else {
-      control->link_this_to_parent_last( parent );
-    }
-  }
-  else {
-    control->link_this_to_parent_last( parent );
-  }
-  control->glui = (GLUI*) this;
-  control->update_size();
-  control->enabled = ((GLUI_Control*) parent)->enabled;
-  control->glui->refresh();
-
-  /** Now set the 'hidden' var based on the parent **/
-  if ( parent_control->hidden OR 
-       (parent_control->collapsible AND NOT parent_control->is_open ) )
-  {
-    control->hidden = true;
-  }
-
-  return true;
-}
-
 
 /********************************************* GLUI::add_panel() *************/
 

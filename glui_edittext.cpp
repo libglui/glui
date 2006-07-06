@@ -29,8 +29,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 #include <cassert>
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
@@ -143,7 +142,7 @@ int    GLUI_EditText::mouse_down_handler( int local_x, int local_y )
   tmp_insertion_pt = find_insertion_pt( local_x, local_y );  
   if ( tmp_insertion_pt == -1 ) {
     if ( glui )
-      glui->disactivate_current_control(  );
+      glui->deactivate_current_control(  );
     return false;
   }
 
@@ -220,14 +219,14 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
   /*  has_selection = (sel_start != sel_end);              */
 
   if ( key == CTRL('m') ) {           /* RETURN */
-    /*    glui->disactivate_current_control();              */
-    disactivate();  /** Force callbacks, etc **/
+    /*    glui->deactivate_current_control();              */
+    deactivate();  /** Force callbacks, etc **/
     activate(GLUI_ACTIVATE_TAB);     /** Reselect all text **/
-    translate_and_draw_front();
+    redraw();
     return true;
   }
   else if ( key  == CTRL('[')) {         /* ESCAPE */
-    glui->disactivate_current_control();
+    glui->deactivate_current_control();
     return true;
   }
   else if ( (key == 127 AND !ctrl_down) OR  /* FORWARD DELETE */
@@ -465,9 +464,9 @@ void    GLUI_EditText::activate( int how )
 }
 
 
-/****************************** GLUI_EditText::disactivate() **********/
+/****************************** GLUI_EditText::deactivate() **********/
 
-void    GLUI_EditText::disactivate( void )
+void    GLUI_EditText::deactivate( void )
 {
   int    new_int_val;
   float  new_float_val;
@@ -508,7 +507,7 @@ void    GLUI_EditText::disactivate( void )
   update_substring_bounds();
 
   /******** redraw text without insertion point ***********/
-  translate_and_draw_front();
+  redraw();
 
   /***** Now do callbacks if value changed ******/
   if ( orig_text != text ) {
@@ -535,13 +534,8 @@ void    GLUI_EditText::disactivate( void )
 
 void    GLUI_EditText::draw( int x, int y )
 {
-  int orig;
+  GLUI_DRAWINGSENTINAL_IDIOM
   int name_x;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
 
   name_x = MAX(text_x_offset - string_width(this->name) - 3,0);
   draw_name( name_x , 13);
@@ -572,8 +566,6 @@ void    GLUI_EditText::draw( int x, int y )
   draw_text(0,0);
   
   draw_insertion_pt();
-
-  restore_window(orig);
 }
 
 
@@ -655,15 +647,10 @@ void    GLUI_EditText::update_x_offsets( void )
 
 void    GLUI_EditText::draw_text( int x, int y )
 {
+  GLUI_DRAWINGSENTINAL_IDIOM
   int text_x, i, sel_lo, sel_hi;
-  int orig;
-
-  if ( NOT can_draw() )
-    return;
 
   if ( debug )    dump( stdout, "-> DRAW_TEXT" );
-
-  orig = set_to_glut_window();
 
   if ( NOT draw_text_only ) {
     if ( enabled )
@@ -743,8 +730,6 @@ void    GLUI_EditText::draw_text( int x, int y )
       x += char_width( text[i] );
     }
   }
-
-  restore_window( orig );
 
   if ( debug )    dump( stdout, "<- DRAW_TEXT" );  
 }
@@ -875,7 +860,7 @@ void   GLUI_EditText::update_and_draw_text( void )
   update_substring_bounds();
   /*  printf( "ss: %d/%d\n", substring_start, substring_end );                  */
 
-  translate_and_draw_front();
+  redraw();
 }
 
 

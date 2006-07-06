@@ -29,8 +29,9 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
+
+enum {rollout_height_pixels=GLUI_DEFAULT_CONTROL_HEIGHT + 7};
 
 /****************************** GLUI_Rollout::GLUI_Rollout() **********/
 
@@ -44,32 +45,28 @@ GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const char *name,
 		
   if ( NOT open ) {
     is_open = false;
-    h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
+    h = rollout_height_pixels;
   }
 
   parent->add_control( this );
-
 }
 
 /****************************** GLUI_Rollout::open() **********/
 
 void    GLUI_Rollout::open( void )
 {
-  int orig;
-
   if ( NOT glui )
     return;
 
   if ( is_open )
     return;
-
   is_open = true;
 
-  orig = set_to_glut_window();
+  GLUI_DRAWINGSENTINAL_IDIOM
 
+  /* Copy hidden children into our private list "collapsed_node" */
   child_head = collapsed_node.child_head;
   child_tail = collapsed_node.child_tail;
-
   collapsed_node.child_head = NULL;
   collapsed_node.child_tail = NULL;
 
@@ -78,8 +75,6 @@ void    GLUI_Rollout::open( void )
   }
 
   glui->refresh();
-
-  restore_window(orig);
 }
 
 
@@ -87,31 +82,26 @@ void    GLUI_Rollout::open( void )
 
 void    GLUI_Rollout::close( void )
 {
-  int orig;
-
   if ( NOT glui )
     return;
 
   if ( NOT is_open )
     return;
-
-  orig = set_to_glut_window();
+  is_open = false;
+  
+  GLUI_DRAWINGSENTINAL_IDIOM
 
   if ( child_head != NULL ) {
     ((GLUI_Control*) child_head)->hide_internal( true );
   }
 
+  /* Move all children into a private list of hidden children */
   collapsed_node.child_head = first_child();
   collapsed_node.child_tail = last_child();
-
   child_head = NULL;
   child_tail = NULL;
 
-  restore_window(orig);
-
-  this->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
-
-  is_open = false;
+  this->h = rollout_height_pixels;
 
   glui->refresh();
 }
@@ -122,16 +112,36 @@ void    GLUI_Rollout::close( void )
 
 int   GLUI_Rollout::mouse_down_handler( int local_x, int local_y )
 {
-  if ( local_y - y_abs > 18 ) {
+  if ( local_y - y_abs > rollout_height_pixels ) {
     initially_inside = currently_inside = false;
     return false;
   }
 
   currently_inside = true;
   initially_inside = true;
+  redraw();
 
-  draw_pressed();
+  return false;
+}
 
+
+/**************************** GLUI_Rollout::mouse_held_down_handler() ****/
+
+int  GLUI_Rollout::mouse_held_down_handler( 
+					   int local_x, int local_y, 
+					   bool new_inside )
+{
+  if ( NOT initially_inside )
+    return false;
+
+  if ( local_y - y_abs> rollout_height_pixels )
+    new_inside = false;
+  
+  if (new_inside != currently_inside) {
+     currently_inside = new_inside;
+     redraw();
+  }
+  
   return false;
 }
 
@@ -140,8 +150,6 @@ int   GLUI_Rollout::mouse_down_handler( int local_x, int local_y )
 
 int   GLUI_Rollout::mouse_up_handler( int local_x, int local_y, bool inside )
 {
-  draw_unpressed();
-
   if ( currently_inside ) {    
     if ( is_open )
       close();
@@ -149,7 +157,9 @@ int   GLUI_Rollout::mouse_up_handler( int local_x, int local_y, bool inside )
       open();
   }
 
+  currently_inside = false;
   initially_inside = false;
+  redraw();
 
   return false;
 }
@@ -159,13 +169,10 @@ int   GLUI_Rollout::mouse_up_handler( int local_x, int local_y, bool inside )
 
 void   GLUI_Rollout::draw( int x, int y )
 {
-  int orig, left, right, top, bottom;
+  GLUI_DRAWINGSENTINAL_IDIOM
+  
+  int left, right, top, bottom;
 
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
-	
   left   = 5;
   right  = w-left;
   top    = 3;
@@ -221,8 +228,8 @@ void   GLUI_Rollout::draw( int x, int y )
   glEnd();
 
   glLineWidth( 1.0 );
-
-  restore_window(orig);
+  
+  if (currently_inside) {draw_pressed(); /* heavy black outline when pressed */ }
 }
 
 
@@ -246,7 +253,6 @@ void   GLUI_Rollout::update_size( void )
 
 void   GLUI_Rollout::draw_pressed( void )
 {
-  int state, orig;
   int left, right, top, bottom;
 
   left   = 5;
@@ -254,15 +260,8 @@ void   GLUI_Rollout::draw_pressed( void )
   top    = 3;
   bottom = 3+16;
 
-  if ( NOT can_draw() )
-    return;
-
-  orig  = set_to_glut_window();
-  state = glui->set_front_draw_buffer();
   
   glColor3f( 0.0, 0.0, 0.0 );
-  glPushMatrix();
-  translate_to_origin();
 
   glBegin( GL_LINE_LOOP );
   glVertex2i( left, top );         glVertex2i( right, top );
@@ -273,46 +272,4 @@ void   GLUI_Rollout::draw_pressed( void )
   glVertex2i( left+1, top+1 );         glVertex2i( right-1, top+1 );
   glVertex2i( right-1, bottom-1 );     glVertex2i( left+1,bottom-1 );
   glEnd();
-
-  glPopMatrix();
-
-  glui->restore_draw_buffer(state);
-  restore_window(orig);
-
-}
-
-
-/**************************** GLUI_Rollout::draw_unpressed() ***********/
-
-void   GLUI_Rollout::draw_unpressed( void )
-{
-  if ( NOT can_draw() )
-    return;
-
-  translate_and_draw_front();
-}
-
-
-/**************************** GLUI_Rollout::mouse_held_down_handler() ****/
-
-int  GLUI_Rollout::mouse_held_down_handler( 
-					   int local_x, int local_y, 
-					   bool new_inside )
-{
-  if ( NOT initially_inside )
-    return false;
-
-  if ( local_y - y_abs> 18 )
-    new_inside = false;
-
-  if ( NOT new_inside AND currently_inside == true ) {
-    draw_unpressed();
-  } 
-  else if ( new_inside AND currently_inside == false ) {
-    draw_pressed();
-  }
-
-  currently_inside = new_inside;
-  
-  return false;
 }

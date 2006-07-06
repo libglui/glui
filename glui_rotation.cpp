@@ -99,9 +99,7 @@ int    GLUI_Rotation::iaction_mouse_held_down_handler( int local_x, int local_y,
 
 void    GLUI_Rotation::iaction_draw_active_area_persp( void )
 {
-  if ( NOT can_draw() )
-    return;
-
+  /********** arcball *******/
   copy_float_array_to_ball();
 
   setup_texture();
@@ -113,14 +111,15 @@ void    GLUI_Rotation::iaction_draw_active_area_persp( void )
   glPushMatrix();
 
   mat4 tmp_rot = *ball->rot_ptr;
-  glMultMatrixf( (float*) &tmp_rot[0][0] );
+  glMultMatrixf( (float*) &tmp_rot[0][0] ); 
 
   /*** Draw the checkered box ***/
   /*glDisable( GL_TEXTURE_2D );              */
-  draw_ball( 1.96 );
+  draw_ball(1.35); // 1.96 );
 
   glPopMatrix();
 
+  glBindTexture(GL_TEXTURE_2D,0); /* unhook our checkerboard texture */
   glDisable( GL_TEXTURE_2D );
   glDisable( GL_LIGHTING );
   glDisable( GL_CULL_FACE );
@@ -131,13 +130,11 @@ void    GLUI_Rotation::iaction_draw_active_area_persp( void )
 
 void    GLUI_Rotation::iaction_draw_active_area_ortho( void )
 {
-  if ( NOT can_draw() )
-    return;
+  float radius;
+  radius = (float)(h-22)/2.0;  /*MIN((float)w/2.0, (float)h/2.0);  */
 
   /********* Draw emboss circles around arcball control *********/
-  int k;
-  float radius;
-  radius = (float)(h-22)/2.0;  /*MIN((float)w/2.0, (float)h/2.0);              */
+  int k;     
   glLineWidth( 1.0 );
   glBegin( GL_LINE_LOOP);
   for( k=0; k<60; k++ ) {
@@ -201,28 +198,36 @@ void  GLUI_Rotation::init_ball( void )
 
 void GLUI_Rotation::setup_texture( void )
 {
-  int i, j;
+  static GLuint tex=0u;
+  GLenum t=GL_TEXTURE_2D;
+  glEnable(t);
+  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+  glColor3f( 1.0, 1.0, 1.0 );
+  if (tex!=0u) {
+  /* (OSL 2006/06) Just use glBindTexture to avoid having to re-upload the whole checkerboard every frame. */
+    glBindTexture(t,tex);
+    return;
+  } /* Else need to make a new checkerboard texture */
+  glGenTextures(1,&tex);
+  glBindTexture(t,tex);
+  glEnable(t);
+  
+  unsigned int i, j;
   int dark, light;   /*** Dark and light colors for ball checkerboard  ***/
 
-#define CHECKBOARD_SIZE 64
+/* Note: you can change the number of checkers across there sphere in draw_ball */
+#define CHECKBOARD_SIZE 64 /* pixels across whole texture */
+#define CHECKBOARD_REPEAT 32u /* pixels across one black/white sector */
   unsigned char texture_image[CHECKBOARD_SIZE] [CHECKBOARD_SIZE] [3];
   unsigned char c;
   for( i=0; i<CHECKBOARD_SIZE; i++ ) 
   {
     for( j=0; j<CHECKBOARD_SIZE; j++ ) 
     {
-      if (enabled) 
-      {
-        dark = 110;
-        light = 220;
-      }
-      else 
-      {
-        dark = glui->bkgd_color.r - 30;
-        light = glui->bkgd_color.r;
-      }
+      dark = 110;
+      light = 220;
 
-      if (((i&0x8)==0) ^ ((j&0x8)==0))
+      if ((((i/CHECKBOARD_REPEAT)&0x1)==0) ^ (((j/CHECKBOARD_REPEAT)&0x1)==0))
         c = light;
       else
         c = dark;
@@ -233,17 +238,26 @@ void GLUI_Rotation::setup_texture( void )
     }    
   }
   
-  glColor3f( 1.0, 1.0, 1.0 );
   glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-  glEnable( GL_TEXTURE_2D);
-  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-  glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, CHECKBOARD_SIZE, 
-                CHECKBOARD_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                texture_image );
+  glTexParameteri( t, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameteri( t, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  glTexParameteri( t, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+  glTexParameteri( t, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+  gluBuild2DMipmaps(t, GL_RGB, CHECKBOARD_SIZE, CHECKBOARD_SIZE,
+  	GL_RGB, GL_UNSIGNED_BYTE, texture_image);
+
+/* Add some mipmapping LOD bias, to keep sphere texture sharp */
+  float bias=-0.5; 
+  /* glTexEnvf(TEXTURE_FILTER_CONTROL_EXT,TEXTURE_LOD_BIAS_EXT,bias); */
+  /* glTexParameteri( t, GL_TEXTURE_MAX_LEVEL,1);*/
+  glTexEnvf(0x8500,0x8501,bias); /* <- numeric version for older OpenGL headers */
+  /* Cap out the mipmap level, to prevent blurring on horizon */
+  glTexParameteri(t, 0x813D, 1);
+  if (glGetError()) {
+  	/* Ignore errors in setting funky texture state-- go with defaults.
+	  If somebody knows how to check OpenGL 1.2 before doing this, please do!
+	*/
+  }
 }
 
 /****************************** GLUI_Rotation::setup_lights() ***********/
@@ -258,12 +272,21 @@ void    GLUI_Rotation::setup_lights( void )
   glEnable(GL_LIGHT0);
   glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE );
   glEnable(GL_COLOR_MATERIAL);
-  GLfloat light0_ambient[] =  {0.2f, 0.2f, 0.2f, 1.0f};
-  GLfloat light0_diffuse[] =  {1.f, 1.f, 1.0f, 1.0f};
   GLfloat light0_position[] = {-1.f, 1.f, 1.0f, 0.0f};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
   glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+  if (enabled) { /* enabled colors */
+	GLfloat light0_ambient[] =  {0.2f, 0.2f, 0.2f, 1.0f};
+	GLfloat light0_diffuse[] =  {1.f, 1.f, 1.0f, 1.0f};
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+  }
+  else { /* disabled colors */
+	GLfloat light0_ambient[] =  {0.6f, 0.6f, 0.6f, 1.0f};
+	GLfloat light0_diffuse[] =  {0.2f, 0.2f, 0.2f, 1.0f};
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+  }
+  
 }
 
 
@@ -279,7 +302,13 @@ void    GLUI_Rotation::draw_ball( float radius )
     gluQuadricDrawStyle(quadObj, GLU_FILL);
     gluQuadricNormals(quadObj, GLU_SMOOTH);
     gluQuadricTexture(quadObj, true );
-    gluSphere(quadObj, radius, 16, 16);
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    double checkerTiles=2.0; /* black-white checker tiles across whole sphere */
+    glScalef(checkerTiles,checkerTiles,1.0);
+    gluSphere(quadObj, radius, 32, 16);
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
   }
 }
 

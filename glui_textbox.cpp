@@ -29,8 +29,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 #include <cmath>
 
 
@@ -101,7 +100,7 @@ int    GLUI_TextBox::mouse_down_handler( int local_x, int local_y )
   tmp_insertion_pt = find_insertion_pt( local_x, local_y );  
   if ( tmp_insertion_pt == -1 ) {
     if ( glui )
-      glui->disactivate_current_control(  );
+      glui->deactivate_current_control(  );
     return false;
   }
 
@@ -179,7 +178,7 @@ int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
   /*  has_selection = (sel_start != sel_end);              */
 
   if ( key  == CTRL('[')) {         /* ESCAPE */
-    glui->disactivate_current_control();
+    glui->deactivate_current_control();
     return true;
   }
   else if ( (key == 127 AND !ctrl_down) OR  /* FORWARD DELETE */
@@ -352,9 +351,9 @@ void    GLUI_TextBox::activate( int how )
 }
 
 
-/****************************** GLUI_TextBox::disactivate() **********/
+/****************************** GLUI_TextBox::deactivate() **********/
 
-void    GLUI_TextBox::disactivate( void )
+void    GLUI_TextBox::deactivate( void )
 {
   active = false;
 
@@ -373,7 +372,7 @@ void    GLUI_TextBox::disactivate( void )
   update_substring_bounds();
 
   /******** redraw text without insertion point ***********/
-  translate_and_draw_front();
+  redraw();
 
   /***** Now do callbacks if value changed ******/
   if ( orig_text != text ) {
@@ -391,15 +390,11 @@ void    GLUI_TextBox::disactivate( void )
 
 void    GLUI_TextBox::draw( int x, int y )
 {
-  int orig;
+  GLUI_DRAWINGSENTINAL_IDIOM
   int line = 0;
   int text_length;
   int box_width;
   int i;
- 
-  if ( NOT can_draw() )
-    return;
-  orig = set_to_glut_window();
 
   /* Bevelled Border */
   glBegin( GL_LINES );
@@ -492,7 +487,6 @@ void    GLUI_TextBox::draw( int x, int y )
     scrollbar->draw_scroll();
     glPopMatrix();
   }
-  restore_window(orig);
 }
 
 
@@ -573,15 +567,10 @@ void    GLUI_TextBox::update_x_offsets( void )
 
 void    GLUI_TextBox::draw_text( int x, int y )
 {
+  GLUI_DRAWINGSENTINAL_IDIOM
   int text_x, i, sel_lo, sel_hi, x_pos;
-  int orig;
-
-  if ( NOT can_draw() )
-    return;
 
   if ( debug )    dump( stdout, "-> DRAW_TEXT" );
-
-  orig = set_to_glut_window();
 
   /** Find where to draw the text **/
 
@@ -664,8 +653,6 @@ void    GLUI_TextBox::draw_text( int x, int y )
       x_pos += char_width( text[i] );
     }
   }
-  
-  restore_window( orig );
 
   if ( debug )    dump( stdout, "<- DRAW_TEXT" );  
 }
@@ -891,14 +878,10 @@ int  GLUI_TextBox::substring_width( int start, int end, int initial_width )
 
 void   GLUI_TextBox::update_and_draw_text( void )
 {
-  if ( NOT can_draw() )
-    return;
-
   //update_substring_bounds();
   /*  printf( "ss: %d/%d\n", substring_start, substring_end );                  */
 
-  translate_and_draw_front();
-
+  redraw();
 }
 
 

@@ -76,21 +76,21 @@ int    GLUI_CommandLine::key_handler( unsigned char key,int modifiers )
 }
 
 
-/****************************** GLUI_CommandLine::disactivate() **********/
+/****************************** GLUI_CommandLine::deactivate() **********/
 
-void    GLUI_CommandLine::disactivate( void )
+void    GLUI_CommandLine::deactivate( void )
 {
   // if the commit_flag is set, add the current command to 
-  // history and call disactivate as normal
+  // history and call deactivate as normal
 
-  // Trick disactivate into calling callback if and only if commit_flag set.
-  // A bit subtle, but disactivate checks that orig_text and text
+  // Trick deactivate into calling callback if and only if commit_flag set.
+  // A bit subtle, but deactivate checks that orig_text and text
   // are the same to decide whether or not to call the callback.
   // Force them to be different for commit, and the same for no commit.
   if (commit_flag) {
     add_to_history(text.c_str());
     orig_text = "";
-    Super::disactivate( );
+    Super::deactivate( );
     set_text( "" );
     commit_flag = false;
   }

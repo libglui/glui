@@ -28,9 +28,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 *****************************************************************************/
+#include "glui_internal_control.h"
 
-#include "GL/glui.h"
-#include "glui_internal.h"
 /****************************** GLUI_Button::GLUI_Button() **********/
 
 GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
@@ -40,7 +39,8 @@ GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
   user_id     = id;
   callback    = cb;
   set_name( name );
-    
+  currently_inside = false; 
+  
   parent->add_control( this );
 }
 
@@ -53,8 +53,7 @@ int    GLUI_Button::mouse_down_handler( int local_x, int local_y )
 		   now we invariably set it to 'depressed' **/
 
   currently_inside = true;
-
-  draw_pressed();
+  redraw();
 
   return false;
 }
@@ -66,17 +65,12 @@ int    GLUI_Button::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   set_int_val( 0 );   /** A button always turns off after you press it **/
 
-  draw_unpressed();
+  currently_inside = false; 
+  redraw();
 
-  if ( NOT inside ) {    
-  }
-  else {
-    /*** Invoke the callback ***/
+  if ( inside ) { 
+    /*** Invoke the user's callback ***/
     execute_callback();
-
-    /** Tell the main gfx window to update itself **/
-    if( glui )
-      glui->post_update_main_gfx();
   }
 
   return false;
@@ -88,14 +82,10 @@ int    GLUI_Button::mouse_up_handler( int local_x, int local_y, bool inside )
 int    GLUI_Button::mouse_held_down_handler( int local_x, int local_y,
 					     bool new_inside)
 {
-  if ( NOT new_inside AND currently_inside == true ) {
-    draw_unpressed();
-  } 
-  else if ( new_inside AND currently_inside == false ) {
-    draw_pressed();
+  if (new_inside != currently_inside) {
+    currently_inside = new_inside;
+    redraw();
   }
-
-  currently_inside = new_inside;
   
   return false;
 }
@@ -108,22 +98,23 @@ int    GLUI_Button::key_handler( unsigned char key,int modifiers )
   return false;
 }
 
+/********************************************** GLUI_Button::draw() **********/
+
+void    GLUI_Button::draw( int x, int y )
+{
+  if (currently_inside) draw_pressed();
+  else {
+    glui->draw_raised_box( 0, 0, w, h );
+    draw_text( 0 );
+  }
+}
+
 
 /************************************** GLUI_Button::draw_pressed() ******/
 
 void   GLUI_Button::draw_pressed( void )
 {
-  int state, orig;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig  = set_to_glut_window();
-  state = glui->set_front_draw_buffer();
-  
   glColor3f( 0.0, 0.0, 0.0 );
-  glPushMatrix();
-  translate_to_origin();
 
   draw_text( 1 );
 
@@ -136,38 +127,6 @@ void   GLUI_Button::draw_pressed( void )
   glVertex2i( 1, 1 );         glVertex2i( w-1, 1 );
   glVertex2i( w-1, h-1 );     glVertex2i( 1, h-1 );
   glEnd();
-
-  glPopMatrix();
-
-  glui->restore_draw_buffer(state);
-  restore_window(orig);
-}
-
-
-/************************************** GLUI_Button::draw_unpressed() ******/
-
-void   GLUI_Button::draw_unpressed( void )
-{
-  if ( NOT can_draw() )
-    return;
-
-  translate_and_draw_front();
-}
-
-
-
-
-/********************************************** GLUI_Button::draw() **********/
-
-void    GLUI_Button::draw( int x, int y )
-{
-  if ( NOT can_draw() )
-    return;
-
-  if ( glui )
-    glui->draw_raised_box( 0, 0, w, h );
-
-  draw_text( 0 );
 }
 
 
@@ -175,12 +134,7 @@ void    GLUI_Button::draw( int x, int y )
 
 void     GLUI_Button::draw_text( int sunken )
 {
-  int string_width, orig;
-
-  if ( NOT can_draw() )
-    return;
-
-  orig = set_to_glut_window();
+  int string_width;
 
   glColor3ub( glui->bkgd_color.r, glui->bkgd_color.g, glui->bkgd_color.b );
   glDisable( GL_CULL_FACE );
@@ -213,8 +167,6 @@ void     GLUI_Button::draw_text( int sunken )
     
     glDisable( GL_LINE_STIPPLE );
   }
-
-  restore_window(orig);
 }
 
 
