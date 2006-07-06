@@ -1,5 +1,4 @@
-Welcome to the GLUI User Interface Library, v2.3!
-March 22, 2005
+Welcome to the GLUI User Interface Library
 -------------------------------------------------
 
 This distribution contains the latest community-maintained fork of the
@@ -13,11 +12,44 @@ these changes are available to everyone in the community.
 WARNING: This version (2.3) introduces some incompatible changes with
 previous versions!!
 
+----------------------------------
 CHANGES:
+Version 2.35, July 7, 2006
+
+- Applied patch [950354] "Good Idle For Spinners" written by Alain
+  Durat.  This makes it so GLUI doesn't suck up 100% of your CPU time
+  when nothing is happening.
+
+Many changes submitted by Orion Sky Lawlor.
+- Comments: I've added doxygen comments to all of glui.h.  Use "make
+  docs" to generate Doxygen in doc/html/index.html.
+- Bug fix: rollout actually resizes properly when opened (bin/example5
+  demonstrated this bug). 
+- Bug fix: scroll bars have a (saner) time-based speed limit.  This is
+  visible in scrolling around in bin/example6.
+- Appearance: double-buffering can be turned on globally, eliminating
+  flicker when, e.g., resizing bin/example5 window.  This is on by
+  default; turn double-buffering off in GLUI::init or set
+  glui->buffer_mode to GLUI::buffer_front.
+- Appearance: the texture used in the GLUI_Rotation
+  control sphere is now mipmapped, which is much smoother than
+  nearest-neighbor.  It's also a stored (glGenTextures) texture, which
+  is much much faster. 
+- Optimization: I moved GLUI_Node::add_child_to_control to a more
+  linker-friendly location.  Now non-deprecated executables are up to
+  100KB smaller on disk.
+- Optimization: glui_img's are now 1 byte per pixel instead of 3 ints
+  per pixel.  This saves 50KB+ space on disk in the library and each
+  executable. 
+
+
 
 ----------------------------------
+CHANGES:
+Version 2.3, March 22, 2005
+
 - GLUI_String is now a std::string
-  This is the main source of most incopatibilities, but I felt it was
+  This is the main source of most incompatibilities, but I felt it was
   a necessary change, because the previous usage of a fixed-sized
   buffer was just too unsafe.  I myself was bitten a few times passing
   a char* buffer of insufficient size into GLUI as a live variable.
