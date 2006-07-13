@@ -21,8 +21,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="../include"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -138,7 +138,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui.h">
+			RelativePath="..\include\Gl\glui.h">
 		</File>
 		<File
 			RelativePath="..\glui_add_controls.cpp">
