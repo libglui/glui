@@ -74,7 +74,7 @@ void GLUI_Control::set_to_bkgd_color( void )
   if ( NOT glui )
     return;
 
-  glColor3ub( glui->bkgd_color.r, glui->bkgd_color.g, glui->bkgd_color.b );
+  glColor3ubv( glui->bkgd_color );
 }
 
 /******** GLUI_Control::draw_box_inwards_outline() ********/

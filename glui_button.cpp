@@ -136,7 +136,7 @@ void     GLUI_Button::draw_text( int sunken )
 {
   int string_width;
 
-  glColor3ub( glui->bkgd_color.r, glui->bkgd_color.g, glui->bkgd_color.b );
+  glColor3ubv( glui->bkgd_color );
   glDisable( GL_CULL_FACE );
   glBegin( GL_QUADS );
   glVertex2i( 2, 2 );         glVertex2i( w-2, 2 );

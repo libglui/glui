@@ -101,5 +101,22 @@
 /**** Return the ASCII control code given the non-control ASCII character */
 #define CTRL(c) ( (c>=('a'-1)) ? (c-'a'+1) : (c-'A'+1) )
 
+/*
+typedef unsigned char Byte;
+
+#ifndef _RGBC_
+class RGBc 
+{
+    public:
+    Byte r, g, b;
+
+    void set(Byte r,Byte g,Byte b) {this->r=r;this->g=g;this->b=b;}
+
+    RGBc( void ) {}
+    RGBc( Byte r, Byte g, Byte b ) { set( r, g, b ); }
+};
+#define _RGBC_
+#endif
+*/
 
 #endif /* GLUI_INTERNAL_H */

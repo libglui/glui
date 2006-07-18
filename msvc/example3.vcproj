@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -25,23 +25,25 @@
 				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="GLUI_NO_LIB_PRAGMA"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Debug/example3.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
+				AssemblerListingLocation="$(OutDir)\"
+				ObjectFile="$(OutDir)\"
+				ProgramDataBaseFileName="$(OutDir)\$(TargetName)"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glut32.lib glu32.lib opengl32.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="glui32d.lib glut32.lib glu32.lib opengl32.lib odbc32.lib odbccp32.lib"
 				OutputFile="bin/example3d.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="lib"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/example3.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -81,16 +83,15 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="GLUI_NO_LIB_PRAGMA"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/example3.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				AssemblerListingLocation="$(OutDir)\"
+				ObjectFile="$(OutDir)\"
+				ProgramDataBaseFileName="$(OutDir)\$(TargetName)"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"/>
 			<Tool
@@ -101,7 +102,129 @@
 				OutputFile="bin/example3.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/example3.pdb"
+				AdditionalLibraryDirectories="lib"
+				ProgramDatabaseFile="$(OutDir)/$(InputName).pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Release/example3.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug GLUIDLL|Win32"
+			OutputDirectory="DebugDLL"
+			IntermediateDirectory="DebugDLL"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../include"
+				PreprocessorDefinitions="GLUI_NO_LIB_PRAGMA;GLUIDLL"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=".\Debug/example3.pch"
+				AssemblerListingLocation="$(OutDir)\"
+				ObjectFile="$(OutDir)\"
+				ProgramDataBaseFileName="$(OutDir)\$(TargetName)"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="glui32dlld.lib glut32.lib glu32.lib opengl32.lib odbc32.lib odbccp32.lib"
+				OutputFile="bin/example3dlld.exe"
+				LinkIncremental="0"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="lib"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Debug/example3.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release GLUIDLL|Win32"
+			OutputDirectory="ReleaseDLL"
+			IntermediateDirectory="ReleaseDLL"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				AdditionalIncludeDirectories="../include"
+				PreprocessorDefinitions="GLUIDLL"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=".\Release/example3.pch"
+				AssemblerListingLocation="$(OutDir)\"
+				ObjectFile="$(OutDir)\"
+				ProgramDataBaseFileName="$(OutDir)\$(TargetName)"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="glut32.lib glu32.lib opengl32.lib odbc32.lib odbccp32.lib"
+				OutputFile="bin/example3dll.exe"
+				LinkIncremental="0"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="lib"
+				ProgramDatabaseFile="$(OutDir)/$(InputName).pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -144,6 +267,20 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					Optimization="2"
+					PreprocessorDefinitions=""/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug GLUIDLL|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					Optimization="0"
+					PreprocessorDefinitions=""/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release GLUIDLL|Win32">
 				<Tool
 					Name="VCCLCompilerTool"
 					Optimization="2"

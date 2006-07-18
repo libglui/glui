@@ -52,25 +52,6 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
 #define  GLUI_SPINNER_CALLBACK_INTERVAL    1
 
  
-/****************************** spinner_edittext_callback() ******************/
-/*   This function is not used anymore.  It has been replaced by directly    */
-/*   Including an optional pointer to a spinner from an edittext box         */
-
-void  spinner_edittext_callback( int id )
-{
-  GLUI_Spinner *spinner;
-
-  putchar( '.' ); flushout;
-  
-  spinner = (GLUI_Spinner*) id;
-
-  if ( NOT spinner )
-    return;
-
-  spinner->do_callbacks();
-}
-
-
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
 GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
@@ -310,7 +291,7 @@ void    GLUI_Spinner::draw( int x, int y )
     glLineStipple( 1, 0x5555 );
   }
   else {
-    glColor3ub( glui->bkgd_color.r,glui->bkgd_color.g,glui->bkgd_color.b );
+    glColor3ubv( glui->bkgd_color );
   } 
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );

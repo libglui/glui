@@ -168,7 +168,7 @@ void   GLUI_Tree::draw( int x, int y )
   glui->draw_raised_box( left, top, 16, 16 );
 
   if ( glui )
-    glColor3ub(glui->bkgd_color.r,glui->bkgd_color.g,glui->bkgd_color.b);
+    glColor3ubv(glui->bkgd_color);
   glDisable( GL_CULL_FACE );
   glBegin( GL_QUADS );
   glVertex2i( left+17, top+1 );      glVertex2i( right-1, top+1 );

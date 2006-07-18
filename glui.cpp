@@ -581,10 +581,10 @@ void    GLUI_Main::display( void )
   }
 
   /*******    Draw GLUI window     ******/
-  glClearColor( (float) bkgd_color.r / 255.0,
-		(float) bkgd_color.g / 255.0,
-		(float) bkgd_color.b / 255.0,
-		1.0 );
+  glClearColor( bkgd_color[0] / 255.0f,
+		        bkgd_color[1] / 255.0f,
+		        bkgd_color[2] / 255.0f,
+		        1.0f );
   glClear( GL_COLOR_BUFFER_BIT ); /* | GL_DEPTH_BUFFER_BIT );          */
 
   set_ortho_projection();
@@ -1129,10 +1129,12 @@ GLUI_Main::GLUI_Main( void )
   curr_cursor             = GLUT_CURSOR_LEFT_ARROW;
 
   int r=200, g=200, b=200;
-  bkgd_color.set( r,g,b );
-  bkgd_color_f[0] = r / 255.0;
-  bkgd_color_f[1] = g / 255.0;
-  bkgd_color_f[2] = b / 255.0;
+  bkgd_color[0] = r;
+  bkgd_color[1] = g;
+  bkgd_color[2] = b;
+  bkgd_color_f[0] = r / 255.0f;
+  bkgd_color_f[1] = g / 255.0f;
+  bkgd_color_f[2] = b / 255.0f;
 
   /*** Create the main panel ***/
   main_panel              = new GLUI_Panel;
@@ -1148,7 +1150,7 @@ void      GLUI_Main::draw_raised_box( int x, int y, int w, int h )
   w = w+x;
   h = h+y;
 
-  glColor3ub( bkgd_color.r, bkgd_color.g, bkgd_color.b );
+  glColor3ubv( bkgd_color );
   glBegin( GL_LINE_LOOP );
   glVertex2i( x+1, y+1 );  glVertex2i( w-1, y+1 );
   glVertex2i( w-1, h-1 );  glVertex2i( x+1, h-1 );
@@ -1179,7 +1181,7 @@ void      GLUI_Main::draw_lowered_box( int x, int y, int w, int h )
   w = w+x;
   h = h+y;
 
-  glColor3ub( bkgd_color.r, bkgd_color.g, bkgd_color.b );
+  glColor3ubv( bkgd_color );
   glBegin( GL_LINE_LOOP );
   glVertex2i( x+1, y+1 );         glVertex2i( w-1, y+1 );
   glVertex2i( w-1, h-1 );     glVertex2i( x+1, h-1 );

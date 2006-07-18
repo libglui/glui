@@ -124,7 +124,7 @@ void    GLUI_Panel::draw( int x, int y )
       str_width = string_width(name);
 
       if ( glui )
-	glColor3ub(glui->bkgd_color.r,glui->bkgd_color.g,glui->bkgd_color.b);
+	glColor3ubv(glui->bkgd_color);
       glDisable( GL_CULL_FACE );
       glBegin( GL_QUADS );
       glVertex2i( left-3, 0 );               glVertex2i( left+str_width+3, 0 );

@@ -148,7 +148,7 @@ void    GLUI_Checkbox::draw_active_area( void )
     glLineStipple( 1, 0x5555 );
     glColor3f( 0., 0., 0. );
   } else {
-    glColor3ub( glui->bkgd_color.r, glui->bkgd_color.g, glui->bkgd_color.b );
+    glColor3ubv( glui->bkgd_color );
   }
 
   glBegin( GL_LINE_LOOP );

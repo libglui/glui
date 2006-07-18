@@ -46,7 +46,7 @@ GLUI_String& glui_format_str(GLUI_String& str, const char* fmt, ...)
   va_list arg;
   while (1) {
     va_start(arg, fmt);
-    int ret = vsnprintf(buf,299,fmt,arg);
+    int ret = vsnprintf(buf,bufsz-1,fmt,arg);
     va_end(arg);
     if (ret>=0) {
       break;
