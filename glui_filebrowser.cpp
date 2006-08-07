@@ -115,7 +115,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
       } while (FindNextFile(hFind, &FN) != 0);
       
       if (GetLastError() == ERROR_NO_MORE_FILES)
-        FindClose(&FN);
+        FindClose(hFind);
       else
         perror("fbreaddir");
     }
