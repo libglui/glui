@@ -319,7 +319,7 @@ int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
 void GLUI_TextBox::enable( void )
 {
   GLUI_Control::enable();
-  scrollbar->enable();
+  if (scrollbar) scrollbar->enable();
 }
 
 /****************************** GLUI_TextBox::disable() **********/
@@ -327,7 +327,7 @@ void GLUI_TextBox::enable( void )
 void GLUI_TextBox::disable( void )
 {
   GLUI_Control::disable();
-  scrollbar->disable();
+  if (scrollbar) scrollbar->disable();
 }
 
 /****************************** GLUI_TextBox::activate() **********/
@@ -338,10 +338,10 @@ void    GLUI_TextBox::activate( int how )
     dump( stdout, "-> ACTIVATE" );
   active = true;
 
+  orig_text = text;
+
   if ( how == GLUI_ACTIVATE_MOUSE )
     return;  /* Don't select everything if activated with mouse */
-
-  orig_text = text;
 
   sel_start    = 0;
   sel_end      = text.length();
