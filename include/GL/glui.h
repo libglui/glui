@@ -80,6 +80,8 @@
 #   define GLUIAPI
 #  endif
 # endif
+#else
+#define GLUIAPI
 #endif
 
 
