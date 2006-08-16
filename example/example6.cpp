@@ -260,6 +260,9 @@ void control_cb(int control) {
     }
   }
 }
+void textbox_cb(GLUI_Control *control) {
+    printf("Got textbox callback\n");
+}
 
 //void out_of_memory() {
 //  printf("Out of memory!\n\n");
@@ -290,7 +293,7 @@ int main(int argc, char* argv[])
   hah->set_h(180);
   new GLUI_Column(ep,false); 
 
-  moo = new GLUI_TextBox(ep,true);
+  moo = new GLUI_TextBox(ep,true,1,textbox_cb);
   moo->set_text(general);
   moo->set_h(400);
   moo->set_w(410);
