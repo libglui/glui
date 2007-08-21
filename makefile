@@ -48,7 +48,7 @@ GLUI_EXAMPLES = bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
 
 GLUI_TOOLS = bin/ppm2array
 
-.PHONY: all setup examples tools clean depend dist
+.PHONY: all setup examples tools clean depend doc dist
 
 all: setup $(GLUI_LIB) examples tools
 
@@ -85,7 +85,10 @@ clean:
 depend:
 	makedepend -Y./include `find -name "*.cpp"` `find -name "*.c"`
 
-DIST = glui-2.3.0
+DIST = glui-2.35
+
+doc:
+	doxygen doc/doxygen.cfg
 
 dist: clean
 	mkdir -p $(DIST) 
