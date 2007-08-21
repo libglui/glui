@@ -48,7 +48,7 @@ GLUI_EXAMPLES = bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
 
 GLUI_TOOLS = bin/ppm2array
 
-.PHONY: all setup examples tools clean depend doc doc-dist dist
+.PHONY: all setup examples tools clean depend doc doc-pdf doc-dist dist
 
 all: setup $(GLUI_LIB) examples tools
 
@@ -89,6 +89,9 @@ DIST = glui-2.35
 
 doc:
 	doxygen doc/doxygen.cfg
+
+doc-pdf:
+	cd doc/doxygen/latex &&	pdflatex refman.tex && pdflatex refman.tex && pdflatex refman.tex
 
 doc-dist:
 	mkdir -p $(DIST)/doc
