@@ -48,7 +48,7 @@ GLUI_EXAMPLES = bin/example1 bin/example2 bin/example3 bin/example4 bin/example5
 
 GLUI_TOOLS = bin/ppm2array
 
-.PHONY: all setup examples tools clean depend doc dist
+.PHONY: all setup examples tools clean depend doc doc-dist dist
 
 all: setup $(GLUI_LIB) examples tools
 
@@ -80,7 +80,7 @@ docs:
 
 clean:
 	rm -f *.o $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS) 
-	rm -fr doc/html
+	rm -fr doc/doxygen
 
 depend:
 	makedepend -Y./include `find -name "*.cpp"` `find -name "*.c"`
@@ -90,6 +90,13 @@ DIST = glui-2.35
 doc:
 	doxygen doc/doxygen.cfg
 
+doc-dist:
+	mkdir -p $(DIST)/doc
+	cp `find doc/doxygen/html -type f` $(DIST)/doc
+	tar cv $(DIST) | gzip -9 - > $(DIST)-doc.tgz
+	zip -vr9 $(DIST)-doc.zip $(DIST)
+	rm -Rf $(DIST)
+	
 dist: clean
 	mkdir -p $(DIST) 
 	cp --parents \
