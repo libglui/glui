@@ -28,7 +28,8 @@ enum {
   UW, // User-interface white-- backgrounds of checkboxes and radio buttons
 };
  
- Orion Sky Lawlor, olawlor@acm.org, 2006/05/04 (LGPL)
+ Orion Sky Lawlor, olawlor@acm.org, 2006/05/04 
+ License: ZLIB
 */
 
 /*----------------------- checkboxes --------------------------*/

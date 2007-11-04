@@ -2,15 +2,23 @@ Welcome to the GLUI User Interface Library
 -------------------------------------------------
 
 This distribution contains the latest community-maintained fork of the
-GLUI Library.  It is based on the GLUI v2.1 beta version from Paul
-Rademacher (http://www.cs.unc.edu/~rademach/glui/) plus the
-compatibility changes made by Nigel Stewart in his "GLUI v2.2" 
-(http://www.nigels.com/glt/glui) In accordance with the LGPL under
-which the library is released (according to Paul's web page at least),
-these changes are available to everyone in the community.
+GLUI Library, now under the ZLIB license.  It is based on the GLUI
+v2.1 beta version from Paul Rademacher
+(http://www.cs.unc.edu/~rademach/glui/) plus the compatibility changes 
+made by Nigel Stewart in his "GLUI v2.2"
+(http://www.nigels.com/glt/glui).
+
 
 WARNING: This version (2.3) introduces some incompatible changes with
 previous versions!!
+
+----------------------------------
+CHANGES:
+Version 2.36, November 4, 2007
+
+- License changed to the more permissive ZLIB license 
+  with the blessing of Paul Rademacher, Nigel Stewart, Bill Baxter, 
+  John Kew, Orion Sky Lawlor and all other developers.
 
 ----------------------------------
 CHANGES:
