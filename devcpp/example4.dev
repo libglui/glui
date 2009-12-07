@@ -6,8 +6,8 @@ IsCpp=1
 Type=1
 Compiler=
 CppCompiler=
-Includes=../
-Linker=-lglui -lglut32 -lglu32 -lopengl32 -lstdc++_@@_
+Includes=../include
+Linker=-lglui -lglut32 -lglu32 -lopengl32 -lgdi32 -lwinmm -lstdc++_@@_
 Libs=.
 UnitCount=1
 Folders=
@@ -27,17 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000
-
-[Unit1]
-FileName=..\example4.cpp
-Folder=
-Compile=1
-CompileCpp=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
+CompilerSettings=0000000000000000000000
 
 [VersionInfo]
 Major=0
@@ -56,4 +46,14 @@ OriginalFilename=example4.exe
 ProductName=example4
 ProductVersion=0.1
 AutoIncBuildNr=0
+
+[Unit1]
+FileName=..\example\example4.cpp
+CompileCpp=1
+Folder=example4
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

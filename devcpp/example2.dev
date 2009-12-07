@@ -6,8 +6,8 @@ IsCpp=1
 Type=1
 Compiler=
 CppCompiler=
-Includes=../
-Linker=-lglui -lglut32 -lglu32 -lopengl32 -lstdc++_@@_
+Includes=../include
+Linker=-lglui -lglut32 -lglu32 -lopengl32 -lgdi32 -lwinmm -lstdc++_@@_
 Libs=.
 UnitCount=1
 Folders=
@@ -27,11 +27,11 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000
+CompilerSettings=0000000000000000000000
 
 [Unit1]
-FileName=..\example2.cpp
-Folder=
+FileName=..\example\example2.cpp
+Folder=example2
 Compile=1
 CompileCpp=1
 Link=1
