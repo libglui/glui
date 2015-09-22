@@ -89,18 +89,6 @@
 
 #define GLUI_VERSION 2.36f    /********** Current version **********/
 
-#if defined(_WIN32)
-#  if !defined(GLUI_NO_LIB_PRAGMA) && !defined(GLUI_BUILDING_LIB)
-// Link automatically with GLUI library
-#    if defined GLUIDLL  // define this when using glui dynamic library
-#      pragma comment(lib, "glui32dll.lib")
-#    else
-#      pragma comment(lib, "glui32.lib")  
-#    endif
-#  endif
-#endif
-
-
 /********** List of GLUT callbacks ********/
 
 enum GLUI_Glut_CB_Types 
