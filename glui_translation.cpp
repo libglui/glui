@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -13,21 +13,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -38,7 +38,7 @@
 /********************** GLUI_Translation::GLUI_Translation() ***/
 
 GLUI_Translation::GLUI_Translation(
-  GLUI_Node *parent, const char *name, 
+  GLUI_Node *parent, const char *name,
   int trans_t, float *value_ptr,
   int id, GLUI_CB cb )
 {
@@ -71,7 +71,7 @@ GLUI_Translation::GLUI_Translation(
 /********************** GLUI_Translation::iaction_mouse_down_handler() ***/
 /*  These are really in local coords (5/10/99)                            */
 
-int    GLUI_Translation::iaction_mouse_down_handler( int local_x, 
+int    GLUI_Translation::iaction_mouse_down_handler( int local_x,
 						     int local_y )
 {
   int center_x, center_y;
@@ -125,7 +125,7 @@ int    GLUI_Translation::iaction_mouse_down_handler( int local_x,
 
 /*********************** GLUI_Translation::iaction_mouse_up_handler() **********/
 
-int    GLUI_Translation::iaction_mouse_up_handler( int local_x, int local_y, 
+int    GLUI_Translation::iaction_mouse_up_handler( int local_x, int local_y,
 						   bool inside )
 {
   trans_mouse_code = GLUI_TRANSLATION_MOUSE_NONE;
@@ -141,7 +141,7 @@ int    GLUI_Translation::iaction_mouse_up_handler( int local_x, int local_y,
 
 int    GLUI_Translation::iaction_mouse_held_down_handler( int local_x, int local_y,
 							  bool inside)
-{  
+{
   float x_off, y_off;
   float off_array[2];
 
@@ -200,7 +200,7 @@ void    GLUI_Translation::iaction_draw_active_area_ortho( void )
   radius = (float)(h-22)/2.0;  /*  MIN((float)w/2.0, (float)h/2.0); */
   glLineWidth( 1.0 );
 
-  draw_emboss_box( (int) -radius-2, (int)radius+2, 
+  draw_emboss_box( (int) -radius-2, (int)radius+2,
 		   (int)-radius-2, (int)radius+2 );
 
   glMatrixMode( GL_MODELVIEW );
@@ -345,11 +345,11 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
   float x1 = .2, x2 = .4, y1 = .54, y2 = .94, y0;
   float x1a, x1b;
 /*
-  vec3  col1( 0.0, 0.0, 0.0 ), col2( .45, .45, .45 ), 
+  vec3  col1( 0.0, 0.0, 0.0 ), col2( .45, .45, .45 ),
     col3( .7, .7, .7 ), col4( 1.0, 1.0, 1.0 );
   vec3  c1, c2, c3, c4, c5, c6;
 */
-  vec3  white(1.0,1.0,1.0), black(0.0,0.0,0.0), gray(.45,.45,.45), 
+  vec3  white(1.0,1.0,1.0), black(0.0,0.0,0.0), gray(.45,.45,.45),
     bkgd(.7,.7,.7);
   int   c_off=0; /* color index offset */
 
@@ -420,7 +420,7 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
       y1 -= 6.0;
       x1a += 2.0;
       x1b += 4.0;
-      x2  += 6.0; 
+      x2  += 6.0;
     }
   }
 
@@ -438,7 +438,7 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
   /*** Check if control is enabled or not ***/
   if ( NOT enabled ) {
     set_to_bkgd_color();
-    /*c_off += 4;  -- Indents the shadows - goes from a raised look to embossed */              
+    /*c_off += 4;  -- Indents the shadows - goes from a raised look to embossed */
     colors_out[0] = colors_out[1] = colors_out[2] = colors_out[7] = gray;
     colors_out[3] = colors_out[4] = colors_out[5] = colors_out[6] = white;
     colors_in[0] = colors_in[1] = colors_in[2] = colors_in[7] = white;
@@ -549,7 +549,7 @@ void  GLUI_Translation::set_one_val( float val, int index )
 	
   if ( ptr_val == NULL OR NOT live_inited )
     return;
- 
+
   fp = (float*) ptr_val;
   fp[index]                    = float_array_val[index];
   last_live_float_array[index] = float_array_val[index];

@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -39,8 +39,8 @@ GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
   user_id     = id;
   callback    = cb;
   set_name( name );
-  currently_inside = false; 
-  
+  currently_inside = false;
+
   parent->add_control( this );
 }
 
@@ -65,10 +65,10 @@ int    GLUI_Button::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   set_int_val( 0 );   /** A button always turns off after you press it **/
 
-  currently_inside = false; 
+  currently_inside = false;
   redraw();
 
-  if ( inside ) { 
+  if ( inside ) {
     /*** Invoke the user's callback ***/
     execute_callback();
   }
@@ -86,7 +86,7 @@ int    GLUI_Button::mouse_held_down_handler( int local_x, int local_y,
     currently_inside = new_inside;
     redraw();
   }
-  
+
   return false;
 }
 
@@ -144,7 +144,7 @@ void     GLUI_Button::draw_text( int sunken )
   glEnd();
 
   glColor3ub( 0,0,0 );
-  
+
   string_width = _glutBitmapWidthString( glui->font,
 					 this->name.c_str() );
   if ( NOT sunken ) {
@@ -157,14 +157,14 @@ void     GLUI_Button::draw_text( int sunken )
   if ( active ) {
     glEnable( GL_LINE_STIPPLE );
     glLineStipple( 1, 0x5555 );
-    
+
     glColor3f( 0., 0., 0. );
-    
+
     glBegin( GL_LINE_LOOP );
     glVertex2i( 3, 3 );         glVertex2i( w-3, 3 );
     glVertex2i( w-3, h-3 );     glVertex2i( 3, h-3 );
     glEnd();
-    
+
     glDisable( GL_LINE_STIPPLE );
   }
 }

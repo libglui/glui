@@ -8,26 +8,26 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 */
 
 /**************************************************************************
-    
+
   There are three vector classes and two matrix classes: vec2, vec3,
   vec4, mat3, and mat4.
 
@@ -38,8 +38,8 @@
   Additional functions include length(), normalize(), homogenize for
   vectors, and print(), set(), apply() for all classes.
 
-  There is a function transpose() for matrices, but note that it 
-  does not actually change the matrix, 
+  There is a function transpose() for matrices, but note that it
+  does not actually change the matrix,
 
   When multiplied with a matrix, a vector is treated as a row vector
   if it precedes the matrix (v*M), and as a column vector if it
@@ -55,7 +55,7 @@
      vec4 b( a, 4.0 );       // now b == {1.0, 2.0, 3.0, 4.0};
   When casting to a lower dimension, the vector is homogenized in
   the lower dimension.  E.g., if a 4d {X,Y,Z,W} is cast to 3d, the
-  resulting vector is {X/W, Y/W, Z/W}.  It is up to the user to 
+  resulting vector is {X/W, Y/W, Z/W}.  It is up to the user to
   insure the fourth component is not zero before casting.
 
   There are also the following function for building matrices:
@@ -66,14 +66,14 @@
 
   NOTE: When compiling for Windows, include this file first, to avoid
         certain name conflicts
- 
+
   ---------------------------------------------------------------------
-  
-  Author: Jean-Francois DOUEg                   
-  Revised: Paul Rademacher                                      
+
+  Author: Jean-Francois DOUEg
+  Revised: Paul Rademacher
   Version 3.2 - Feb 1998
   Revised: Nigel Stewart (GLUI Code Cleaning)
-  
+
 **************************************************************************/
 
 #ifndef GLUI_ALGEBRA3_H
@@ -289,7 +289,7 @@ public:
 
   void   print(FILE *file, const char *name) const; // print vector to a file
 
-  void   set(float x, float y, float z, float a);                        
+  void   set(float x, float y, float z, float a);
 
   float &operator [] (int i);             // indexing
   const float &operator [] (int i) const; // indexing
@@ -422,7 +422,7 @@ public:
   mat4 &apply(V_FCT_PTR fct);                // apply a func. to each element
 
   void  print(FILE *file, const char *name) const; // print matrix to a file
-    
+
   vec4 &operator [] (int i);       // indexing
   const vec4 &operator [] (int i) const; // indexing
 

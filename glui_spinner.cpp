@@ -1,12 +1,12 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
      glui_spinner.cpp - GLUI_Spinner class
 
 
-  notes: 
+  notes:
      spinner does not explicitly keep track of the current value - this is all
         handled by the underlying edittext control
         -> thus, spinner->sync_live() has no meaning, nor spinner->output_live
@@ -14,7 +14,7 @@
 	   so that spinner->get/set will work
 
 
-FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cpp. 
+FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cpp.
   (OSL, 2006/06)
 
 
@@ -25,21 +25,21 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -53,10 +53,10 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
 #define  GLUI_SPINNER_MIN_GROWTH_STEPS     100
 #define  GLUI_SPINNER_CALLBACK_INTERVAL    1
 
- 
+
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
                             int data_type, int id, GLUI_CB callback )
 {
   common_construct(parent, name, data_type, NULL, id, callback);
@@ -64,7 +64,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
                             int *live_var, int id, GLUI_CB callback )
 {
   common_construct(parent, name, GLUI_SPINNER_INT, live_var, id, callback);
@@ -72,7 +72,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name, 
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
              float *live_var, int id, GLUI_CB callback )
 {
   common_construct(parent, name, GLUI_SPINNER_FLOAT, live_var, id, callback);
@@ -80,7 +80,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name, 
+GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name,
                             int data_t, void *live_var,
                             int id, GLUI_CB callback )
 {
@@ -89,8 +89,8 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_Spinner::common_construct() ************/
 
-void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name, 
-                                     int data_t, void *data, 
+void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name,
+                                     int data_t, void *data,
                                      int id, GLUI_CB cb )
 {
   common_init();
@@ -117,16 +117,16 @@ void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name,
 
   parent->add_control( this );
 
-  GLUI_EditText *txt = 
+  GLUI_EditText *txt =
     new GLUI_EditText( this, name, text_type, data, id, cb);
 
   edittext    = txt;  /* Link the edittext to the spinner */
   /*      control->ptr_val     = data;               */
-    
+
   edittext->spinner    = this; /* Link the spinner to the edittext */
-            
+
 }
- 
+
 /****************************** GLUI_Spinner::mouse_down_handler() **********/
 
 int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
@@ -142,7 +142,7 @@ int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
     return true;
 
   reset_growth();
-  redraw();  
+  redraw();
 
   /*** ints and floats behave a bit differently.  When you click on
     an int spinner, you expect the value to immediately go up by 1, whereas
@@ -154,9 +154,9 @@ int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
     else if ( state == GLUI_SPINNER_STATE_DOWN )
       edittext->set_float_val( edittext->float_val - .9 );
   }
-  
-  do_click();  
-  
+
+  do_click();
+
   return false;
 }
 
@@ -177,7 +177,7 @@ int    GLUI_Spinner::mouse_up_handler( int local_x, int local_y, bool inside )
   /*  do_callbacks(); --- stub               */
   /*  if ( callback )               */
   /*  callback( this->user_id );              */
-  
+
   return false;
 }
 
@@ -201,7 +201,7 @@ int    GLUI_Spinner::mouse_held_down_handler( int local_x, int local_y,
   }
   else {                                      /* not dragging */
     new_state = find_arrow( local_x, local_y );
-    
+
     if ( new_state == state ) {
       /** Still in same arrow **/
       do_click();
@@ -213,7 +213,7 @@ int    GLUI_Spinner::mouse_held_down_handler( int local_x, int local_y,
 	state = GLUI_SPINNER_STATE_BOTH;
       }
       else {
-	/*** Here check y of mouse position to determine whether to 
+	/*** Here check y of mouse position to determine whether to
 	  drag ***/
 
 	/* ... */
@@ -245,7 +245,7 @@ int    GLUI_Spinner::mouse_held_down_handler( int local_x, int local_y,
 
 int    GLUI_Spinner::key_handler( unsigned char key,int modifiers )
 {
-  
+
 
   return true;
 }
@@ -260,30 +260,30 @@ void    GLUI_Spinner::draw( int x, int y )
   if ( enabled ) {
     /*** Draw the up arrow either pressed or unrpessed ***/
     if ( state == GLUI_SPINNER_STATE_UP OR state == GLUI_SPINNER_STATE_BOTH )
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_ON, 
-			      w-GLUI_SPINNER_ARROW_WIDTH-1, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_ON,
+			      w-GLUI_SPINNER_ARROW_WIDTH-1,
 			      GLUI_SPINNER_ARROW_Y);
     else
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_OFF, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_OFF,
 			      w-GLUI_SPINNER_ARROW_WIDTH-1,
 			      GLUI_SPINNER_ARROW_Y);
 
     /*** Draw the down arrow either pressed or unrpessed ***/
     if (state == GLUI_SPINNER_STATE_DOWN OR state == GLUI_SPINNER_STATE_BOTH)
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_ON, 
-			      w-GLUI_SPINNER_ARROW_WIDTH-1, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_ON,
+			      w-GLUI_SPINNER_ARROW_WIDTH-1,
 			      GLUI_SPINNER_ARROW_HEIGHT+GLUI_SPINNER_ARROW_Y);
     else
-      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_OFF, 
+      glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_OFF,
 			      w-GLUI_SPINNER_ARROW_WIDTH-1,
 			      GLUI_SPINNER_ARROW_HEIGHT+GLUI_SPINNER_ARROW_Y);
   }
   else {  /**** The spinner is disabled ****/
-    glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_DIS, 
-			    w-GLUI_SPINNER_ARROW_WIDTH-1, 
+    glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_DIS,
+			    w-GLUI_SPINNER_ARROW_WIDTH-1,
 			    GLUI_SPINNER_ARROW_Y);
-    glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_DIS, 
-			    w-GLUI_SPINNER_ARROW_WIDTH-1, 
+    glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_DIS,
+			    w-GLUI_SPINNER_ARROW_WIDTH-1,
 			    GLUI_SPINNER_ARROW_HEIGHT+GLUI_SPINNER_ARROW_Y);
   }
 
@@ -294,7 +294,7 @@ void    GLUI_Spinner::draw( int x, int y )
   }
   else {
     glColor3ubv( glui->bkgd_color );
-  } 
+  }
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glDisable( GL_CULL_FACE );
@@ -304,7 +304,7 @@ void    GLUI_Spinner::draw( int x, int y )
   glVertex2i( w, h );
   glVertex2i( w-GLUI_SPINNER_ARROW_WIDTH-2, h );
   glEnd();
-  glDisable( GL_LINE_STIPPLE );  
+  glDisable( GL_LINE_STIPPLE );
   glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
@@ -326,10 +326,10 @@ int    GLUI_Spinner::special_handler( int key,int modifiers )
 		      y_abs+GLUI_SPINNER_ARROW_Y+1 +GLUI_SPINNER_ARROW_HEIGHT,
 		      true );
   }
-  else if ( key == GLUT_KEY_HOME ) {  /** Set value to limit top - 
+  else if ( key == GLUT_KEY_HOME ) {  /** Set value to limit top -
 					or increment by 10 **/
   }
-  else if ( key == GLUT_KEY_END ) {  
+  else if ( key == GLUT_KEY_END ) {
   }
 
   return true;
@@ -339,7 +339,7 @@ int    GLUI_Spinner::special_handler( int key,int modifiers )
 /******************************* GLUI_Spinner::set_float_val() ************/
 
 void   GLUI_Spinner::set_float_val( float new_val )
-{ 
+{
   if ( NOT edittext )
     return;
 
@@ -366,23 +366,23 @@ void   GLUI_Spinner::update_size( void )
   /*edittext->w = this->w - GLUI_SPINNER_ARROW_WIDTH-3;              */
   this->w = edittext->w + GLUI_SPINNER_ARROW_WIDTH + 3;
 }
- 
+
 
 /************************************ GLUI_Spinner::find_arrow() ************/
 
 int    GLUI_Spinner::find_arrow( int local_x, int local_y )
 {
-  local_x -= x_abs; 
+  local_x -= x_abs;
   local_y -= y_abs;
- 
+
   if ( local_x >= (w - GLUI_SPINNER_ARROW_WIDTH) AND
        local_x <= w ) {
 
-    if ( local_y >= GLUI_SPINNER_ARROW_Y AND 
+    if ( local_y >= GLUI_SPINNER_ARROW_Y AND
 	 local_y <= (GLUI_SPINNER_ARROW_Y+GLUI_SPINNER_ARROW_HEIGHT) )
       return GLUI_SPINNER_STATE_UP;
 
-    if ( local_y >= GLUI_SPINNER_ARROW_Y+GLUI_SPINNER_ARROW_HEIGHT AND 
+    if ( local_y >= GLUI_SPINNER_ARROW_Y+GLUI_SPINNER_ARROW_HEIGHT AND
 	 local_y <= (GLUI_SPINNER_ARROW_Y+GLUI_SPINNER_ARROW_HEIGHT*2) )
       return GLUI_SPINNER_STATE_DOWN;
 
@@ -409,9 +409,9 @@ void    GLUI_Spinner::do_click( void )
 
   modifier_factor = 1.0;
   if ( glui ) {
-    if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT ) 
+    if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT )
       modifier_factor = 100.0f;
-    else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL ) 
+    else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL )
       modifier_factor = .01f;
   }
 
@@ -422,7 +422,7 @@ void    GLUI_Spinner::do_click( void )
   }
 
   /*** Now update live variable and do callback.  We don't want
-    to do the callback on each iteration of this function, just on every 
+    to do the callback on each iteration of this function, just on every
     i^th iteration, where i is given by GLUI_SPINNER_CALLBACK_INTERVAL ****/
   callback_count++;
   if ( (callback_count % GLUI_SPINNER_CALLBACK_INTERVAL ) == 0 )
@@ -440,15 +440,15 @@ void    GLUI_Spinner::do_drag( int x, int y )
 
   modifier_factor = 1.0f;
   if ( glui ) {
-    if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT ) 
+    if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT )
       modifier_factor = 100.0f;
-    else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL ) 
+    else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL )
       modifier_factor = .01f;
   }
 
   /*  delta_x = x - last_x;              */
   delta_y = -(y - last_y);
- 
+
   if ( this->data_type == GLUI_SPINNER_FLOAT OR 1 ) {
     incr = growth * delta_y * modifier_factor * user_speed;
     edittext->set_float_val( edittext->float_val + incr );
@@ -459,7 +459,7 @@ void    GLUI_Spinner::do_drag( int x, int y )
   last_y = y;
 
   /*** Now update live variable and do callback.  We don't want
-    to do the callback on each iteration of this function, just on every 
+    to do the callback on each iteration of this function, just on every
     i^th iteration, where i is given by GLUI_SPINNER_CALLBACK_INTERVAL ****/
 
   callback_count++;
@@ -506,12 +506,12 @@ void    GLUI_Spinner::do_callbacks( void )
     if ( data_type == GLUI_SPINNER_INT AND int_val == last_int_val ) {
       return;
     }
-    
+
     if ( data_type == GLUI_SPINNER_FLOAT AND float_val == last_float_val ) {
       return;
     }
   }
-  
+
   this->execute_callback();
 
   last_int_val   = int_val;
@@ -524,7 +524,7 @@ void    GLUI_Spinner::do_callbacks( void )
 
 void GLUI_Spinner::set_float_limits( float low, float high, int limit_type )
 {
-  if ( NOT edittext ) 
+  if ( NOT edittext )
     return;
 
   edittext->set_float_limits( low, high, limit_type );
@@ -535,12 +535,12 @@ void GLUI_Spinner::set_float_limits( float low, float high, int limit_type )
 
 void   GLUI_Spinner::set_int_limits( int low, int high, int limit_type )
 {
-  if ( NOT edittext ) 
+  if ( NOT edittext )
     return;
-  
+
   edittext->set_int_limits( low, high, limit_type );
 }
- 
+
 
 /*********************************** GLUI_Spinner:reset_growth() *************/
 
@@ -552,7 +552,7 @@ void    GLUI_Spinner::reset_growth( void )
     if ( data_type == GLUI_SPINNER_FLOAT )
       growth = sqrt(ABS(edittext->float_val)) * .05f;
     else if ( data_type == GLUI_SPINNER_INT )
-      growth = .4f; 
+      growth = .4f;
   }
   else {
     if ( data_type == GLUI_SPINNER_FLOAT ) {
@@ -563,7 +563,7 @@ void    GLUI_Spinner::reset_growth( void )
     else if ( data_type == GLUI_SPINNER_INT ) {
       lo = (float) edittext->int_low;
       hi = (float) edittext->int_high;
-      
+
       growth = (hi-lo) / GLUI_SPINNER_GROWTH_STEPS;
     }
   }
@@ -587,7 +587,7 @@ void    GLUI_Spinner::increase_growth( void )
     lo = (float) edittext->int_low;
     hi = (float) edittext->int_high;
   }
- 
+
   if ( growth < (hi-lo) / GLUI_SPINNER_MIN_GROWTH_STEPS )
     growth *= growth_exp;
 
@@ -598,11 +598,11 @@ void    GLUI_Spinner::increase_growth( void )
 /*************************************** GLUI_Spinner:get_text() *************/
 
 const char    *GLUI_Spinner::get_text( void )
-{ 
-  if (edittext) 
-    return edittext->text.c_str(); 
-  else 
-    return ""; 
+{
+  if (edittext)
+    return edittext->text.c_str();
+  else
+    return "";
 }
 
 
@@ -610,10 +610,10 @@ const char    *GLUI_Spinner::get_text( void )
 
 float    GLUI_Spinner::get_float_val( void )
 {
-  if (edittext) 
-    return edittext->float_val; 
-  else 
-    return 0.0f; 
+  if (edittext)
+    return edittext->float_val;
+  else
+    return 0.0f;
 }
 
 
@@ -621,10 +621,10 @@ float    GLUI_Spinner::get_float_val( void )
 
 int    GLUI_Spinner::get_int_val( void )
 {
-  if (edittext) 
-    return edittext->int_val; 
-  else 
-    return 0; 
+  if (edittext)
+    return edittext->int_val;
+  else
+    return 0;
 }
 
 

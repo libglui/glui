@@ -1,12 +1,12 @@
 /**
  Bitmaps for all GLUI images.
- 
- These were converted from original PPM images 
+
+ These were converted from original PPM images
  (mostly lost) with the tools/ppm2array program.
- 
+
  The images here are extracted in typical OpenGL
  bottom-to-top fashion.
- 
+
  FIXME: don't use greyscale brightness here--this prevents
  people changing the background color.  Instead, use a code
  indicating the underlying purpose of the pixel:
@@ -15,7 +15,7 @@
 	128 = shadowing, disabled
 	192 = disabled white; background
 	255 = highlights; checkbox/radio background
- 
+
  I'm thinking the way to do this would be to have an
 enum {
   BG = 0, // Background shines through-- totally alpha transparent
@@ -27,8 +27,8 @@ enum {
   UB, // User-interface black-- arrows, checkboxes, radio buttons
   UW, // User-interface white-- backgrounds of checkboxes and radio buttons
 };
- 
- Orion Sky Lawlor, olawlor@acm.org, 2006/05/04 
+
+ Orion Sky Lawlor, olawlor@acm.org, 2006/05/04
  License: ZLIB
 */
 

@@ -2,27 +2,27 @@
 
   viewmodel.cpp
 
-  GLUI User Interface Toolkit 
+  GLUI User Interface Toolkit
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 */
 
@@ -30,18 +30,18 @@
 
       1996, Paul Rademacher (rademach@cs.unc.edu)
   Oct 2003, Nigel Stewart - GLUI Code Cleaning
-  
+
 ************************************************************************/
 
-#include "viewmodel.h" 
+#include "viewmodel.h"
 
 #include "GL/glui.h"
 
 #include <cstdio>
 #include <cstdlib>
 
-void 
-ViewModel::set_distance(const float new_distance) 
+void
+ViewModel::set_distance(const float new_distance)
 {
     if ( new_distance <= 0.0 )  /* Distance has to be positive */
         return;
@@ -57,55 +57,55 @@ ViewModel::set_distance(const float new_distance)
     eye = lookat - forward * distance;
 }
 
-void 
-ViewModel::set_up(const vec3 &new_up) 
+void
+ViewModel::set_up(const vec3 &new_up)
 {
     up = new_up;
     update();
 }
 
-void 
-ViewModel::set_up(const float x, const float y, const float z) 
+void
+ViewModel::set_up(const float x, const float y, const float z)
 {
     set_up(vec3(x,y,z));
 }
 
-void 
-ViewModel::set_eye(const vec3 &new_eye) 
+void
+ViewModel::set_eye(const vec3 &new_eye)
 {
     eye = new_eye;
     update();
 }
 
-void 
-ViewModel::set_eye(const float x, const float y, const float z) 
+void
+ViewModel::set_eye(const float x, const float y, const float z)
 {
     set_eye(vec3(x,y,z));
 }
 
-void 
-ViewModel::set_lookat(const vec3 &new_lookat) 
+void
+ViewModel::set_lookat(const vec3 &new_lookat)
 {
     lookat = new_lookat;
     update();
 }
 
-void 
-ViewModel::set_lookat(const float x, const float y, const float z) 
+void
+ViewModel::set_lookat(const float x, const float y, const float z)
 {
     set_lookat(vec3(x,y,z));
 }
 
 
-void 
-ViewModel::roll(const float angle) 
+void
+ViewModel::roll(const float angle)
 {
     mat4 rot = rotation3D( forward, angle );
     up = rot * up;
     update();
 }
 
-void 
+void
 ViewModel::eye_yaw(const float angle)
 {
     vec3 eye_pt = eye - lookat; /* eye w/lookat at center */
@@ -113,12 +113,12 @@ ViewModel::eye_yaw(const float angle)
 
     eye_pt = rot * eye_pt;
     eye    = lookat + eye_pt;
- 
+
     update();
 }
 
-void 
-ViewModel::eye_yaw_abs(const float angle, const vec3 &axis) 
+void
+ViewModel::eye_yaw_abs(const float angle, const vec3 &axis)
 {
     vec3 eye_pt   = eye  - lookat;   /* eye w/lookat at center */
     mat4 rot      = rotation3D( axis, angle );
@@ -132,8 +132,8 @@ ViewModel::eye_yaw_abs(const float angle, const vec3 &axis)
 }
 
 
-void 
-ViewModel::eye_pitch(const float angle) 
+void
+ViewModel::eye_pitch(const float angle)
 {
     vec3 eye_pt = eye - lookat; /* eye w/lookat at center */
     mat4 rot    = rotation3D( side, angle );
@@ -142,12 +142,12 @@ ViewModel::eye_pitch(const float angle)
     eye    = lookat + eye_pt;
 
     up = rot * up;
- 
+
     update();
 }
 
-void 
-ViewModel::lookat_yaw(const float angle) 
+void
+ViewModel::lookat_yaw(const float angle)
 {
     vec3 lookat_pt = lookat - eye;   /* lookat w/eye at center */
     mat4 rot = rotation3D( up, -angle );
@@ -158,12 +158,12 @@ ViewModel::lookat_yaw(const float angle)
     update();
 }
 
-void 
-ViewModel::lookat_pitch(const float angle) 
+void
+ViewModel::lookat_pitch(const float angle)
 {
     vec3 lookat_pt = lookat - eye;   /* lookat w/eye at center */
     mat4 rot = rotation3D( side, -angle );
-    
+
     lookat_pt = rot * lookat_pt;
     lookat = eye + lookat_pt;
 
@@ -172,11 +172,11 @@ ViewModel::lookat_pitch(const float angle)
     update();
 }
 
-void 
-ViewModel::reset_up(const int axis_num) 
+void
+ViewModel::reset_up(const int axis_num)
 {
     float eye_distance = (lookat - eye).length();
-    eye[axis_num] = lookat[axis_num]; 
+    eye[axis_num] = lookat[axis_num];
     /* Bring eye to same level as lookat */
 
     vec3 vector = eye - lookat;
@@ -190,14 +190,14 @@ ViewModel::reset_up(const int axis_num)
     update();
 }
 
-void 
-ViewModel::reset_up() 
+void
+ViewModel::reset_up()
 {
     reset_up( VY ); /* Resets to the Y axis */
 }
 
-void 
-ViewModel::move(const float side_move, const float up_move, const float forw_move) 
+void
+ViewModel::move(const float side_move, const float up_move, const float forw_move)
 {
     eye    += forward * forw_move;
     eye    += side    * side_move;
@@ -208,14 +208,14 @@ ViewModel::move(const float side_move, const float up_move, const float forw_mov
     update();
 }
 
-void 
+void
 ViewModel::move(const vec3 &v) /* A vector version of the above command */
-{ 
+{
     move( v[VX], v[VY], v[VZ] );
 }
 
-void 
-ViewModel::move_by_eye(const vec3 &new_eye) 
+void
+ViewModel::move_by_eye(const vec3 &new_eye)
 {
     vec3 diff = new_eye - eye;
 
@@ -225,8 +225,8 @@ ViewModel::move_by_eye(const vec3 &new_eye)
     update();
 }
 
-void 
-ViewModel::move_by_lookat(const vec3 &new_lookat) 
+void
+ViewModel::move_by_lookat(const vec3 &new_lookat)
 {
     vec3 diff = new_lookat - lookat;
 
@@ -236,8 +236,8 @@ ViewModel::move_by_lookat(const vec3 &new_lookat)
     update();
 }
 
-void 
-ViewModel::move_abs(const vec3 &v) 
+void
+ViewModel::move_abs(const vec3 &v)
 {
     eye    += v;
     lookat += v;
@@ -245,8 +245,8 @@ ViewModel::move_abs(const vec3 &v)
     update();
 }
 
-void 
-ViewModel::rot_about_eye(const mat4 &rot) 
+void
+ViewModel::rot_about_eye(const mat4 &rot)
 {
     vec3  view = lookat - eye;
 
@@ -258,8 +258,8 @@ ViewModel::rot_about_eye(const mat4 &rot)
     update();
 }
 
-void 
-ViewModel::rot_about_lookat(const mat4 &rot) 
+void
+ViewModel::rot_about_lookat(const mat4 &rot)
 {
     // NOT QUITE RIGHT YET
 
@@ -273,8 +273,8 @@ ViewModel::rot_about_lookat(const mat4 &rot)
     update();
 }
 
-void 
-ViewModel::make_mtx() 
+void
+ViewModel::make_mtx()
 {
     update();
 
@@ -284,8 +284,8 @@ ViewModel::make_mtx()
     mtx[3][0]=0.0;      mtx[3][1]=0.0;    mtx[3][2]= 0.0;        mtx[3][3]=1.0;
 }
 
-void 
-ViewModel::load_to_openGL() 
+void
+ViewModel::load_to_openGL()
 {
     mat4  m;
 
@@ -297,8 +297,8 @@ ViewModel::load_to_openGL()
     glTranslatef( -eye[VX], -eye[VY], -eye[VZ] );
 }
 
-void 
-ViewModel::load_to_openGL_noident() 
+void
+ViewModel::load_to_openGL_noident()
 {
     mat4  m;
 
@@ -309,8 +309,8 @@ ViewModel::load_to_openGL_noident()
     glTranslatef( -eye[VX], -eye[VY], -eye[VZ] );
 }
 
-void 
-ViewModel::reset() 
+void
+ViewModel::reset()
 {
     up.set( 0.0, 1.0, 0.0 );
 
@@ -322,13 +322,13 @@ ViewModel::reset()
     update();
 }
 
-ViewModel::ViewModel() 
+ViewModel::ViewModel()
 {
     reset();
 }
 
-void 
-ViewModel::update() 
+void
+ViewModel::update()
 {
     /* get proper side and forward vectors, and distance  */
     forward  = -(lookat - eye);
@@ -344,8 +344,8 @@ ViewModel::update()
 }
 
 
-void 
-ViewModel::dump(FILE *output) const 
+void
+ViewModel::dump(FILE *output) const
 {
     fprintf( output, "Viewmodel: \n" );
     eye.print(    output, "  eye"    );

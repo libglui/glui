@@ -13,21 +13,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 **********************************************************************/
 
@@ -39,7 +39,7 @@
 /**************************************** Arcball::Arcball() ****/
 /* Default (void) constructor for Arcball                         */
 
-Arcball::Arcball() 
+Arcball::Arcball()
 {
     rot_ptr = &rot;
     init();
@@ -48,7 +48,7 @@ Arcball::Arcball()
 /**************************************** Arcball::Arcball() ****/
 /* Takes as argument a mat4 to use instead of the internal rot  */
 
-Arcball::Arcball(mat4 *mtx) 
+Arcball::Arcball(mat4 *mtx)
 {
     rot_ptr = mtx;
 }
@@ -99,17 +99,17 @@ vec3 Arcball::mouse_to_sphere(const vec2 &p)
 
     mag = v2*v2;
 
-    if ( mag > 1.0 ) 
+    if ( mag > 1.0 )
         v3.normalize();
-    else 
+    else
         v3[VZ] = (float) sqrt( 1.0 - mag );
 
     /* Now we add constraints - X takes precedence over Y */
-    if ( constraint_x ) 
+    if ( constraint_x )
     {
         v3 = constrain_vector( v3, vec3( 1.0, 0.0, 0.0 ));
-    } 
-    else if ( constraint_y ) 
+    }
+    else if ( constraint_y )
         {
             v3 = constrain_vector( v3, vec3( 0.0, 1.0, 0.0 ));
         }
@@ -174,12 +174,12 @@ void Arcball::mouse_motion(int x, int y, int shift, int ctrl, int alt)
 
     set_constraints(false, false);
 
-    if ( q_increment.s < .999999 ) 
+    if ( q_increment.s < .999999 )
     {
         is_spinning = true;
         zero_increment = false;
     }
-    else 
+    else
     {
         is_spinning = false;
         zero_increment = true;
@@ -207,18 +207,18 @@ void Arcball::set_constraints(bool _constraint_x, bool _constraint_y)
 
 void Arcball::idle()
 {
-    if (is_mouse_down) 
+    if (is_mouse_down)
     {
         is_spinning = false;
         zero_increment = true;
     }
 
-    if (damp_factor < 1.0f) 
+    if (damp_factor < 1.0f)
         q_increment.scale_angle(1.0f - damp_factor);
 
     rot_increment = q_increment.to_mat4();
 
-    if (q_increment.s >= .999999f) 
+    if (q_increment.s >= .999999f)
     {
         is_spinning = false;
         zero_increment = true;

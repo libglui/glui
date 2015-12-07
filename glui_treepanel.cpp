@@ -1,19 +1,19 @@
 /*
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 */
 
 #include "GL/glui.h"
@@ -22,14 +22,14 @@
 
 /****************************** GLUI_TreePanel::GLUI_TreePanel() *********/
 
-GLUI_TreePanel::GLUI_TreePanel(GLUI_Node *parent, const char *name, 
+GLUI_TreePanel::GLUI_TreePanel(GLUI_Node *parent, const char *name,
                                bool open, int inset)
 {
   common_init();
 
   set_name( name );
   user_id    = -1;
-        
+
   if ( !open ) {
     is_open = false;
     h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
@@ -40,7 +40,7 @@ GLUI_TreePanel::GLUI_TreePanel(GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_TreePanel::set_color() *********/
 
-void GLUI_TreePanel::set_color(float r, float g, float b) 
+void GLUI_TreePanel::set_color(float r, float g, float b)
 {
   red = r;
   green = g;
@@ -50,7 +50,7 @@ void GLUI_TreePanel::set_color(float r, float g, float b)
 
 /************************ GLUI_TreePanel::set_level_color() *********/
 
-void GLUI_TreePanel::set_level_color(float r, float g, float b) 
+void GLUI_TreePanel::set_level_color(float r, float g, float b)
 {
   lred = r;
   lgreen = g;
@@ -61,11 +61,11 @@ void GLUI_TreePanel::set_level_color(float r, float g, float b)
 /****************************** GLUI_TreePanel::ab() *********/
 
 /* Adds branch to curr_root */
-GLUI_Tree *GLUI_TreePanel::ab(const char *name, GLUI_Tree *root) 
+GLUI_Tree *GLUI_TreePanel::ab(const char *name, GLUI_Tree *root)
 {
   GLUI_Tree *temp;
 
-  
+
   if (root != NULL) {
     resetToRoot(root);
   }
@@ -89,7 +89,7 @@ GLUI_Tree *GLUI_TreePanel::ab(const char *name, GLUI_Tree *root)
 /****************************** GLUI_TreePanel::fb() *********/
 
 /* Goes up one level, resets curr_root and curr_branch to parents*/
-void GLUI_TreePanel::fb(GLUI_Tree *branch) 
+void GLUI_TreePanel::fb(GLUI_Tree *branch)
 {
   if (((GLUI_Panel *)branch) == ((GLUI_Panel *)this))
     return;
@@ -141,7 +141,7 @@ void GLUI_TreePanel::fb(GLUI_Tree *branch)
 
 /****************************** GLUI_TreePanel::refresh() *********/
 
-void GLUI_TreePanel::refresh() 
+void GLUI_TreePanel::refresh()
 {
   glui->deactivate_current_control();
   glui->activate_control( curr_root, GLUI_ACTIVATE_TAB );
@@ -151,7 +151,7 @@ void GLUI_TreePanel::refresh()
 
 /****************************** GLUI_TreePanel::initNode() *********/
 
-void GLUI_TreePanel::initNode(GLUI_Tree *temp) 
+void GLUI_TreePanel::initNode(GLUI_Tree *temp)
 {
   if (temp == NULL)
     return;
@@ -165,7 +165,7 @@ void GLUI_TreePanel::initNode(GLUI_Tree *temp)
     if (prevTree) {
       child_number = prevTree->get_child_number() + 1;
     }
-  } else if (dynamic_cast<GLUI_Tree*>(temp) && 
+  } else if (dynamic_cast<GLUI_Tree*>(temp) &&
              dynamic_cast<GLUI_TreePanel*>(temp->parent())) {
     child_number = ++root_children;
   }
@@ -176,7 +176,7 @@ void GLUI_TreePanel::initNode(GLUI_Tree *temp)
 
 /****************************** GLUI_TreePanel::formatNode() *********/
 
-void GLUI_TreePanel::formatNode(GLUI_Tree *temp) 
+void GLUI_TreePanel::formatNode(GLUI_Tree *temp)
 {
   if (temp == NULL)
     return;
@@ -193,8 +193,8 @@ void GLUI_TreePanel::formatNode(GLUI_Tree *temp)
     }
     if (format & GLUI_TREEPANEL_HIERARCHY_NUMERICDOT) {
       if ( dynamic_cast<GLUI_Tree*>(temp->parent()) )
-        glui_format_str(level_name, "%s.%d", 
-                        ((GLUI_Tree *)(temp->parent()))->level_name.c_str(), 
+        glui_format_str(level_name, "%s.%d",
+                        ((GLUI_Tree *)(temp->parent()))->level_name.c_str(),
                         child_number);
       else
         glui_format_str(level_name, "%d", child_number);
@@ -230,7 +230,7 @@ void GLUI_TreePanel::formatNode(GLUI_Tree *temp)
     } else
       if (format & GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY) {
         temp->disable_bar();
-        if (temp->prev() && dynamic_cast<GLUI_Tree*>(temp->prev()) ) 
+        if (temp->prev() && dynamic_cast<GLUI_Tree*>(temp->prev()) )
         {
           ((GLUI_Tree *)temp->prev())->enable_bar();
         }
@@ -240,7 +240,7 @@ void GLUI_TreePanel::formatNode(GLUI_Tree *temp)
 
 /****************************** GLUI_TreePanel::update_all() *********/
 
-void GLUI_TreePanel::update_all() 
+void GLUI_TreePanel::update_all()
 {
   printf("GLUI_TreePanel::update_all() doesn't work yet. - JVK\n");
   return;
@@ -256,14 +256,14 @@ void GLUI_TreePanel::update_all()
       formatNode((GLUI_Tree *)curr_branch);
     }
     next();
-  } 
+  }
   curr_root = saved_root;
   curr_branch = saved_branch;
 }
 
 /****************************** GLUI_TreePanel::expand_all() *********/
 
-void            GLUI_TreePanel::expand_all() 
+void            GLUI_TreePanel::expand_all()
 {
   GLUI_Panel *saved_root = curr_root;
   GLUI_Tree *saved_branch = curr_branch;
@@ -284,7 +284,7 @@ void            GLUI_TreePanel::expand_all()
 
 /****************************** GLUI_TreePanel::collapse_all() *********/
 
-void            GLUI_TreePanel::collapse_all() 
+void            GLUI_TreePanel::collapse_all()
 {
   GLUI_Panel *saved_root = curr_root;
   GLUI_Tree *saved_branch = curr_branch;
@@ -292,11 +292,11 @@ void            GLUI_TreePanel::collapse_all()
   resetToRoot(this);
   next();
   while (curr_root != NULL && curr_branch != this->first_child()) {
-    if (dynamic_cast<GLUI_Tree*>(curr_root) && 
+    if (dynamic_cast<GLUI_Tree*>(curr_root) &&
 	      curr_branch == NULL) { /* we want to close everything leaf-first */
       ((GLUI_Tree*)curr_root)->close();
       /* Rather than simply next(), we need to manually move the
-         curr_root because this node has been moved to the 
+         curr_root because this node has been moved to the
          collapsed_node list */
       curr_branch = (GLUI_Tree *)curr_root->next();
       curr_root = (GLUI_Panel *)curr_root->parent();
@@ -312,7 +312,7 @@ void            GLUI_TreePanel::collapse_all()
 /****************************** GLUI_TreePanel::db() *********/
 
 /* Deletes the curr_root */
-void GLUI_TreePanel::db(GLUI_Tree *root) 
+void GLUI_TreePanel::db(GLUI_Tree *root)
 {
   GLUI_Tree  *temp_branch;
   GLUI_Panel *temp_root;
@@ -358,13 +358,13 @@ void            GLUI_TreePanel::descendBranch(GLUI_Panel *root) {
   if (curr_branch != NULL && curr_branch != ((GLUI_Panel *)this)) {
     if (dynamic_cast<GLUI_Tree*>(curr_root))
       ((GLUI_Tree *)curr_root)->set_current(false);
-    descendBranch(curr_branch); 
-  } 
+    descendBranch(curr_branch);
+  }
 }
 
 /****************************** GLUI_TreePanel::next() *********/
 
-void GLUI_TreePanel::next() 
+void GLUI_TreePanel::next()
 {
   if (curr_root == NULL)
     resetToRoot(this);
@@ -385,7 +385,7 @@ void GLUI_TreePanel::next()
 /****************************** GLUI_TreePanel::resetToRoot() *********/
 
 /* Resets curr_root and curr branch to TreePanel and lastChild */
-void GLUI_TreePanel::resetToRoot(GLUI_Panel *new_root) 
+void GLUI_TreePanel::resetToRoot(GLUI_Panel *new_root)
 {
   GLUI_Panel *root = this;
   if (new_root != NULL)

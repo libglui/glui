@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -9,21 +9,21 @@
 
   Copyright (c) 2004 John Kew, 1998 Paul Rademacher
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -43,12 +43,12 @@ enum {
   GLUI_SCROLL_ARROW_LEFT,
   GLUI_SCROLL_ARROW_RIGHT
 };
-  
+
 
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
 // Constructor, no live var
 GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
-                                const char *name, 
+                                const char *name,
                                 int horz_vert,
                                 int data_type,
                                 int id, GLUI_CB callback
@@ -61,7 +61,7 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
 
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
 // Constructor, int live var
-GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name, 
+GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
                                 int horz_vert,
                                 int *live_var,
                                 int id, GLUI_CB callback
@@ -117,7 +117,7 @@ void GLUI_Scrollbar::common_init(void)
 /****************************** GLUI_Scrollbar::common_construct() **********/
 void GLUI_Scrollbar::common_construct(
   GLUI_Node *parent,
-  const char *name, 
+  const char *name,
   int horz_vert,
   int data_type,
   void *data,
@@ -168,7 +168,7 @@ void GLUI_Scrollbar::common_construct(
   parent->add_control( this );
   this->init_live();
 }
- 
+
 /****************************** GLUI_Scrollbar::mouse_down_handler() **********/
 
 int    GLUI_Scrollbar::mouse_down_handler( int local_x, int local_y )
@@ -208,9 +208,9 @@ int    GLUI_Scrollbar::mouse_down_handler( int local_x, int local_y )
     }
   }
 #endif
-  do_click();  
+  do_click();
   redraw();
-  
+
   return false;
 }
 
@@ -232,7 +232,7 @@ int    GLUI_Scrollbar::mouse_up_handler( int local_x, int local_y, bool inside )
   /*  do_callbacks(); --- stub               */
   /*  if ( callback )               */
   /*  callback( this->user_id );              */
-  
+
   return false;
 }
 
@@ -245,7 +245,7 @@ int    GLUI_Scrollbar::mouse_held_down_handler( int local_x, int local_y,
   int new_state;
   if ( state == GLUI_SCROLL_STATE_NONE )
     return false;
-  
+
   /*  printf("spinner: mouse held: %d/%d    inside: %d\n",local_x,local_y,
       new_inside);
   */
@@ -342,13 +342,13 @@ void GLUI_Scrollbar::draw_scroll_arrow(int arrowtype, int x, int y)
     glColor3ub(128,128,128);
     glBegin(GL_LINE_LOOP);
     int x2=x+GLUI_SCROLL_ARROW_WIDTH, y2=y+GLUI_SCROLL_ARROW_HEIGHT;
-    glVertex2i(x ,y); 
+    glVertex2i(x ,y);
     glVertex2i(x2,y);
-    glVertex2i(x2,y2); 
+    glVertex2i(x2,y2);
     glVertex2i(x ,y2);
     glEnd();
   }
-  
+
   GLubyte black[]={0,0,0};
   GLubyte white[]={255,255,255};
   GLubyte  gray[]={128,128,128};
@@ -363,7 +363,7 @@ void GLUI_Scrollbar::draw_scroll_arrow(int arrowtype, int x, int y)
   glVertex2fv(tri); glVertex2fv(tri+2), glVertex2fv(tri+4);
   glEnd();
   glTranslatef(-(x+offset),-(y+offset),0);
-  
+
   if (!enabled) { // once more!
     glTranslatef(x,y,0);
     glColor3ubv(gray);
@@ -393,7 +393,7 @@ void GLUI_Scrollbar::draw_scroll() {
   glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
   glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE,
   	  scroll_bg);
-  
+
   float y0 = horizontal? 0 : GLUI_SCROLL_ARROW_HEIGHT;
   float y1 = horizontal? h : h-GLUI_SCROLL_ARROW_HEIGHT;
   float x0 = horizontal? GLUI_SCROLL_ARROW_WIDTH   : 0;
@@ -429,7 +429,7 @@ void GLUI_Scrollbar::draw_scroll_box(int x, int y, int w, int h)
   glColor3ubv(glui->bkgd_color);
   glRecti(x,y,x+w,y+h);
   glui->draw_raised_box(x,y, w-1, h-1);
-  
+
   if (active) {
     glEnable( GL_LINE_STIPPLE );
     glLineStipple( 1, 0x5555 );
@@ -450,12 +450,12 @@ void GLUI_Scrollbar::draw_scroll_box(int x, int y, int w, int h)
 /**************************** update_scroll_parameters ***********/
 
 void GLUI_Scrollbar::update_scroll_parameters() {
-  track_length = horizontal? 
+  track_length = horizontal?
     this->w-GLUI_SCROLL_ARROW_WIDTH*2 :
     this->h-GLUI_SCROLL_ARROW_HEIGHT*2;
-  if (data_type==GLUI_SCROLL_INT) 
+  if (data_type==GLUI_SCROLL_INT)
   {
-    if (int_max==int_min) 
+    if (int_max==int_min)
       box_length=track_length;
     else {
       const int MIN_TAB = GLUI_SCROLL_BOX_STD_HEIGHT;
@@ -466,13 +466,13 @@ void GLUI_Scrollbar::update_scroll_parameters() {
     float pixels_per_unit = (track_length-box_length)/float(int_max-int_min);
     if (horizontal)
       box_start_position = int((int_val-int_min)*pixels_per_unit);
-    else 
+    else
       box_start_position = int((int_max-int_val)*pixels_per_unit);
     box_end_position = box_start_position+box_length;
   }
-  else if (data_type==GLUI_SCROLL_FLOAT) 
+  else if (data_type==GLUI_SCROLL_FLOAT)
   {
-    if (float_max==float_min) 
+    if (float_max==float_min)
       box_length=track_length;
     else {
       box_length = GLUI_SCROLL_BOX_STD_HEIGHT;
@@ -480,7 +480,7 @@ void GLUI_Scrollbar::update_scroll_parameters() {
     float pixels_per_unit = (track_length-box_length)/float(float_max-float_min);
     if (horizontal)
       box_start_position = int((float_val-float_min)*pixels_per_unit);
-    else 
+    else
       box_start_position = int((float_max-float_val)*pixels_per_unit);
     box_end_position = box_start_position+box_length;
   }
@@ -515,10 +515,10 @@ int    GLUI_Scrollbar::special_handler( int key,int modifiers )
       y_abs+1,
       true );
   }
-  else if ( key == GLUT_KEY_HOME ) {  /** Set value to limit top - 
+  else if ( key == GLUT_KEY_HOME ) {  /** Set value to limit top -
                                           or increment by 10 **/
   }
-  else if ( key == GLUT_KEY_END ) {  
+  else if ( key == GLUT_KEY_END ) {
   }
 
   return true;
@@ -542,19 +542,19 @@ void   GLUI_Scrollbar::update_size( void )
     }
   }
 }
- 
+
 
 /************************************ GLUI_Scrollbar::find_arrow() ************/
 
 int    GLUI_Scrollbar::find_arrow( int local_x, int local_y )
 {
 
-  local_x = local_x-x_abs; 
+  local_x = local_x-x_abs;
   local_y = local_y-y_abs;
 
-  if (horizontal) 
+  if (horizontal)
   {
-    if ( local_y >=  h-GLUI_SCROLL_ARROW_HEIGHT-3 && local_y <= h) 
+    if ( local_y >=  h-GLUI_SCROLL_ARROW_HEIGHT-3 && local_y <= h)
     {
       update_scroll_parameters();
       if ( local_x >= 0 AND local_x <= (GLUI_SCROLL_ARROW_WIDTH+box_start_position) )
@@ -562,16 +562,16 @@ int    GLUI_Scrollbar::find_arrow( int local_x, int local_y )
         return GLUI_SCROLL_STATE_DOWN;
       }
       if ( local_x >= (GLUI_SCROLL_ARROW_WIDTH+box_end_position)
-           AND local_x <= (w+GLUI_SCROLL_ARROW_WIDTH) ) 
+           AND local_x <= (w+GLUI_SCROLL_ARROW_WIDTH) )
       {
         return GLUI_SCROLL_STATE_UP;
       }
       return GLUI_SCROLL_STATE_SCROLL;
     }
   }
-  else 
+  else
   {
-    if ( local_x >=  w-GLUI_SCROLL_ARROW_WIDTH-3 && local_x <= w) 
+    if ( local_x >=  w-GLUI_SCROLL_ARROW_WIDTH-3 && local_x <= w)
     {
       update_scroll_parameters();
       if ( local_y >= 0 AND local_y <= (GLUI_SCROLL_ARROW_HEIGHT+box_start_position) )
@@ -608,7 +608,7 @@ void    GLUI_Scrollbar::do_click( void )
 
   float modifier_factor = 1.0;
   float incr = growth * modifier_factor * user_speed ;
-  
+
   double frame_time=GLUI_Time()-last_update_time;
   double frame_limit=velocity_limit*frame_time;
   if (incr>frame_limit) incr=frame_limit; /* don't scroll faster than limit */
@@ -622,7 +622,7 @@ void    GLUI_Scrollbar::do_click( void )
   //printf("do_click: incr %f  val=%f  float_val=%f\n",incr,new_val,float_val);
 
   /*** Now update live variable and do callback.  We don't want
-    to do the callback on each iteration of this function, just on every 
+    to do the callback on each iteration of this function, just on every
     i^th iteration, where i is given by GLUI_SCROLL_CALLBACK_INTERVAL ****/
   callback_count++;
   if ( (callback_count % GLUI_SCROLL_CALLBACK_INTERVAL ) == 0 )
@@ -652,11 +652,11 @@ void    GLUI_Scrollbar::do_drag( int x, int y )
     if (horizontal) {
       int track_v = x-GLUI_SCROLL_ARROW_WIDTH;
       new_int_val = int_min + (track_v-hbox)*(int_max-int_min)/free_len;
-      new_float_val = float_min + (track_v-hbox)*(float_max-float_min)/float(free_len); 
+      new_float_val = float_min + (track_v-hbox)*(float_max-float_min)/float(free_len);
     } else {
       int track_v = y-GLUI_SCROLL_ARROW_HEIGHT;
       new_int_val = int_max - (track_v-hbox)*(int_max-int_min)/free_len;
-      new_float_val = float_max - (track_v-hbox)*(float_max-float_min)/float(free_len); 
+      new_float_val = float_max - (track_v-hbox)*(float_max-float_min)/float(free_len);
     }
   }
   else {
@@ -672,7 +672,7 @@ void    GLUI_Scrollbar::do_drag( int x, int y )
   last_x = x;
 
   /*** Now update live variable and do callback.  We don't want
-    to do the callback on each iteration of this function, just on every 
+    to do the callback on each iteration of this function, just on every
     i^th iteration, where i is given by GLUI_SCROLL_CALLBACK_INTERVAL ****/
   if(data_type==GLUI_SCROLL_INT)
     set_int_val(new_int_val);
@@ -796,7 +796,7 @@ void   GLUI_Scrollbar::set_float_limits( float low, float high, int limit_type )
   if (float_val<lo) set_float_val(lo);
   if (float_val>hi) set_float_val(hi);
 }
- 
+
 
 /*********************************** GLUI_Scrollbar::set_int_limits() *********/
 
@@ -806,7 +806,7 @@ void   GLUI_Scrollbar::set_int_limits( int low, int high, int limit_type )
     // error!
   }
   int_min = low;
-  int_max = high;    
+  int_max = high;
   // Allow for possiblitly of reversed limits
   int lo = MIN(low,high);
   int hi = MAX(low,high);
@@ -815,7 +815,7 @@ void   GLUI_Scrollbar::set_int_limits( int low, int high, int limit_type )
   float_min = low;
   float_max = high;
 }
- 
+
 
 /*********************************** GLUI_Scrollbar::reset_growth() *************/
 
@@ -833,7 +833,7 @@ void    GLUI_Scrollbar::increase_growth( void )
   float range=0;
   if (data_type==GLUI_SCROLL_FLOAT)
     range = fabs(float_max-float_min);
-  else 
+  else
     range = fabs(float(int_max-int_min));
   if ( growth < (range / float(GLUI_SCROLL_MIN_GROWTH_STEPS)) )
     growth *= growth_exp;

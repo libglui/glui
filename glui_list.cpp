@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -10,21 +10,21 @@
 
   Copyright (c) 2004 John Kew
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -36,7 +36,7 @@
 
 GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
                       int id, GLUI_CB callback
-                      /*,GLUI_Control *object 
+                      /*,GLUI_Control *object
                       GLUI_InterObject_CB obj_cb*/)
 {
   common_construct(parent, NULL, scroll, id, callback/*, object, obj_cb*/);
@@ -45,9 +45,9 @@ GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
 /****************************** GLUI_List::GLUI_List() **********/
 
 GLUI_List::GLUI_List( GLUI_Node *parent,
-                      GLUI_String& live_var, bool scroll, 
-                      int id, 
-                      GLUI_CB callback 
+                      GLUI_String& live_var, bool scroll,
+                      int id,
+                      GLUI_CB callback
                       /* ,GLUI_Control *object
                       ,GLUI_InterObject_CB obj_cb*/ )
 {
@@ -58,8 +58,8 @@ GLUI_List::GLUI_List( GLUI_Node *parent,
 
 void GLUI_List::common_construct(
   GLUI_Node *parent,
-  GLUI_String* data, bool scroll, 
-  int id, 
+  GLUI_String* data, bool scroll,
+  int id,
   GLUI_CB callback
   /*,GLUI_Control *object
   , GLUI_InterObject_CB obj_cb*/)
@@ -80,10 +80,10 @@ void GLUI_List::common_construct(
   this->callback    = callback;
   this->name        = "list";
   list_panel->add_control( this );
-  if (scroll) 
+  if (scroll)
   {
     new GLUI_Column(list_panel, false);
-    scrollbar = 
+    scrollbar =
       new GLUI_Scrollbar(list_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
@@ -104,7 +104,7 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
   ftime(&time);
   ms = time.millitm + (time.time)*1000;
 
-  tmp_line = find_line( local_x-x_abs, local_y-y_abs-5 );  
+  tmp_line = find_line( local_x-x_abs, local_y-y_abs-5 );
   if ( tmp_line == -1 ) {
     if ( glui )
       glui->deactivate_current_control(  );
@@ -201,14 +201,14 @@ void    GLUI_List::draw( int x, int y )
   int line = 0;
   int box_width;
   GLUI_List_Item *item;
- 
+
   GLUI_DRAWINGSENTINAL_IDIOM
 
   /* Bevelled Border */
   glBegin( GL_LINES );
   glColor3f( .5, .5, .5 );
   glVertex2i( 0, 0 );     glVertex2i( w, 0 );
-  glVertex2i( 0, 0 );     glVertex2i( 0, h );     
+  glVertex2i( 0, 0 );     glVertex2i( 0, h );
 
   glColor3f( 1., 1., 1. );
   glVertex2i( 0, h );     glVertex2i( w, h );
@@ -299,7 +299,7 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
     glVertex2i(w-text_x, y+19 );    glVertex2i(text_x, y+19 );
     glEnd();
   }
-  box_width = get_box_width();   
+  box_width = get_box_width();
 
   if ( !selected || !enabled ) {   /* No current selection */
     x_pos = text_x;                /*  or control disabled */
@@ -307,7 +307,7 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
       glColor3b( 0, 0, 0 );
     else
       glColor3b( 32, 32, 32 );
-    
+
     glRasterPos2i( text_x, y+15);
     i = 0;
     while( t[i] != '\0' && substring_width(t,0,i) < box_width) {
@@ -335,8 +335,8 @@ int GLUI_List::find_line(int x, int y) {
 }
 
 int      GLUI_List::get_box_width() {
-   return MAX( this->w 
-		   - 6     /*  2 * the two-line box border */ 
+   return MAX( this->w
+		   - 6     /*  2 * the two-line box border */
 		   - 2 * GLUI_LIST_BOXINNERMARGINX, 0 );
 
 }
@@ -349,11 +349,11 @@ int  GLUI_List::substring_width( const char *t, int start, int end )
   width = 0;
 
   for( i=start; i<=end; i++ )
-    width += char_width( t[i] ); 
+    width += char_width( t[i] );
 
   return width;
 }
- 
+
 
 /***************************** GLUI_List::update_and_draw_text() ********/
 
@@ -504,7 +504,7 @@ GLUI_List_Item *GLUI_List::get_item_ptr( const char *text )
   while( item ) {
     if ( item->text == text )
       return item;
-    
+
     item = (GLUI_List_Item *) item->next();
   }
 
@@ -522,7 +522,7 @@ GLUI_List_Item *GLUI_List::get_item_ptr( int id )
   while( item ) {
     if ( item->id == id )
       return item;
-    
+
     item = (GLUI_List_Item *) item->next();
   }
 

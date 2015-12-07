@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -13,21 +13,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -58,7 +58,7 @@ void    GLUI_Panel::draw( int x, int y )
     glVertex2i( 0, top );    glVertex2i( w, top );
     glVertex2i( 0, top );    glVertex2i( 0, h );
     glEnd();
-    
+
     glColor3f( .5, .5, .5 );
     glBegin( GL_LINE_LOOP );
     glVertex2i( w, top );
@@ -73,24 +73,24 @@ void    GLUI_Panel::draw( int x, int y )
     glColor3f( 1.0, 1.0, 1.0 );
     glVertex2i( 1, 1 );    glVertex2i( w-2, 1 );
     glVertex2i( 1, 1 );    glVertex2i( 1, h-2 );
-    
+
     glColor3f( .5, .5, .5 );
     glVertex2i( w-1, 1 );    glVertex2i( w-1, h-1 );
     glVertex2i( 1, h-1 );    glVertex2i( w-1, h-1 );
-    
+
     glColor3f( 0.0, 0.0, 0.0 );
     glVertex2i( 0, h );    glVertex2i( w, h );
     glVertex2i( w, 0 );    glVertex2i( w, h );
     glEnd();
-    
-    -- Touch up the lines a bit (needed in some opengl implementations   
+
+    -- Touch up the lines a bit (needed in some opengl implementations
     glBegin( GL_POINTS );
     glColor3f( .5, .5, .5 );
     glVertex2i( w-1, h-1 );
     glColor3f( 0.0, 0.0, 0.0 );
     glVertex2i( w, h );
     glEnd();
-    **/    
+    **/
       }
   else if ( int_val == GLUI_PANEL_EMBOSSED ) {
     if ( parent_node == NULL || name == "" ) {
@@ -109,7 +109,7 @@ void    GLUI_Panel::draw( int x, int y )
     glVertex2i( 1, top+1 );    glVertex2i( w-1, top+1 );
     glVertex2i( w-1, h-1 );    glVertex2i( 1, h-1 );
     glEnd();
-    
+
     glColor3f( .5, .5, .5 );
     glBegin( GL_LINE_LOOP );
     glVertex2i( 0, top );

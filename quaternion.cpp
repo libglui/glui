@@ -4,33 +4,33 @@
 
   -------------------------------------------------------------------
 
-  GLUI User Interface Toolkit 
+  GLUI User Interface Toolkit
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 ************************************************************************
 
   Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
   Oct 2003, Nigel Stewart - GLUI Code Cleaning
-  
+
 ************************************************************************/
 
 #include "quaternion.h"
@@ -89,10 +89,10 @@ void quat::set(const vec3 &_v, const float _s)
 }
 
 quat &quat::operator=(const quat &q)
-{ 
-    v = q.v;  
-    s = q.s; 
-    return *this; 
+{
+    v = q.v;
+    s = q.s;
+    return *this;
 }
 
 /******** quat friends ************/
@@ -138,7 +138,7 @@ mat4 quat::to_mat4() const
     xx = v[VX]*xs;  xy = v[VX]*ys;  xz = v[VX]*zs;
     yy = v[VY]*ys;  yz = v[VY]*zs;  zz = v[VZ]*zs;
 
-    mat4 matrix( 
+    mat4 matrix(
            1.0f-(yy+zz), xy+wz,        xz-wy,        0.0f,
            xy-wz,        1.0f-(xx+zz), yz+wx,        0.0f,
            xz+wy,        yz-wx,        1.0f-(xx+yy), 0.0f,
@@ -150,7 +150,7 @@ mat4 quat::to_mat4() const
 /************************************************* quat_identity() *****/
 /* Returns quaternion identity element                                 */
 
-quat quat_identity() 
+quat quat_identity()
 {
     return quat( vec3( 0.0, 0.0, 0.0 ), 1.0 );
 }
@@ -167,7 +167,7 @@ quat quat_slerp(const quat &from, const quat &to, float t)
     cosom = from.v * to.v + from.s + to.s;
 
     /* Adjust signs (if necessary) */
-    if ( cosom < 0.0 ) 
+    if ( cosom < 0.0 )
     {
         cosom = -cosom;
         to1 = -to;
@@ -178,7 +178,7 @@ quat quat_slerp(const quat &from, const quat &to, float t)
     }
 
     /* Calculate coefficients */
-    if ((1.0 - cosom) > FUDGE ) 
+    if ((1.0 - cosom) > FUDGE )
     {
         /* standard case (slerp) */
         omega =  (float) acos( cosom );
@@ -186,11 +186,11 @@ quat quat_slerp(const quat &from, const quat &to, float t)
         scale0 = (float) sin((1.0 - t) * omega) / sinom;
         scale1 = (float) sin(t * omega) / sinom;
     }
-    else 
+    else
     {
         /* 'from' and 'to' are very close - just do linear interpolation */
         scale0 = 1.0f - t;
-        scale1 = t;      
+        scale1 = t;
     }
 
     return scale0 * from + scale1 * to1;
@@ -240,6 +240,6 @@ vec3 quat::get_axis() const
 
 void quat::print(FILE *dest, const char *name) const
 {
-    fprintf( dest, "%s:   v:<%3.2f %3.2f %3.2f>  s:%3.2f\n", 
+    fprintf( dest, "%s:   v:<%3.2f %3.2f %3.2f>  s:%3.2f\n",
         name, v[0], v[1], v[2], s );
-}   
+}

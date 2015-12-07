@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -13,21 +13,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -36,7 +36,7 @@
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
                             const char *name, int *value_ptr,
-                            int id, 
+                            int id,
                             GLUI_CB cb)
 {
   common_init();
@@ -73,7 +73,7 @@ int    GLUI_Listbox::mouse_up_handler( int local_x, int local_y, bool inside )
 int    GLUI_Listbox::mouse_held_down_handler( int local_x, int local_y,
 					      bool inside)
 {
-  
+
   return false;
 }
 
@@ -185,7 +185,7 @@ int  GLUI_Listbox::delete_item( const char *text )
 {
   GLUI_Listbox_Item *node = get_item_ptr(text);
 
-  if (node) 
+  if (node)
   {
     node->unlink();
     delete node;
@@ -203,14 +203,14 @@ int  GLUI_Listbox::delete_item(int id)
 {
   GLUI_Listbox_Item *node = get_item_ptr(id);
 
-  if (node) 
+  if (node)
   {
     node->unlink();
     delete node;
     return true;
   }
   if (recalculate_item_width()) glui->refresh();
-  
+
   return false;
 }
 
@@ -236,7 +236,7 @@ void     GLUI_Listbox::dump( FILE *output )
   item = (GLUI_Listbox_Item *) items_list.first_child();
   while( item ) {
     fprintf( output, "         %3d : %s\n", item->id, item->text.c_str() );
-    
+
     item = (GLUI_Listbox_Item *) item->next();
   }
 }
@@ -252,7 +252,7 @@ GLUI_Listbox_Item *GLUI_Listbox::get_item_ptr( const char *text )
   while( item ) {
     if ( item->text == text )
       return item;
-    
+
     item = (GLUI_Listbox_Item *) item->next();
   }
 
@@ -270,7 +270,7 @@ GLUI_Listbox_Item *GLUI_Listbox::get_item_ptr( int id )
   while( item ) {
     if ( item->id == id )
       return item;
-    
+
     item = (GLUI_Listbox_Item *) item->next();
   }
 
@@ -284,15 +284,15 @@ static void listbox_callback( int i )
 {
   int old_val;
 
-  if ( NOT GLUI_Master.curr_left_button_glut_menu OR 
-       !dynamic_cast<GLUI_Listbox*>(GLUI_Master.curr_left_button_glut_menu) ) 
+  if ( NOT GLUI_Master.curr_left_button_glut_menu OR
+       !dynamic_cast<GLUI_Listbox*>(GLUI_Master.curr_left_button_glut_menu) )
     return;
 
   old_val = ((GLUI_Listbox*)GLUI_Master.curr_left_button_glut_menu)->int_val;
   ((GLUI_Listbox*)GLUI_Master.curr_left_button_glut_menu)->set_int_val(i);
 
   /****   If value changed, execute callback   ****/
-  if ( old_val != 
+  if ( old_val !=
        ((GLUI_Listbox*)GLUI_Master.curr_left_button_glut_menu)->int_val ) {
     ((GLUI_Listbox*)GLUI_Master.curr_left_button_glut_menu)->execute_callback();
   }
@@ -309,7 +309,7 @@ int     GLUI_Listbox::mouse_over( int state, int x, int y )
 
   if ( state AND enabled AND x > x_abs + text_x_offset) {
     /****  Build a GLUT menu for this listbox   ***/
-    
+
     /*	printf( "%d %d\n", x, y );              */
 
     glut_menu_id = glutCreateMenu(listbox_callback);
@@ -321,7 +321,7 @@ int     GLUI_Listbox::mouse_over( int state, int x, int y )
     }
 
     glutAttachMenu( GLUT_LEFT_BUTTON);
-    
+
     GLUI_Master.set_left_button_glut_menu_control( this );
   }
   else if ( glut_menu_id != -1 ) {
@@ -352,7 +352,7 @@ int    GLUI_Listbox::do_selection( int item_num )
       sel_item = item;
       break;
     }
-    
+
     item = (GLUI_Listbox_Item *) item->next();
   }
 
@@ -375,7 +375,7 @@ GLUI_Listbox::~GLUI_Listbox()
 {
   GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
 
-  while (item) 
+  while (item)
   {
     GLUI_Listbox_Item *tmp = item;
     item = (GLUI_Listbox_Item *) item->next();
@@ -430,14 +430,14 @@ bool    GLUI_Listbox::recalculate_item_width( void )
   text_x_offset = string_width( name );
 
   /* Find the longest item string ***/
-  item_text_size = 0;   
- 
+  item_text_size = 0;
+
   GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
   while( item ) {
     item_text_size = MAX(item_text_size,string_width(item->text));
     item = (GLUI_Listbox_Item *) item->next();
   }
-  
+
   /* Sum up our layout: name, item, and drop-down marker */
   int new_wid=text_x_offset+MAX(GLUI_EDITTEXT_MIN_TEXT_WIDTH,item_text_size)+20;
   if ( w != new_wid) {

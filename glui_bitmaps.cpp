@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -65,7 +65,7 @@ extern unsigned char glui_img_listbox_up_dis[];
 
 
 // These must be in the same order as the GLUI_STDBITMAP enums from glui.h!
-unsigned char *bitmap_arrays[] = {  
+unsigned char *bitmap_arrays[] = {
   glui_img_checkbox_0,
   glui_img_checkbox_1,
   glui_img_radiobutton_0,
@@ -92,9 +92,9 @@ unsigned char *bitmap_arrays[] = {
 
 /************************************ GLUI_Bitmap::load_from_array() ********/
 
-GLUI_Bitmap::GLUI_Bitmap() 
+GLUI_Bitmap::GLUI_Bitmap()
 :   pixels(NULL),
-    w(0), 
+    w(0),
     h(0)
 {
 }
@@ -115,7 +115,7 @@ void GLUI_Bitmap::init_grey(unsigned char *array)
 	pixels = (unsigned char *) malloc(w*h*3);
 	assert(pixels);
 
-	for(int i = 0; i<w*h; i++ ) 
+	for(int i = 0; i<w*h; i++ )
 		for (int j = 0; j<3; j++) /* copy grey to r,g,b channels */
 			pixels[i*3+j] = (unsigned char) array[i+2];
 }
@@ -138,9 +138,9 @@ void GLUI_Bitmap::init(int *array)
 
 /*********************************** GLUI_StdBitmaps::draw() *****************/
 
-GLUI_StdBitmaps::GLUI_StdBitmaps() 
+GLUI_StdBitmaps::GLUI_StdBitmaps()
 {
-    for (int i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++) 
+    for (int i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++)
         bitmaps[i].init_grey(bitmap_arrays[i]);
 }
 
@@ -164,13 +164,13 @@ void GLUI_StdBitmaps::draw(int i, int x, int y) const
 {
 	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
 
-	if (bitmaps[i].pixels != NULL ) 
+	if (bitmaps[i].pixels != NULL )
 	{
 		glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 		glRasterPos2f(0.5f+x, 0.5f+y+bitmaps[i].h);
-		glDrawPixels( 
+		glDrawPixels(
 			bitmaps[i].w, bitmaps[i].h,
-			GL_RGB, GL_UNSIGNED_BYTE, bitmaps[i].pixels); 
+			GL_RGB, GL_UNSIGNED_BYTE, bitmaps[i].pixels);
 	}
 }
 

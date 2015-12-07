@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -30,7 +30,7 @@
 
 
 /****************************** GLUI_Tree::GLUI_Tree() **********/
-GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name, 
+GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name,
                      int open, int inset)
 {
   common_init();
@@ -39,7 +39,7 @@ GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name,
 
   this->set_name( name );
   this->user_id    = -1;
-        
+
   if ( NOT open ) {
     this->is_open = false;
     this->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
@@ -102,7 +102,7 @@ void    GLUI_Tree::close( void )
   child_tail = NULL;
 
   this->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
-  
+
   glui->refresh();
 }
 
@@ -126,8 +126,8 @@ int   GLUI_Tree::mouse_down_handler( int local_x, int local_y )
 
 /**************************** GLUI_Tree::mouse_held_down_handler() ****/
 
-int  GLUI_Tree::mouse_held_down_handler( 
-                       int local_x, int local_y, 
+int  GLUI_Tree::mouse_held_down_handler(
+                       int local_x, int local_y,
                        bool new_inside )
 {
   if ( NOT initially_inside )
@@ -138,7 +138,7 @@ int  GLUI_Tree::mouse_held_down_handler(
 
   if (currently_inside != new_inside)
     redraw();
-  
+
   return false;
 }
 
@@ -147,7 +147,7 @@ int  GLUI_Tree::mouse_held_down_handler(
 
 int   GLUI_Tree::mouse_up_handler( int local_x, int local_y, bool inside )
 {
-  if ( currently_inside ) {    
+  if ( currently_inside ) {
     if ( is_open )
       close();
     else
@@ -168,7 +168,7 @@ void   GLUI_Tree::draw( int x, int y )
 {
   GLUI_DRAWINGSENTINAL_IDIOM
   int left, right, top, bottom, delta_x;
-    
+
   left   = 5;
   right  = w-left;
   top    = 3;
@@ -205,12 +205,12 @@ void   GLUI_Tree::draw( int x, int y )
 
   glBegin( GL_LINES );
   if ( is_open ) {
-    if ( enabled )      
-      if (is_current) 
-	glColor3f( 0, 0, 1 ); 
-      else 
+    if ( enabled )
+      if (is_current)
+	glColor3f( 0, 0, 1 );
+      else
 	glColor3f( 0.0, 0.0, 0.0 );
-    else 
+    else
 	glColor3f( 0.5, 0.5, 0.5 );
     glVertex2i(left+4,(top+bottom)/2);  glVertex2i(left+13,(top+bottom)/2);
 
@@ -224,11 +224,11 @@ void   GLUI_Tree::draw( int x, int y )
     glVertex2i(left+4,(top+bottom)/2);        glVertex2i(left+13,(top+bottom)/2);
 
     if ( enabled )
-      if (is_current) 
-	glColor3f( 0, 0, 1 ); 
-      else       
+      if (is_current)
+	glColor3f( 0, 0, 1 );
+      else
 	glColor3f( 0.0, 0.0, 0.0 );
-    else 
+    else
       glColor3f( 0.5, 0.5, 0.5 );
     glVertex2i(left+4,-1+(top+bottom)/2);
     glVertex2i(left+13,-1+(top+bottom)/2);
@@ -238,7 +238,7 @@ void   GLUI_Tree::draw( int x, int y )
   glEnd();
 
   glLineWidth( 1.0 );
-  
+
   if (currently_inside) draw_pressed();
 }
 
@@ -273,7 +273,7 @@ void   GLUI_Tree::draw_pressed( void )
   right  = w-left;
   top    = 3;
   bottom = 3+16;
-  
+
   glColor3f( 0.0, 0.0, 0.0 );
 
   glBegin( GL_LINE_LOOP );

@@ -2,27 +2,27 @@
 
   ViewModel.h
 
-  GLUI User Interface Toolkit 
+  GLUI User Interface Toolkit
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 */
 
@@ -43,7 +43,7 @@
 
   There is also a routine for rotating the eye about an arbitrary
   axis, which is quite useful in conjuction with the world up axis.
-  
+
   This class is heavily-dependent on the vec3 class in
   the file algebra3.h.
 
@@ -55,16 +55,16 @@
      ViewModel vm;
      vm.eye.set( 0.0, 0.0, 20.0 );
      vm.lookat.set( 0.0, 0.0, 0.0 );
-     vm.update();  // updates the three vectors 
+     vm.update();  // updates the three vectors
 
-     vm.move( 0.0, 2.0, 0.0 );  // Moves the eye and lookat 
-                                //   by 2 units in the world 
-                                //   Y direction 
-     vm.roll( 5.0 );            //   rolls 5 degrees about the forward axis 
+     vm.move( 0.0, 2.0, 0.0 );  // Moves the eye and lookat
+                                //   by 2 units in the world
+                                //   Y direction
+     vm.roll( 5.0 );            //   rolls 5 degrees about the forward axis
      vm.lookat_yaw( -25.0 );    // Yaws about the eye (lookat is
-				                //   fixed) by -25 degrees 
-     vm.load_to_openGL();       // Sets OpenGL modelview matrix 
-     
+				                //   fixed) by -25 degrees
+     vm.load_to_openGL();       // Sets OpenGL modelview matrix
+
      .. render ...
 
 
@@ -79,20 +79,20 @@
   eye_pitch()      - Rotates eye about side vector
   lookat_yaw()     - Rotates lookat about up vector
   lookat_pitch()   - Rotates lookat about side vector
-  reset_up_level() - Resets the up vector (after unwanted rolls), and 
+  reset_up_level() - Resets the up vector (after unwanted rolls), and
                        sets the eye level with the lookat point
   move()           - Moves eye and lookat by some amount
   move_by_eye()    - Moves eye to new position, lookat follows
   move_by_lookat() - Moves lookat to new position, eye follows
   move_abs()       - Moves eye and lookat in world coordinates
   rot_about_eye()  - Rotates about the eye point by a given 4x4 matrix
-  rot_about_lookat() - Rotates about the lookat point by a given 4x4 matrix  
+  rot_about_lookat() - Rotates about the lookat point by a given 4x4 matrix
   make_mtx()       - Constructs 4x4 matrix, used by load_to_openGL()
   load_to_openGL() - Loads current camera description in openGL
   load_to_openGL_noident() - Loads camera into OpenGL without first
                      resetting the OpenGL matrix to identity
   reset()          - Resets class values
-  ViewModel()      - constructor 
+  ViewModel()      - constructor
   update()         - Recalculates side and forward based on eye,
                      lookat, and up
   dump()           - Prints class contents to a file
@@ -108,7 +108,7 @@
 
 #include "algebra3.h"
 
-class ViewModel 
+class ViewModel
 {
 public:
   vec3    eye, lookat;

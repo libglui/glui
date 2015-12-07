@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -13,21 +13,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 *****************************************************************************/
 
@@ -43,7 +43,7 @@ int    GLUI_Mouse_Interaction::mouse_down_handler( int local_x, int local_y )
   iaction_mouse_down_handler( local_x-x_abs, local_y-y_abs );
   /*local_x-x_abs, ((glui->h-local_y)-y_abs) );              */
   redraw();
-  
+
   return false;
 }
 
@@ -61,7 +61,7 @@ int    GLUI_Mouse_Interaction::mouse_up_handler( int local_x, int local_y, bool 
 
 int    GLUI_Mouse_Interaction::mouse_held_down_handler( int local_x, int local_y,
 							bool inside)
-{  
+{
   iaction_mouse_held_down_handler( local_x-x_abs, local_y-y_abs , inside );
 
   redraw();
@@ -87,7 +87,7 @@ void    GLUI_Mouse_Interaction::draw( int x, int y )
 
   if ( NOT draw_active_area_only ) {
     draw_name( x_left, h-4 );
-    draw_active_box( x_left-4, x_left+string_width( name )+4, 
+    draw_active_box( x_left-4, x_left+string_width( name )+4,
 		     h, h-14 );
   }
 
@@ -148,7 +148,7 @@ int    GLUI_Mouse_Interaction::special_handler( int key,int modifiers )
 /****************************** GLUI_Mouse_Interaction::draw_active_area() **********/
 
 void    GLUI_Mouse_Interaction::draw_active_area( void )
-{ 
+{
   int win_h = glutGet( GLUT_WINDOW_HEIGHT ), win_w = glutGet(GLUT_WINDOW_WIDTH);
 
   int text_height = 18; /* what a kludge              */
@@ -168,23 +168,23 @@ void    GLUI_Mouse_Interaction::draw_active_area( void )
   glTranslatef( (float)this->w/2.0, (float)viewport_size/2.0 + 2.0 , 0.0  );
 
   /***   Draw the interaction control's orthographic elements   ***/
-  iaction_draw_active_area_ortho();	 
- 
+  iaction_draw_active_area_ortho();	
+
   /***   Setup and draw the interaction control's perspective elements   ***/
 
   /***  Set the viewport to just the square of the drawing area  ***/
   /* glViewport( this->x_abs , glui->main_panel->h - this->y_abs - this->h,*/
   /*glViewport( this->x_abs+1+(this->w/2-viewport_size/2),
-    this->h-this->y_abs-viewport_size-1, 
+    this->h-this->y_abs-viewport_size-1,
     viewport_size, viewport_size );*/
 	
   viewport_size -= 4;
   int offset = 0;
-  if ( ((this->w-viewport_size) % 2) == 1 ) 
+  if ( ((this->w-viewport_size) % 2) == 1 )
     offset = 1;
 
-  glViewport( this->x_abs + (this->w-viewport_size)/2 + offset, 
-	      win_h - this->y_abs - this->h + text_height, 
+  glViewport( this->x_abs + (this->w-viewport_size)/2 + offset,
+	      win_h - this->y_abs - this->h + text_height,
 	      viewport_size, viewport_size );
 
   glMatrixMode( GL_PROJECTION );
@@ -196,7 +196,7 @@ void    GLUI_Mouse_Interaction::draw_active_area( void )
   glLoadIdentity();
   glTranslatef( 0.0, 0.0, -zc );
   glScalef(xy,xy,1.0); // xy);
-  
+
   /*	glutSolidTeapot( 1.0 );              */
   iaction_draw_active_area_persp();
 

@@ -1,5 +1,5 @@
 /****************************************************************************
-  
+
   GLUI User Interface Toolkit
   ---------------------------
 
@@ -10,21 +10,21 @@
 
   Copyright (c) 1998 Paul Rademacher
 
-  This software is provided 'as-is', without any express or implied 
-  warranty. In no event will the authors be held liable for any damages 
-  arising from the use of this software. 
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose, 
-  including commercial applications, and to alter it and redistribute it 
-  freely, subject to the following restrictions: 
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not 
-  claim that you wrote the original software. If you use this software 
-  in a product, an acknowledgment in the product documentation would be 
-  appreciated but is not required. 
-  2. Altered source versions must be plainly marked as such, and must not be 
-  misrepresented as being the original software. 
-  3. This notice may not be removed or altered from any source distribution. 
+  1. The origin of this software must not be misrepresented; you must not
+  claim that you wrote the original software. If you use this software
+  in a product, an acknowledgment in the product documentation would be
+  appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+  misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
 
 
 *****************************************************************************/
@@ -44,7 +44,7 @@
 
 #include <sys/stat.h>
 
-GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent, 
+GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
                                     const char *name,
                                     int type,
                                     int id,
@@ -68,7 +68,7 @@ GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
 
 void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
   GLUI_List *list = dynamic_cast<GLUI_List*>(glui_object);
-  if (!list) 
+  if (!list)
     return;
   GLUI_FileBrowser* me = dynamic_cast<GLUI_FileBrowser*>(list->associated_object);
   if (!me)
@@ -110,7 +110,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
   HANDLE hFind;
   //char search_arg[MAX_PATH], new_file_path[MAX_PATH];
   //sprintf(search_arg, "%s\\*.*", path_name);
-  
+
   hFind = FindFirstFile("*.*", &FN);
   if (list) {
     list->delete_all();
@@ -126,7 +126,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
         list->add_item(i,item.c_str());
         i++;
       } while (FindNextFile(hFind, &FN) != 0);
-      
+
       if (GetLastError() == ERROR_NO_MORE_FILES)
         FindClose(hFind);
       else
@@ -146,7 +146,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
       perror("fbreaddir:");
     else {
       while ((dirp = readdir(dir)) != NULL)   /* open directory     */
-      { 
+      {
         if (!lstat(dirp->d_name,&dr) && S_ISDIR(dr.st_mode)) /* dir is directory   */
           item = dirp->d_name + GLUI_String("/");
         else
@@ -167,12 +167,12 @@ void ProcessFiles(const char *path_name)
 }
 
 
-void GLUI_FileBrowser::set_w(int w) 
-{ 
+void GLUI_FileBrowser::set_w(int w)
+{
   if (list) list->set_w(w);
 }
 
-void GLUI_FileBrowser::set_h(int h) 
+void GLUI_FileBrowser::set_h(int h)
 {
   if (list) list->set_h(h);
 }
