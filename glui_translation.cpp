@@ -156,7 +156,7 @@ int    GLUI_Translation::iaction_mouse_held_down_handler( int local_x, int local
     x_off *= .01f;
     y_off *= .01f;
   }
-		
+
 
   if ( trans_type == GLUI_TRANSLATION_XY ) {
 
@@ -382,7 +382,7 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
 #define DRAW_SEG( xa,ya,xb,yb ) glVertex2f(xa,ya); glVertex2f(xb,yb);
 
   glScalef( -1.0, 1.0, 1.0 );
-	
+
   if ( orientation == 2 ) {
     c_off = 4;
   }
@@ -406,7 +406,7 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
   else
     y0 = 0.0;
 
-	
+
   if ( trans_type == GLUI_TRANSLATION_Z ) {
     if ( orientation == 0 ) {
       y1 += 2.0;
@@ -443,7 +443,7 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
     colors_out[3] = colors_out[4] = colors_out[5] = colors_out[6] = white;
     colors_in[0] = colors_in[1] = colors_in[2] = colors_in[7] = white;
     colors_in[3] = colors_in[4] = colors_in[5] = colors_in[6] = gray;
-	
+
   }
 
   glBegin( GL_POLYGON );
@@ -489,19 +489,19 @@ int    GLUI_Translation::get_mouse_code( int x, int y )
   if ( x == 0 AND y < 0 )
     return GLUI_TRANSLATION_MOUSE_DOWN;
   else if ( x == 0 AND y > 0 )
-    return GLUI_TRANSLATION_MOUSE_UP;		
+    return GLUI_TRANSLATION_MOUSE_UP;
   else if ( x > 0 AND y == 0 )
-    return GLUI_TRANSLATION_MOUSE_LEFT;		
+    return GLUI_TRANSLATION_MOUSE_LEFT;
   else if ( x < 0 AND y == 0 )
-    return GLUI_TRANSLATION_MOUSE_RIGHT;		
+    return GLUI_TRANSLATION_MOUSE_RIGHT;
   else if ( x < 0 AND y < 0 )
-    return GLUI_TRANSLATION_MOUSE_DOWN_LEFT;		
+    return GLUI_TRANSLATION_MOUSE_DOWN_LEFT;
   else if ( x < 0 AND y > 0 )
     return GLUI_TRANSLATION_MOUSE_DOWN_RIGHT;
   else if ( x > 0 AND y < 0 )
     return GLUI_TRANSLATION_MOUSE_UP_LEFT;
   else if ( x > 0 AND y > 0 )
-    return GLUI_TRANSLATION_MOUSE_UP_RIGHT;	
+    return GLUI_TRANSLATION_MOUSE_UP_RIGHT;
 
 
   return GLUI_TRANSLATION_MOUSE_NONE;
@@ -520,7 +520,7 @@ void  GLUI_Translation::set_x( float val )
 
 void  GLUI_Translation::set_y( float val )
 {
-  if ( trans_type == GLUI_TRANSLATION_XY )			
+  if ( trans_type == GLUI_TRANSLATION_XY )
     set_one_val( val, 1 );
   else
     set_one_val( val, 0 );
@@ -546,7 +546,7 @@ void  GLUI_Translation::set_one_val( float val, int index )
   /*** The code below is like output_live, except it only operates on
     a single member of the float array (given by 'index') instead of
     outputting the entire array   ****/
-	
+
   if ( ptr_val == NULL OR NOT live_inited )
     return;
 

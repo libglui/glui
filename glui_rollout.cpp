@@ -44,7 +44,7 @@ GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const char *name,
   set_name( name );
   user_id    = -1;
   int_val    = type;
-		
+
   if ( NOT open ) {
     is_open = false;
     h = rollout_height_pixels;

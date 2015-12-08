@@ -84,7 +84,7 @@ void  GLUI_Column::draw( int x, int y )
 	/*glVertex2i( 1, -y_diff + GLUI_SEPARATOR_HEIGHT/2 );              */
 	/*glVertex2i( 1, -y_diff + panel_h - GLUI_SEPARATOR_HEIGHT/2);              */
 	glEnd();
-      }		
+      }
     }
   }
 }

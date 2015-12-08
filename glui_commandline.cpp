@@ -110,7 +110,7 @@ int    GLUI_CommandLine::special_handler( int key,int modifiers )
   if ( debug )
     printf( "CMD_TEXT SPECIAL:%d - mod:%d   subs:%d/%d  ins:%d  sel:%d/%d\n",
 	    key, modifiers, substring_start, substring_end,insertion_pt,
-	    sel_start, sel_end );	
+	    sel_start, sel_end );
 
   if ( key == GLUT_KEY_UP )  // PREVIOUS HISTORY
   {

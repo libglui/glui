@@ -106,7 +106,7 @@ void    GLUI_Rotation::iaction_draw_active_area_persp( void )
 
   setup_texture();
   setup_lights();
-	
+
   glEnable(GL_CULL_FACE );
 
   glMatrixMode( GL_MODELVIEW );
@@ -323,7 +323,7 @@ void  GLUI_Rotation::reset( void )
   ball->set_params( vec2( (float)(w/2), (float)((h-18)/2)),
 		   (float) 2.0*(h-18) );
 
-  set_spin( this->damping );	
+  set_spin( this->damping );
 
   copy_ball_to_float_array();
 
@@ -448,7 +448,7 @@ NO! WVB
     }
 */
     /*init_ball();              */
-		
+
 
 }
 

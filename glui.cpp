@@ -1608,9 +1608,9 @@ void   GLUI_Main::check_subwindow_position( void )
 
       curr_glui = (GLUI*) curr_glui->next();
     }
-	
 
-		
+
+
     CLAMP( new_x, 0, new_x );
     CLAMP( new_y, 0, new_y );
 
@@ -1710,7 +1710,7 @@ void glui_parent_window_reshape_func( int w, int h )
 
       if ( first ) {
         if (glui->glut_reshape_CB) glui->glut_reshape_CB( w, h );
-	
+
         first = false;
       }
     }
@@ -1748,7 +1748,7 @@ void glui_parent_window_keyboard_func(unsigned char key, int x, int y)
         glui->glut_keyboard_CB( key, x, y );
         break;
       }
-	
+
       glui = (GLUI*) glui->next();
     }
   }

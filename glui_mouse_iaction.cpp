@@ -125,7 +125,7 @@ int    GLUI_Mouse_Interaction::special_handler( int key,int modifiers )
   center_y = (h-18)/2;
   drag_x   = 0;
   drag_y   = 0;
-	
+
   if ( key == GLUT_KEY_LEFT )
     drag_x = -6;
   else if ( key == GLUT_KEY_RIGHT )
@@ -168,7 +168,7 @@ void    GLUI_Mouse_Interaction::draw_active_area( void )
   glTranslatef( (float)this->w/2.0, (float)viewport_size/2.0 + 2.0 , 0.0  );
 
   /***   Draw the interaction control's orthographic elements   ***/
-  iaction_draw_active_area_ortho();	
+  iaction_draw_active_area_ortho();
 
   /***   Setup and draw the interaction control's perspective elements   ***/
 
@@ -177,7 +177,7 @@ void    GLUI_Mouse_Interaction::draw_active_area( void )
   /*glViewport( this->x_abs+1+(this->w/2-viewport_size/2),
     this->h-this->y_abs-viewport_size-1,
     viewport_size, viewport_size );*/
-	
+
   viewport_size -= 4;
   int offset = 0;
   if ( ((this->w-viewport_size) % 2) == 1 )

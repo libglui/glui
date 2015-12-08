@@ -43,7 +43,7 @@ public:
 	GLUI_DrawingSentinal(GLUI_Control *c_);
 	/** The destructor cleans up drawing back how it was */
 	~GLUI_DrawingSentinal();
-	
+
 	// Do-nothing routine to avoid compiler warning about unused variable
 	inline void avoid_warning(void) {}
 };

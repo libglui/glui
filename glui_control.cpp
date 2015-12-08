@@ -393,7 +393,7 @@ void GLUI_Control::align()
     /*		if ( this->prev() != NULL ) {
 		((GLUI_Control*)prev())->get_this_column_dims(&col_x, &col_y, &col_w, &col_h,
 		&col_x_off, &col_y_off);
-		
+
 		x_abs = col_x + col_w;
 		}
 		else {
@@ -418,7 +418,7 @@ void GLUI_Control::align()
     int delta = x_abs - orig_x_abs;
 
     GLUI_Control *node;
-		
+
     node = (GLUI_Control*) this->first_child();
     while( node != NULL ) {
       if ( dynamic_cast<GLUI_Column*>(node) ) {
@@ -508,7 +508,7 @@ void GLUI_Control::pack_old(int x, int y)
   if ( this->is_container ) {
     max_y += y_margin_bot;  /*** Add bottom border inside box */
     if ( this->first_child() ) {
-      if ( dynamic_cast<GLUI_Rollout*>(this) ) {	
+      if ( dynamic_cast<GLUI_Rollout*>(this) ) {
 	/**  We don't want the rollout to shrink in width when it's
 	  closed **/
 	this->w = MAX(this->w, column_x + max_w + 2 * x_margin );
@@ -694,7 +694,7 @@ void    GLUI_Control::pack( int x, int y )
       node = (GLUI_Control*) node->next();
       continue;
     }
-		
+
     node->pack( curr_x, curr_y );
 
     if ( dynamic_cast<GLUI_Panel*>(node)  && !node->collapsible)
@@ -831,7 +831,7 @@ void GLUI_Control::sync_live(int recurse, int draw_it)
           changed = true;
           break;
         }
-		
+
         fp++;
       }
 

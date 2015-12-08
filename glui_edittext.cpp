@@ -374,7 +374,7 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
         }
       }
     }
-    else if (data_type == GLUI_EDITTEXT_INT)	
+    else if (data_type == GLUI_EDITTEXT_INT)
     {
       if ( (key < '0' OR key > '9') AND key != '-' )
         return true;
@@ -876,7 +876,7 @@ int    GLUI_EditText::special_handler( int key,int modifiers )
   if ( debug )
     printf( "SPECIAL:%d - mod:%d   subs:%d/%d  ins:%d  sel:%d/%d\n",
 	    key, modifiers, substring_start, substring_end,insertion_pt,
-	    sel_start, sel_end );	
+	    sel_start, sel_end );
 
   if ( key == GLUT_KEY_LEFT ) {
     if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) {
@@ -914,7 +914,7 @@ int    GLUI_EditText::special_handler( int key,int modifiers )
 						                                    is in bounds */
   CLAMP( sel_end, 0, (int) text.length()); /* Make sure insertion_pt
 					                                     is in bounds */
-					
+
   /******** Now redraw text ***********/
   if ( can_draw())
     update_and_draw_text();

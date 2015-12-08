@@ -100,7 +100,7 @@ void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
 void GLUI_FileBrowser::fbreaddir(const char *d) {
   GLUI_String item;
   int i = 0;
-	
+
 	if (!d)
     return;
 
@@ -162,7 +162,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
 }
 
 void ProcessFiles(const char *path_name)
-{	
+{
 
 }
 
