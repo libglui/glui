@@ -49,7 +49,7 @@ add_library(glui_obj OBJECT ${GLUI_SRCS})
 set_property(TARGET glui_obj PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 add_library(glui SHARED $<TARGET_OBJECTS:glui_obj>)
-target_link_libraries(glui ${GLUT_LIBRARIES})
+target_link_libraries(glui ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_library(glui_static STATIC $<TARGET_OBJECTS:glui_obj>)
 target_link_libraries(glui_static ${GLUT_LIBRARIES})
