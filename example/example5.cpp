@@ -37,7 +37,7 @@ float sphere_rotate[16] = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 float torus_rotate[16] = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 float view_rotate[16] = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 float obj_pos[] = { 0.0, 0.0, 0.0 };
-char *string_list[] = { "Hello World!", "Foo", "Testing...", "Bounding box: on" };
+const char *string_list[] = { "Hello World!", "Foo", "Testing...", "Bounding box: on" };
 int   curr_string = 0;
 
 /** Pointers to the windows and some of the controls we'll create **/
