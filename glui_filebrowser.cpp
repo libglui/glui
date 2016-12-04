@@ -81,7 +81,7 @@ void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
     if (selected[0] == '/' || selected[0] == '\\') {
       if (me->allow_change_dir) {
 #ifdef __GNUC__
-        chdir(selected+1);
+        AssertResult(0,chdir(selected+1));
 #endif
 #ifdef _WIN32
         SetCurrentDirectory(selected+1);
