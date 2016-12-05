@@ -12,7 +12,7 @@
 
 #define PPM_VERBOSE 0
 
-#define AssertResult(desired,expr) { int rc = expr; assert(rc == rc); }
+#include "../glui_internal.h"
 
 void VFlip(unsigned char * Pix, int width, int height, int chan)
 {
