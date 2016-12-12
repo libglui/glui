@@ -12,7 +12,6 @@
 
 #define PPM_VERBOSE 0
 
-#include "../glui_internal.h"
 
 void VFlip(unsigned char * Pix, int width, int height, int chan)
 {
@@ -47,13 +46,15 @@ void LoadPPM(const char *FileName, unsigned char* &Color, int &Width, int &Heigh
   int c,s;
   do{ do { s=fgetc(fp); } while (s!='\n'); } while ((c=fgetc(fp))=='#');
   ungetc(c,fp);
-  AssertResult(2,fscanf(fp, "%d %d\n255\n", &Width, &Height));
+  int result = fscanf(fp, "%d %d\n255\n", &Width, &Height);
+  assert(result==2);
 #if PPM_VERBOSE
   printf("Reading %dx%d Texture [%s]. . .\n", Width, Height, FileName);
 #endif
   int NumComponents = Width*Height*3;
   if (Color==NULL) Color = new unsigned char[NumComponents];
-  AssertResult(1,fread(Color,NumComponents,1,fp));
+  result = fread(Color,NumComponents,1,fp);
+  assert(result==1);
   fclose(fp);
 }
 
