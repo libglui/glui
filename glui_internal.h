@@ -20,7 +20,7 @@
 
 #include <cstdio>
 #include <cmath>
-#include <assert.h>
+#include <cassert>
 
 #ifndef AND
 #define AND &&
@@ -49,6 +49,7 @@
 #define TEST_AND( a, b ) ((a&b)==b)
 #endif
 
+
 #ifndef M_PI
 #define M_PI 3.141592654
 #endif
@@ -63,11 +64,6 @@
 #ifndef error_return
 #define error_return( c ); {fprintf(stderr,c);return;}
 #endif
-
-/*! evaluates the 'expr' in the second parameter, and does an assert()
-  on this expr's result being the same as the (int) value passed in
-  'desired' */
-#define AssertResult(desired,expr) { int rc = (expr); assert(rc == (desired)); }
 
 /************************* floating-point random ********************/
 #ifndef randf

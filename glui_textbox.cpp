@@ -1070,10 +1070,10 @@ void    GLUI_TextBox::set_text( const char *new_text )
 void   GLUI_TextBox::dump( FILE *out, const char *name )
 {
   fprintf( out,
-       "%s (edittext@%p):   line:%d ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%ld\n",
+       "%s (edittext@%p):   line:%d ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%lu\n",
        name, this, curr_line,
        insertion_pt, substring_start, substring_end, sel_start, sel_end,
-       text.length());
+       (long unsigned) text.length());
 }
 
 
