@@ -21,4 +21,5 @@ addons:
     - cmake
     - libosmesa6-dev
     - libegl1-mesa-dev
+    - libxi-dev
     - freeglut3-dev
