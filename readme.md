@@ -1,6 +1,10 @@
 Welcome to the GLUI User Interface Library
 -------------------------------------------------
 
+https://github.com/libglui/glui
+
+[![Build Status](https://travis-ci.org/nigels-com/glui.svg?branch=master)](https://travis-ci.org/nigels-com/glui)
+
 This distribution contains the latest community-maintained fork of the
 GLUI Library, now under the ZLIB license.  It is based on the GLUI
 v2.1 beta version from Paul Rademacher
@@ -252,17 +256,3 @@ To include GLUI in your own apps, add the glui library to your
 makefile (before the glut library 'libglut.a'), and include "glui.h"
 in your sources.
 
-
-
-----------------------------------------------------------------------
-
-Please let me know what you think, what you'd like to change or add,
-and especially what bugs you encounter.  Also, please send me your
-e-mail so I can add you to a mailing list for updates.
-
-Good luck, and thanks for trying this out!
-
-Paul Rademacher
-rademach
-at
-cs unc edu
