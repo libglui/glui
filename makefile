@@ -12,7 +12,7 @@ OPTS=-O0
 UNAME = $(shell uname)
 
 ifeq ($(UNAME), Linux)
-CXX       = g++
+CXX      ?= g++
 CPPFLAGS += $(OPTS) -Wall -pedantic
 endif
 
