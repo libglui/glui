@@ -9,8 +9,8 @@ compiler:
     - clang
 
 script:
-    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then CPPFLAGS=-DGLUI_FREEGLUT make ; fi
-    - if [ "$TRAVIS_OS_NAME" == "osx" ];   then                          make;  fi
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then CPPFLAGS=-DGLUI_FREEGLUT              make; fi
+    - if [ "$TRAVIS_OS_NAME" == "osx" ];   then CPPFLAGS=-Wno-deprecated-declarations make; fi
     - mkdir build
     - pushd build && git clean -xdf . && cmake -G 'Unix Makefiles' .. && make && popd
 
