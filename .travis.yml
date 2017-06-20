@@ -1,0 +1,25 @@
+language: cpp
+dist: trusty
+sudo: false
+os:
+    - linux
+    - osx
+compiler:
+    - gcc
+    - clang
+
+script:
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then CPPFLAGS=-DGLUI_FREEGLUT              make; fi
+    - if [ "$TRAVIS_OS_NAME" == "osx" ];   then CPPFLAGS=-Wno-deprecated-declarations make; fi
+    - mkdir build
+    - pushd build && git clean -xdf . && cmake -G 'Unix Makefiles' .. && make && popd
+
+addons:
+  apt:
+    packages:
+    - git
+    - cmake
+    - libosmesa6-dev
+    - libegl1-mesa-dev
+    - libxi-dev
+    - freeglut3-dev

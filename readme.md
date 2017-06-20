@@ -1,5 +1,8 @@
-Welcome to the GLUI User Interface Library
--------------------------------------------------
+# Welcome to the GLUI User Interface Library
+
+https://github.com/libglui/glui
+
+[![Build Status](https://travis-ci.org/nigels-com/glui.svg?branch=master)](https://travis-ci.org/nigels-com/glui)
 
 This distribution contains the latest community-maintained fork of the
 GLUI Library, now under the ZLIB license.  It is based on the GLUI
@@ -8,21 +11,16 @@ v2.1 beta version from Paul Rademacher
 made by Nigel Stewart in his "GLUI v2.2"
 (http://www.nigels.com/glt/glui).
 
-
 WARNING: This version (2.3) introduces some incompatible changes with
 previous versions!!
 
-----------------------------------
-CHANGES:
-Version 2.36, November 4, 2007
+## Version 2.36, November 4, 2007
 
 - License changed to the more permissive ZLIB license 
   with the blessing of Paul Rademacher, Nigel Stewart, Bill Baxter, 
   John Kew, Orion Sky Lawlor and all other developers.
 
-----------------------------------
-CHANGES:
-Version 2.35, July 7, 2006
+## Version 2.35, July 7, 2006
 
 - Applied patch [950354] "Good Idle For Spinners" written by Alain
   Durat.  This makes it so GLUI doesn't suck up 100% of your CPU time
@@ -50,11 +48,7 @@ Many changes submitted by Orion Sky Lawlor.
   per pixel.  This saves 50KB+ space on disk in the library and each
   executable. 
 
-
-
-----------------------------------
-CHANGES:
-Version 2.3, March 22, 2005
+## Version 2.3, March 22, 2005
 
 - GLUI_String is now a std::string
   This is the main source of most incompatibilities, but I felt it was
@@ -76,7 +70,6 @@ Version 2.3, March 22, 2005
   If you used to clear the string with mystr[0]='\0', now just clear
   it with mystr="".
 
-----------------------------------
 - Enhanced GLUI_EditText
   Control keys can be used for navigation and control.  The bindings
   are bash-like: Ctrl-B for previous char, Ctrl-F for forward char, etc.
@@ -84,11 +77,9 @@ Version 2.3, March 22, 2005
   simply ignored, whereas before they would be inserted as invisible
   characters.
 
-----------------------------------
 - Added GLUI_CommandLine class
   This is a GLUI_EditText with a history mechanism.
 
-----------------------------------
 - New, more object oriented construction API.
   Now instead of calling 
 
@@ -118,8 +109,6 @@ Version 2.3, March 22, 2005
   always be "second-class citizens" since they would have to be
   constructed differently from the built-ins.
 
-
-----------------------------------
 - Removed need for type-declaring arguments when argment type suffices.
   This effects GLUI_Spinner and GLUI_EditText (and GLUI_CommandLine?).
 
@@ -138,34 +127,27 @@ Version 2.3, March 22, 2005
   construction API, not with the old "add_blah_to_panel" style of
   API.
 
-----------------------------------
 - GLUI_Rotation uses your matrix live-variable now.
   GLUI used to ignore the matrix in your live variable.  This version
   doesn't ignore it, so you'll need to set it to the identity matrix
   yourself if that's what you want it to start as.  There could
   probably be some improvements to this API, though.
   
-----------------------------------
 - Improvements to 'const' usage.
   Most char*'s in GLUI functions used to be non-const even when the
   functions did not modify the string.  I changed everywhere
   appropriate to use const char* instead.
 
-----------------------------------
 - Updated license info in the headers
   Paul's web page says that GLUI is LGPL, but that wasn't declared in
   the code itself.  I've modified all the headers with the standard
   LGPL notice.
 
-----------------------------------
 - Updated examples for the API changes
 
-----------------------------------
 - Created project files for Visual Studio .NET (MSVC7.1)
 
-
 That's about it.  Enjoy!
-
 
 If you find yourself with too much time on your hands, the things I
 think would be most useful for future improvements to GLUI would be:
@@ -182,7 +164,6 @@ think would be most useful for future improvements to GLUI would be:
    GLUI_GLUT lib, and call one extra GLUI_glut_init() function or 
    something.
 
-
 Definitly consider submitting a patch if you've made some nice improvements
 to GLUI.  Hopefully being an LGPL sourceforge project will attract some new
 interest to the GLUI project.
@@ -192,9 +173,7 @@ baxter
 at
 cs unc edu
 
-=================================================
-JOHN KEW'S ADDITIONS (March 2005)
-=================================================
+## JOHN KEW'S ADDITIONS (March 2005)
 
 Thanks to John Kew of Natural Solutions Inc.,
 there are some new widgets.  These are demonstrated in example6.cpp.
@@ -212,12 +191,9 @@ And one other change:
 
 * GLUI_Rollout has optional embossed border 
 
-=================================================
-PAUL'S ORIGINAL GLUI 2.0/2.1 README
-=================================================
+## PAUL'S ORIGINAL GLUI 2.0/2.1 README
 
-Welcome to the GLUI User Interface Library, v2.0 beta!
--------------------------------------------------
+### Welcome to the GLUI User Interface Library, v2.0 beta!
 
 This distribution contains the full GLUI sources, as well as 5 example
 programs.  You'll find the full manual under "glui_manual.pdf".  The
@@ -225,8 +201,7 @@ GLUI web page is at
 
 	http://www.cs.unc.edu/~rademach/glui
 
-
-		    ---------- Windows ----------
+### Windows
 
 The directory 'msvc' contains a Visual C++ workspace entitled
 'glui.dsw'.  To recompile the library and examples, open this
@@ -243,7 +218,7 @@ and add the OpenGL libs:
 Include the file "glui.h" in any file that uses the GLUI library.
 
 
-		      ---------- Unix ----------
+### Unix
 
 An SGI/HP makefile is found in the file 'makefile' (certain lines may need 
 to be commented/uncommented).
@@ -252,17 +227,3 @@ To include GLUI in your own apps, add the glui library to your
 makefile (before the glut library 'libglut.a'), and include "glui.h"
 in your sources.
 
-
-
-----------------------------------------------------------------------
-
-Please let me know what you think, what you'd like to change or add,
-and especially what bugs you encounter.  Also, please send me your
-e-mail so I can add you to a mailing list for updates.
-
-Good luck, and thanks for trying this out!
-
-Paul Rademacher
-rademach
-at
-cs unc edu
