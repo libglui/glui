@@ -100,7 +100,16 @@ int    GLUI_Translation::iaction_mouse_down_handler( int local_x,
     }
     else {
       locked = GLUI_TRANSLATION_LOCK_NONE;
-      glutSetCursor( GLUT_CURSOR_SPRAY );
+	  	  
+	  //XC_spraycan (GLUT_CURSOR_SPRAY) is an air-brush icon. 
+	  //This crosshair has 8 directions, and is identical on
+	  //windows with freeglut. Don't know about classic GLUT.	  
+	  //THOUGHTS:
+	  //X11 has XC_fleur shaped like four-way arrows but not
+	  //strictly the same as the double-arrows.
+	  //Windows has the MOVE cursor, which would be an ideal.
+	  //Better the cursor could disappear so not to distract.
+      glutSetCursor(/*GLUT_CURSOR_SPRAY*/GLUT_CURSOR_FULL_CROSSHAIR);
     }
   }
   else if ( trans_type == GLUI_TRANSLATION_X ) {

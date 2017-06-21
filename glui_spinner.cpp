@@ -132,7 +132,8 @@ void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name,
 int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
 {
   this->state = find_arrow( local_x, local_y );
-  GLUI_Master.glui_setIdleFuncIfNecessary();
+  //Removing for X11 selection server support.
+  //GLUI_Master.glui_setIdleFuncIfNecessary();
 
   /*  printf( "spinner: mouse down  : %d/%d   arrow:%d\n", local_x, local_y,
       find_arrow( local_x, local_y ));
@@ -166,7 +167,8 @@ int    GLUI_Spinner::mouse_down_handler( int local_x, int local_y )
 int    GLUI_Spinner::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   state = GLUI_SPINNER_STATE_NONE;
-  GLUI_Master.glui_setIdleFuncIfNecessary();
+  //Removing for X11 selection server support.
+  //GLUI_Master.glui_setIdleFuncIfNecessary();
 
   /*  printf("spinner: mouse up  : %d/%d    inside: %d\n",local_x,local_y,inside);              */
 

@@ -68,6 +68,12 @@ void GLUI_Control::translate_and_draw_front()
   glPopMatrix();
 }
 
+/* GLUI_Control::translate_to_origin() ********/
+
+void GLUI_Control::translate_to_origin()
+{
+  glTranslatef((float)x_abs+.5,(float)y_abs+.5,0.0);
+}
 
 /********** GLUI_Control::set_to_bkgd_color() ********/
 
@@ -313,12 +319,18 @@ int GLUI_Control::char_width(char c)
 { /* Hash table for faster character width lookups - JVK
        Speeds up the textbox a little bit.
   */
-  int hash_index = c % CHAR_WIDTH_HASH_SIZE;
+  /*Killing this with fire.
+	  int hash_index = c % CHAR_WIDTH_HASH_SIZE;
   if (char_widths[hash_index][0] != c) {
     char_widths[hash_index][0] = c;
     char_widths[hash_index][1] = glutBitmapWidth( get_font(), c );
   }
   return char_widths[hash_index][1];
+  */
+	//SCHEDULED FOR REMOVAL
+	if(0xff==char_widths[c])
+	char_widths[c] = glutBitmapWidth(get_font(),c);
+	return char_widths[c];
 }
 
 

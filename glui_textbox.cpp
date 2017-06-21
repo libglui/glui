@@ -180,8 +180,9 @@ int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
   /*  has_selection = (sel_start != sel_end);              */
 
   if ( key  == CTRL('[')) {         /* ESCAPE */
-    glui->deactivate_current_control();
-    return true;
+    
+	  //GLUI_Main::keyboard returns control to the container.
+	  assert(0); 
   }
   else if ( (key == 127 AND !ctrl_down) OR  /* FORWARD DELETE */
             ( key == CTRL('d') AND modifiers == GLUT_ACTIVE_CTRL) )
@@ -299,16 +300,8 @@ int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
   }
 
   /******** Now redraw text ***********/
-  /* Hack to prevent text box from being cleared first **/
-  /**  int substring_change =  update_substring_bounds();
-       draw_text_only =
-       (NOT substring_change AND NOT has_selection AND regular_key );
-  */
-
-  draw_text_only = false;  /** Well, hack is not yet working **/
+  
   update_and_draw_text();
-  draw_text_only = false;
-
 
   if ( debug )
     dump( stdout, "<- KEY HANDLER" );
@@ -545,7 +538,7 @@ int    GLUI_TextBox::update_substring_bounds( void )
 
   /*** No selection if not enabled ***/
   if ( NOT enabled ) {
-    sel_start = sel_end = 0;
+    sel_start = sel_end = /*0*/insertion_pt;
   }
 
   if ( debug )    dump( stdout, "<- UPDATE SS" );
@@ -952,6 +945,12 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     insertion_pt = text.length();
     // update keygoal_x!
   }
+  else
+  {
+	  //Don't react to GLUT_KEY_CTRL_L (freeglut)
+	  //by clearing the selection.
+	  return false;
+  }
 
   /*** Update selection if shift key is down ***/
   if ( (modifiers & GLUT_ACTIVE_SHIFT ) != 0 )
@@ -960,11 +959,11 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     sel_start = sel_end = insertion_pt;
 
 
-  CLAMP( insertion_pt, 0, text.length()); /* Make sure insertion_pt
+  CLAMP( insertion_pt, 0, (int)text.length()); /* Make sure insertion_pt
                            is in bounds */
-  CLAMP( sel_start, 0, text.length()); /* Make sure insertion_pt
+  CLAMP( sel_start, 0, (int)text.length()); /* Make sure insertion_pt
                         is in bounds */
-  CLAMP( sel_end, 0, text.length()); /* Make sure insertion_pt
+  CLAMP( sel_end, 0, (int)text.length()); /* Make sure insertion_pt
                           is in bounds */
 
   /******** Now redraw text ***********/

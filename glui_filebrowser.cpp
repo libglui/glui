@@ -33,13 +33,11 @@
 #include "glui_internal.h"
 #include <sys/types.h>
 
-#ifdef __GNUC__
-#include <dirent.h>
-#include <unistd.h>
-#endif
-
 #ifdef _WIN32
 #include <windows.h>
+#elif defined(__GNUC__)
+#include <dirent.h>
+#include <unistd.h>
 #endif
 
 #include <sys/stat.h>
@@ -80,12 +78,15 @@ void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
     selected = list->get_item_ptr( this_item )->text.c_str();
     if (selected[0] == '/' || selected[0] == '\\') {
       if (me->allow_change_dir) {
-#ifdef __GNUC__
-        int result = chdir(selected+1);
-        assert(result==0);
-#endif
+
 #ifdef _WIN32
+
         SetCurrentDirectory(selected+1);
+
+#elif defined(__GNUC__)
+
+		int result = chdir(selected+1);
+        assert(result==0);
 #endif
         me->fbreaddir(".");
       }
@@ -105,9 +106,9 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
 	if (!d)
     return;
 
-#ifdef _WIN32
-
-  WIN32_FIND_DATA FN;
+#if defined(_WIN32)
+   
+WIN32_FIND_DATA FN;
   HANDLE hFind;
   //char search_arg[MAX_PATH], new_file_path[MAX_PATH];
   //sprintf(search_arg, "%s\\*.*", path_name);
@@ -136,7 +137,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
   }
 
 #elif defined(__GNUC__)
-
+	
   DIR *dir;
   struct dirent *dirp;
   struct stat dr;
@@ -149,7 +150,14 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
       while ((dirp = readdir(dir)) != NULL)   /* open directory     */
       {
         if (!lstat(dirp->d_name,&dr) && S_ISDIR(dr.st_mode)) /* dir is directory   */
-          item = dirp->d_name + GLUI_String("/");
+		{
+			//Making this consistent with the _WIN32 block so that the
+			//double-click function works.
+			//NOTE THAT really the list should be sorted; but it also
+			//should be using std::vector.
+          item = '/';
+		  item+=dirp->d_name;
+		}
         else
           item = dirp->d_name;
 
@@ -159,7 +167,9 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
       closedir(dir);
     }
   }
+
 #endif
+
 }
 
 void ProcessFiles(const char *path_name)

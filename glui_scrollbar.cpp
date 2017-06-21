@@ -175,7 +175,8 @@ int    GLUI_Scrollbar::mouse_down_handler( int local_x, int local_y )
 {
   last_update_time=GLUI_Time()-1.0;
   this->state = find_arrow( local_x, local_y );
-  GLUI_Master.glui_setIdleFuncIfNecessary();
+  //Removing for X11 selection server support.
+  //GLUI_Master.glui_setIdleFuncIfNecessary();
 
   /*  printf( "spinner: mouse down  : %d/%d   arrow:%d\n", local_x, local_y,
       find_arrow( local_x, local_y ));
@@ -220,7 +221,8 @@ int    GLUI_Scrollbar::mouse_down_handler( int local_x, int local_y )
 int    GLUI_Scrollbar::mouse_up_handler( int local_x, int local_y, bool inside )
 {
   state = GLUI_SCROLL_STATE_NONE;
-  GLUI_Master.glui_setIdleFuncIfNecessary();
+  //Removing for X11 selection server support.
+  //GLUI_Master.glui_setIdleFuncIfNecessary();
 
   /*  printf("spinner: mouse up  : %d/%d    inside: %d\n",local_x,local_y,inside);              */
 

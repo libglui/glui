@@ -99,10 +99,15 @@ void GLUI_List::common_construct(
 int    GLUI_List::mouse_down_handler( int local_x, int local_y )
 {
   int tmp_line;
-  unsigned long int ms;
-  timeb time;
-  ftime(&time);
-  ms = time.millitm + (time.time)*1000;
+
+  //Removing this because Cygwin/X response times are
+  //nowhere near 300ms. For accessibility and hardware
+  //issues it may be a good idea to ignore rapid clicks
+  //unless the end-user expresses a desire to count them.
+  //unsigned long int ms;
+  //timeb time;
+  //ftime(&time);
+  //ms = time.millitm + (time.time)*1000;
 
   tmp_line = find_line( local_x-x_abs, local_y-y_abs-5 );
   if ( tmp_line == -1 ) {
@@ -111,26 +116,38 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
     return false;
   }
 
-  if (tmp_line < num_lines) {
+  if (tmp_line < num_lines)
+  {
+	bool dbl = curr_line==tmp_line;
     curr_line = tmp_line;
     if (scrollbar)
       scrollbar->set_int_val(curr_line);
+
     this->execute_callback();
+
     if (associated_object != NULL)
-      if (cb_click_type == GLUI_SINGLE_CLICK) {
-        if (obj_cb) {
+    if (cb_click_type == GLUI_SINGLE_CLICK) 
+	{
+        if (obj_cb) 
+		{
           // obj_cb(associated_object, user_id);
           obj_cb(this);
         }
-      } else {
-        if (last_line == curr_line && (ms - last_click_time) < 300) {
+    } 
+	else if(dbl/*tmp_line==curr_line*/)
+	{
+        //if (last_line == curr_line && (ms - last_click_time) < 300) 
+		{
           //obj_cb(associated_object, user_id);
           obj_cb(this);
-        } else {
-          last_click_time = ms;
-          last_line = curr_line;
         }
-      }
+		//else 
+		//{
+        //  last_click_time = ms;
+        //  last_line = curr_line;
+        //}
+    }
+
     if ( can_draw())
       update_and_draw_text();
   }
@@ -163,11 +180,8 @@ int    GLUI_List::mouse_held_down_handler( int local_x, int local_y,
 int    GLUI_List::key_handler( unsigned char key,int modifiers )
 {
 
-
-  draw_text_only = false;  /** Well, hack is not yet working **/
   update_and_draw_text();
-  draw_text_only = false;
-
+  
   return true;
 }
 

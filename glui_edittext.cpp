@@ -123,7 +123,7 @@ void GLUI_EditText::common_construct( GLUI_Node *parent, const char *name,
       set_int_val(int_val);   /** Set to some default, in case of no live var **/
   }
   else if ( live_type == GLUI_LIVE_FLOAT ) {
-    num_periods = 1;
+    //num_periods = 1;
     if ( data == NULL )
       set_float_val(float_val);   /** Set to some default, in case of no live var **/
   }
@@ -205,207 +205,188 @@ int    GLUI_EditText::mouse_held_down_handler( int local_x, int local_y,
 
 /****************************** GLUI_EditText::key_handler() **********/
 
-int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
-{
-  int i, regular_key;
-  /* int has_selection;              */
+int GLUI_EditText::key_handler( unsigned char key,int modifiers )
+{	
+  if( NOT glui ) return false;
 
-  if ( NOT glui )
-    return false;
+  if( debug ) dump( stdout, "-> KEY HANDLER" );
 
-  if ( debug )
-    dump( stdout, "-> KEY HANDLER" );
+	//Kind of annoying to have to do this.
+	int leftmost = MIN(sel_start,sel_end);
+	int rightmost = MAX(sel_start,sel_end);
 
-  regular_key = false;
-  bool ctrl_down = (modifiers & GLUT_ACTIVE_CTRL)!=0;
-  /*  has_selection = (sel_start != sel_end);              */
+	assert(insertion_pt>=leftmost&&insertion_pt<=rightmost);
+		
+	if(iscntrl(key)) switch(key)
+	{
+	case '\r': /* RETURN */
+ 
+		//glui->deactivate_current_control();
+		deactivate();  /** Force callbacks, etc **/
+		activate(GLUI_ACTIVATE_TAB);     /** Reselect all text **/
+		redraw();
+		return true;
+  
+	case CTRL('['): /* ESCAPE */
+	   
+		//GLUI_Main::keyboard returns control to the container.
+		assert(0); break;
+	
+	case 127: case CTRL('d'): /* FORWARD DELETE */
+  
+		if(leftmost==rightmost) /* no selection */
+		{   
+			if(modifiers==GLUT_ACTIVE_ALT) //???
+			{
+			  leftmost = sel_start = insertion_pt;
+			  rightmost = sel_end = find_word_break(insertion_pt,1);		
+			}
+			else if(insertion_pt<(int)text.length()) 
+			{							
+			  /*** Shift over string first ***/
+			  rightmost = insertion_pt+1;
+			}
+		}                
+		_kh_erase(leftmost,rightmost);
+		break;
 
-  if ( key == CTRL('m') ) {           /* RETURN */
-    /*    glui->deactivate_current_control();              */
-    deactivate();  /** Force callbacks, etc **/
-    activate(GLUI_ACTIVATE_TAB);     /** Reselect all text **/
-    redraw();
-    return true;
+	case '\b': //CTRL('h') /* BACKSPACE */
+  
+		if(leftmost==rightmost) /* no selection */
+		{
+			/*** Shift over string first ***/
+			if(insertion_pt>0) 
+			leftmost = insertion_pt-1;
+		}
+		_kh_erase(leftmost,rightmost);     
+		break;
+  
+	case CTRL('a'):
+	
+		//This is very unlike Windows application.
+		#ifndef _WIN32
+		{
+			return special_handler(GLUT_KEY_HOME,0);
+		}
+		#else //SELECT-ALL
+		{
+			sel_start = 0; sel_end = text.length();
+		}
+		#endif
+		break;
+
+	case CTRL('x'): case CTRL('c'): //COPY
+	
+		if(sel_end==sel_start)
+		return true;
+				
+		GLUI_Clipboard.set_text(text.c_str()+leftmost,rightmost-leftmost);
+			
+		if(key == CTRL('x')) //CUT?
+		{
+			_kh_erase(leftmost,rightmost);
+		}
+		break;
+   
+	case CTRL('v'): //"PASTE"	
+	{
+		GLUI_String v;
+		if(GLUI_Clipboard.get_text(v))
+		{
+			_kh_erase(leftmost,rightmost);
+
+			text.insert(leftmost,v.c_str());
+
+			sel_start = sel_end = insertion_pt = leftmost+v.size();
+
+			//THIS IS NOT THE PLACE TO CHANGE THE SUBSTRING END??
+			//THIS IS NOT THE PLACE TO CHANGE THE SUBSTRING END??
+			//THIS IS NOT THE PLACE TO CHANGE THE SUBSTRING END??
+			substring_end+=v.size();
+		}
+		break;
+	}
+	case CTRL('e'): return special_handler(GLUT_KEY_END,0);
+	case CTRL('b'): return special_handler(GLUT_KEY_LEFT,0);
+	case CTRL('f'): return special_handler(GLUT_KEY_RIGHT,0);
+	case CTRL('p'): return special_handler(GLUT_KEY_UP,0);
+	case CTRL('n'): return special_handler(GLUT_KEY_DOWN,0);	
+	//This is destructive without an "undo" feature.
+	#ifndef _WIN32
+	
+		case CTRL('u'): /* ERASE LINE */
+				  
+			  _kh_erase(0,text.length());
+			  break;
+
+		case CTRL('k'): /* KILL TO END OF LINE */
+		 
+			_kh_erase(insertion_pt,text.size());
+			break;
+	#endif	
   }
-  else if ( key  == CTRL('[')) {         /* ESCAPE */
-    glui->deactivate_current_control();
-    return true;
-  }
-  else if ( (key == 127 AND !ctrl_down) OR  /* FORWARD DELETE */
-            ( key == CTRL('d') AND modifiers == GLUT_ACTIVE_CTRL) )
+  else if(isprint(key))
   {
-    if ( sel_start == sel_end ) {   /* no selection */
-      if ( insertion_pt < (int)text.length() ) {
-        /*** See if we're deleting a period in a float data-type box ***/
-        if ( data_type == GLUI_EDITTEXT_FLOAT AND text[insertion_pt]=='.' )
-          num_periods--;
-
-        /*** Shift over string first ***/
-        text.erase(insertion_pt,1);
-      }
-    }
-    else {                         /* There is a selection */
-      clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-      insertion_pt = MIN(sel_start,sel_end);
-      sel_start = sel_end = insertion_pt;
-    }
-  }
-  else if ( ((key == 127) AND ctrl_down) OR   // Delete word forward
-            ((key == 'd') AND (modifiers == GLUT_ACTIVE_ALT)) )
-  {
-    if ( sel_start == sel_end ) {   /* no selection */
-      sel_start = insertion_pt;
-      sel_end = find_word_break( insertion_pt, +1 );
-    }
-
-    clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-    insertion_pt = MIN(sel_start,sel_end);
-    sel_start = sel_end = insertion_pt;
-  }
-  else if ( key == CTRL('h') ) {       /* BACKSPACE */
-    if ( sel_start == sel_end ) {   /* no selection */
-      if ( insertion_pt > 0 ) {
-        /*** See if we're deleting a period in a float data-type box ***/
-        if ( data_type == GLUI_EDITTEXT_FLOAT AND text[insertion_pt-1]=='.' )
-          num_periods--;
-
-        /*** Shift over string first ***/
-        insertion_pt--;
-        text.erase(insertion_pt,1);
-      }
-    }
-    else {                         /* There is a selection */
-      clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-      insertion_pt = MIN(sel_start,sel_end);
-      sel_start = sel_end = insertion_pt;
-    }
-  }
-  else if ( modifiers == GLUT_ACTIVE_CTRL )  /* CTRL ONLY */
-  {
-    /* Ctrl-key bindings */
-    if ( key == CTRL('a') ) {
-      return special_handler( GLUT_KEY_HOME, 0 );
-    }
-    else if ( key == CTRL('e') ) {
-      return special_handler( GLUT_KEY_END, 0 );
-    }
-    else if ( key == CTRL('b') ) {
-      return special_handler( GLUT_KEY_LEFT, 0 );
-    }
-    else if ( key == CTRL('f') ) {
-      return special_handler( GLUT_KEY_RIGHT, 0 );
-    }
-    else if ( key == CTRL('p') ) {
-      return special_handler( GLUT_KEY_UP, 0 );
-    }
-    else if ( key == CTRL('n') ) {
-      return special_handler( GLUT_KEY_DOWN, 0 );
-    }
-    else if ( key == CTRL('u') ) { /* ERASE LINE */
-      insertion_pt = 0;
-      text.erase(0,text.length());
-      sel_start = sel_end = 0;
-    }
-    else if ( key == CTRL('k') ) { /* KILL TO END OF LINE */
-      sel_start = sel_end = insertion_pt;
-      text.erase(insertion_pt,GLUI_String::npos);
-    }
-  }
-  else if ( modifiers == GLUT_ACTIVE_ALT ) /* ALT ONLY */
-  {
-    if ( key == 'b' ) { // Backward word
-      return special_handler ( GLUT_KEY_LEFT, GLUT_ACTIVE_CTRL );
-    }
-    if ( key == 'f' ) { // Forward word
-      return special_handler ( GLUT_KEY_RIGHT, GLUT_ACTIVE_CTRL );
-    }
-  }
-  else if ( (modifiers & GLUT_ACTIVE_CTRL) OR
-            (modifiers & GLUT_ACTIVE_ALT) )
-  {
-    /** ignore other keys with modifiers */
-    return true;
-  }
-  else { /* Regular key */
-    regular_key = true;
+	  if(modifiers==GLUT_ACTIVE_ALT ) /* ALT ONLY */
+	  {
+		if(key=='b')  // Backward word
+		{
+		  return special_handler ( GLUT_KEY_LEFT, GLUT_ACTIVE_CTRL );
+		}
+		if(key=='f') // Forward word
+		{
+		  return special_handler ( GLUT_KEY_RIGHT, GLUT_ACTIVE_CTRL );
+		}
+	  }	
+	  if( (modifiers & GLUT_ACTIVE_CTRL) 
+	  OR  (modifiers & GLUT_ACTIVE_ALT) )
+	  {
+		/** ignore other keys with modifiers */
+		return true;
+	  }
 
     /** Check if we only accept numbers **/
-    if (data_type == GLUI_EDITTEXT_FLOAT ) {
-      if ( (key < '0' OR key > '9') AND key != '.' AND key != '-' )
+	if(data_type==GLUI_EDITTEXT_FLOAT)
+	{
+	  if(key=='.') 
+	  {
+        /** We're trying to type a period, but the text already contains
+          a period.  Check whether the period is contained within
+          is current selection (thus it will be safely replaced) 
+		*/
+		int dp = (int)text.find_first_of('.');
+		if(dp!=text.npos)
+		if(dp<leftmost||dp>=rightmost)
+		return true;
+		goto decimal_point;
+      }
+	  goto floating_point;	 
+	}
+    if(data_type==GLUI_EDITTEXT_INT) floating_point:
+	{
+      if((key<'0' OR key>'9') AND key!='-' /*AND key!='.'*/)
+	  {
         return true;
+	  }
+	  decimal_point:
 
-      if ( key == '-' ) { /* User typed a '-' */
-
+      if(key=='-' )  /* User typed a '-' */
+	  {
         /* If user has first character selected, then '-' is allowed */
-        if ( NOT ( MIN(sel_start,sel_end) == 0 AND
-                   MAX(sel_start,sel_end) > 0 ) ) {
-
+        if( NOT ( leftmost == 0 AND rightmost > 0 ) ) 
+		{
           /* User does not have 1st char selected */
-          if (insertion_pt != 0 OR text[0] == '-' ) {
+          if (insertion_pt != 0 OR text[0] == '-' ) 
+		  {
             return true; /* Can only place negative at beginning of text,
                             and only one of them */
           }
         }
       }
-
-      if ( key == '.' ) {
-        /*printf( "PERIOD: %d\n", num_periods );              */
-
-        if ( num_periods > 0 ) {
-          /** We're trying to type a period, but the text already contains
-          a period.  Check whether the period is contained within
-          is current selection (thus it will be safely replaced) **/
-
-          int period_found = false;
-          if ( sel_start != sel_end ) {
-            for( i=MIN(sel_end,sel_start); i<MAX(sel_start,sel_end); i++ ) {
-              /*  printf( "%c ", text[i] );              */
-              if ( text[i] == '.' ) {
-                period_found = true;
-                break;
-              }
-            }
-          }
-
-          /* printf( "found: %d    num: %d\n", period_found, num_periods );              */
-
-          if ( NOT period_found )
-            return true;
-        }
-      }
-    }
-    else if (data_type == GLUI_EDITTEXT_INT)
-    {
-      if ( (key < '0' OR key > '9') AND key != '-' )
-        return true;
-
-      if ( key == '-' ) { /* User typed a '-' */
-
-        /* If user has first character selected, then '-' is allowed */
-        if ( NOT ( MIN(sel_start,sel_end) == 0 AND
-          MAX(sel_start,sel_end) > 0 ) ) {
-
-            /* User does not have 1st char selected */
-            if (insertion_pt != 0 OR text[0] == '-' ) {
-              return true; /* Can only place negative at beginning of text,
-                           and only one of them */
-            }
-          }
-      }
-    }
-
-    /** This is just to get rid of warnings - the flag regular_key is
-      set if the key was not a backspace, return, whatever.  But I
-      believe if we're here, we know it was a regular key anyway */
-    if ( regular_key ) {
-    }
+    }    
 
     /**** If there's a current selection, erase it ******/
-    if ( sel_start != sel_end ) {
-      clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-      insertion_pt = MIN(sel_start,sel_end);
-      sel_start = sel_end = insertion_pt;
-    }
+    _kh_erase(leftmost,rightmost);
 
     /******** We insert the character into the string ***/
 
@@ -413,34 +394,32 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
 
     /******** Move the insertion point and substring_end one over ******/
     insertion_pt++;
+
+	//THIS IS NOT THE PLACE TO CHANGE THE SUBSTRING END??
+	//THIS IS NOT THE PLACE TO CHANGE THE SUBSTRING END??
+	//THIS IS NOT THE PLACE TO CHANGE THE SUBSTRING END??
     substring_end++;
 
     sel_start = sel_end = insertion_pt;
   }
 
   /******** Now redraw text ***********/
-  /* Hack to prevent text box from being cleared first **/
-  /**  int substring_change =  update_substring_bounds();
-  draw_text_only =
-  (NOT substring_change AND NOT has_selection AND regular_key );
-  */
-
-  draw_text_only = false;  /** Well, hack is not yet working **/
+      
   update_and_draw_text();
-  draw_text_only = false;
-
-
-  if ( debug )
-    dump( stdout, "<- KEY HANDLER" );
-
-  /*** Now look to see if this string has a period ***/
-  num_periods = 0;
-  for( i=0; i<(int)text.length(); i++ )
-    if ( text[i] == '.' )
-      num_periods++;
+  
+  if(debug) dump(stdout,"<- KEY HANDLER");
 
   return true;
 }
+void GLUI_EditText::_kh_erase( int start, int end )
+{
+  assert(start<=end);
+  
+  text.erase(start,end-start);
+
+  sel_start = sel_end = insertion_pt = start;			
+}
+
 
 
 /****************************** GLUI_EditText::activate() **********/
@@ -626,7 +605,7 @@ int    GLUI_EditText::update_substring_bounds( void )
 
   /*** No selection if not enabled ***/
   if ( NOT enabled ) {
-    sel_start = sel_end = 0;
+    sel_start = sel_end = /*0*/insertion_pt;
   }
 
   if ( debug )    dump( stdout, "<- UPDATE SS" );
@@ -654,17 +633,18 @@ void    GLUI_EditText::draw_text( int x, int y )
 
   if ( debug )    dump( stdout, "-> DRAW_TEXT" );
 
-  if ( NOT draw_text_only ) {
-    if ( enabled )
-      glColor3f( 1., 1., 1. );
-    else
-      set_to_bkgd_color();
-    glDisable( GL_CULL_FACE );
-    glBegin( GL_QUADS );
-    glVertex2i( text_x_offset+2, 2 );     glVertex2i( w-2, 2 );
-    glVertex2i( w-2, h-2 );               glVertex2i( text_x_offset+2, h-2 );
-    glEnd();
-  }
+  
+	if( enabled )
+	{
+		glColor3f(1,1,1);
+	}
+	else set_to_bkgd_color();
+
+	glDisable( GL_CULL_FACE );
+	glBegin( GL_QUADS );
+	glVertex2i( text_x_offset+2, 2 );     glVertex2i( w-2, 2 );
+	glVertex2i( w-2, h-2 );               glVertex2i( text_x_offset+2, h-2 );
+	glEnd();
 
   /** Find where to draw the text **/
 
@@ -878,27 +858,49 @@ int    GLUI_EditText::special_handler( int key,int modifiers )
 	    key, modifiers, substring_start, substring_end,insertion_pt,
 	    sel_start, sel_end );
 
-  if ( key == GLUT_KEY_LEFT ) {
-    if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) {
-      insertion_pt = find_word_break( insertion_pt, -1 );
-    }
-    else {
-      insertion_pt--;
-    }
+  if ( key == GLUT_KEY_LEFT )
+  {
+	if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) 
+	{
+		insertion_pt = find_word_break(insertion_pt, -1 );
+	}
+	else if( (modifiers & GLUT_ACTIVE_SHIFT ) != 0 )
+	{
+		insertion_pt--;
+	}
+	else if(sel_start==sel_end)
+	{
+		insertion_pt--;
+	}
+	else insertion_pt = MIN(sel_start,sel_end);
   }
-  else if ( key == GLUT_KEY_RIGHT ) {
-    if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) {
-      insertion_pt = find_word_break( insertion_pt, +1 );
+  else if ( key == GLUT_KEY_RIGHT ) 
+  {
+    if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) 
+	{
+      insertion_pt = find_word_break(insertion_pt, +1 );
     }
-    else {
-      insertion_pt++;
-    }
+	else if( (modifiers & GLUT_ACTIVE_SHIFT ) != 0 )
+	{
+		insertion_pt++;
+	}
+    else if(sel_start==sel_end)
+	{
+		insertion_pt++;
+	}
+	else insertion_pt = MAX(sel_start,sel_end);
   }
   else if ( key == GLUT_KEY_HOME ) {
     insertion_pt = 0;
   }
   else if ( key == GLUT_KEY_END ) {
     insertion_pt = (int) text.length();
+  }
+  else
+  {
+	  //Don't react to GLUT_KEY_CTRL_L (freeglut)
+	  //by clearing the selection.
+	  return false;
   }
 
   /*** Update selection if shift key is down ***/
@@ -966,31 +968,6 @@ int    GLUI_EditText::find_word_break( int start, int direction )
   else                  /* Return the beginning of the text */
     return 0;
 }
-
-
-/********************************** GLUI_EditText::clear_substring() ********/
-
-void   GLUI_EditText::clear_substring( int start, int end )
-{
-  int i;
-
-  /*
-  printf( "clearing: %d-%d   '", start,end);
-  for(i=start;i<end;i++ )
-  putchar(text[i]);
-  printf( "'\n" ); flushout;
-  */
-  /*** See if we're deleting a period in a float data-type box ***/
-  if ( data_type == GLUI_EDITTEXT_FLOAT ) {
-    for( i=start; i<end; i++ )
-      if ( text[i] == '.' )
-        num_periods = 0;
-  }
-
-  text.erase(start,end-start);
-}
-
-
 
 /************************************ GLUI_EditText::update_size() **********/
 
@@ -1133,34 +1110,25 @@ void   GLUI_EditText::set_int_limits( int low, int high, int limit_type )
 
 /************************************ GLUI_EditText::set_numeric_text() ******/
 
-void    GLUI_EditText::set_numeric_text( void )
+void GLUI_EditText::set_numeric_text( void )
 {
   char buf_num[200];
-  int  i, text_len;
-
-  if ( data_type == GLUI_EDITTEXT_FLOAT ) {
-    sprintf( buf_num, "%#g", float_val );
-
-    num_periods = 0;
-    text_len = (int) strlen(buf_num);
-    for ( i=0; i<text_len; i++ )
-      if ( buf_num[i] == '.' )
-        num_periods++;
-
+  if(data_type==GLUI_EDITTEXT_FLOAT)
+  {
+    snprintf( buf_num, sizeof(buf_num), "%#g", float_val );
+						  
     /* Now remove trailing zeros */
-    if ( num_periods > 0 ) {
-      text_len = (int) strlen(buf_num);
-      for ( i=text_len-1; i>0; i-- ) {
-        if ( buf_num[i] == '0' AND buf_num[i-1] != '.' )
-          buf_num[i] = '\0';
-        else
-          break;
-      }
+    for(int i=(int)strlen(buf_num)-1;i>0;i--)
+	{
+        if(buf_num[i]!='0' OR buf_num[i-1]=='.')
+		break;
+		buf_num[i] = '\0';
     }
     set_text( buf_num );
   }
-  else {
-    sprintf( buf_num, "%d", int_val );
+  else 
+  {
+    snprintf( buf_num, sizeof(buf_num), "%d", int_val );
     set_text( buf_num );
   }
 

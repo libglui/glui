@@ -18,6 +18,7 @@
 #ifndef GLUI_INTERNAL_H
 #define GLUI_INTERNAL_H
 
+#include <cstdlib>
 #include <cstdio>
 #include <cmath>
 #include <cassert>

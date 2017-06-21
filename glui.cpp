@@ -31,6 +31,60 @@
 *****************************************************************************/
 #include "glui_internal_control.h"
 
+//PASS-THROUGHS
+//These are here so glui.h does not have to #include glut.h.
+void GLUI_Master_Object::set_glutDisplayFunc(void (*f)(void))
+{
+	glutDisplayFunc(f);
+}
+void set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value)
+{
+	glutTimerFunc(millis,f,value);
+}
+void set_glutOverlayDisplayFunc(void(*f)(void))
+{
+	glutOverlayDisplayFunc(f);
+}
+void set_glutSpaceballMotionFunc(Int3_CB f)
+{
+	glutSpaceballMotionFunc(f);
+}
+void set_glutSpaceballRotateFunc(Int3_CB f)
+{
+	glutSpaceballRotateFunc(f);
+}
+void set_glutSpaceballButtonFunc(Int2_CB f)
+{
+	glutSpaceballButtonFunc(f);
+}
+void set_glutTabletMotionFunc(Int2_CB f)
+{
+	glutTabletMotionFunc(f);
+}
+void set_glutTabletButtonFunc(Int4_CB f)
+{
+	glutTabletButtonFunc(f);
+}
+void set_glutWindowStatusFunc(Int1_CB f)
+{
+	glutWindowStatusFunc(f);
+} 
+void set_glutMenuStatusFunc(Int3_CB f)
+{
+	glutMenuStatusFunc(f);
+}
+void set_glutMenuStateFunc(Int1_CB f)
+{
+	glutMenuStateFunc(f);
+}
+void set_glutButtonBoxFunc(Int2_CB f)  
+{
+	glutButtonBoxFunc(f);
+}
+void set_glutDialsFunc(Int2_CB f) 
+{
+	glutDialsFunc(f);
+}    
 
 /**
  Note: moving this routine here from glui_add_controls.cpp prevents the linker
@@ -102,11 +156,11 @@ int GLUI_Main::add_control( GLUI_Node *parent, GLUI_Control *control )
 
 GLUI_Master_Object GLUI_Master;
 
-/************************************ finish_drawing() ***********
+/************************************ _sync_drawing_by_calling_glFinish() ***********
   Probably a silly routine.  Called after all event handling callbacks.
 */
 
-static void finish_drawing(void)
+static void _sync_drawing_by_calling_glFinish(void)
 {
 	glFinish();
 }
@@ -210,7 +264,17 @@ void GLUI_Main::setup_default_glut_callbacks( void )
   glutPassiveMotionFunc( glui_passive_motion_func );
   glutEntryFunc( glui_entry_func );
   glutVisibilityFunc( glui_visibility_func );
-  /*  glutIdleFunc( glui_idle_func );    // FIXME!  100% CPU usage!      */
+  /*  glutIdleFunc( glui_idle_func );    // FIXME!  100% CPU usage!      */  
+  //This is needed to host the X11 copy-paste selection-owner.
+  //It's really no big deal. The scheduler will divide time up
+  //and unless "vsync" is off a continuously rendering client
+  //will wait for the "vertical-blank."
+  //GLUT isn't a good fit for passive applications, and it is
+  //historically for full-motion 3-D displays.
+  //Clients can figure out a wait solution in their Idle function.
+  //freeglut provides a default idle, which it does not expose,
+  //but it's open-souce and so copy-friendly.
+  glutIdleFunc( glui_idle_func );
 }
 
 
@@ -292,7 +356,7 @@ void glui_keyboard_func(unsigned char key, int x, int y)
       glutSetWindow( GLUI_Master.active_control_glui->get_glut_window_id() );
 
       GLUI_Master.active_control_glui->keyboard(key,x,y);
-	  finish_drawing();
+	  _sync_drawing_by_calling_glFinish();
 
       glutSetWindow( current_window );
     }
@@ -306,7 +370,7 @@ void glui_keyboard_func(unsigned char key, int x, int y)
 
     if ( glui ) {
       glui->keyboard(key,x,y);
-	  finish_drawing();
+	  _sync_drawing_by_calling_glFinish();
     }
   }
 }
@@ -330,7 +394,7 @@ void glui_special_func(int key, int x, int y)
       glutSetWindow( GLUI_Master.active_control_glui->get_glut_window_id() );
 
       GLUI_Master.active_control_glui->special(key,x,y);
-      finish_drawing();
+      _sync_drawing_by_calling_glFinish();
 
       glutSetWindow( current_window );
     }
@@ -347,7 +411,7 @@ void glui_special_func(int key, int x, int y)
     if ( glui )
     {
       glui->special(key,x,y);
-      finish_drawing();
+      _sync_drawing_by_calling_glFinish();
     }
   }
 }
@@ -369,14 +433,14 @@ void glui_mouse_func(int button, int state, int x, int y)
 
     if (glut_window->glut_mouse_CB)
       glut_window->glut_mouse_CB( button, state, x, y );
-	finish_drawing();
+	_sync_drawing_by_calling_glFinish();
   }
   else {               /**  Nope - event was in a GLUI standalone window  **/
     glui = GLUI_Master.find_glui_by_window_id( glutGetWindow() );
     if ( glui ) {
       glui->passive_motion( 0,0 );
       glui->mouse( button, state, x, y );
-	  finish_drawing();
+	  _sync_drawing_by_calling_glFinish();
     }
   }
 }
@@ -392,7 +456,7 @@ void glui_motion_func(int x, int y)
 
   if ( glui ) {
     glui->motion(x,y);
-	finish_drawing();
+	_sync_drawing_by_calling_glFinish();
   }
 
 }
@@ -408,7 +472,7 @@ void glui_passive_motion_func(int x, int y)
 
   if ( glui ) {
     glui->passive_motion(x,y);
-	finish_drawing();
+	_sync_drawing_by_calling_glFinish();
   }
 }
 
@@ -449,12 +513,24 @@ void glui_visibility_func(int state)
 
 void glui_idle_func(void)
 {
+	//X11 needs the owner of the the selection to process
+	//SelectionRequest events on a fulltime basis.
+	//NOTE that idle is entered
+	extern void glui_clipboard_try_SelectionRequest();
+	glui_clipboard_try_SelectionRequest();
+	
   GLUI *glui;
 
   glui = (GLUI*) GLUI_Master.gluis.first_child();
-  while( glui ) {
+  while( glui ) 
+  {
     glui->idle();
-	finish_drawing();
+	
+	//This is not drawing in the idle loop.
+	//It was called "finish_drawing" and it
+	//should probably be removed. I think it
+	//is just here as a matter of convenience.
+	_sync_drawing_by_calling_glFinish(); 
 
     glui = (GLUI*) glui->next();
   }
@@ -641,6 +717,7 @@ void _glutBitmapString( void *font, const char *s )
 {
   const char *p = s;
 
+  //Reminder: freeglut_ext.h has glutBitmapString().
   while( *p != '\0' )  {
     glutBitmapCharacter( font, *p );
     p++;
@@ -698,7 +775,7 @@ void    GLUI_Main::keyboard(unsigned char key, int x, int y)
   GLUI_Control *new_control;
 
   curr_modifiers = glutGetModifiers();
-
+  
   /*** If it's a tab or shift tab, we don't pass it on to the controls.
     Instead, we use it to cycle through active controls ***/
   if ( key == '\t' AND !mouse_button_down AND
@@ -725,7 +802,20 @@ void    GLUI_Main::keyboard(unsigned char key, int x, int y)
 
     active_control->mouse_down_handler( 0, 0 );
     active_control->mouse_up_handler( 0, 0, true );
-  } else {
+  }
+  else if(key==CTRL('[')) //ESC
+  {
+	  //The text controls had handled ESC. No more.
+
+	//On Windows Esc belongs to the parent container.
+	//I can't recall if it changes controls' state or not.
+	//The parent might hide the control group or close itself.
+	deactivate_current_control();
+	glutSetWindow(main_gfx_window_id);
+	glui_keyboard_func(key,x,y);
+  }
+  else
+  {
     /*** Pass the keystroke onto the active control, if any ***/
     if ( active_control != NULL )
       active_control->key_handler( key, curr_modifiers );
@@ -1429,7 +1519,8 @@ GLUI_Control  *GLUI_Main::find_prev_control( GLUI_Control *control )
 void    GLUI_Master_Object::set_glutIdleFunc(void (*f)(void))
 {
   glut_idle_CB = f;
-  GLUI_Master.glui_setIdleFuncIfNecessary();
+  //Removing for X11 selection server support.
+  //GLUI_Master.glui_setIdleFuncIfNecessary();
 }
 
 
@@ -2083,7 +2174,9 @@ GLUI_DrawingSentinal::~GLUI_DrawingSentinal() {
 	c->restore_window(orig_win);
 }
 
-
+/*FOR-REFERENCE-ONLY
+//From setup_default_glut_callbacks:
+"glutIdleFunc( glui_idle_func ); // FIXME!  100% CPU usage!"
 void GLUI_Master_Object::glui_setIdleFuncIfNecessary( void )
 {
   GLUI *glui;
@@ -2106,4 +2199,4 @@ void GLUI_Master_Object::glui_setIdleFuncIfNecessary( void )
     glutIdleFunc( glui_idle_func );
   else
     glutIdleFunc( NULL );
-}
+}*/
