@@ -10,8 +10,8 @@
 
   Copyright (c) 1998 Paul Rademacher
 
-  WWW:    http://sourceforge.net/projects/glui/
-  Forums: http://sourceforge.net/forum/?group_id=92496
+  WWW:    https://github.com/libglui/glui
+  Issues: https://github.com/libglui/glui/issues
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -38,14 +38,14 @@ int _glui_draw_border_only = 0;
 /*************************** Drawing Utility routines *********************/
 
 /* Redraw this control. */
-void	      GLUI_Control::redraw(void) {
+void	      GLUI_Control::redraw() {
     if (glui==NULL || hidden) return;
     if (glui->should_redraw_now(this))
       translate_and_draw_front();
 }
 
 /** Redraw everybody in our window. */
-void	     GLUI_Control::redraw_window(void) {
+void	     GLUI_Control::redraw_window() {
   if (glui==NULL || hidden) return;
   if ( glui->get_glut_window_id() == -1 ) return;
   int orig = set_to_glut_window();

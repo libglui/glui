@@ -5,8 +5,8 @@
   GLUI User Interface Toolkit
   Copyright (c) 1998-2007 Paul Rademacher
 
-  WWW:    http://sourceforge.net/projects/glui/
-  Forums: http://sourceforge.net/forum/?group_id=92496
+  WWW:    https://github.com/libglui/glui
+  Issues: https://github.com/libglui/glui/issues
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -485,7 +485,7 @@ vec3 &vec3::normalize() // it is up to caller to avoid divide-by-zero
     return *this;
 }
 
-vec3 &vec3::homogenize(void) // it is up to caller to avoid divide-by-zero
+vec3 &vec3::homogenize() // it is up to caller to avoid divide-by-zero
 {
     n[VX] /= n[VZ];
     n[VY] /= n[VZ];

@@ -10,8 +10,8 @@
 
   Copyright (c) 1998 Paul Rademacher
 
-  WWW:    http://sourceforge.net/projects/glui/
-  Forums: http://sourceforge.net/forum/?group_id=92496
+  WWW:    https://github.com/libglui/glui
+  Issues: https://github.com/libglui/glui/issues
 
   This software is provided 'as-is', without any express or implied 
   warranty. In no event will the authors be held liable for any damages 
@@ -485,7 +485,7 @@ public:
 
     GLUI_Glut_Window   *find_glut_window( int window_id );
 
-    void           set_glutIdleFunc(void (*f)(void));
+    void           set_glutIdleFunc(void (*f)());
 
     /**************
     void (*glut_keyboard_CB)(unsigned char, int, int);
@@ -496,7 +496,7 @@ public:
     void (*glut_passive_motion_CB)(int,int);
     void (*glut_visibility_CB)(int);
     void (*glut_motion_CB)(int,int);
-    void (*glut_display_CB)(void);
+    void (*glut_display_CB)();
     void (*glut_entry_CB)(int);
     **********/
 
@@ -510,10 +510,10 @@ public:
     void set_glutSpecialFunc (void (*f)(int key, int x, int y));
     void set_glutMouseFunc   (void (*f)(int, int, int, int ));
 
-    void set_glutDisplayFunc(void (*f)(void)) {glutDisplayFunc(f);}
+    void set_glutDisplayFunc(void (*f)()) {glutDisplayFunc(f);}
     void set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value)
     { ::glutTimerFunc(millis,f,value);}
-    void set_glutOverlayDisplayFunc(void(*f)(void)){glutOverlayDisplayFunc(f);}
+    void set_glutOverlayDisplayFunc(void(*f)()){glutOverlayDisplayFunc(f);}
     void set_glutSpaceballMotionFunc(Int3_CB f)  {glutSpaceballMotionFunc(f);}
     void set_glutSpaceballRotateFunc(Int3_CB f)  {glutSpaceballRotateFunc(f);}
     void set_glutSpaceballButtonFunc(Int2_CB f)  {glutSpaceballButtonFunc(f);}
@@ -538,11 +538,11 @@ public:
 
     float          get_version() { return GLUI_VERSION; }
 
-    void glui_setIdleFuncIfNecessary(void);
+    void glui_setIdleFuncIfNecessary();
 
 private:
     GLUI_Node     glut_windows;
-    void (*glut_idle_CB)(void);
+    void (*glut_idle_CB)();
 
     void          add_cb_to_glut_window(int window,int cb_type,void *cb);
 };
@@ -581,7 +581,7 @@ public:
     void (*glut_mouse_CB)(int,int,int,int);
     void (*glut_visibility_CB)(int);
     void (*glut_motion_CB)(int,int);
-    void (*glut_display_CB)(void);
+    void (*glut_display_CB)();
     void (*glut_entry_CB)(int);
 };
 
@@ -625,7 +625,7 @@ class GLUIAPI GLUI_Main : public GLUI_Node
     friend void glui_motion_func(int x, int y);
     friend void glui_entry_func(int state);
     friend void glui_display_func( void );
-    friend void glui_idle_func(void);
+    friend void glui_idle_func();
 
     friend void glui_parent_window_reshape_func( int w, int h );
     friend void glui_parent_window_keyboard_func( unsigned char, int, int );
@@ -673,8 +673,8 @@ protected:
     void           motion(int x, int y);
     void           entry(int state);
     void           display( void );
-    void           idle(void);
-    int            needs_idle(void);
+    void           idle();
+    int            needs_idle();
 
     void (*glut_mouse_CB)(int, int, int, int);
     void (*glut_keyboard_CB)(unsigned char, int, int);
@@ -852,10 +852,10 @@ public:
        In double-buffering mode (drawing to GL_BACK), this queues up 
           a redraw and returns false, since you shouldn't draw yet.
     */
-    void          redraw(void);
+    void          redraw();
     
     /** Redraw everybody in our window. */
-    void         redraw_window(void);
+    void         redraw_window();
 
     virtual void align( void );
     void         pack( int x, int y );    /* Recalculate positions and offsets */
@@ -902,7 +902,7 @@ public:
     virtual bool needs_idle( void ) const;
     virtual bool wants_tabs() const      { return false; }
 
-    GLUI_Control(void) 
+    GLUI_Control() 
     {
         x_off          = GLUI_XOFF;
         y_off_top      = GLUI_YOFF;
@@ -982,7 +982,7 @@ public:
     GLUI_Button( void ) { common_init(); };
 
 protected:
-    void common_init(void) {
+    void common_init() {
         glui_format_str(name, "Button: %p", this );
         h            = GLUI_BUTTON_SIZE;
         w            = 100;
@@ -1037,7 +1037,7 @@ public:
     GLUI_Checkbox( void ) { common_init(); }
 
 protected:
-    void common_init(void) {
+    void common_init() {
         glui_format_str( name, "Checkbox: %p", this );
         w              = 100;
         h              = GLUI_CHECKBOX_SIZE;
@@ -1545,7 +1545,7 @@ public:
 
     /***** GLUT callback setup functions *****/
     /*
-      void set_glutDisplayFunc(void (*f)(void));
+      void set_glutDisplayFunc(void (*f)());
       void set_glutReshapeFunc(void (*f)(int width, int height));
       void set_glutKeyboardFunc(void (*f)(unsigned char key, int x, int y));
       void set_glutSpecialFunc(void (*f)(int key, int x, int y));
@@ -2480,7 +2480,7 @@ public:
 
     GLUI_Rotation( GLUI_Node *parent, const char *name, float *live_var=NULL,
                    int id=-1, GLUI_CB callback=GLUI_CB() );
-    GLUI_Rotation(void) { common_init(); }
+    GLUI_Rotation() { common_init(); }
 
 protected:
     void common_init();
@@ -2584,7 +2584,7 @@ void glui_motion_func(int x, int y);
 void glui_passive_motion_func(int x, int y);
 void glui_entry_func(int state);
 void glui_visibility_func(int state);
-void glui_idle_func(void);
+void glui_idle_func();
 
 void glui_parent_window_reshape_func( int w, int h );
 void glui_parent_window_keyboard_func(unsigned char key, int x, int y);
