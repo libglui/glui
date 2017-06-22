@@ -2,7 +2,7 @@
 
 https://github.com/libglui/glui
 
-[![Build Status](https://travis-ci.org/nigels-com/glui.svg?branch=master)](https://travis-ci.org/nigels-com/glui)
+[![Build Status](https://travis-ci.org/libglui/glui.svg?branch=master)](https://travis-ci.org/libglui/glui)
 
 This distribution contains the latest community-maintained fork of the
 GLUI Library, now under the ZLIB license.  It is based on the GLUI
