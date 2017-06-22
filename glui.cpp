@@ -9,8 +9,8 @@
 
   Copyright (c) 1998 Paul Rademacher
 
-  WWW:    http://sourceforge.net/projects/glui/
-  Forums: http://sourceforge.net/forum/?group_id=92496
+  WWW:    https://github.com/libglui/glui
+  Issues: https://github.com/libglui/glui/issues
 
   This software is provided 'as-is', without any express or implied
   warranty. In no event will the authors be held liable for any damages
@@ -106,7 +106,7 @@ GLUI_Master_Object GLUI_Master;
   Probably a silly routine.  Called after all event handling callbacks.
 */
 
-static void finish_drawing(void)
+static void finish_drawing()
 {
 	glFinish();
 }
@@ -216,7 +216,7 @@ void GLUI_Main::setup_default_glut_callbacks( void )
 
 /********************************************** glui_display_func() ********/
 
-void glui_display_func(void)
+void glui_display_func()
 {
   GLUI *glui;
 
@@ -447,7 +447,7 @@ void glui_visibility_func(int state)
 /********************************************** glui_idle_func() ********/
 /* Send idle event to each glui, then to the main window            */
 
-void glui_idle_func(void)
+void glui_idle_func()
 {
   GLUI *glui;
 
@@ -895,7 +895,7 @@ void    GLUI_Main::visibility(int state)
 
 /****************************** GLUI_Main::idle() **************/
 
-void    GLUI_Main::idle(void)
+void    GLUI_Main::idle()
 {
   /*** Pass the idle event onto the active control, if any ***/
 
@@ -1426,7 +1426,7 @@ GLUI_Control  *GLUI_Main::find_prev_control( GLUI_Control *control )
 
 /************************* GLUI_Master_Object::set_glutIdleFunc() ***********/
 
-void    GLUI_Master_Object::set_glutIdleFunc(void (*f)(void))
+void    GLUI_Master_Object::set_glutIdleFunc(void (*f)())
 {
   glut_idle_CB = f;
   GLUI_Master.glui_setIdleFuncIfNecessary();

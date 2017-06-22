@@ -86,7 +86,7 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
 }
 
 /****************************** GLUI_Scrollbar::common_init() **********/
-void GLUI_Scrollbar::common_init(void)
+void GLUI_Scrollbar::common_init()
 {
    horizontal	= true;
    h		= GLUI_SCROLL_ARROW_HEIGHT;
