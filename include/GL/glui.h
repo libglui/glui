@@ -960,16 +960,16 @@ class GLUIAPI GLUI_Button : public GLUI_Control
 public:
     bool currently_inside;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
     void draw_pressed();
     void draw_text( int sunken );
 
-    void update_size();
+    void update_size() override;
 
 /**
  Create a new button.
@@ -1011,18 +1011,18 @@ public:
     bool currently_inside;
     int  text_x_offset;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
 
-    void update_size();
+    void update_size() override;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
 
     void draw_active_area();
     void draw_empty_box();
-    void set_int_val( int new_val );
+    void set_int_val( int new_val ) override;
 
 /**
  Create a new checkbox object.
@@ -1063,7 +1063,7 @@ protected:
 class GLUIAPI GLUI_Column : public GLUI_Control
 {
 public:
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
 
 /**
  Create a new column, which separates the previous controls
@@ -1111,11 +1111,11 @@ public:
                 int type=GLUI_PANEL_EMBOSSED );
     GLUI_Panel() { common_init(); }
 
-    void draw( int x, int y );
-    void set_name( const char *text );
+    void draw( int x, int y ) override;
+    void set_name( const char *text ) override;
     void set_type( int new_type );
 
-    void update_size();
+    void update_size() override;
 
 protected:
     void common_init() {
@@ -1226,16 +1226,16 @@ public:
     bool        currently_inside, initially_inside;
     GLUI_Button  button;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
     void draw_pressed();
-    int mouse_down_handler( int local_x, int local_y );
-    int mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    int mouse_down_handler( int local_x, int local_y ) override;
+    int mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
         
     void  open(); 
     void  close();
 
-    void update_size();
+    void update_size() override;
 
 protected:
     void common_init() {
@@ -1287,18 +1287,18 @@ public:
     GLUI_String  level_name; // level name, eg: 1.1.2, III, or 3
     GLUI_TreePanel *panel; 
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
     void draw_pressed();
-    int mouse_down_handler( int local_x, int local_y );
-    int mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    int mouse_down_handler( int local_x, int local_y ) override;
+    int mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
     void set_column(GLUI_Column *c) { column = c; }
     void  open(); 
     void  close();
 
     /*   void set_name( const char *text )   { panel.set_name( text ); }; */
-    void update_size();
-    void set_id(int i) { id = i; }
+    void update_size() override;
+    void set_id(int i) override { id = i; }
     void set_level(int l) { level = l; }
     void set_format(int f) { format = f; }
     void set_current(int c) { is_current = c; }
@@ -1599,18 +1599,18 @@ public:
     int                 draw_text_only;
 
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler( int key, int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler( int key, int modifiers ) override;
 
-    void activate( int how );
-    void deactivate();
+    void activate( int how ) override;
+    void deactivate() override;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
 
-    int  mouse_over( int state, int x, int y );
+    int  mouse_over( int state, int x, int y ) override;
 
     int  find_word_break( int start, int direction );
     int  substring_width( int start, int end );
@@ -1622,13 +1622,13 @@ public:
     void draw_insertion_pt();
     void set_numeric_text();
     void update_x_offsets();
-    void update_size();
+    void update_size() override;
 
     void set_float_limits( float low,float high,int limit_type=GLUI_LIMIT_CLAMP);
     void set_int_limits( int low, int high, int limit_type=GLUI_LIMIT_CLAMP );
-    void set_float_val( float new_val );
-    void set_int_val( int new_val );
-    void set_text( const char *text );
+    void set_float_val( float new_val ) override;
+    void set_int_val( int new_val ) override;
+    void set_text( const char *text ) override;
     void set_text( const GLUI_String &s) { set_text(s.c_str()); }
     const char *get_text()               { return text.c_str(); }
 
@@ -1716,9 +1716,9 @@ public:
     bool commit_flag;
 
 public:
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler(	int key,int modifiers );
-    void deactivate();
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler(	int key,int modifiers ) override;
+    void deactivate() override;
 
     virtual const char *get_history( int command_number ) const
     { return hist_list[command_number - oldest_hist].c_str(); }
@@ -1759,9 +1759,9 @@ class GLUIAPI GLUI_RadioGroup : public GLUI_Control
 public:
     int  num_buttons;
 
-    void draw( int x, int y );
-    void set_name( const char *text );
-    void set_int_val( int int_val ); 
+    void draw( int x, int y ) override;
+    void set_name( const char *text ) override;
+    void set_int_val( int int_val ) override; 
     void set_selected( int int_val );
 
     void draw_group( int translate );
@@ -1798,12 +1798,12 @@ public:
     bool currently_inside;
     int text_x_offset;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
 
-    void draw( int x, int y );
-    void update_size();
+    void draw( int x, int y ) override;
+    void update_size() override;
 
     void draw_active_area();
     void draw_checked();
@@ -1835,7 +1835,7 @@ protected:
 class GLUIAPI GLUI_Separator : public GLUI_Control
 {
 public:
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
 
     GLUI_Separator( GLUI_Node *parent );
     GLUI_Separator() { common_init(); }
@@ -1898,18 +1898,18 @@ public:
 
     GLUI_EditText *edittext;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler(   int key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler(   int key,int modifiers ) override;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
     void draw_pressed();
     void draw_unpressed();
     void draw_text( int sunken );
 
-    void update_size();
+    void update_size() override;
 
     void set_float_limits( float low,float high,int limit_type=GLUI_LIMIT_CLAMP);
     void set_int_limits( int low, int high,int limit_type=GLUI_LIMIT_CLAMP);
@@ -1917,15 +1917,15 @@ public:
     void do_drag( int x, int y );
     void do_callbacks();
     void do_click();
-    void idle();
-    bool needs_idle() const;
+    void idle() override;
+    bool needs_idle() const  override;
 
     const char *get_text();
 
-    void set_float_val( float new_val );
-    void set_int_val( int new_val );
-    float  get_float_val();
-    int    get_int_val();
+    void set_float_val( float new_val ) override;
+    void set_int_val( int new_val ) override;
+    float  get_float_val() override;
+    int    get_int_val() override;
     void increase_growth();
     void reset_growth();
 
@@ -1961,10 +1961,10 @@ protected:
 class GLUIAPI GLUI_StaticText : public GLUI_Control
 {
 public:
-    void set_text( const char *text );
-    void draw( int x, int y );
+    void set_text( const char *text ) override;
+    void draw( int x, int y ) override;
     void draw_text();
-    void update_size();
+    void update_size() override;
     void erase_text();
 
     GLUI_StaticText(GLUI_Node *parent, const char *name);
@@ -2012,21 +2012,21 @@ public:
     int                 keygoal_x;       /* where up down keys would like to put insertion pt*/
     GLUI_Scrollbar     *scrollbar;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler( int key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler( int key,int modifiers ) override;
   
-    void activate( int how );
-    void deactivate();
+    void activate( int how ) override;
+    void deactivate() override;
 
-    void enable();
-    void disable();
+    void enable() override;
+    void disable() override;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
 
-    int  mouse_over( int state, int x, int y );
+    int  mouse_over( int state, int x, int y ) override;
 
     int get_box_width();
     int  find_word_break( int start, int direction );
@@ -2038,9 +2038,9 @@ public:
     void draw_text( int x, int y );
     void draw_insertion_pt();
     void update_x_offsets();
-    void update_size();
+    void update_size() override;
 
-    void set_text( const char *text );
+    void set_text( const char *text ) override;
     const char *get_text()         { return text.c_str(); }
 
     void dump( FILE *out, const char *text );
@@ -2048,7 +2048,7 @@ public:
     void set_start_line(int l) { start_line = l; }
     static void scrollbar_callback(GLUI_Control*);
 
-    bool wants_tabs() const { return true; }
+    bool wants_tabs() const  override { return true; }
 
 protected:
     void common_init()
@@ -2132,18 +2132,18 @@ public:
     int                 last_line;
     int                 last_click_time;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler( int key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler( int key,int modifiers ) override;
   
-    void activate( int how );
-    void deactivate();
+    void activate( int how ) override;
+    void deactivate() override;
 
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
 
-    int  mouse_over( int state, int x, int y );
+    int  mouse_over( int state, int x, int y ) override;
 
     int get_box_width();
     int  find_word_break( int start, int direction );
@@ -2151,7 +2151,7 @@ public:
     int  find_line( int x, int y );
     void update_and_draw_text();
     void draw_text( const char *t, int selected, int x, int y );
-    void update_size();
+    void update_size() override;
 
 
     int  add_item( int id, const char *text );
@@ -2266,18 +2266,18 @@ public:
     void *        associated_object; /* Lets the Spinner manage it's own callbacks */
     GLUI_CB       object_cb; /* function pointer to object call_back */
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler( int key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler( int key,int modifiers ) override;
   
-    void draw( int x, int y );
+    void draw( int x, int y ) override;
     void draw_pressed();
     void draw_unpressed();
     void draw_text( int sunken );
 
-    void update_size();
+    void update_size() override;
 
     void set_int_limits( int low, int high,int limit_type=GLUI_LIMIT_CLAMP);
     void set_float_limits( float low,float high,int limit_type=GLUI_LIMIT_CLAMP);
@@ -2286,10 +2286,10 @@ public:
     void do_callbacks();
     void draw_scroll();
     void do_click();
-    void idle();
-    bool needs_idle() const;
-    void set_int_val( int new_val );
-    void set_float_val( float new_val );
+    void idle() override;
+    bool needs_idle() const override;
+    void set_int_val( int new_val ) override;
+    void set_float_val( float new_val ) override;
     void increase_growth();
     void reset_growth();
 
@@ -2339,17 +2339,17 @@ public:
     int  text_x_offset, title_x_offset;
     int  glut_menu_id;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  key_handler( unsigned char key,int modifiers );
-    int  special_handler( int key,int modifiers );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  key_handler( unsigned char key,int modifiers ) override;
+    int  special_handler( int key,int modifiers ) override;
 
-    void update_size();
-    void draw( int x, int y );
-    int  mouse_over( int state, int x, int y );
+    void update_size() override;
+    void draw( int x, int y ) override;
+    int  mouse_over( int state, int x, int y ) override;
 
-    void set_int_val( int new_val );
+    void set_int_val( int new_val ) override;
     void dump( FILE *output );
 
     int  add_item( int id, const char *text );
@@ -2403,12 +2403,12 @@ public:
     /*int  get_main_area_size() { return MIN( h-18,  */
     int            draw_active_area_only;
 
-    int  mouse_down_handler( int local_x, int local_y );
-    int  mouse_up_handler( int local_x, int local_y, bool inside );
-    int  mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  special_handler( int key, int modifiers );
-    void update_size();
-    void draw( int x, int y );
+    int  mouse_down_handler( int local_x, int local_y ) override;
+    int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  special_handler( int key, int modifiers ) override;
+    void update_size() override;
+    void draw( int x, int y ) override;
     void draw_active_area();
 
     /***  The following methods (starting with "iaction_") need to
@@ -2451,14 +2451,14 @@ public:
     bool           can_spin, spinning;
     float          damping;
   
-    int  iaction_mouse_down_handler( int local_x, int local_y );
-    int  iaction_mouse_up_handler( int local_x, int local_y, bool inside );
-    int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  iaction_special_handler( int key, int modifiers );
-    void iaction_init() { init_ball(); }
-    void iaction_draw_active_area_persp();
-    void iaction_draw_active_area_ortho();
-    void iaction_dump( FILE *output );
+    int  iaction_mouse_down_handler( int local_x, int local_y ) override;
+    int  iaction_mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  iaction_special_handler( int key, int modifiers ) override;
+    void iaction_init()  override { init_ball(); }
+    void iaction_draw_active_area_persp() override;
+    void iaction_draw_active_area_ortho() override;
+    void iaction_dump( FILE *output ) override;
 
     /*  void update_size(); */
     /*  void draw( int x, int y ); */
@@ -2472,8 +2472,8 @@ public:
 
     void reset();
 
-    bool needs_idle() const;
-    void idle();
+    bool needs_idle() const override;
+    void idle() override;
 
     void copy_float_array_to_ball();
     void copy_ball_to_float_array();
@@ -2509,14 +2509,14 @@ public:
     float orig_x, orig_y, orig_z;
     int   locked;
 
-    int  iaction_mouse_down_handler( int local_x, int local_y );
-    int  iaction_mouse_up_handler( int local_x, int local_y, bool inside );
-    int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside );
-    int  iaction_special_handler( int key, int modifiers );
-    void iaction_init() { }
-    void iaction_draw_active_area_persp();
-    void iaction_draw_active_area_ortho();
-    void iaction_dump( FILE *output );
+    int  iaction_mouse_down_handler( int local_x, int local_y ) override;
+    int  iaction_mouse_up_handler( int local_x, int local_y, bool inside ) override;
+    int  iaction_mouse_held_down_handler( int local_x, int local_y, bool inside ) override;
+    int  iaction_special_handler( int key, int modifiers ) override;
+    void iaction_init() override { }
+    void iaction_draw_active_area_persp() override;
+    void iaction_draw_active_area_ortho() override;
+    void iaction_dump( FILE *output ) override;
 
     void set_speed( float s ) { scale_factor = s; }
 
