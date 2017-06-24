@@ -6,6 +6,15 @@ set(PROJECT_VERSION 2.37)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set (CMAKE_CXX_FLAGS "--std=gnu++11 ${CMAKE_CXX_FLAGS}")
+endif ()
+
+if (APPLE)
+  set (CMAKE_CXX_FLAGS "--std=gnu++11 ${CMAKE_CXX_FLAGS}")
+  set (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
+endif ()
+
 SET(GLUI_SRCS
  algebra3.cpp
  arcball.cpp
