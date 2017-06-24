@@ -265,7 +265,7 @@ void    GLUI_RadioButton::draw( int x, int y )
 
 /************************************ GLUI_RadioButton::draw_checked() ******/
 
-void   GLUI_RadioButton::draw_checked( void )
+void   GLUI_RadioButton::draw_checked()
 {
   GLUI_DRAWINGSENTINAL_IDIOM
   if ( enabled )
@@ -278,7 +278,7 @@ void   GLUI_RadioButton::draw_checked( void )
 
 /*********************************** GLUI_RadioButton::draw_unchecked() ******/
 
-void   GLUI_RadioButton::draw_unchecked( void )
+void   GLUI_RadioButton::draw_unchecked()
 {
   GLUI_DRAWINGSENTINAL_IDIOM
 
@@ -292,7 +292,7 @@ void   GLUI_RadioButton::draw_unchecked( void )
 
 /**************************************** GLUI_RadioButton::draw_O() ********/
 
-void   GLUI_RadioButton::draw_O( void )
+void   GLUI_RadioButton::draw_O()
 {
   GLUI_DRAWINGSENTINAL_IDIOM
   int i, j;
@@ -307,7 +307,7 @@ void   GLUI_RadioButton::draw_O( void )
 
 /******************************** GLUI_RadioButton::update_size() **********/
 
-void   GLUI_RadioButton::update_size( void )
+void   GLUI_RadioButton::update_size()
 {
   int text_size;
 
@@ -323,7 +323,7 @@ void   GLUI_RadioButton::update_size( void )
 
 /************************* GLUI_RadioButton::draw_active_area() **************/
 
-void    GLUI_RadioButton::draw_active_area( void )
+void    GLUI_RadioButton::draw_active_area()
 {
   GLUI_DRAWINGSENTINAL_IDIOM
   int text_width, left, right;

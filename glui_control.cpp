@@ -71,7 +71,7 @@ void GLUI_Control::translate_and_draw_front()
 
 /********** GLUI_Control::set_to_bkgd_color() ********/
 
-void GLUI_Control::set_to_bkgd_color( void )
+void GLUI_Control::set_to_bkgd_color()
 {
   if ( NOT glui )
     return;
@@ -324,7 +324,7 @@ int GLUI_Control::char_width(char c)
 
 /*************** GLUI_Control::get_font() **********/
 
-void *GLUI_Control::get_font( void )
+void *GLUI_Control::get_font()
 {
   /*** Does this control have its own font? ***/
   if ( this->font != NULL )

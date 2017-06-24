@@ -160,7 +160,7 @@ void myGlutMenu( int value )
 
 /***************************************** myGlutIdle() ***********/
 
-void myGlutIdle( void )
+void myGlutIdle()
 {
   /* According to the GLUT specification, the current window is 
      undefined during an idle callback.  So we need to explicitly change
@@ -234,7 +234,7 @@ void draw_axes( float scale )
 
 /***************************************** myGlutDisplay() *****************/
 
-void myGlutDisplay( void )
+void myGlutDisplay()
 {
   glClearColor( .9f, .9f, .9f, 1.0f );
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );

@@ -318,7 +318,7 @@ int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
 
 /****************************** GLUI_TextBox::enable() **********/
 
-void GLUI_TextBox::enable( void )
+void GLUI_TextBox::enable()
 {
   GLUI_Control::enable();
   if (scrollbar) scrollbar->enable();
@@ -326,7 +326,7 @@ void GLUI_TextBox::enable( void )
 
 /****************************** GLUI_TextBox::disable() **********/
 
-void GLUI_TextBox::disable( void )
+void GLUI_TextBox::disable()
 {
   GLUI_Control::disable();
   if (scrollbar) scrollbar->disable();
@@ -355,7 +355,7 @@ void    GLUI_TextBox::activate( int how )
 
 /****************************** GLUI_TextBox::deactivate() **********/
 
-void    GLUI_TextBox::deactivate( void )
+void    GLUI_TextBox::deactivate()
 {
   active = false;
 
@@ -495,7 +495,7 @@ void    GLUI_TextBox::draw( int x, int y )
 
 /************************** GLUI_TextBox::update_substring_bounds() *********/
 
-int    GLUI_TextBox::update_substring_bounds( void )
+int    GLUI_TextBox::update_substring_bounds()
 {
   int box_width;
   int text_len = text.length();
@@ -560,7 +560,7 @@ int    GLUI_TextBox::update_substring_bounds( void )
 
 /********************************* GLUI_TextBox::update_x_offsets() *********/
 
-void    GLUI_TextBox::update_x_offsets( void )
+void    GLUI_TextBox::update_x_offsets()
 {
 }
 
@@ -761,7 +761,7 @@ int GLUI_TextBox::get_box_width()
 
 /******************************** GLUI_TextBox::draw_insertion_pt() *********/
 
-void     GLUI_TextBox::draw_insertion_pt( void )
+void     GLUI_TextBox::draw_insertion_pt()
 {
   int curr_x, box_width, text_length, eol, sol, line;
 
@@ -878,7 +878,7 @@ int  GLUI_TextBox::substring_width( int start, int end, int initial_width )
 
 /***************************** GLUI_TextBox::update_and_draw_text() ********/
 
-void   GLUI_TextBox::update_and_draw_text( void )
+void   GLUI_TextBox::update_and_draw_text()
 {
   //update_substring_bounds();
   /*  printf( "ss: %d/%d\n", substring_start, substring_end );                  */
@@ -1031,7 +1031,7 @@ void   GLUI_TextBox::clear_substring( int start, int end )
 
 /************************************ GLUI_TextBox::update_size() **********/
 
-void   GLUI_TextBox::update_size( void )
+void   GLUI_TextBox::update_size()
 {
   if ( NOT glui )
     return;

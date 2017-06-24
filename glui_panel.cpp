@@ -167,7 +167,7 @@ void    GLUI_Panel::set_type( int new_type )
 
 /************************************** GLUI_Panel::update_size() **********/
 
-void   GLUI_Panel::update_size( void )
+void   GLUI_Panel::update_size()
 {
   int text_size;
 

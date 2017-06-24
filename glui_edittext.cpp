@@ -468,7 +468,7 @@ void    GLUI_EditText::activate( int how )
 
 /****************************** GLUI_EditText::deactivate() **********/
 
-void    GLUI_EditText::deactivate( void )
+void    GLUI_EditText::deactivate()
 {
   int    new_int_val;
   float  new_float_val;
@@ -574,7 +574,7 @@ void    GLUI_EditText::draw( int x, int y )
 
 /************************** GLUI_EditText::update_substring_bounds() *********/
 
-int    GLUI_EditText::update_substring_bounds( void )
+int    GLUI_EditText::update_substring_bounds()
 {
   int box_width;
   int text_len = (int)text.length();
@@ -640,7 +640,7 @@ int    GLUI_EditText::update_substring_bounds( void )
 
 /********************************* GLUI_EditText::update_x_offsets() *********/
 
-void    GLUI_EditText::update_x_offsets( void )
+void    GLUI_EditText::update_x_offsets()
 {
 }
 
@@ -788,7 +788,7 @@ int  GLUI_EditText::find_insertion_pt( int x, int y )
 
 /******************************** GLUI_EditText::draw_insertion_pt() *********/
 
-void     GLUI_EditText::draw_insertion_pt( void )
+void     GLUI_EditText::draw_insertion_pt()
 {
   int curr_x, i;
 
@@ -854,7 +854,7 @@ int  GLUI_EditText::substring_width( int start, int end )
 
 /***************************** GLUI_EditText::update_and_draw_text() ********/
 
-void   GLUI_EditText::update_and_draw_text( void )
+void   GLUI_EditText::update_and_draw_text()
 {
   if ( NOT can_draw() )
     return;
@@ -994,7 +994,7 @@ void   GLUI_EditText::clear_substring( int start, int end )
 
 /************************************ GLUI_EditText::update_size() **********/
 
-void   GLUI_EditText::update_size( void )
+void   GLUI_EditText::update_size()
 {
   int text_size, delta;
 
@@ -1133,7 +1133,7 @@ void   GLUI_EditText::set_int_limits( int low, int high, int limit_type )
 
 /************************************ GLUI_EditText::set_numeric_text() ******/
 
-void    GLUI_EditText::set_numeric_text( void )
+void    GLUI_EditText::set_numeric_text()
 {
   char buf_num[200];
   int  i, text_len;

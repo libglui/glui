@@ -186,14 +186,14 @@ int    GLUI_Translation::iaction_mouse_held_down_handler( int local_x, int local
 
 /******************** GLUI_Translation::iaction_draw_active_area_persp() **************/
 
-void    GLUI_Translation::iaction_draw_active_area_persp( void )
+void    GLUI_Translation::iaction_draw_active_area_persp()
 {
 }
 
 
 /******************** GLUI_Translation::iaction_draw_active_area_ortho() **********/
 
-void    GLUI_Translation::iaction_draw_active_area_ortho( void )
+void    GLUI_Translation::iaction_draw_active_area_ortho()
 {
   /********* Draw emboss circles around arcball control *********/
   float radius;

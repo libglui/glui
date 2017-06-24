@@ -136,7 +136,7 @@ void    GLUI_Checkbox::draw( int x, int y )
 
 /**************************** GLUI_Checkbox::draw_active_area() **************/
 
-void    GLUI_Checkbox::draw_active_area( void )
+void    GLUI_Checkbox::draw_active_area()
 {
   GLUI_DRAWINGSENTINAL_IDIOM
   int text_width, left, right;
@@ -164,7 +164,7 @@ void    GLUI_Checkbox::draw_active_area( void )
 
 /************************************ GLUI_Checkbox::update_size() **********/
 
-void   GLUI_Checkbox::update_size( void )
+void   GLUI_Checkbox::update_size()
 {
   int text_size;
 

@@ -199,7 +199,7 @@ void GLUI_Main::create_subwindow( int parent_window, int window_alignment )
 
 /**************************** GLUI_Main::setup_default_glut_callbacks() *****/
 
-void GLUI_Main::setup_default_glut_callbacks( void )
+void GLUI_Main::setup_default_glut_callbacks()
 {
   glutDisplayFunc( glui_display_func );
   glutReshapeFunc( glui_reshape_func );
@@ -542,7 +542,7 @@ GLUI  *GLUI_Master_Object::find_glui_by_window_id( int window_id )
 
 /******************************************** GLUI_Main::display() **********/
 
-void    GLUI_Main::display( void )
+void    GLUI_Main::display()
 {
   int       win_w, win_h;
 
@@ -918,7 +918,7 @@ void    GLUI_Main::idle()
   }
 }
 
-int  GLUI_Main::needs_idle( void )
+int  GLUI_Main::needs_idle()
 {
   return active_control != NULL && active_control->needs_idle();
 }
@@ -982,7 +982,7 @@ GLUI_Control  *GLUI_Main::find_control( int x, int y )
 
 /************************************* GLUI_Main::pack_controls() ***********/
 
-void      GLUI_Main::pack_controls( void )
+void      GLUI_Main::pack_controls()
 {
   main_panel->pack(0,0);
 
@@ -1053,7 +1053,7 @@ void   GLUI::set_main_gfx_window( int window_id )
 
 /********************************* GLUI_Main::post_update_main_gfx() ********/
 
-void   GLUI_Main::post_update_main_gfx( void )
+void   GLUI_Main::post_update_main_gfx()
 {
   int old_window;
 
@@ -1088,7 +1088,7 @@ bool	     GLUI_Main::should_redraw_now(GLUI_Control *ctl)
 
 /********************************* GLUI_Main::set_current_draw_buffer() ********/
 
-int          GLUI_Main::set_current_draw_buffer( void )
+int          GLUI_Main::set_current_draw_buffer()
 {
   /* Save old buffer */
   GLint state;
@@ -1112,7 +1112,7 @@ void         GLUI_Main::restore_draw_buffer( int buffer_state )
 
 /******************************************** GLUI_Main::GLUI_Main() ********/
 
-GLUI_Main::GLUI_Main( void )
+GLUI_Main::GLUI_Main()
 {
   mouse_button_down       = false;
   w                       = 0;
@@ -1240,7 +1240,7 @@ void         GLUI_Main::activate_control( GLUI_Control *control, int how )
 
 /************************* GLUI_Main::deactivate_current_control() **********/
 
-void         GLUI_Main::deactivate_current_control( void )
+void         GLUI_Main::deactivate_current_control()
 {
   int orig;
 
@@ -1435,7 +1435,7 @@ void    GLUI_Master_Object::set_glutIdleFunc(void (*f)())
 
 /**************************************** GLUI::disable() ********************/
 
-void   GLUI::disable( void )
+void   GLUI::disable()
 {
   deactivate_current_control();
   main_panel->disable();
@@ -1444,7 +1444,7 @@ void   GLUI::disable( void )
 
 /******************************************** GLUI::sync_live() **************/
 
-void   GLUI::sync_live( void )
+void   GLUI::sync_live()
 {
   main_panel->sync_live(true, true);
 }
@@ -1452,7 +1452,7 @@ void   GLUI::sync_live( void )
 
 /********************************* GLUI_Master_Object::sync_live_all() *****/
 
-void   GLUI_Master_Object::sync_live_all( void )
+void   GLUI_Master_Object::sync_live_all()
 {
   GLUI *glui;
 
@@ -1468,7 +1468,7 @@ void   GLUI_Master_Object::sync_live_all( void )
 
 /************************************* GLUI_Master_Object::close() **********/
 
-void   GLUI_Master_Object::close_all( void )
+void   GLUI_Master_Object::close_all()
 {
   GLUI *glui;
 
@@ -1484,7 +1484,7 @@ void   GLUI_Master_Object::close_all( void )
 
 /************************************* GLUI_Main::close_internal() **********/
 
-void   GLUI_Main::close_internal( void )
+void   GLUI_Main::close_internal()
 {
   glutDestroyWindow(glutGetWindow()); /** Close this window **/
 
@@ -1511,7 +1511,7 @@ void   GLUI_Main::close_internal( void )
 
 /************************************************** GLUI::close() **********/
 
-void   GLUI::close( void )
+void   GLUI::close()
 {
   int   old_glut_window;
 
@@ -1527,7 +1527,7 @@ void   GLUI::close( void )
 
 /************************** GLUI_Main::check_subwindow_position() **********/
 
-void   GLUI_Main::check_subwindow_position( void )
+void   GLUI_Main::check_subwindow_position()
 {
   /*** Reposition this window if subwindow ***/
   if ( TEST_AND( this->flags, GLUI_SUBWINDOW ) ) {
@@ -1626,7 +1626,7 @@ void   GLUI_Main::check_subwindow_position( void )
 /* This gets called by the user from a GLUT reshape callback.  So we look */
 /* for subwindows that belong to the current window                   */
 
-void  GLUI_Master_Object::reshape( void )
+void  GLUI_Master_Object::reshape()
 {
   GLUI *glui;
   int   current_window;
@@ -1899,7 +1899,7 @@ void  GLUI_Master_Object::set_left_button_glut_menu_control(
 
 /******************************* GLUI_Main::set_ortho_projection() **********/
 
-void  GLUI_Main::set_ortho_projection( void )
+void  GLUI_Main::set_ortho_projection()
 {
   int win_h, win_w;
 
@@ -1928,7 +1928,7 @@ void  GLUI_Main::set_ortho_projection( void )
 
 /******************************* GLUI_Main::set_viewport() **********/
 
-void  GLUI_Main::set_viewport( void )
+void  GLUI_Main::set_viewport()
 {
   glViewport( 0, 0, main_panel->w, main_panel->h );
 }
@@ -1936,7 +1936,7 @@ void  GLUI_Main::set_viewport( void )
 
 /****************************** GLUI_Main::refresh() ****************/
 
-void    GLUI_Main::refresh( void )
+void    GLUI_Main::refresh()
 {
   int orig;
 
@@ -2030,7 +2030,7 @@ void     GLUI_Master_Object::get_viewport_area( int *x, int *y,
 
 /*****************GLUI_Master_Object::auto_set_main_gfx_viewport() **********/
 
-void           GLUI_Master_Object::auto_set_viewport( void )
+void           GLUI_Master_Object::auto_set_viewport()
 {
   int x, y, w, h;
 
@@ -2042,7 +2042,7 @@ void           GLUI_Master_Object::auto_set_viewport( void )
 
 /***************************************** GLUI::show() **********************/
 
-void            GLUI::show( void )
+void            GLUI::show()
 {
   int orig_window;
 
@@ -2057,7 +2057,7 @@ void            GLUI::show( void )
 
 /***************************************** GLUI::hide() **********************/
 
-void            GLUI::hide( void )
+void            GLUI::hide()
 {
   int orig_window;
 
@@ -2084,7 +2084,7 @@ GLUI_DrawingSentinal::~GLUI_DrawingSentinal() {
 }
 
 
-void GLUI_Master_Object::glui_setIdleFuncIfNecessary( void )
+void GLUI_Master_Object::glui_setIdleFuncIfNecessary()
 {
   GLUI *glui;
 
