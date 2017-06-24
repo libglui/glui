@@ -201,22 +201,22 @@ void GLUI_Main::create_subwindow( int parent_window, int window_alignment )
 
 void GLUI_Main::setup_default_glut_callbacks()
 {
-  glutDisplayFunc( glui_display_func );
-  glutReshapeFunc( glui_reshape_func );
-  glutKeyboardFunc( glui_keyboard_func );
-  glutSpecialFunc( glui_special_func );
-  glutMouseFunc( glui_mouse_func );
-  glutMotionFunc( glui_motion_func );
-  glutPassiveMotionFunc( glui_passive_motion_func );
-  glutEntryFunc( glui_entry_func );
-  glutVisibilityFunc( glui_visibility_func );
-  /*  glutIdleFunc( glui_idle_func );    // FIXME!  100% CPU usage!      */
+  glutDisplayFunc( display_func );
+  glutReshapeFunc( reshape_func );
+  glutKeyboardFunc( keyboard_func );
+  glutSpecialFunc( special_func );
+  glutMouseFunc( mouse_func );
+  glutMotionFunc( motion_func );
+  glutPassiveMotionFunc( passive_motion_func );
+  glutEntryFunc( entry_func );
+  glutVisibilityFunc( visibility_func );
+  /*  glutIdleFunc( idle_func );    // FIXME!  100% CPU usage!      */
 }
 
 
 /********************************************** glui_display_func() ********/
 
-void glui_display_func()
+void GLUI_Main::display_func()
 {
   GLUI *glui;
 
@@ -236,7 +236,7 @@ void glui_display_func()
 
 /********************************************** glui_reshape_func() ********/
 
-void glui_reshape_func(int w,int h )
+void GLUI_Main::reshape_func(int w,int h )
 {
   GLUI             *glui;
   GLUI_Glut_Window *glut_window;
@@ -276,7 +276,7 @@ void glui_reshape_func(int w,int h )
 
 /********************************************** glui_keyboard_func() ********/
 
-void glui_keyboard_func(unsigned char key, int x, int y)
+void GLUI_Main::keyboard_func(unsigned char key, int x, int y)
 {
   GLUI              *glui;
   int                current_window;
@@ -314,7 +314,7 @@ void glui_keyboard_func(unsigned char key, int x, int y)
 
 /************************************************ glui_special_func() ********/
 
-void glui_special_func(int key, int x, int y)
+void GLUI_Main::special_func(int key, int x, int y)
 {
   GLUI              *glui;
   int                current_window;
@@ -354,7 +354,7 @@ void glui_special_func(int key, int x, int y)
 
 /********************************************** glui_mouse_func() ********/
 
-void glui_mouse_func(int button, int state, int x, int y)
+void GLUI_Main::mouse_func(int button, int state, int x, int y)
 {
   GLUI              *glui;
   int                current_window;
@@ -384,7 +384,7 @@ void glui_mouse_func(int button, int state, int x, int y)
 
 /********************************************** glui_motion_func() ********/
 
-void glui_motion_func(int x, int y)
+void GLUI_Main::motion_func(int x, int y)
 {
   GLUI *glui;
 
@@ -400,7 +400,7 @@ void glui_motion_func(int x, int y)
 
 /**************************************** glui_passive_motion_func() ********/
 
-void glui_passive_motion_func(int x, int y)
+void GLUI_Main::passive_motion_func(int x, int y)
 {
   GLUI *glui;
 
@@ -415,7 +415,7 @@ void glui_passive_motion_func(int x, int y)
 
 /********************************************** glui_entry_func() ********/
 
-void glui_entry_func(int state)
+void GLUI_Main::entry_func(int state)
 {
   GLUI *glui;
 
@@ -429,7 +429,7 @@ void glui_entry_func(int state)
 
 /******************************************** glui_visibility_func() ********/
 
-void glui_visibility_func(int state)
+void GLUI_Main::visibility_func(int state)
 {
   GLUI *glui;
 
@@ -447,7 +447,7 @@ void glui_visibility_func(int state)
 /********************************************** glui_idle_func() ********/
 /* Send idle event to each glui, then to the main window            */
 
-void glui_idle_func()
+void GLUI_Main::idle_func()
 {
   GLUI *glui;
 
@@ -1652,7 +1652,7 @@ void  GLUI_Master_Object::reshape()
 
 void GLUI_Master_Object::set_glutReshapeFunc(void (*f)(int width, int height))
 {
-  glutReshapeFunc( glui_reshape_func );
+  glutReshapeFunc( GLUI_Main::reshape_func );
   add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_RESHAPE, (void*) f);
 }
 
@@ -1662,7 +1662,7 @@ void GLUI_Master_Object::set_glutReshapeFunc(void (*f)(int width, int height))
 void GLUI_Master_Object::set_glutKeyboardFunc(void (*f)(unsigned char key,
 							int x, int y))
 {
-  glutKeyboardFunc( glui_keyboard_func );
+  glutKeyboardFunc( GLUI_Main::keyboard_func );
   add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_KEYBOARD, (void*) f);
 }
 
@@ -1672,7 +1672,7 @@ void GLUI_Master_Object::set_glutKeyboardFunc(void (*f)(unsigned char key,
 void GLUI_Master_Object::set_glutSpecialFunc(void (*f)(int key,
 						       int x, int y))
 {
-  glutSpecialFunc( glui_special_func );
+  glutSpecialFunc( GLUI_Main::special_func );
   add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_SPECIAL, (void*) f);
 }
 
@@ -1682,7 +1682,7 @@ void GLUI_Master_Object::set_glutSpecialFunc(void (*f)(int key,
 void GLUI_Master_Object::set_glutMouseFunc(void (*f)(int button, int state,
 						     int x, int y))
 {
-  glutMouseFunc( glui_mouse_func );
+  glutMouseFunc( GLUI_Main::mouse_func );
   add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_MOUSE, (void*) f);
 }
 
@@ -1690,7 +1690,7 @@ void GLUI_Master_Object::set_glutMouseFunc(void (*f)(int button, int state,
 /****************************** glui_parent_window_reshape_func() **********/
 /* This is the reshape callback for a window that contains subwindows      */
 
-void glui_parent_window_reshape_func( int w, int h )
+void GLUI_Main::parent_window_reshape_func( int w, int h )
 {
   int   current_window;
   GLUI  *glui;
@@ -1722,7 +1722,7 @@ void glui_parent_window_reshape_func( int w, int h )
 
 /****************************** glui_parent_window_keyboard_func() **********/
 
-void glui_parent_window_keyboard_func(unsigned char key, int x, int y)
+void GLUI_Main::parent_window_keyboard_func(unsigned char key, int x, int y)
 {
   /*  printf( "glui_parent_window_keyboard_func: %d\n", glutGetWindow() );          */
 
@@ -1757,7 +1757,7 @@ void glui_parent_window_keyboard_func(unsigned char key, int x, int y)
 
 /****************************** glui_parent_window_special_func() **********/
 
-void glui_parent_window_special_func(int key, int x, int y)
+void GLUI_Main::parent_window_special_func(int key, int x, int y)
 {
   /*printf( "glui_parent_window_special_func: %d\n", glutGetWindow() );          */
 
@@ -1790,7 +1790,7 @@ void glui_parent_window_special_func(int key, int x, int y)
 
 /****************************** glui_parent_window_mouse_func() **********/
 
-void glui_parent_window_mouse_func(int button, int state, int x, int y)
+void GLUI_Main::parent_window_mouse_func(int button, int state, int x, int y)
 {
   int   current_window;
   GLUI  *glui;
@@ -2103,7 +2103,7 @@ void GLUI_Master_Object::glui_setIdleFuncIfNecessary()
     }
   }
   if( necessary )
-    glutIdleFunc( glui_idle_func );
+    glutIdleFunc( GLUI_Main::idle_func );
   else
     glutIdleFunc( NULL );
 }

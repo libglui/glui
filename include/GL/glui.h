@@ -470,8 +470,7 @@ private:
 */
 class GLUIAPI GLUI_Master_Object 
 {
-
-    friend void glui_idle_func();
+    friend class GLUI_Main;
   
 public:
 
@@ -614,23 +613,24 @@ class GLUIAPI GLUI_Main : public GLUI_Node
     friend class GLUI;
     friend class GLUI_Master_Object;
 
-    /*********** Friend functions **********/
+    /*********** static functions **********/
 
-    friend void glui_mouse_func(int button, int state, int x, int y);
-    friend void glui_keyboard_func(unsigned char key, int x, int y);
-    friend void glui_special_func(int key, int x, int y);
-    friend void glui_passive_motion_func(int x, int y);
-    friend void glui_reshape_func( int w, int h );
-    friend void glui_visibility_func(int state);
-    friend void glui_motion_func(int x, int y);
-    friend void glui_entry_func(int state);
-    friend void glui_display_func();
-    friend void glui_idle_func();
+  private:
+    static void mouse_func(int button, int state, int x, int y);
+    static void keyboard_func(unsigned char key, int x, int y);
+    static void special_func(int key, int x, int y);
+    static void passive_motion_func(int x, int y);
+    static void reshape_func( int w, int h );
+    static void visibility_func(int state);
+    static void motion_func(int x, int y);
+    static void entry_func(int state);
+    static void display_func();
+    static void idle_func();
 
-    friend void glui_parent_window_reshape_func( int w, int h );
-    friend void glui_parent_window_keyboard_func( unsigned char, int, int );
-    friend void glui_parent_window_special_func( int, int, int );
-    friend void glui_parent_window_mouse_func( int, int, int, int );
+    static void parent_window_reshape_func( int w, int h );
+    static void parent_window_keyboard_func( unsigned char, int, int );
+    static void parent_window_special_func( int, int, int );
+    static void parent_window_mouse_func( int, int, int, int );
 
 protected:
     /*** Variables ***/
@@ -2568,27 +2568,5 @@ protected:
 /********** Misc functions *********************/
 int _glutBitmapWidthString( void *font, const char *s );
 void _glutBitmapString( void *font, const char *s );
-
-/********** Our own callbacks for glut *********/
-/* These are the callbacks that we pass to glut.  They take
-   some action if necessary, then (possibly) call the user-level
-   glut callbacks.  
-*/
-
-void glui_display_func();
-void glui_reshape_func( int w, int h );
-void glui_keyboard_func(unsigned char key, int x, int y);
-void glui_special_func(int key, int x, int y);
-void glui_mouse_func(int button, int state, int x, int y);
-void glui_motion_func(int x, int y);
-void glui_passive_motion_func(int x, int y);
-void glui_entry_func(int state);
-void glui_visibility_func(int state);
-void glui_idle_func();
-
-void glui_parent_window_reshape_func( int w, int h );
-void glui_parent_window_keyboard_func(unsigned char key, int x, int y);
-void glui_parent_window_mouse_func(int, int, int, int );
-void glui_parent_window_special_func(int key, int x, int y);
 
 #endif
