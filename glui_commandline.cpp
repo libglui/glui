@@ -79,7 +79,7 @@ int    GLUI_CommandLine::key_handler( unsigned char key,int modifiers )
 
 /****************************** GLUI_CommandLine::deactivate() **********/
 
-void    GLUI_CommandLine::deactivate( void )
+void    GLUI_CommandLine::deactivate()
 {
   // if the commit_flag is set, add the current command to
   // history and call deactivate as normal
@@ -177,7 +177,7 @@ void    GLUI_CommandLine::add_to_history( const char *cmd )
 
 /**************************** GLUI_CommandLine::reset_history() ********/
 
-void    GLUI_CommandLine::reset_history( void )
+void    GLUI_CommandLine::reset_history()
 {
   oldest_hist = newest_hist = curr_hist = 0;
 }

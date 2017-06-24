@@ -49,7 +49,7 @@ GLUI_Node::GLUI_Node()
 /********************************************* GLUI_Node::first() *******/
 /* Returns first sibling in 'this' node's sibling list                  */
 
-GLUI_Node   *GLUI_Node::first_sibling( void )
+GLUI_Node   *GLUI_Node::first_sibling()
 {
   if ( parent_node == NULL )
     return this;           /* root node has no siblings */
@@ -61,7 +61,7 @@ GLUI_Node   *GLUI_Node::first_sibling( void )
 /******************************************** GLUI_Node::next() ********/
 /* Returns next sibling in 'this' node's sibling list                  */
 
-GLUI_Node    *GLUI_Node::next( void )
+GLUI_Node    *GLUI_Node::next()
 {
   return next_sibling;
 }
@@ -70,7 +70,7 @@ GLUI_Node    *GLUI_Node::next( void )
 /******************************************** GLUI_Node::prev() ********/
 /* Returns prev sibling in 'this' node's sibling list                  */
 
-GLUI_Node    *GLUI_Node::prev( void )
+GLUI_Node    *GLUI_Node::prev()
 {
   return prev_sibling;
 }
@@ -79,7 +79,7 @@ GLUI_Node    *GLUI_Node::prev( void )
 /********************************************* GLUI_Node::last() *******/
 /* Returns last sibling in 'this' node's sibling list                  */
 
-GLUI_Node   *GLUI_Node::last_sibling( void )
+GLUI_Node   *GLUI_Node::last_sibling()
 {
   if ( parent_node == NULL )
     return this;            /* root node has no siblings */
@@ -174,7 +174,7 @@ void   GLUI_Node::link_this_to_sibling_prev( GLUI_Node *sibling )
 
 /**************************************** GLUI_Node::unlink() **************/
 
-void   GLUI_Node::unlink( void )
+void   GLUI_Node::unlink()
 {
   /* Unlink from prev sibling */
   if ( this->prev_sibling != NULL ) {

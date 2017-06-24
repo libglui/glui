@@ -127,7 +127,7 @@ void myGlutReshape( int x, int y )
 
 /***************************************** myGlutDisplay() *****************/
 
-void myGlutDisplay( void )
+void myGlutDisplay()
 {
   glClearColor( .9f, .9f, .9f, 1.0f );
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );

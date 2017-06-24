@@ -143,7 +143,7 @@ GLUI_Button   *GLUI::add_button_to_panel( GLUI_Panel *panel,
 
 /********************************** GLUI::add_separator() ************/
 
-void  GLUI::add_separator( void )
+void  GLUI::add_separator()
 {
   add_separator_to_panel( main_panel );
 }

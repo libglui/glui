@@ -55,7 +55,7 @@ GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_Rollout::open() **********/
 
-void    GLUI_Rollout::open( void )
+void    GLUI_Rollout::open()
 {
   if ( NOT glui )
     return;
@@ -82,7 +82,7 @@ void    GLUI_Rollout::open( void )
 
 /****************************** GLUI_Rollout::close() **********/
 
-void    GLUI_Rollout::close( void )
+void    GLUI_Rollout::close()
 {
   if ( NOT glui )
     return;
@@ -237,7 +237,7 @@ void   GLUI_Rollout::draw( int x, int y )
 
 /***************************** GLUI_Rollout::update_size() **********/
 
-void   GLUI_Rollout::update_size( void )
+void   GLUI_Rollout::update_size()
 {
   int text_size;
 
@@ -253,7 +253,7 @@ void   GLUI_Rollout::update_size( void )
 
 /**************************** GLUI_Rollout::draw_pressed() ***********/
 
-void   GLUI_Rollout::draw_pressed( void )
+void   GLUI_Rollout::draw_pressed()
 {
   int left, right, top, bottom;
 

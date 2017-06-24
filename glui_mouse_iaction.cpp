@@ -97,7 +97,7 @@ void    GLUI_Mouse_Interaction::draw( int x, int y )
 
 /************************************ GLUI_Mouse_Interaction::update_size() **********/
 
-void   GLUI_Mouse_Interaction::update_size( void )
+void   GLUI_Mouse_Interaction::update_size()
 {
   if ( NOT glui )
     return;
@@ -147,7 +147,7 @@ int    GLUI_Mouse_Interaction::special_handler( int key,int modifiers )
 
 /****************************** GLUI_Mouse_Interaction::draw_active_area() **********/
 
-void    GLUI_Mouse_Interaction::draw_active_area( void )
+void    GLUI_Mouse_Interaction::draw_active_area()
 {
   int win_h = glutGet( GLUT_WINDOW_HEIGHT ), win_w = glutGet(GLUT_WINDOW_WIDTH);
 

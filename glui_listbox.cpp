@@ -133,7 +133,7 @@ void    GLUI_Listbox::draw( int x, int y )
 
 
 /************************************ GLUI_Listbox::update_si() **********/
-void   GLUI_Listbox::update_size( void )
+void   GLUI_Listbox::update_size()
 {
   recalculate_item_width();
 }
@@ -217,7 +217,7 @@ int  GLUI_Listbox::delete_item(int id)
 
 /************************************** GLUI_Listbox::sort_items() **********/
 
-int  GLUI_Listbox::sort_items( void )
+int  GLUI_Listbox::sort_items()
 {
   return false;
 }
@@ -417,9 +417,9 @@ int    GLUI_Listbox::special_handler( int key,int modifiers )
 }
 
 
-/************************* GLUI_Listbox::recalculate_item_width( void ) ***********/
+/************************* GLUI_Listbox::recalculate_item_width() ***********/
 /** Change w and return true if we need to be widened to fit the current items. */
-bool    GLUI_Listbox::recalculate_item_width( void )
+bool    GLUI_Listbox::recalculate_item_width()
 {
   int item_text_size;
 

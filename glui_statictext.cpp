@@ -62,7 +62,7 @@ void    GLUI_StaticText::set_text( const char *text )
 
 /************************************ GLUI_StaticText::update_size() **********/
 
-void   GLUI_StaticText::update_size( void )
+void   GLUI_StaticText::update_size()
 {
   int text_size;
 
@@ -78,7 +78,7 @@ void   GLUI_StaticText::update_size( void )
 
 /****************************** GLUI_StaticText::draw_text() **********/
 
-void    GLUI_StaticText::draw_text( void )
+void    GLUI_StaticText::draw_text()
 {
   if ( NOT can_draw() )
     return;
@@ -90,7 +90,7 @@ void    GLUI_StaticText::draw_text( void )
 
 /****************************** GLUI_StaticText::erase_text() **********/
 
-void    GLUI_StaticText::erase_text( void )
+void    GLUI_StaticText::erase_text()
 {
   if ( NOT can_draw() )
     return;

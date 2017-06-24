@@ -56,7 +56,7 @@ GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_Tree::open() **********/
 
-void GLUI_Tree::open( void )
+void GLUI_Tree::open()
 {
   if ( is_open )
     return;
@@ -80,7 +80,7 @@ void GLUI_Tree::open( void )
 
 /****************************** GLUI_Tree::close() **********/
 
-void    GLUI_Tree::close( void )
+void    GLUI_Tree::close()
 {
   if ( NOT glui )
     return;
@@ -245,7 +245,7 @@ void   GLUI_Tree::draw( int x, int y )
 
 /***************************** GLUI_Tree::update_size() **********/
 
-void   GLUI_Tree::update_size( void )
+void   GLUI_Tree::update_size()
 {
   int text_size = 0, delta_x = 0;
 
@@ -265,7 +265,7 @@ void   GLUI_Tree::update_size( void )
 
 /**************************** GLUI_Tree::draw_pressed() ***********/
 
-void   GLUI_Tree::draw_pressed( void )
+void   GLUI_Tree::draw_pressed()
 {
   int left, right, top, bottom;
 

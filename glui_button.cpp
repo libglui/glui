@@ -112,7 +112,7 @@ void    GLUI_Button::draw( int x, int y )
 
 /************************************** GLUI_Button::draw_pressed() ******/
 
-void   GLUI_Button::draw_pressed( void )
+void   GLUI_Button::draw_pressed()
 {
   glColor3f( 0.0, 0.0, 0.0 );
 
@@ -172,7 +172,7 @@ void     GLUI_Button::draw_text( int sunken )
 
 /************************************** GLUI_Button::update_size() **********/
 
-void   GLUI_Button::update_size( void )
+void   GLUI_Button::update_size()
 {
   int text_size;
 

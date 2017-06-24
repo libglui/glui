@@ -360,7 +360,7 @@ void   GLUI_Spinner::set_int_val( int new_val )
 
 /************************************ GLUI_Spinner::update_size() **********/
 
-void   GLUI_Spinner::update_size( void )
+void   GLUI_Spinner::update_size()
 {
   if (!edittext) return;
   /*edittext->w = this->w - GLUI_SPINNER_ARROW_WIDTH-3;              */
@@ -394,7 +394,7 @@ int    GLUI_Spinner::find_arrow( int local_x, int local_y )
 
 /***************************************** GLUI_Spinner::do_click() **********/
 
-void    GLUI_Spinner::do_click( void )
+void    GLUI_Spinner::do_click()
 {
   int    direction = 0;
   float  incr;
@@ -470,7 +470,7 @@ void    GLUI_Spinner::do_drag( int x, int y )
 
 /***************************************** GLUI_Spinner::needs_idle() ******/
 
-bool GLUI_Spinner::needs_idle( void ) const
+bool GLUI_Spinner::needs_idle() const
 {
   if  (state == GLUI_SPINNER_STATE_UP OR state == GLUI_SPINNER_STATE_DOWN ) {
     return true;
@@ -482,7 +482,7 @@ bool GLUI_Spinner::needs_idle( void ) const
 
 /***************************************** GLUI_Spinner::idle() **********/
 
-void    GLUI_Spinner::idle( void )
+void    GLUI_Spinner::idle()
 {
   if ( NOT needs_idle() )
     return;
@@ -493,7 +493,7 @@ void    GLUI_Spinner::idle( void )
 
 /************************************ GLUI_Spinner::do_callbacks() **********/
 
-void    GLUI_Spinner::do_callbacks( void )
+void    GLUI_Spinner::do_callbacks()
 {
   /*** This is not necessary, b/c edittext automatically updates us ***/
   if ( NOT edittext )
@@ -544,7 +544,7 @@ void   GLUI_Spinner::set_int_limits( int low, int high, int limit_type )
 
 /*********************************** GLUI_Spinner:reset_growth() *************/
 
-void    GLUI_Spinner::reset_growth( void )
+void    GLUI_Spinner::reset_growth()
 {
   float lo, hi;
 
@@ -575,7 +575,7 @@ void    GLUI_Spinner::reset_growth( void )
 
 /******************************* GLUI_Spinner:increase_growth() *************/
 
-void    GLUI_Spinner::increase_growth( void )
+void    GLUI_Spinner::increase_growth()
 {
   float hi = 0.0,lo = 0.0;
 
@@ -597,7 +597,7 @@ void    GLUI_Spinner::increase_growth( void )
 
 /*************************************** GLUI_Spinner:get_text() *************/
 
-const char    *GLUI_Spinner::get_text( void )
+const char    *GLUI_Spinner::get_text()
 {
   if (edittext)
     return edittext->text.c_str();
@@ -608,7 +608,7 @@ const char    *GLUI_Spinner::get_text( void )
 
 /********************************** GLUI_Spinner:get_float_val() *************/
 
-float    GLUI_Spinner::get_float_val( void )
+float    GLUI_Spinner::get_float_val()
 {
   if (edittext)
     return edittext->float_val;
@@ -619,7 +619,7 @@ float    GLUI_Spinner::get_float_val( void )
 
 /********************************** GLUI_Spinner:get_int_val() *************/
 
-int    GLUI_Spinner::get_int_val( void )
+int    GLUI_Spinner::get_int_val()
 {
   if (edittext)
     return edittext->int_val;

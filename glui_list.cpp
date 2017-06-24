@@ -188,7 +188,7 @@ void    GLUI_List::activate( int how )
 
 /****************************** GLUI_List::deactivate() **********/
 
-void    GLUI_List::deactivate( void )
+void    GLUI_List::deactivate()
 {
   active = false;
   redraw();
@@ -357,7 +357,7 @@ int  GLUI_List::substring_width( const char *t, int start, int end )
 
 /***************************** GLUI_List::update_and_draw_text() ********/
 
-void   GLUI_List::update_and_draw_text( void )
+void   GLUI_List::update_and_draw_text()
 {
   if ( NOT can_draw() )
     return;
@@ -399,7 +399,7 @@ int    GLUI_List::special_handler( int key,int modifiers )
 
 /************************************ GLUI_List::update_size() **********/
 
-void   GLUI_List::update_size( void )
+void   GLUI_List::update_size()
 {
   if ( NOT glui )
     return;

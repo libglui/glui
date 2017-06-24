@@ -527,7 +527,7 @@ int    GLUI_Scrollbar::special_handler( int key,int modifiers )
 
 /************************************ GLUI_Scrollbar::update_size() **********/
 
-void   GLUI_Scrollbar::update_size( void )
+void   GLUI_Scrollbar::update_size()
 {
   if (horizontal) {
     h = GLUI_SCROLL_ARROW_HEIGHT;
@@ -592,7 +592,7 @@ int    GLUI_Scrollbar::find_arrow( int local_x, int local_y )
 
 /***************************************** GLUI_Scrollbar::do_click() **********/
 
-void    GLUI_Scrollbar::do_click( void )
+void    GLUI_Scrollbar::do_click()
 {
   int    direction = 0;
 
@@ -687,7 +687,7 @@ void    GLUI_Scrollbar::do_drag( int x, int y )
 
 /***************************************** GLUI_Scrollbar::needs_idle() ******/
 
-bool GLUI_Scrollbar::needs_idle( void ) const
+bool GLUI_Scrollbar::needs_idle() const
 {
   if  (state == GLUI_SCROLL_STATE_UP OR state == GLUI_SCROLL_STATE_DOWN ) {
     return true;
@@ -699,7 +699,7 @@ bool GLUI_Scrollbar::needs_idle( void ) const
 
 /***************************************** GLUI_Scrollbar::idle() **********/
 
-void    GLUI_Scrollbar::idle( void )
+void    GLUI_Scrollbar::idle()
 {
   if ( NOT needs_idle() )
     return;
@@ -710,7 +710,7 @@ void    GLUI_Scrollbar::idle( void )
 
 /************************************ GLUI_Scrollbar::do_callbacks() **********/
 
-void    GLUI_Scrollbar::do_callbacks( void )
+void    GLUI_Scrollbar::do_callbacks()
 {
 
   /*    *******************************************/
@@ -819,7 +819,7 @@ void   GLUI_Scrollbar::set_int_limits( int low, int high, int limit_type )
 
 /*********************************** GLUI_Scrollbar::reset_growth() *************/
 
-void    GLUI_Scrollbar::reset_growth( void )
+void    GLUI_Scrollbar::reset_growth()
 {
   growth = fabs(float_max - float_min) / float(GLUI_SCROLL_GROWTH_STEPS);
   if (data_type == GLUI_SCROLL_INT && growth<1) growth=1;
@@ -828,7 +828,7 @@ void    GLUI_Scrollbar::reset_growth( void )
 
 /******************************* GLUI_Scrollbar::increase_growth() *************/
 
-void    GLUI_Scrollbar::increase_growth( void )
+void    GLUI_Scrollbar::increase_growth()
 {
   float range=0;
   if (data_type==GLUI_SCROLL_FLOAT)
