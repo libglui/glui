@@ -32,6 +32,7 @@
 *****************************************************************************/
 
 #include "glui_internal_control.h"
+#include "tinyformat.h"
 #include <cassert>
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
@@ -1171,15 +1172,16 @@ void    GLUI_EditText::set_numeric_text()
 
 void   GLUI_EditText::dump( FILE *out, const char *name )
 {
-  fprintf( out,
-           "%s (edittext@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
-           name, this,
-           insertion_pt,
-           substring_start,
-           substring_end,
-           sel_start,
-           sel_end,
-           (int) text.length());
+  const GLUI_String buffer = tfm::format(
+    "%s (edittext@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
+    name, this,
+    insertion_pt,
+    substring_start,
+    substring_end,
+    sel_start,
+    sel_end,
+    text.length());
+  fprintf(out, "%s", buffer.c_str());
 }
 
 
