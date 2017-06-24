@@ -33,6 +33,8 @@
 
 #include "glui_internal_control.h"
 
+#include "tinyformat.h"
+
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
                             const char *name, int *value_ptr,
@@ -50,6 +52,20 @@ GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
   init_live();
 }
 
+void GLUI_Listbox::common_init()
+{
+    name           = tfm::format("Listbox: %p", this);
+    w              = GLUI_EDITTEXT_WIDTH;
+    h              = GLUI_EDITTEXT_HEIGHT;
+    orig_value     = -1;
+    title_x_offset = 0;
+    text_x_offset  = 55;
+    can_activate   = true;
+    curr_text      = "";
+    live_type      = GLUI_LIVE_INT;  /* This has an integer live var */
+    depressed      = false;
+    glut_menu_id   = -1;
+}
 
 /****************************** GLUI_Listbox::mouse_down_handler() **********/
 

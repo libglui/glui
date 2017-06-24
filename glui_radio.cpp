@@ -32,6 +32,9 @@
 *****************************************************************************/
 
 #include "glui_internal_control.h"
+
+#include "tinyformat.h"
+
 #include <cassert>
 
 /****************************** GLUI_RadioGroup::GLUI_RadioGroup() **********/
@@ -41,7 +44,6 @@ GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
                                  int id, GLUI_CB cb)
 {
   common_init();
-  GLUI_String      buf;
 
   set_ptr_val( value_ptr );
   if ( value_ptr ) {
@@ -53,7 +55,7 @@ GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
   }
 
   user_id    = id;
-  glui_format_str( buf, "RadioGroup: %p", this );
+  GLUI_String buf = tfm::format("RadioGroup: %p", this );
   set_name( buf.c_str() );
   callback   = cb;
 
@@ -168,6 +170,15 @@ GLUI_RadioButton::GLUI_RadioButton( GLUI_RadioGroup *grp, const char *name )
                                            updating all its buttons */
 }
 
+void GLUI_RadioButton::common_init()
+{
+  name           = tfm::format("RadioButton: %p", this );
+  h              = GLUI_RADIOBUTTON_SIZE;
+  group          = NULL;
+  orig_value     = -1;
+  text_x_offset  = 18;
+  can_activate   = true;
+}
 
 /************************ GLUI_RadioButton::mouse_down_handler() **********/
 

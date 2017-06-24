@@ -44,6 +44,9 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
 *****************************************************************************/
 
 #include "glui_internal_control.h"
+
+#include "tinyformat.h"
+
 #include <cmath>
 #include <cassert>
 
@@ -53,6 +56,22 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
 #define  GLUI_SPINNER_MIN_GROWTH_STEPS     100
 #define  GLUI_SPINNER_CALLBACK_INTERVAL    1
 
+void GLUI_Spinner::common_init() 
+{
+  name = tfm::format("Spinner: %p", this);
+  h            = GLUI_EDITTEXT_HEIGHT;
+  w            = GLUI_EDITTEXT_WIDTH;
+  x_off        = 0;
+  y_off_top    = 0;
+  y_off_bot    = 0;
+  can_activate = true;
+  state        = GLUI_SPINNER_STATE_NONE;
+  edittext     = NULL;
+  growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
+  callback_count = 0;
+  first_callback = true;
+  user_speed   = 1.0;
+}
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 

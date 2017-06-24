@@ -34,6 +34,8 @@
 
 #include "glui_internal_control.h"
 
+#include "tinyformat.h"
+
 /****************************** GLUI_Checkbox::GLUI_Checkbox() **********/
 
 GLUI_Checkbox::GLUI_Checkbox( GLUI_Node *parent,
@@ -51,6 +53,17 @@ GLUI_Checkbox::GLUI_Checkbox( GLUI_Node *parent,
   parent->add_control( this );
 
   init_live();
+}
+
+void GLUI_Checkbox::common_init()
+{
+  name           = tfm::format("Checkbox: %p", this);
+  w              = 100;
+  h              = GLUI_CHECKBOX_SIZE;
+  orig_value     = -1;
+  text_x_offset  = 18;
+  can_activate   = true;
+  live_type      = GLUI_LIVE_INT;   /* This control has an 'int' live var */
 }
 
 /****************************** GLUI_Checkbox::mouse_down_handler() **********/

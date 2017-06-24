@@ -41,7 +41,6 @@ SET(GLUI_SRCS
  glui_separator.cpp
  glui_spinner.cpp
  glui_statictext.cpp
- glui_string.cpp
  glui_textbox.cpp
  glui_translation.cpp
  glui_tree.cpp

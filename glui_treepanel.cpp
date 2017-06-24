@@ -17,7 +17,7 @@
 */
 
 #include "GL/glui.h"
-
+#include "tinyformat.h"
 
 
 /****************************** GLUI_TreePanel::GLUI_TreePanel() *********/
@@ -189,15 +189,15 @@ void GLUI_TreePanel::formatNode(GLUI_Tree *temp)
 
   if (format & GLUI_TREEPANEL_DISPLAY_HIERARCHY) {
     if (format & GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY) {
-      glui_format_str(level_name, "%d", level);
+      level_name = tfm::format("%d", level);
     }
     if (format & GLUI_TREEPANEL_HIERARCHY_NUMERICDOT) {
       if ( dynamic_cast<GLUI_Tree*>(temp->parent()) )
-        glui_format_str(level_name, "%s.%d",
-                        ((GLUI_Tree *)(temp->parent()))->level_name.c_str(),
+        level_name = tfm::format("%s.%d",
+                        ((GLUI_Tree *)(temp->parent()))->level_name,
                         child_number);
       else
-        glui_format_str(level_name, "%d", child_number);
+        level_name = tfm::format("%d", child_number);
     }
   }
 

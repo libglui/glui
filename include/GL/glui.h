@@ -240,7 +240,6 @@ enum TranslationCodes
 /************ A string type for us to use **********/
 
 typedef std::string GLUI_String;
-GLUIAPI GLUI_String& glui_format_str(GLUI_String &str, const char* fmt, ...);
 
 /********* Pre-declare classes as needed *********/
 
@@ -904,44 +903,7 @@ public:
     virtual bool needs_idle() const;
     virtual bool wants_tabs() const      { return false; }
 
-    GLUI_Control() 
-    {
-        x_off          = GLUI_XOFF;
-        y_off_top      = GLUI_YOFF;
-        y_off_bot      = GLUI_YOFF;
-        x_abs          = GLUI_XOFF;
-        y_abs          = GLUI_YOFF;
-        active         = false;
-        enabled        = true;
-        int_val        = 0;
-        last_live_int  = 0;
-        float_array_size = 0;
-        glui_format_str(name, "Control: %p", this);
-        float_val      = 0.0;
-        last_live_float = 0.0;
-        ptr_val        = NULL;
-        glui           = NULL;
-        w              = GLUI_DEFAULT_CONTROL_WIDTH;
-        h              = GLUI_DEFAULT_CONTROL_HEIGHT;
-        font           = NULL;
-        active_type    = GLUI_CONTROL_ACTIVE_MOUSEDOWN;
-        alignment      = GLUI_ALIGN_LEFT;
-        is_container   = false;
-        can_activate   = true;         /* By default, you can activate a control */
-        spacebar_mouse_click = true;    /* Does spacebar simulate a mouse click? */
-        live_type      = GLUI_LIVE_NONE;
-        text = "";
-        last_live_text = "";
-        live_inited    = false;
-        collapsible    = false;
-        is_open        = true;
-        hidden         = false;
-        memset(char_widths, -1, sizeof(char_widths)); /* JVK */
-        int i;
-        for( i=0; i<GLUI_DEF_MAX_ARRAY; i++ )
-            float_array_val[i] = last_live_float_array[i] = 0.0;
-    }
-
+    GLUI_Control();
     virtual ~GLUI_Control();
 };
 
@@ -984,13 +946,7 @@ public:
     GLUI_Button() { common_init(); };
 
 protected:
-    void common_init() {
-        glui_format_str(name, "Button: %p", this );
-        h            = GLUI_BUTTON_SIZE;
-        w            = 100;
-        alignment    = GLUI_ALIGN_CENTER;
-        can_activate = true;
-    }
+    void common_init();
 };
 
 
@@ -1039,15 +995,7 @@ public:
     GLUI_Checkbox() { common_init(); }
 
 protected:
-    void common_init() {
-        glui_format_str( name, "Checkbox: %p", this );
-        w              = 100;
-        h              = GLUI_CHECKBOX_SIZE;
-        orig_value     = -1;
-        text_x_offset  = 18;
-        can_activate   = true;
-        live_type      = GLUI_LIVE_INT;   /* This control has an 'int' live var */
-    }
+    void common_init();
 };
 
 /************************************************************/
@@ -1814,15 +1762,7 @@ public:
     GLUI_RadioGroup *group;
 
 protected:
-    void common_init()
-    {
-        glui_format_str( name, "RadioButton: %p", (void *) this );
-        h              = GLUI_RADIOBUTTON_SIZE;
-        group          = NULL;
-        orig_value     = -1;
-        text_x_offset  = 18;
-        can_activate   = true;
-    }
+    void common_init();
 };
 
 
@@ -1932,21 +1872,7 @@ public:
     void set_speed( float speed ) { user_speed = speed; }
 
 protected:
-    void common_init() {
-        glui_format_str( name, "Spinner: %p", this );
-        h            = GLUI_EDITTEXT_HEIGHT;
-        w            = GLUI_EDITTEXT_WIDTH;
-        x_off        = 0;
-        y_off_top    = 0;
-        y_off_bot    = 0;
-        can_activate = true;
-        state        = GLUI_SPINNER_STATE_NONE;
-        edittext     = NULL;
-        growth_exp   = GLUI_SPINNER_DEFAULT_GROWTH_EXP;
-        callback_count = 0;
-        first_callback = true;
-        user_speed   = 1.0;
-    }
+    void common_init();
     void common_construct( GLUI_Node* parent, const char *name, 
                            int data_type, void *live_var,
                            int id, GLUI_CB callback );
@@ -2371,19 +2297,7 @@ public:
 protected:
     /** Change w and return true if we need to be widened to fit the current item. */
     bool recalculate_item_width();
-    void common_init() {
-        glui_format_str( name, "Listbox: %p", this );
-        w              = GLUI_EDITTEXT_WIDTH;
-        h              = GLUI_EDITTEXT_HEIGHT;
-        orig_value     = -1;
-        title_x_offset = 0;
-        text_x_offset  = 55;
-        can_activate   = true;
-        curr_text      = "";
-        live_type      = GLUI_LIVE_INT;  /* This has an integer live var */
-        depressed      = false;
-        glut_menu_id   = -1;
-    }
+    void common_init();
 
     ~GLUI_Listbox();
 };
@@ -2422,15 +2336,7 @@ public:
     virtual void iaction_dump( FILE *output )=0;
     virtual void iaction_init() = 0;
   
-    GLUI_Mouse_Interaction() {
-        glui_format_str( name, "Mouse_Interaction: %p", this );
-        w              = GLUI_MOUSE_INTERACTION_WIDTH;
-        h              = GLUI_MOUSE_INTERACTION_HEIGHT;
-        can_activate   = true;
-        live_type      = GLUI_LIVE_NONE;
-        alignment      = GLUI_ALIGN_CENTER;
-        draw_active_area_only = false;
-    }
+    GLUI_Mouse_Interaction();
 };
 
 /************************************************************/
@@ -2551,20 +2457,7 @@ public:
     GLUI_Translation() { common_init(); }
 
 protected:
-    void common_init() {
-        locked              = GLUI_TRANSLATION_LOCK_NONE;
-        glui_format_str( name, "Translation: %p", this );
-        w                   = GLUI_MOUSE_INTERACTION_WIDTH;
-        h                   = GLUI_MOUSE_INTERACTION_HEIGHT;
-        can_activate        = true;
-        live_type           = GLUI_LIVE_FLOAT_ARRAY;
-        float_array_size    = 0;
-        alignment           = GLUI_ALIGN_CENTER;
-        trans_type          = GLUI_TRANSLATION_XY;
-        scale_factor        = 1.0;
-        quadObj             = NULL;
-        trans_mouse_code    = GLUI_TRANSLATION_MOUSE_NONE;
-    }
+    void common_init();
 };
 
 #endif
