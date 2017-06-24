@@ -34,34 +34,15 @@
 #ifndef GLUI_GLUI_H
 #define GLUI_GLUI_H
 
-// Having stdlib here first fixes some 'exit() redefined' errors on MSVC.NET
-// that come from old GLUT headers.
-#include <cstdlib>
-
-#if defined(GLUI_FREEGLUT)
-
-  // FreeGLUT does not yet work perfectly with GLUI
-  //  - use at your own risk.
-  
-  #include <GL/freeglut.h>
-
-#elif defined(GLUI_OPENGLUT)
-
-  // OpenGLUT does not yet work properly with GLUI
-  //  - use at your own risk.
-  
-  #include <GL/openglut.h>
-
-#else 
-
-  #ifdef __APPLE__
-  #include <GLUT/glut.h>
-  #else
-  #include <GL/glut.h>
-  #endif
-
+#ifdef __APPLE__
+#include <OpenGL/GL.h>
+#include <OpenGL/GLU.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
 #endif
 
+#include <cstdlib>
 #include <cstdio>
 #include <cstring>
 
@@ -511,20 +492,19 @@ public:
     void set_glutSpecialFunc (void (*f)(int key, int x, int y));
     void set_glutMouseFunc   (void (*f)(int, int, int, int ));
 
-    void set_glutDisplayFunc(void (*f)()) {glutDisplayFunc(f);}
-    void set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value)
-    { ::glutTimerFunc(millis,f,value);}
-    void set_glutOverlayDisplayFunc(void(*f)()){glutOverlayDisplayFunc(f);}
-    void set_glutSpaceballMotionFunc(Int3_CB f)  {glutSpaceballMotionFunc(f);}
-    void set_glutSpaceballRotateFunc(Int3_CB f)  {glutSpaceballRotateFunc(f);}
-    void set_glutSpaceballButtonFunc(Int2_CB f)  {glutSpaceballButtonFunc(f);}
-    void set_glutTabletMotionFunc(Int2_CB f)        {glutTabletMotionFunc(f);}
-    void set_glutTabletButtonFunc(Int4_CB f)        {glutTabletButtonFunc(f);}
+    void set_glutDisplayFunc(void (*f)(void));
+    void set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value);
+    void set_glutOverlayDisplayFunc(void(*f)(void));
+    void set_glutSpaceballMotionFunc(Int3_CB f);
+    void set_glutSpaceballRotateFunc(Int3_CB f);
+    void set_glutSpaceballButtonFunc(Int2_CB f);
+    void set_glutTabletMotionFunc(Int2_CB f);
+    void set_glutTabletButtonFunc(Int4_CB f);
     /*    void set_glutWindowStatusFunc(Int1_CB f)        {glutWindowStatusFunc(f);} */
-    void set_glutMenuStatusFunc(Int3_CB f)            {glutMenuStatusFunc(f);}
-    void set_glutMenuStateFunc(Int1_CB f)              {glutMenuStateFunc(f);}
-    void set_glutButtonBoxFunc(Int2_CB f)              {glutButtonBoxFunc(f);}
-    void set_glutDialsFunc(Int2_CB f)                      {glutDialsFunc(f);}  
+    void set_glutMenuStatusFunc(Int3_CB f);
+    void set_glutMenuStateFunc(Int1_CB f);
+    void set_glutButtonBoxFunc(Int2_CB f);
+    void set_glutDialsFunc(Int2_CB f);  
   
 
     GLUI          *create_glui( const char *name, long flags=0, int x=-1, int y=-1 ); 

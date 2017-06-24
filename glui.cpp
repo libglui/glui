@@ -1686,6 +1686,19 @@ void GLUI_Master_Object::set_glutMouseFunc(void (*f)(int button, int state,
   add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_MOUSE, reinterpret_cast<void(*)()>(f));
 }
 
+void GLUI_Master_Object::set_glutDisplayFunc(void (*f)(void)) {glutDisplayFunc(f);}
+void GLUI_Master_Object::set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value)
+{ ::glutTimerFunc(millis,f,value);}
+void GLUI_Master_Object::set_glutOverlayDisplayFunc(void(*f)(void)){glutOverlayDisplayFunc(f);}
+void GLUI_Master_Object::set_glutSpaceballMotionFunc(Int3_CB f)  {glutSpaceballMotionFunc(f);}
+void GLUI_Master_Object::set_glutSpaceballRotateFunc(Int3_CB f)  {glutSpaceballRotateFunc(f);}
+void GLUI_Master_Object::set_glutSpaceballButtonFunc(Int2_CB f)  {glutSpaceballButtonFunc(f);}
+void GLUI_Master_Object::set_glutTabletMotionFunc(Int2_CB f)        {glutTabletMotionFunc(f);}
+void GLUI_Master_Object::set_glutTabletButtonFunc(Int4_CB f)        {glutTabletButtonFunc(f);}
+void GLUI_Master_Object::set_glutMenuStatusFunc(Int3_CB f)            {glutMenuStatusFunc(f);}
+void GLUI_Master_Object::set_glutMenuStateFunc(Int1_CB f)              {glutMenuStateFunc(f);}
+void GLUI_Master_Object::set_glutButtonBoxFunc(Int2_CB f)              {glutButtonBoxFunc(f);}
+void GLUI_Master_Object::set_glutDialsFunc(Int2_CB f)                      {glutDialsFunc(f);}  
 
 /****************************** glui_parent_window_reshape_func() **********/
 /* This is the reshape callback for a window that contains subwindows      */
