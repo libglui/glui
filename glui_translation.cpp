@@ -34,6 +34,7 @@
 #include "GL/glui.h"
 #include "glui_internal.h"
 #include "algebra3.h"
+#include "tinyformat.h"
 
 /********************** GLUI_Translation::GLUI_Translation() ***/
 
@@ -66,6 +67,22 @@ GLUI_Translation::GLUI_Translation(
     float_array_size = 1;
   }
   init_live();
+}
+
+void GLUI_Translation::common_init()
+{
+  locked              = GLUI_TRANSLATION_LOCK_NONE;
+  name                = tfm::format("Translation: %p", this);
+  w                   = GLUI_MOUSE_INTERACTION_WIDTH;
+  h                   = GLUI_MOUSE_INTERACTION_HEIGHT;
+  can_activate        = true;
+  live_type           = GLUI_LIVE_FLOAT_ARRAY;
+  float_array_size    = 0;
+  alignment           = GLUI_ALIGN_CENTER;
+  trans_type          = GLUI_TRANSLATION_XY;
+  scale_factor        = 1.0;
+  quadObj             = NULL;
+  trans_mouse_code    = GLUI_TRANSLATION_MOUSE_NONE;
 }
 
 /********************** GLUI_Translation::iaction_mouse_down_handler() ***/

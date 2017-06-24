@@ -31,6 +31,7 @@
 *****************************************************************************/
 #include "glui_internal_control.h"
 
+#include "tinyformat.h"
 
 /**
  Note: moving this routine here from glui_add_controls.cpp prevents the linker
@@ -512,8 +513,7 @@ GLUI *GLUI_Master_Object::create_glui_subwindow( int parent_window,
 						   long flags )
 {
   GLUI *new_glui = new GLUI;
-  GLUI_String new_name;
-  glui_format_str( new_name, "subwin_%p", this );
+  GLUI_String new_name = tfm::format("subwin_%p", this );
 
   new_glui->init( new_name.c_str(), flags | GLUI_SUBWINDOW, 0,0,
 		    parent_window );

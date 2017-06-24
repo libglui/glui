@@ -34,6 +34,7 @@
 #include "GL/glui.h"
 #include "arcball.h"
 #include "algebra3.h"
+#include "tinyformat.h"
 
 /*************************** GLUI_Rotation::iaction_mouse_down_handler() ***/
 
@@ -457,7 +458,7 @@ NO! WVB
 
 void GLUI_Rotation::common_init()
 {
-  glui_format_str( name, "Rotation: %p", this );
+  name = tfm::format("Rotation: %p", this );
 //  type                = GLUI_CONTROL_ROTATION;
   w                   = GLUI_ROTATION_WIDTH;
   h                   = GLUI_ROTATION_HEIGHT;

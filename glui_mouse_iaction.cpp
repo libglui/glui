@@ -33,6 +33,19 @@
 
 #include "glui_internal_control.h"
 
+#include "tinyformat.h"
+
+GLUI_Mouse_Interaction::GLUI_Mouse_Interaction()
+{
+    name           = tfm::format("Mouse_Interaction: %p", this );
+    w              = GLUI_MOUSE_INTERACTION_WIDTH;
+    h              = GLUI_MOUSE_INTERACTION_HEIGHT;
+    can_activate   = true;
+    live_type      = GLUI_LIVE_NONE;
+    alignment      = GLUI_ALIGN_CENTER;
+    draw_active_area_only = false;
+}
+
 /********************** GLUI_Mouse_Interaction::mouse_down_handler() ******/
 
 int    GLUI_Mouse_Interaction::mouse_down_handler( int local_x, int local_y )

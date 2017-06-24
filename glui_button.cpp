@@ -30,6 +30,8 @@
 *****************************************************************************/
 #include "glui_internal_control.h"
 
+#include "tinyformat.h"
+
 /****************************** GLUI_Button::GLUI_Button() **********/
 
 GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
@@ -44,6 +46,14 @@ GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
   parent->add_control( this );
 }
 
+void GLUI_Button::common_init() 
+{
+  name         = tfm::format("Button: %p", this);
+  h            = GLUI_BUTTON_SIZE;
+  w            = 100;
+  alignment    = GLUI_ALIGN_CENTER;
+  can_activate = true;
+}
 
 /****************************** GLUI_Button::mouse_down_handler() **********/
 

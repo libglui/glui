@@ -33,7 +33,63 @@
 
 #include "glui_internal_control.h"
 
+#include "tinyformat.h"
+
 int _glui_draw_border_only = 0;
+
+/********* GLUI_Control::GLUI_Control() **********/
+
+GLUI_Control::GLUI_Control() 
+{
+    x_off          = GLUI_XOFF;
+    y_off_top      = GLUI_YOFF;
+    y_off_bot      = GLUI_YOFF;
+    x_abs          = GLUI_XOFF;
+    y_abs          = GLUI_YOFF;
+    active         = false;
+    enabled        = true;
+    int_val        = 0;
+    last_live_int  = 0;
+    float_array_size = 0;
+    name           = tfm::format("Control: %p", this);
+    float_val      = 0.0;
+    last_live_float = 0.0;
+    ptr_val        = NULL;
+    glui           = NULL;
+    w              = GLUI_DEFAULT_CONTROL_WIDTH;
+    h              = GLUI_DEFAULT_CONTROL_HEIGHT;
+    font           = NULL;
+    active_type    = GLUI_CONTROL_ACTIVE_MOUSEDOWN;
+    alignment      = GLUI_ALIGN_LEFT;
+    is_container   = false;
+    can_activate   = true;         /* By default, you can activate a control */
+    spacebar_mouse_click = true;    /* Does spacebar simulate a mouse click? */
+    live_type      = GLUI_LIVE_NONE;
+    text = "";
+    last_live_text = "";
+    live_inited    = false;
+    collapsible    = false;
+    is_open        = true;
+    hidden         = false;
+    memset(char_widths, -1, sizeof(char_widths)); /* JVK */
+    int i;
+    for( i=0; i<GLUI_DEF_MAX_ARRAY; i++ )
+        float_array_val[i] = last_live_float_array[i] = 0.0;
+}
+
+/********* GLUI_Control::~GLUI_Control() **********/
+
+GLUI_Control::~GLUI_Control()
+{
+  GLUI_Control *item = (GLUI_Control*) this->first_child();
+
+  while (item)
+  {
+    GLUI_Control *tmp = item;
+    item = (GLUI_Control*) item->next();
+    delete tmp;
+  }
+}
 
 /*************************** Drawing Utility routines *********************/
 
@@ -1128,20 +1184,6 @@ bool GLUI_Control::needs_idle() const
   return false;
 }
 
-
-/********* GLUI_Control::~GLUI_Control() **********/
-
-GLUI_Control::~GLUI_Control()
-{
-  GLUI_Control *item = (GLUI_Control*) this->first_child();
-
-  while (item)
-  {
-    GLUI_Control *tmp = item;
-    item = (GLUI_Control*) item->next();
-    delete tmp;
-  }
-}
 
 /********* GLUI_Control::hide_internal() ********/
 /** Sets hidden==true for this  control and all its siblings.             */
