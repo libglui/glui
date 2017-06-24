@@ -78,12 +78,12 @@ GLUI_Bitmap::GLUI_Bitmap()
 /* Create bitmap from greyscale byte array */
 void GLUI_Bitmap::init_grey(const unsigned char *array)
 {
-  w = array[0]; 
-  h = array[1];
+  w = size_t(array[0]); 
+  h = size_t(array[1]);
   pixels.resize(w*h*3);
   array += 2;
-  for(int i = 0; i<w*h; i++)
-    for (int j = 0; j<3; j++) /* copy grey to r,g,b channels */
+  for(size_t i = 0; i<w*h; i++)
+    for (size_t j = 0; j<3; j++) /* copy grey to r,g,b channels */
       pixels[i*3+j] = (unsigned char) array[i];
 }
 
@@ -93,8 +93,8 @@ void GLUI_Bitmap::init_grey(const unsigned char *array)
 */
 void GLUI_Bitmap::init(const int *array)
 {
-  w = array[0]; 
-  h = array[1];
+  w = size_t(array[0]); 
+  h = size_t(array[1]);
   pixels.resize(w*h*3);
   array += 2;
   pixels.assign(array, array+w*h*3);
@@ -104,26 +104,26 @@ void GLUI_Bitmap::init(const int *array)
 
 GLUI_StdBitmaps::GLUI_StdBitmaps()
 {
-  for (int i=0; i<bitmaps.size(); i++)
+  for (size_t i=0; i<bitmaps.size(); i++)
     bitmaps[i].init_grey(bitmap_arrays[i]);
 }
 
-int GLUI_StdBitmaps::width(int i) const
+int GLUI_StdBitmaps::width(size_t i) const
 {
-  assert(i>=0 && i<bitmaps.size());
-  return i>=0 && i<bitmaps.size() ? bitmaps[i].w : 0;
+  assert(i<bitmaps.size());
+  return i<bitmaps.size() ? bitmaps[i].w : 0;
 }
 
-int GLUI_StdBitmaps::height(int i) const
+int GLUI_StdBitmaps::height(size_t i) const
 {
-  assert(i>=0 && i<bitmaps.size());
-  return i>=0 && i<bitmaps.size() ? bitmaps[i].h : 0;
+  assert(i<bitmaps.size());
+  return i<bitmaps.size() ? bitmaps[i].h : 0;
 }
 
-void GLUI_StdBitmaps::draw(int i, int x, int y) const
+void GLUI_StdBitmaps::draw(size_t i, int x, int y) const
 {
-  assert(i>=0 && i<bitmaps.size());
-  if (i>=0 && i<bitmaps.size() && !bitmaps[i].pixels.empty())
+  assert(i<bitmaps.size());
+  if (i<bitmaps.size() && !bitmaps[i].pixels.empty())
   {
     glPixelStorei(GL_UNPACK_ALIGNMENT,1);
     glRasterPos2f(0.5f+x, 0.5f+y+bitmaps[i].h);

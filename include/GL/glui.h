@@ -426,7 +426,7 @@ public:
 private:
     /** RGB pixel data */
     std::vector<uint8_t> pixels;
-    int                  w, h;
+    size_t               w, h;
 };
 
 
@@ -447,14 +447,14 @@ public:
     ~GLUI_StdBitmaps() = default;
 
     /** Return the width (in pixels) of the n'th standard bitmap. */
-    int  width (int n) const;
+    int  width (size_t n) const;
     /** Return the height (in pixels) of the n'th standard bitmap. */
-    int  height(int n) const;
+    int  height(size_t n) const;
 
     /** Draw the n'th standard bitmap (one of the enums
        listed in GLUI_StdBitmaps_Codes) at pixel corner (x,y). 
     */
-    void draw(int n, int x, int y) const;
+    void draw(size_t n, int x, int y) const;
 
 private:
     std::array<GLUI_Bitmap,GLUI_STDBITMAP_NUM_ITEMS> bitmaps;
