@@ -8,8 +8,7 @@ This distribution contains the latest community-maintained fork of the
 GLUI Library, now under the ZLIB license.  It is based on the GLUI
 v2.1 beta version from Paul Rademacher
 (http://www.cs.unc.edu/~rademach/glui/) plus the compatibility changes 
-made by Nigel Stewart in his "GLUI v2.2"
-(http://www.nigels.com/glt/glui).
+made by Nigel Stewart in his "GLUI v2.2".
 
 WARNING: This version (2.3) introduces some incompatible changes with
 previous versions!!
