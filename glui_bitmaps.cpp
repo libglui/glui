@@ -16,8 +16,8 @@ FIXME: upload the images to a texture.  This will allow them to be:
 
   Copyright (c) 1998 Paul Rademacher
 
-  WWW:    http://sourceforge.net/projects/glui/
-  Forums: http://sourceforge.net/forum/?group_id=92496
+  WWW:    https://github.com/libglui/glui
+  Issues: https://github.com/libglui/glui/issues
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
