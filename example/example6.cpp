@@ -14,6 +14,12 @@
 #include <string.h>
 #include <GL/glui.h>
 
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
 /** These are the live variables passed into GLUI ***/
 int main_window;
 int num_display  = 0;
