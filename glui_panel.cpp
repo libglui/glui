@@ -37,7 +37,6 @@ GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const GLUI_String &name, int type )
 {
   common_init();
   set_name( name );
-  user_id    = -1;
   int_val    = type;
 
   parent->add_control( this );

@@ -54,12 +54,10 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
                                 const GLUI_String &name,
                                 int horz_vert,
                                 int data_type,
-                                int id, GLUI_CB callback
-                                /*,GLUI_Control *object
-                                ,GLUI_InterObject_CB obj_cb*/
+                                GLUI_CB callback
                                 )
 {
-  common_construct(parent, name, horz_vert, data_type, NULL, id, callback/*, object, obj_cb*/);
+  common_construct(parent, name, horz_vert, data_type, NULL, callback/*, object, obj_cb*/);
 }
 
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
@@ -67,12 +65,10 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
 GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const GLUI_String &name,
                                 int horz_vert,
                                 int *live_var,
-                                int id, GLUI_CB callback
-                                /*,GLUI_Control *object
-                                ,GLUI_InterObject_CB obj_cb*/
+                                GLUI_CB callback
                                 )
 {
-  common_construct(parent, name, horz_vert, GLUI_SCROLL_INT, live_var, id, callback/*, object, obj_cb*/);
+  common_construct(parent, name, horz_vert, GLUI_SCROLL_INT, live_var, callback/*, object, obj_cb*/);
 }
 
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
@@ -80,12 +76,10 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const GLUI_String &name,
 GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const GLUI_String &name,
                                 int horz_vert,
                                 float *live_var,
-                                int id, GLUI_CB callback
-                                /*,GLUI_Control *object
-                                ,GLUI_InterObject_CB obj_cb*/
+                                GLUI_CB callback
                                 )
 {
-  common_construct(parent, name, horz_vert, GLUI_SCROLL_FLOAT, live_var, id, callback/*, object, obj_cb*/);
+  common_construct(parent, name, horz_vert, GLUI_SCROLL_FLOAT, live_var, callback/*, object, obj_cb*/);
 }
 
 /****************************** GLUI_Scrollbar::common_init() **********/
@@ -124,9 +118,7 @@ void GLUI_Scrollbar::common_construct(
   int horz_vert,
   int data_type,
   void *data,
-  int id, GLUI_CB callback
-  /*,GLUI_Control *object,
-  GLUI_InterObject_CB obj_cb*/
+  GLUI_CB callback
   )
 {
   common_init();
@@ -156,7 +148,6 @@ void GLUI_Scrollbar::common_construct(
   this->data_type = data_type;
   this->set_ptr_val( data );
   this->set_name(name);
-  this->user_id = id;
   this->callback    = callback;
   //this->associated_object = object;
   //this->object_cb = obj_cb;
@@ -731,10 +722,7 @@ void    GLUI_Scrollbar::do_callbacks()
     this->execute_callback();
   }
   else  {                      // Use internal Callbacks
-    if (object_cb) {
-      //object_cb(associated_object, int_val);
-      object_cb(this);
-    }
+    if (object_cb) object_cb();
   }
   last_int_val   = int_val;
   last_float_val = float_val;
