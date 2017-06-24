@@ -18,6 +18,11 @@ CXX      ?= g++
 CPPFLAGS += $(OPTS) -Wall -pedantic
 endif
 
+ifeq ($(UNAME), Darwin)
+CXX      ?= g++
+CPPFLAGS += $(OPTS) -Wall -pedantic
+endif
+
 #######################################
 
 CPPFLAGS += -I./ -I./include

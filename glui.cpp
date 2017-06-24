@@ -1653,7 +1653,7 @@ void  GLUI_Master_Object::reshape()
 void GLUI_Master_Object::set_glutReshapeFunc(void (*f)(int width, int height))
 {
   glutReshapeFunc( GLUI_Main::reshape_func );
-  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_RESHAPE, (void*) f);
+  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_RESHAPE, reinterpret_cast<void(*)()>(f));
 }
 
 
@@ -1663,7 +1663,7 @@ void GLUI_Master_Object::set_glutKeyboardFunc(void (*f)(unsigned char key,
 							int x, int y))
 {
   glutKeyboardFunc( GLUI_Main::keyboard_func );
-  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_KEYBOARD, (void*) f);
+  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_KEYBOARD, reinterpret_cast<void(*)()>(f));
 }
 
 
@@ -1673,7 +1673,7 @@ void GLUI_Master_Object::set_glutSpecialFunc(void (*f)(int key,
 						       int x, int y))
 {
   glutSpecialFunc( GLUI_Main::special_func );
-  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_SPECIAL, (void*) f);
+  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_SPECIAL, reinterpret_cast<void(*)()>(f));
 }
 
 
@@ -1683,7 +1683,7 @@ void GLUI_Master_Object::set_glutMouseFunc(void (*f)(int button, int state,
 						     int x, int y))
 {
   glutMouseFunc( GLUI_Main::mouse_func );
-  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_MOUSE, (void*) f);
+  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_MOUSE, reinterpret_cast<void(*)()>(f));
 }
 
 
@@ -1843,7 +1843,7 @@ GLUI_Glut_Window  *GLUI_Master_Object::find_glut_window( int window_id )
 /******************** GLUI_Master_Object::add_cb_to_glut_window() **********/
 
 void     GLUI_Master_Object::add_cb_to_glut_window(int window_id,
-						   int cb_type,void *cb)
+						   int cb_type, void(*cb)())
 {
   GLUI_Glut_Window *window;
 

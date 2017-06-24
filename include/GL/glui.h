@@ -545,7 +545,7 @@ private:
     GLUI_Node     glut_windows;
     void (*glut_idle_CB)();
 
-    void          add_cb_to_glut_window(int window,int cb_type,void *cb);
+    void          add_cb_to_glut_window(int window,int cb_type,void(*cb)());
 };
 
 /**
