@@ -8,9 +8,9 @@
 Draws the hardcoded images listed in glui_bitmap_img_data with OpenGL.
 
 FIXME: upload the images to a texture.  This will allow them to be:
-	- Drawn with alpha blending
-	- Drawn at random sizes and angles onscreen
-	- Drawn much faster than with glDrawPixels
+  - Drawn with alpha blending
+  - Drawn at random sizes and angles onscreen
+  - Drawn much faster than with glDrawPixels
 
  --------------------------------------------------
 
@@ -37,35 +37,12 @@ FIXME: upload the images to a texture.  This will allow them to be:
 
 #include "GL/glui.h"
 #include "glui_internal.h"
+#include "glui_bitmap_img_data.h"
+
 #include <cassert>
 
-/************ Image Bitmap arrays **********/
-
-extern unsigned char glui_img_checkbox_0[];
-extern unsigned char glui_img_checkbox_1[];
-extern unsigned char glui_img_radiobutton_0[];
-extern unsigned char glui_img_radiobutton_1[];
-extern unsigned char glui_img_uparrow[];
-extern unsigned char glui_img_downarrow[];
-extern unsigned char glui_img_leftarrow[];
-extern unsigned char glui_img_rightarrow[];
-extern unsigned char glui_img_spinup_0[];
-extern unsigned char glui_img_spinup_1[];
-extern unsigned char glui_img_spindown_0[];
-extern unsigned char glui_img_spindown_1[];
-extern unsigned char glui_img_checkbox_0_dis[];
-extern unsigned char glui_img_checkbox_1_dis[];
-extern unsigned char glui_img_radiobutton_0_dis[];
-extern unsigned char glui_img_radiobutton_1_dis[];
-extern unsigned char glui_img_spinup_dis[];
-extern unsigned char glui_img_spindown_dis[];
-extern unsigned char glui_img_listbox_up[];
-extern unsigned char glui_img_listbox_down[];
-extern unsigned char glui_img_listbox_up_dis[];
-
-
 // These must be in the same order as the GLUI_STDBITMAP enums from glui.h!
-unsigned char *bitmap_arrays[] = {
+const unsigned char * const bitmap_arrays[] = {
   glui_img_checkbox_0,
   glui_img_checkbox_1,
   glui_img_radiobutton_0,
@@ -90,87 +67,69 @@ unsigned char *bitmap_arrays[] = {
 };
 
 
-/************************************ GLUI_Bitmap::load_from_array() ********/
+/************************************ GLUI_Bitmap::GLUI_Bitmap() ********/
 
 GLUI_Bitmap::GLUI_Bitmap()
-:   pixels(NULL),
-    w(0),
+:   w(0),
     h(0)
 {
 }
 
-GLUI_Bitmap::~GLUI_Bitmap()
-{
-	if (pixels)
-	{
-		free(pixels);
-		pixels = NULL;
-	}
-}
-
 /* Create bitmap from greyscale byte array */
-void GLUI_Bitmap::init_grey(unsigned char *array)
+void GLUI_Bitmap::init_grey(const unsigned char *array)
 {
-	w = array[0]; h = array[1];
-	pixels = (unsigned char *) malloc(w*h*3);
-	assert(pixels);
-
-	for(int i = 0; i<w*h; i++ )
-		for (int j = 0; j<3; j++) /* copy grey to r,g,b channels */
-			pixels[i*3+j] = (unsigned char) array[i+2];
+  w = array[0]; 
+  h = array[1];
+  pixels.resize(w*h*3);
+  array += 2;
+  for(int i = 0; i<w*h; i++)
+    for (int j = 0; j<3; j++) /* copy grey to r,g,b channels */
+      pixels[i*3+j] = (unsigned char) array[i];
 }
-
 
 /* Create bitmap from color int array.
   (OSL) This used to be how all GLUI bitmaps were stored, which was horribly
   inefficient--three ints per pixel, or 12 bytes per pixel!
 */
-void GLUI_Bitmap::init(int *array)
+void GLUI_Bitmap::init(const int *array)
 {
-	w = array[0]; h = array[1];
-	pixels = (unsigned char *) malloc(w*h*3);
-	assert(pixels);
-
-	for (int i = 0; i<w*h*3; i++)
-		pixels[i] = (unsigned char) array[i+2];
+  w = array[0]; 
+  h = array[1];
+  pixels.resize(w*h*3);
+  array += 2;
+  pixels.assign(array, array+w*h*3);
 }
-
 
 /*********************************** GLUI_StdBitmaps::draw() *****************/
 
 GLUI_StdBitmaps::GLUI_StdBitmaps()
 {
-    for (int i=0; i<GLUI_STDBITMAP_NUM_ITEMS; i++)
-        bitmaps[i].init_grey(bitmap_arrays[i]);
-}
-
-GLUI_StdBitmaps::~GLUI_StdBitmaps()
-{
+  for (int i=0; i<bitmaps.size(); i++)
+    bitmaps[i].init_grey(bitmap_arrays[i]);
 }
 
 int GLUI_StdBitmaps::width(int i) const
 {
-	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
-	return bitmaps[i].w;
+  assert(i>=0 && i<bitmaps.size());
+  return i>=0 && i<bitmaps.size() ? bitmaps[i].w : 0;
 }
 
 int GLUI_StdBitmaps::height(int i) const
 {
-	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
-	return bitmaps[i].h;
+  assert(i>=0 && i<bitmaps.size());
+  return i>=0 && i<bitmaps.size() ? bitmaps[i].h : 0;
 }
 
 void GLUI_StdBitmaps::draw(int i, int x, int y) const
 {
-	assert(i>=0 && i<GLUI_STDBITMAP_NUM_ITEMS);
-
-	if (bitmaps[i].pixels != NULL )
-	{
-		glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-		glRasterPos2f(0.5f+x, 0.5f+y+bitmaps[i].h);
-		glDrawPixels(
-			bitmaps[i].w, bitmaps[i].h,
-			GL_RGB, GL_UNSIGNED_BYTE, bitmaps[i].pixels);
-	}
+  assert(i>=0 && i<bitmaps.size());
+  if (i>=0 && i<bitmaps.size() && !bitmaps[i].pixels.empty())
+  {
+    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+    glRasterPos2f(0.5f+x, 0.5f+y+bitmaps[i].h);
+    glDrawPixels(
+      bitmaps[i].w, bitmaps[i].h,
+      GL_RGB, GL_UNSIGNED_BYTE, bitmaps[i].pixels.data());
+  }
 }
 

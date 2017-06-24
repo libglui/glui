@@ -10,7 +10,6 @@ SET(GLUI_SRCS
  algebra3.cpp
  arcball.cpp
  glui_add_controls.cpp
- glui_bitmap_img_data.cpp
  glui_bitmaps.cpp
  glui_button.cpp
  glui_checkbox.cpp

@@ -64,6 +64,8 @@
 
 #include <cstdio>
 #include <cstring>
+
+#include <array>
 #include <string>
 #include <vector>
 
@@ -413,18 +415,18 @@ class GLUIAPI GLUI_Bitmap
 
 public:
     GLUI_Bitmap();
-    ~GLUI_Bitmap();
+    ~GLUI_Bitmap() = default;
 
     /** Create bitmap from greyscale byte image */
-    void init_grey(unsigned char *array);
+    void init_grey(const unsigned char *array);
     
     /** Create bitmap from color int image */
-    void init(int *array);
+    void init(const int *array);
 
 private:
     /** RGB pixel data */
-    unsigned char *pixels;
-    int            w, h;
+    std::vector<uint8_t> pixels;
+    int                  w, h;
 };
 
 
@@ -442,7 +444,7 @@ class GLUIAPI GLUI_StdBitmaps
 {
 public:
     GLUI_StdBitmaps(); 
-    ~GLUI_StdBitmaps();
+    ~GLUI_StdBitmaps() = default;
 
     /** Return the width (in pixels) of the n'th standard bitmap. */
     int  width (int n) const;
@@ -455,7 +457,7 @@ public:
     void draw(int n, int x, int y) const;
 
 private:
-    GLUI_Bitmap bitmaps[GLUI_STDBITMAP_NUM_ITEMS];
+    std::array<GLUI_Bitmap,GLUI_STDBITMAP_NUM_ITEMS> bitmaps;
 };
 
 /************************************************************/
