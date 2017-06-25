@@ -1136,35 +1136,29 @@ void   GLUI_EditText::set_int_limits( int low, int high, int limit_type )
 
 void    GLUI_EditText::set_numeric_text()
 {
-  char buf_num[200];
-  int  i, text_len;
+  GLUI_String buf_num;
 
   if ( data_type == GLUI_EDITTEXT_FLOAT ) {
-    sprintf( buf_num, "%#g", float_val );
-
+    buf_num = tfm::format("%#g", float_val);
     num_periods = 0;
-    text_len = (int) strlen(buf_num);
-    for ( i=0; i<text_len; i++ )
-      if ( buf_num[i] == '.' )
-        num_periods++;
+    for (const auto c : buf_num) {
+      if ( c == '.' ) num_periods++;
+    }
 
     /* Now remove trailing zeros */
     if ( num_periods > 0 ) {
-      text_len = (int) strlen(buf_num);
-      for ( i=text_len-1; i>0; i-- ) {
+      for ( size_t i=buf_num.size()-1; i>0; i-- ) {
         if ( buf_num[i] == '0' AND buf_num[i-1] != '.' )
-          buf_num[i] = '\0';
+          buf_num = buf_num.substr(0, i);
         else
           break;
       }
     }
-    set_text( buf_num );
   }
   else {
-    sprintf( buf_num, "%d", int_val );
-    set_text( buf_num );
+    buf_num = tfm::format("%d", int_val);
   }
-
+  set_text( buf_num );
 }
 
 
