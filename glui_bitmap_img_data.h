@@ -2,7 +2,7 @@
  Bitmaps for all GLUI images.
 
  These were converted from original PPM images
- (mostly lost) with the tools/ppm2array program.
+ with the tools/ppm2array program.
 
  The images here are extracted in typical OpenGL
  bottom-to-top fashion.
