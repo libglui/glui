@@ -1141,7 +1141,7 @@ void    GLUI_EditText::set_numeric_text()
   if ( data_type == GLUI_EDITTEXT_FLOAT ) {
     buf_num = tfm::format("%#g", float_val);
     num_periods = 0;
-    for (const auto c : buf_num) {
+    for (const GLUI_String::value_type c : buf_num) {
       if ( c == '.' ) num_periods++;
     }
 
