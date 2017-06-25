@@ -48,7 +48,7 @@
   // This is for applications that do not want GLUT
   // #included for them and it should be used if an
   // alternative back-end is selected. 
-  typedef struct GLUquadric GLUquadric;
+  typedef class GLUquadric GLUquadric;
 
 #elif defined(GLUI_FREEGLUT)
 
@@ -565,6 +565,8 @@ public:
 	/* These are the glut callbacks that we do not handle */
 
     void set_glutDisplayFunc(void (*f)());
+	void set_glutMotionFunc(Int2_CB);
+	void set_glutPassiveMotionFunc(Int2_CB);
     void set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value);
     void set_glutOverlayDisplayFunc(void(*f)());
     void set_glutSpaceballMotionFunc(Int3_CB f);
@@ -1652,14 +1654,12 @@ public:
     int                 text_x_offset;
     int                 substring_start; /*substring that gets displayed in box*/
     int                 substring_end;  
-    int                 sel_start, sel_end;  /* current selection */
-    int                 __removing__num_periods;
+    int                 sel_start, sel_end;  /* current selection */    
     int                 last_insertion_pt;
     float               float_low, float_high;
     int                 int_low, int_high;
     GLUI_Spinner       *spinner;
-    int                 debug;
-    int                 __removing__draw_text_only;
+    int                 debug;   
 
 
     int  mouse_down_handler( int local_x, int local_y );
@@ -1738,7 +1738,6 @@ protected:
         substring_start       = 0;
         data_type             = GLUI_EDITTEXT_TEXT;
         substring_end         = 2;
-        //num_periods           = 0;
         has_limits            = GLUI_LIMIT_NONE;
         sel_start             = 0;
         sel_end               = 0;
@@ -1747,7 +1746,6 @@ protected:
         spacebar_mouse_click  = false;
         spinner               = NULL;
         debug                 = false;
-        //draw_text_only        = false;
     }
     void common_construct( GLUI_Node *parent, const char *name, 
                            int data_type, int live_type, void *live_var,
@@ -2064,8 +2062,7 @@ public:
     int                 substring_end;  
     int                 sel_start, sel_end;  /* current selection */
     int                 last_insertion_pt;
-    int                 debug;
-    int                 __removing__draw_text_only;
+    int                 debug;    
     int                 tab_width;
     int                 start_line;
     int                 num_lines;
@@ -2138,7 +2135,6 @@ protected:
         spacebar_mouse_click  = false;
         scrollbar             = NULL;
         debug                 = false;
-        //draw_text_only        = false;
     }
     void common_construct(
         GLUI_Node *parent, GLUI_String *live_var, 
@@ -2182,8 +2178,7 @@ public:
 
 
     GLUI_String         orig_text;
-    int                 debug;
-    int                 __removing__draw_text_only;
+    int                 debug;    
     int                 start_line;
     int                 num_lines;
     int                 curr_line;
@@ -2193,9 +2188,6 @@ public:
     GLUI_Control        *associated_object;
     GLUI_CB             obj_cb;
     int                 cb_click_type;
-	//Removing unreliable time-based double-click.
-    int                 __removed__last_line;
-    int                 __removed__last_click_time;
 
     int  mouse_down_handler( int local_x, int local_y );
     int  mouse_up_handler( int local_x, int local_y, bool inside );
@@ -2250,11 +2242,8 @@ protected:
         can_activate          = true;
         spacebar_mouse_click  = false;
         scrollbar             = NULL;
-        debug                 = false;
-     //   draw_text_only        = false;
+        debug                 = false;     
         cb_click_type         = GLUI_SINGLE_CLICK;
-     //   last_line             = -1;
-     //   last_click_time       = 0;
         associated_object     = NULL;
     };
     void common_construct(

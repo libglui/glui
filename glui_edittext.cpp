@@ -123,7 +123,7 @@ void GLUI_EditText::common_construct( GLUI_Node *parent, const char *name,
       set_int_val(int_val);   /** Set to some default, in case of no live var **/
   }
   else if ( live_type == GLUI_LIVE_FLOAT ) {
-    //num_periods = 1;
+    
     if ( data == NULL )
       set_float_val(float_val);   /** Set to some default, in case of no live var **/
   }
@@ -219,7 +219,7 @@ int GLUI_EditText::key_handler( unsigned char key,int modifiers )
 		
 	if(iscntrl(key)) switch(key)
 	{
-	case '\r': /* RETURN */
+	case '\r': //CTRL('m') /* RETURN */
  
 		//glui->deactivate_current_control();
 		deactivate();  /** Force callbacks, etc **/
@@ -270,7 +270,8 @@ int GLUI_EditText::key_handler( unsigned char key,int modifiers )
 		}
 		#else //SELECT-ALL
 		{
-			sel_start = 0; sel_end = text.length();
+			leftmost = sel_start = 0; 			
+			rightmost = sel_end = insertion_pt = text.length();
 		}
 		#endif
 		break;
@@ -362,13 +363,15 @@ int GLUI_EditText::key_handler( unsigned char key,int modifiers )
       }
 	  goto floating_point;	 
 	}
-    if(data_type==GLUI_EDITTEXT_INT) floating_point:
+    if(data_type==GLUI_EDITTEXT_INT) 
 	{
+		floating_point:
+
       if((key<'0' OR key>'9') AND key!='-' /*AND key!='.'*/)
 	  {
         return true;
 	  }
-	  decimal_point:
+		decimal_point:
 
       if(key=='-' )  /* User typed a '-' */
 	  {

@@ -31,6 +31,8 @@
 
 *****************************************************************************/
 
+#include "glui_internal_control.h"
+
 #include <limits.h>
 
 #ifdef _WIN32
@@ -39,12 +41,10 @@
 #ifdef GLUI_GLX
 #include <GL/glx.h>
 //Xlib/X crazily pollute the global namespace.
-#include <X11\Xlib.h>
-#include <X11\Xatom.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #endif
 #endif
-
-#include "glui_internal_control.h"
 
 GLUI_Clipboard_Object GLUI_Clipboard("CLIPBOARD");
 GLUI_Clipboard_Object GLUI_Selection("PRIMARY");
@@ -252,7 +252,9 @@ bool GLUI_Clipboard_Object::get_text(GLUI_String &container)
 	HGLOBAL h = GetClipboardData(CF_UNICODETEXT);
 	if(h==nullptr)
 	return false;
-	glui_clipboard_urlencode(container,(wchar_t*)GlobalLock(h));	
+	wchar_t *p = (wchar_t*)GlobalLock(h);
+	container.reserve(wcslen(p));
+	glui_clipboard_urlencode(container,p);	
 	GlobalUnlock(h);
 	CloseClipboard(); 
 	#endif

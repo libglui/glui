@@ -37,51 +37,59 @@ void GLUI_Master_Object::set_glutDisplayFunc(void (*f)(void))
 {
 	glutDisplayFunc(f);
 }
-void set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value)
+void GLUI_Master_Object::set_glutMotionFunc(Int2_CB f)
+{
+	glutMotionFunc(f);
+}
+void GLUI_Master_Object::set_glutPassiveMotionFunc(Int2_CB f)
+{
+	glutPassiveMotionFunc(f);
+}
+void GLUI_Master_Object::set_glutTimerFunc(unsigned int millis, void (*f)(int value), int value)
 {
 	glutTimerFunc(millis,f,value);
 }
-void set_glutOverlayDisplayFunc(void(*f)(void))
+void GLUI_Master_Object::set_glutOverlayDisplayFunc(void(*f)(void))
 {
 	glutOverlayDisplayFunc(f);
 }
-void set_glutSpaceballMotionFunc(Int3_CB f)
+void GLUI_Master_Object::set_glutSpaceballMotionFunc(Int3_CB f)
 {
 	glutSpaceballMotionFunc(f);
 }
-void set_glutSpaceballRotateFunc(Int3_CB f)
+void GLUI_Master_Object::set_glutSpaceballRotateFunc(Int3_CB f)
 {
 	glutSpaceballRotateFunc(f);
 }
-void set_glutSpaceballButtonFunc(Int2_CB f)
+void GLUI_Master_Object::set_glutSpaceballButtonFunc(Int2_CB f)
 {
 	glutSpaceballButtonFunc(f);
 }
-void set_glutTabletMotionFunc(Int2_CB f)
+void GLUI_Master_Object::set_glutTabletMotionFunc(Int2_CB f)
 {
 	glutTabletMotionFunc(f);
 }
-void set_glutTabletButtonFunc(Int4_CB f)
+void GLUI_Master_Object::set_glutTabletButtonFunc(Int4_CB f)
 {
 	glutTabletButtonFunc(f);
 }
-void set_glutWindowStatusFunc(Int1_CB f)
+void GLUI_Master_Object::set_glutWindowStatusFunc(Int1_CB f)
 {
 	glutWindowStatusFunc(f);
 } 
-void set_glutMenuStatusFunc(Int3_CB f)
+void GLUI_Master_Object::set_glutMenuStatusFunc(Int3_CB f)
 {
 	glutMenuStatusFunc(f);
 }
-void set_glutMenuStateFunc(Int1_CB f)
+void GLUI_Master_Object::set_glutMenuStateFunc(Int1_CB f)
 {
 	glutMenuStateFunc(f);
 }
-void set_glutButtonBoxFunc(Int2_CB f)  
+void GLUI_Master_Object::set_glutButtonBoxFunc(Int2_CB f)  
 {
 	glutButtonBoxFunc(f);
 }
-void set_glutDialsFunc(Int2_CB f) 
+void GLUI_Master_Object::set_glutDialsFunc(Int2_CB f) 
 {
 	glutDialsFunc(f);
 }    
