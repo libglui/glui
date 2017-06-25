@@ -16,20 +16,8 @@ CPPFLAGS+=-std=c++11
 ifeq ($(UNAME), Linux)
 CXX      ?= g++
 CPPFLAGS += $(OPTS) -Wall -pedantic
-endif
-
-ifeq ($(UNAME), Darwin)
-CXX      ?= g++
-CPPFLAGS += $(OPTS) -Wall -pedantic
-endif
-
-#######################################
-
-CPPFLAGS += -I./ -I./include
-
-LIBGLUI = -L./lib -lglui
-LIBGL   = -lGLU -lGL
-LIBS    = -lXmu -lXext -lX11 -lXi -lm
+LIBGL     = -lGLU -lGL
+LIBS      = -lXmu -lXext -lX11 -lXi -lm
 
 # One of the following options only...
 
@@ -44,6 +32,20 @@ LIBS    = -lXmu -lXext -lX11 -lXi -lm
 # (3) GLUT
 LIBGLUT   = -L/usr/X11R6/lib -lglut
 CPPFLAGS += -I/usr/X11R6/include
+endif
+
+ifeq ($(UNAME), Darwin)
+CXX      ?= g++
+CPPFLAGS += $(OPTS) -Wall -pedantic
+LIBGL     = -framework OpenGL
+LIBGLUT   = -framework GLUT
+endif
+
+#######################################
+
+CPPFLAGS += -I./ -I./include
+
+LIBGLUI = -L./lib -lglui
 
 #######################################
 
