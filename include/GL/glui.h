@@ -2565,8 +2565,4 @@ protected:
     }
 };
 
-/********** Misc functions *********************/
-int _glutBitmapWidthString( void *font, const char *s );
-void _glutBitmapString( void *font, const char *s );
-
 #endif
