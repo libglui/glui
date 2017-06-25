@@ -1141,17 +1141,20 @@ void    GLUI_EditText::set_numeric_text()
   if ( data_type == GLUI_EDITTEXT_FLOAT ) {
     buf_num = tfm::format("%#g", float_val);
     num_periods = 0;
-    for (const GLUI_String::value_type c : buf_num) {
-      if ( c == '.' ) num_periods++;
+    for ( size_t i=0; i<buf_num.size(); ++i ) {
+      if ( buf_num[i] == '.' ) num_periods++;
     }
 
     /* Now remove trailing zeros */
     if ( num_periods > 0 ) {
-      for ( size_t i=buf_num.size()-1; i>0; i-- ) {
-        if ( buf_num[i] == '0' AND buf_num[i-1] != '.' )
-          buf_num = buf_num.substr(0, i);
-        else
+      size_t i = 0;
+      for ( size_t i=buf_num.size()-1; i>0 && i<buf_num.size(); i-- )
+      {
+        if ( buf_num[i]!='0' || buf_num[i-1]=='.' )
+        {
+          buf_num = buf_num.substr(0,i+1);
           break;
+        }
       }
     }
   }
