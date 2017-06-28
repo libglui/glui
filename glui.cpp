@@ -33,6 +33,8 @@
 
 #include "tinyformat.h"
 
+#include <algorithm>
+
 /**
  Note: moving this routine here from glui_add_controls.cpp prevents the linker
  from touching glui_add_controls.o in non-deprecated programs, which
@@ -989,16 +991,16 @@ void      GLUI_Main::pack_controls()
 
     if ( 1 ) {
       if ( TEST_AND(this->flags,GLUI_SUBWINDOW_TOP )) {
-	main_panel->w = MAX( main_panel->w, parent_w );
+	main_panel->w = std::max( main_panel->w, parent_w );
       }
       else if ( TEST_AND(this->flags,GLUI_SUBWINDOW_LEFT )) {
-	main_panel->h = MAX( main_panel->h, parent_h );
+	main_panel->h = std::max( main_panel->h, parent_h );
       }
       else if ( TEST_AND(this->flags,GLUI_SUBWINDOW_BOTTOM )) {
-	main_panel->w = MAX( main_panel->w, parent_w );
+	main_panel->w = std::max( main_panel->w, parent_w );
       }
       else if ( TEST_AND(this->flags,GLUI_SUBWINDOW_RIGHT )) {
-	main_panel->h = MAX( main_panel->h, parent_h );
+	main_panel->h = std::max( main_panel->h, parent_h );
       }
     }
   }
@@ -2013,10 +2015,10 @@ void     GLUI_Master_Object::get_viewport_area( int *x, int *y,
     curr_glui = (GLUI*) curr_glui->next();
   }
 
-  curr_x = MAX( 0, curr_x );
-  curr_y = MAX( 0, curr_y );
-  curr_w = MAX( 0, curr_w );
-  curr_h = MAX( 0, curr_h );
+  curr_x = std::max( 0, curr_x );
+  curr_y = std::max( 0, curr_y );
+  curr_w = std::max( 0, curr_w );
+  curr_h = std::max( 0, curr_h );
 
   *x = curr_x;
   *y = curr_y;
@@ -2032,7 +2034,7 @@ void           GLUI_Master_Object::auto_set_viewport()
   int x, y, w, h;
 
   get_viewport_area( &x, &y, &w, &h );
-  glViewport( MAX(x,0), MAX(y,0), MAX(w,0), MAX(h,0) );
+  glViewport( std::max(x,0), std::max(y,0), std::max(w,0), std::max(h,0) );
 }
 
 

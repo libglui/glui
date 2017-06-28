@@ -32,7 +32,10 @@
 *****************************************************************************/
 
 #include "glui_internal_control.h"
+
 #include "tinyformat.h"
+
+#include <algorithm>
 #include <cassert>
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
@@ -246,8 +249,8 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
       }
     }
     else {                         /* There is a selection */
-      clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-      insertion_pt = MIN(sel_start,sel_end);
+      clear_substring( std::min(sel_start,sel_end), std::max(sel_start,sel_end ));
+      insertion_pt = std::min(sel_start,sel_end);
       sel_start = sel_end = insertion_pt;
     }
   }
@@ -259,8 +262,8 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
       sel_end = find_word_break( insertion_pt, +1 );
     }
 
-    clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-    insertion_pt = MIN(sel_start,sel_end);
+    clear_substring( std::min(sel_start,sel_end), std::max(sel_start,sel_end ));
+    insertion_pt = std::min(sel_start,sel_end);
     sel_start = sel_end = insertion_pt;
   }
   else if ( key == CTRL('h') ) {       /* BACKSPACE */
@@ -276,8 +279,8 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
       }
     }
     else {                         /* There is a selection */
-      clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-      insertion_pt = MIN(sel_start,sel_end);
+      clear_substring( std::min(sel_start,sel_end), std::max(sel_start,sel_end ));
+      insertion_pt = std::min(sel_start,sel_end);
       sel_start = sel_end = insertion_pt;
     }
   }
@@ -338,8 +341,8 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
       if ( key == '-' ) { /* User typed a '-' */
 
         /* If user has first character selected, then '-' is allowed */
-        if ( NOT ( MIN(sel_start,sel_end) == 0 AND
-                   MAX(sel_start,sel_end) > 0 ) ) {
+        if ( NOT ( std::min(sel_start,sel_end) == 0 AND
+                   std::max(sel_start,sel_end) > 0 ) ) {
 
           /* User does not have 1st char selected */
           if (insertion_pt != 0 OR text[0] == '-' ) {
@@ -359,7 +362,7 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
 
           int period_found = false;
           if ( sel_start != sel_end ) {
-            for( i=MIN(sel_end,sel_start); i<MAX(sel_start,sel_end); i++ ) {
+            for( i=std::min(sel_end,sel_start); i<std::max(sel_start,sel_end); i++ ) {
               /*  printf( "%c ", text[i] );              */
               if ( text[i] == '.' ) {
                 period_found = true;
@@ -383,8 +386,8 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
       if ( key == '-' ) { /* User typed a '-' */
 
         /* If user has first character selected, then '-' is allowed */
-        if ( NOT ( MIN(sel_start,sel_end) == 0 AND
-          MAX(sel_start,sel_end) > 0 ) ) {
+        if ( NOT ( std::min(sel_start,sel_end) == 0 AND
+          std::max(sel_start,sel_end) > 0 ) ) {
 
             /* User does not have 1st char selected */
             if (insertion_pt != 0 OR text[0] == '-' ) {
@@ -403,8 +406,8 @@ int    GLUI_EditText::key_handler( unsigned char key,int modifiers )
 
     /**** If there's a current selection, erase it ******/
     if ( sel_start != sel_end ) {
-      clear_substring( MIN(sel_start,sel_end), MAX(sel_start,sel_end ));
-      insertion_pt = MIN(sel_start,sel_end);
+      clear_substring( std::min(sel_start,sel_end), std::max(sel_start,sel_end ));
+      insertion_pt = std::min(sel_start,sel_end);
       sel_start = sel_end = insertion_pt;
     }
 
@@ -540,7 +543,7 @@ void    GLUI_EditText::draw( int x, int y )
   GLUI_DRAWINGSENTINAL_IDIOM
   int name_x;
 
-  name_x = MAX(text_x_offset - string_width(this->name) - 3,0);
+  name_x = std::max(text_x_offset - string_width(this->name) - 3,0);
   draw_name( name_x , 13);
 
   glBegin( GL_LINES );
@@ -585,12 +588,12 @@ int    GLUI_EditText::update_substring_bounds()
   old_end = substring_end;
 
   /*** Calculate the width of the usable area of the edit box ***/
-  box_width = MAX( this->w - this->text_x_offset
+  box_width = std::max( this->w - this->text_x_offset
 		   - 4     /*  2 * the two-line box border */
 		   - 2 * GLUI_EDITTEXT_BOXINNERMARGINX, 0 );
 
-  CLAMP( substring_end, 0, MAX(text_len-1,0) );
-  CLAMP( substring_start, 0, MAX(text_len-1,0) );
+  CLAMP( substring_end, 0, std::max(text_len-1,0) );
+  CLAMP( substring_start, 0, std::max(text_len-1,0) );
 
   if ( debug )    dump( stdout, "-> UPDATE SS" );
 
@@ -676,8 +679,8 @@ void    GLUI_EditText::draw_text( int x, int y )
     substring_start, substring_end );
     */
   /** Find lower and upper selection bounds **/
-  sel_lo = MIN(sel_start, sel_end );
-  sel_hi = MAX(sel_start, sel_end );
+  sel_lo = std::min(sel_start, sel_end );
+  sel_hi = std::max(sel_start, sel_end );
 
   int sel_x_start, sel_x_end, delta;
 

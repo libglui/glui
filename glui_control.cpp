@@ -35,6 +35,8 @@
 
 #include "tinyformat.h"
 
+#include <algorithm>
+
 int _glui_draw_border_only = 0;
 
 /********* GLUI_Control::GLUI_Control() **********/
@@ -567,7 +569,7 @@ void GLUI_Control::pack_old(int x, int y)
       if ( dynamic_cast<GLUI_Rollout*>(this) ) {
 	/**  We don't want the rollout to shrink in width when it's
 	  closed **/
-	this->w = MAX(this->w, column_x + max_w + 2 * x_margin );
+	this->w = std::max(this->w, column_x + max_w + 2 * x_margin );
       }
       else {
 	this->w        = column_x + max_w + 2 * x_margin;

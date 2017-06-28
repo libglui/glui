@@ -35,6 +35,8 @@
 
 #include "tinyformat.h"
 
+#include <algorithm>
+
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
                             const GLUI_String &name, int *value_ptr,
@@ -111,7 +113,7 @@ void    GLUI_Listbox::draw( int x, int y )
 
   /*  draw_active_area();              */
 
-  name_x = MAX(text_x_offset - string_width(this->name) - 3,0);
+  name_x = std::max(text_x_offset - string_width(this->name) - 3,0);
   draw_name( name_x , 13);
   draw_box_inwards_outline( text_x_offset, w,
 			    0, h );
@@ -450,12 +452,12 @@ bool    GLUI_Listbox::recalculate_item_width()
 
   GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
   while( item ) {
-    item_text_size = MAX(item_text_size,string_width(item->text));
+    item_text_size = std::max(item_text_size,string_width(item->text));
     item = (GLUI_Listbox_Item *) item->next();
   }
 
   /* Sum up our layout: name, item, and drop-down marker */
-  int new_wid=text_x_offset+MAX(GLUI_EDITTEXT_MIN_TEXT_WIDTH,item_text_size)+20;
+  int new_wid=text_x_offset+std::max(GLUI_EDITTEXT_MIN_TEXT_WIDTH,item_text_size)+20;
   if ( w != new_wid) {
     w = new_wid;
     return true; /* we gotta be shortened or widened */

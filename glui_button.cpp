@@ -32,6 +32,8 @@
 
 #include "tinyformat.h"
 
+#include <algorithm>
+
 /****************************** GLUI_Button::GLUI_Button() **********/
 
 GLUI_Button::GLUI_Button( GLUI_Node *parent, const GLUI_String &name,
@@ -158,10 +160,10 @@ void     GLUI_Button::draw_text( int sunken )
   string_width = _glutBitmapWidthString( glui->font,
 					 this->name.c_str() );
   if ( NOT sunken ) {
-    draw_name( MAX((w-string_width),0)/2, 13);
+    draw_name( std::max((w-string_width),0)/2, 13);
   }
   else {
-    draw_name( MAX((w-string_width),0)/2 + 1, 13 + 1);
+    draw_name( std::max((w-string_width),0)/2 + 1, 13 + 1);
   }
 
   if ( active ) {

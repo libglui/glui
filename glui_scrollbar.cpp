@@ -28,6 +28,9 @@
 *****************************************************************************/
 
 #include "glui_internal_control.h"
+
+#include <algorithm>
+
 #include <cmath>
 #include <cassert>
 
@@ -133,8 +136,8 @@ void GLUI_Scrollbar::common_construct(
     float lo = 0.0f, hi=1.0f;
     if (data) {
       float d = *(float*)(data);
-      lo = MIN(lo, d);
-      hi = MAX(hi, d);
+      lo = std::min(lo, d);
+      hi = std::max(hi, d);
     }
     this->set_float_limits(lo,hi);
     this->set_float_val(lo);
@@ -143,8 +146,8 @@ void GLUI_Scrollbar::common_construct(
     int lo = 0, hi=100;
     if (data) {
       int d = *(int*)(data);
-      lo = MIN(lo, d);
-      hi = MAX(hi, d);
+      lo = std::min(lo, d);
+      hi = std::max(hi, d);
     }
     this->set_int_limits(lo,hi);
     this->set_int_val(0);
@@ -193,8 +196,8 @@ int    GLUI_Scrollbar::mouse_down_handler( int local_x, int local_y )
 #if 1
   if ( data_type == GLUI_SCROLL_INT ) {
     // Allow for possibility of reversed limits
-    int lo = MIN(int_min,int_max);
-    int hi = MAX(int_min,int_max);
+    int lo = std::min(int_min,int_max);
+    int hi = std::max(int_min,int_max);
     int increase = int_min < int_max ? 1 : -1;
     int new_val = int_val;
     if ( state == GLUI_SCROLL_STATE_UP ) {
@@ -744,8 +747,8 @@ void    GLUI_Scrollbar::do_callbacks()
 void   GLUI_Scrollbar::set_float_val( float new_val )
 {
   // Allow for the possibility that the limits are reversed
-  float hi = MAX(float_min,float_max);
-  float lo = MIN(float_min,float_max);
+  float hi = std::max(float_min,float_max);
+  float lo = std::min(float_min,float_max);
   if (new_val > hi)
     new_val = hi;
   if (new_val < lo)
@@ -766,8 +769,8 @@ void   GLUI_Scrollbar::set_float_val( float new_val )
 void   GLUI_Scrollbar::set_int_val( int new_val )
 {
   // Allow for the possibility that the limits are reversed
-  int hi = MAX(int_min,int_max);
-  int lo = MIN(int_min,int_max);
+  int hi = std::max(int_min,int_max);
+  int lo = std::min(int_min,int_max);
   if (new_val > hi)
     new_val = hi;
   if (new_val < lo)
@@ -791,8 +794,8 @@ void   GLUI_Scrollbar::set_float_limits( float low, float high, int limit_type )
   float_min = low;
   float_max = high;
   // Allow for possiblitly of reversed limits
-  float lo = MIN(low,high);
-  float hi = MAX(low,high);
+  float lo = std::min(low,high);
+  float hi = std::max(low,high);
   if (float_val<lo) set_float_val(lo);
   if (float_val>hi) set_float_val(hi);
 }
@@ -808,8 +811,8 @@ void   GLUI_Scrollbar::set_int_limits( int low, int high, int limit_type )
   int_min = low;
   int_max = high;
   // Allow for possiblitly of reversed limits
-  int lo = MIN(low,high);
-  int hi = MAX(low,high);
+  int lo = std::min(low,high);
+  int hi = std::max(low,high);
   if (int_val<lo) set_int_val(lo);
   if (int_val>hi) set_int_val(hi);
   float_min = low;
