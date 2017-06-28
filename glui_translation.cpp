@@ -36,6 +36,8 @@
 #include "algebra3.h"
 #include "tinyformat.h"
 
+#include <algorithm>
+
 /********************** GLUI_Translation::GLUI_Translation() ***/
 
 GLUI_Translation::GLUI_Translation(

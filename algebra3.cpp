@@ -76,6 +76,9 @@
 
 #include "algebra3.h"
 #include "glui_internal.h"
+
+#include <algorithm>
+
 #include <cmath>
 
 #ifdef VEC_ERROR_FATAL
@@ -335,12 +338,12 @@ void swap(vec2 &a, vec2 &b)
 
 vec2 min_vec(const vec2 &a, const vec2 &b)
 {
-    return vec2(MIN(a.n[VX], b.n[VX]), MIN(a.n[VY], b.n[VY]));
+    return vec2(std::min(a.n[VX], b.n[VX]), std::min(a.n[VY], b.n[VY]));
 }
 
 vec2 max_vec(const vec2 &a, const vec2 &b)
 {
-    return vec2(MAX(a.n[VX], b.n[VX]), MAX(a.n[VY], b.n[VY]));
+    return vec2(std::max(a.n[VX], b.n[VX]), std::max(a.n[VY], b.n[VY]));
 }
 
 vec2 prod(const vec2 &a, const vec2 &b)
@@ -615,17 +618,17 @@ void swap(vec3 &a, vec3 &b)
 vec3 min_vec(const vec3 &a, const vec3 &b)
 {
     return vec3(
-        MIN(a.n[VX], b.n[VX]),
-        MIN(a.n[VY], b.n[VY]),
-        MIN(a.n[VZ], b.n[VZ]));
+        std::min(a.n[VX], b.n[VX]),
+        std::min(a.n[VY], b.n[VY]),
+        std::min(a.n[VZ], b.n[VZ]));
 }
 
 vec3 max_vec(const vec3 &a, const vec3 &b)
 {
     return vec3(
-        MAX(a.n[VX], b.n[VX]),
-        MAX(a.n[VY], b.n[VY]),
-        MAX(a.n[VZ], b.n[VZ]));
+        std::max(a.n[VX], b.n[VX]),
+        std::max(a.n[VY], b.n[VY]),
+        std::max(a.n[VZ], b.n[VZ]));
 }
 
 vec3 prod(const vec3 &a, const vec3 &b)
@@ -918,19 +921,19 @@ void swap(vec4 &a, vec4 &b)
 vec4 min_vec(const vec4 &a, const vec4 &b)
 {
     return vec4(
-        MIN(a.n[VX], b.n[VX]),
-        MIN(a.n[VY], b.n[VY]),
-        MIN(a.n[VZ], b.n[VZ]),
-        MIN(a.n[VW], b.n[VW]));
+        std::min(a.n[VX], b.n[VX]),
+        std::min(a.n[VY], b.n[VY]),
+        std::min(a.n[VZ], b.n[VZ]),
+        std::min(a.n[VW], b.n[VW]));
 }
 
 vec4 max_vec(const vec4 &a, const vec4 &b)
 {
     return vec4(
-        MAX(a.n[VX], b.n[VX]),
-        MAX(a.n[VY], b.n[VY]),
-        MAX(a.n[VZ], b.n[VZ]),
-        MAX(a.n[VW], b.n[VW]));
+        std::max(a.n[VX], b.n[VX]),
+        std::max(a.n[VY], b.n[VY]),
+        std::max(a.n[VZ], b.n[VZ]),
+        std::max(a.n[VW], b.n[VW]));
 }
 
 vec4 prod(const vec4 &a, const vec4 &b)

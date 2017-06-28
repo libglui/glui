@@ -2309,7 +2309,6 @@ protected:
 class GLUIAPI GLUI_Mouse_Interaction : public GLUI_Control
 {
 public:
-    /*int  get_main_area_size() { return MIN( h-18,  */
     int            draw_active_area_only;
 
     int  mouse_down_handler( int local_x, int local_y ) override;

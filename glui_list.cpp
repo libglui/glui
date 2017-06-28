@@ -29,6 +29,9 @@
 *****************************************************************************/
 
 #include "glui_internal_control.h"
+
+#include <algorithm>
+
 #include <cmath>
 #include <sys/timeb.h>
 
@@ -270,7 +273,7 @@ void    GLUI_List::draw( int x, int y )
   }
 
   if (scrollbar) {
-    scrollbar->set_int_limits(MAX(0,num_lines-visible_lines), 0);
+    scrollbar->set_int_limits(std::max(0,num_lines-visible_lines), 0);
     glPushMatrix();
     glTranslatef(scrollbar->x_abs-x_abs, scrollbar->y_abs-y_abs,0.0);
     scrollbar->draw_scroll();
@@ -335,7 +338,7 @@ int GLUI_List::find_line(int x, int y) {
 }
 
 int      GLUI_List::get_box_width() {
-   return MAX( this->w
+   return std::max( this->w
 		   - 6     /*  2 * the two-line box border */
 		   - 2 * GLUI_LIST_BOXINNERMARGINX, 0 );
 
@@ -433,7 +436,7 @@ int  GLUI_List::add_item( int id, const GLUI_String &new_text )
   }
   num_lines++;
   if (scrollbar)
-    scrollbar->set_int_limits(MAX(num_lines-visible_lines,0), 0);
+    scrollbar->set_int_limits(std::max(num_lines-visible_lines,0), 0);
 
   return true;
 }
