@@ -111,7 +111,7 @@ void    GLUI_RadioGroup::draw_group( int translate )
 
 /****************************** GLUI_RadioGroup::set_name() **********/
 
-void    GLUI_RadioGroup::set_name( const char *text )
+void    GLUI_RadioGroup::set_name( const GLUI_String &text )
 {
   name = text;
 
@@ -148,7 +148,7 @@ void    GLUI_RadioGroup::set_selected( int int_val )
 
 /************************ GLUI_RadioButton::GLUI_RadioButton() **********/
 
-GLUI_RadioButton::GLUI_RadioButton( GLUI_RadioGroup *grp, const char *name )
+GLUI_RadioButton::GLUI_RadioButton( GLUI_RadioGroup *grp, const GLUI_String &name )
 {
   common_init();
 

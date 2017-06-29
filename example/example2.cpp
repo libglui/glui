@@ -54,7 +54,7 @@ void control_cb( int control )
   printf( "             checkbox: %d\n", checkbox->get_int_val() );
   printf( "              spinner: %d\n", spinner->get_int_val() );
   printf( "          radio group: %d\n", radio->get_int_val() );
-  printf( "                 text: %s\n", edittext->get_text() );
+  printf( "                 text: %s\n", edittext->get_text().c_str() );
   
 }
 

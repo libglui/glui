@@ -6,6 +6,8 @@
 // ppm.cpp : Portable Pixel Map image format module
 //============================================================================
 
+#include <string>
+
 #include <cstdio>
 #include <cassert>
 #include <cstring>
@@ -37,11 +39,11 @@ void VFlip(unsigned char * Pix, int width, int height, int chan)
 // PERFORMS AUTO-ALLOCATION OF Color ARRAY IF SET TO NULL BEFORE CALLING; OTHERWISE
 // ASSUMES THAT COLOR HAS BEEN PRE-ALLOCED.
 //----------------------------------------------------------------------------
-void LoadPPM(const char *FileName, unsigned char* &Color, int &Width, int &Height)
+void LoadPPM(const std::string &FileName, unsigned char* &Color, int &Width, int &Height)
 {
-  FILE* fp = fopen(FileName, "rb");
+  FILE* fp = fopen(FileName.c_str(), "rb");
   if (fp==NULL) 
-    { printf("PPM ERROR (ReadPPM) : unable to open %s!\n",FileName);
+    { printf("PPM ERROR (ReadPPM) : unable to open %s!\n",FileName.c_str());
       Color=NULL; Width=0; Height=0; return; }
   int c,s;
   do{ do { s=fgetc(fp); } while (s!='\n'); } while ((c=fgetc(fp))=='#');
@@ -49,7 +51,7 @@ void LoadPPM(const char *FileName, unsigned char* &Color, int &Width, int &Heigh
   int result = fscanf(fp, "%d %d\n255\n", &Width, &Height);
   assert(result==2);
 #if PPM_VERBOSE
-  printf("Reading %dx%d Texture [%s]. . .\n", Width, Height, FileName);
+  printf("Reading %dx%d Texture [%s]. . .\n", Width, Height, FileName.c_str());
 #endif
   int NumComponents = Width*Height*3;
   if (Color==NULL) Color = new unsigned char[NumComponents];
@@ -61,10 +63,10 @@ void LoadPPM(const char *FileName, unsigned char* &Color, int &Width, int &Heigh
 //----------------------------------------------------------------------------
 // Writes an unsigned byte RGB color array out to a PPM file.
 //----------------------------------------------------------------------------
-void WritePPM(const char *FileName, unsigned char* Color, int Width, int Height)
+void WritePPM(const std::string &FileName, unsigned char* Color, int Width, int Height)
 {
-  FILE* fp = fopen(FileName, "wb");
-  if (fp==NULL) { printf("PPM ERROR (WritePPM) : unable to open %s!\n",FileName); return; }
+  FILE* fp = fopen(FileName.c_str(), "wb");
+  if (fp==NULL) { printf("PPM ERROR (WritePPM) : unable to open %s!\n",FileName.c_str()); return; }
   fprintf(fp, "P6\n%d %d\n255\n", Width, Height);
   fwrite(Color,1,Width*Height*3,fp);
   fclose(fp);

@@ -122,7 +122,7 @@ void GLUI_CB::operator()(GLUI_Control*ctrl) const
 
 /************************************************ GLUI::GLUI() **********/
 
-int GLUI::init( const char *text, long flags, int x, int y, int parent_window )
+int GLUI::init( const GLUI_String &text, long flags, int x, int y, int parent_window )
 {
   int old_glut_window;
 
@@ -179,13 +179,13 @@ int GLUI::init( const char *text, long flags, int x, int y, int parent_window )
 
 /**************************** GLUI_Main::create_standalone_window() ********/
 
-void GLUI_Main::create_standalone_window( const char *name, int x, int y )
+void GLUI_Main::create_standalone_window( const GLUI_String &name, int x, int y )
 {
   glutInitWindowSize( 100, 100 );
   if ( x >= 0 OR y >= 0 )
     glutInitWindowPosition( x, y );
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
-  glut_window_id = glutCreateWindow( name );
+  glut_window_id = glutCreateWindow( name.c_str() );
 }
 
 
@@ -498,7 +498,7 @@ GLUI_Master_Object::~GLUI_Master_Object()
 
 /*********************************** GLUI_Master_Object::create_glui() ******/
 
-GLUI *GLUI_Master_Object::create_glui( const char *name, long flags,int x,int y )
+GLUI *GLUI_Master_Object::create_glui( const GLUI_String &name, long flags,int x,int y )
 {
   GLUI *new_glui = new GLUI;
   new_glui->init( name, flags, x, y, -1 );
@@ -615,21 +615,12 @@ void    GLUI_Main::display()
   }
 }
 
-
-
-
 /*************************************** _glutBitmapWidthString() **********/
 
-int _glutBitmapWidthString( void *font, const char *s )
+int _glutBitmapWidthString( void *font, const GLUI_String &s )
 {
-  const char *p = s;
   int  width = 0;
-
-  while( *p != '\0' )  {
-    width += glutBitmapWidth( font, *p );
-    p++;
-  }
-
+  for (auto i : s) width += glutBitmapWidth( font, i );
   return width;
 }
 
@@ -637,17 +628,10 @@ int _glutBitmapWidthString( void *font, const char *s )
 /* Displays the contents of a string using GLUT's bitmap character function */
 /* Does not handle newlines                                             */
 
-void _glutBitmapString( void *font, const char *s )
+void _glutBitmapString( void *font, const GLUI_String &s )
 {
-  const char *p = s;
-
-  while( *p != '\0' )  {
-    glutBitmapCharacter( font, *p );
-    p++;
-  }
+  for (auto i : s) glutBitmapCharacter( font, i );
 }
-
-
 
 /****************************** GLUI_Main::reshape() **************/
 

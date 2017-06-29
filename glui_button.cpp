@@ -34,7 +34,7 @@
 
 /****************************** GLUI_Button::GLUI_Button() **********/
 
-GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
+GLUI_Button::GLUI_Button( GLUI_Node *parent, const GLUI_String &name,
                           int id, GLUI_CB cb )
 {
   common_init();

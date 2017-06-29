@@ -238,8 +238,8 @@ vec3 quat::get_axis() const
 
 /******************************************* quat::print() ************/
 
-void quat::print(FILE *dest, const char *name) const
+void quat::print(FILE *dest, const std::string &name) const
 {
     fprintf( dest, "%s:   v:<%3.2f %3.2f %3.2f>  s:%3.2f\n",
-        name, v[0], v[1], v[2], s );
+        name.c_str(), v[0], v[1], v[2], s );
 }

@@ -34,7 +34,7 @@
 #include "glui_internal.h"
 
 /****************************** GLUI_CommandLine::GLUI_CommandLine() **********/
-GLUI_CommandLine::GLUI_CommandLine( GLUI_Node *parent, const char *name,
+GLUI_CommandLine::GLUI_CommandLine( GLUI_Node *parent, const GLUI_String &name,
                                     void *data, int id, GLUI_CB cb )
 {
   common_init();
@@ -157,9 +157,9 @@ void    GLUI_CommandLine::recall_history( int hist_num )
 
 /**************************** GLUI_CommandLine::add_to_history() ********/
 
-void    GLUI_CommandLine::add_to_history( const char *cmd )
+void    GLUI_CommandLine::add_to_history( const GLUI_String &cmd )
 {
-  if (cmd[0]=='\0') return; // don't add if it's empty
+  if (cmd.empty()) return; // don't add if it's empty
 
   curr_hist = newest_hist;
   get_history_str(newest_hist) = text;
@@ -186,11 +186,11 @@ void    GLUI_CommandLine::reset_history()
 
 /*************************************** GLUI_CommandLine::dump() **************/
 
-void   GLUI_CommandLine::dump( FILE *out, const char *name )
+void   GLUI_CommandLine::dump( FILE *out, const GLUI_String &name )
 {
   fprintf( out,
 	   "%s (commandline@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
-	   name, this,
+	   name.c_str(), this,
 	   insertion_pt, substring_start, substring_end, sel_start, sel_end,
 	   (int)text.length());
 }

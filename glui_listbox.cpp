@@ -37,7 +37,7 @@
 
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
-                            const char *name, int *value_ptr,
+                            const GLUI_String &name, int *value_ptr,
                             int id,
                             GLUI_CB cb)
 {
@@ -168,7 +168,7 @@ void    GLUI_Listbox::set_int_val( int new_val )
 
 /**************************************** GLUI_Listbox::add_item() **********/
 
-int  GLUI_Listbox::add_item( int id, const char *new_text )
+int  GLUI_Listbox::add_item( int id, const GLUI_String &new_text )
 {
   GLUI_Listbox_Item *new_node = new GLUI_Listbox_Item;
   GLUI_Listbox_Item *head;
@@ -197,7 +197,7 @@ int  GLUI_Listbox::add_item( int id, const char *new_text )
 
 /************************************** GLUI_Listbox::delete_item() **********/
 
-int  GLUI_Listbox::delete_item( const char *text )
+int  GLUI_Listbox::delete_item( const GLUI_String &text )
 {
   GLUI_Listbox_Item *node = get_item_ptr(text);
 
@@ -260,7 +260,7 @@ void     GLUI_Listbox::dump( FILE *output )
 
 /************************************ GLUI_Listbox::get_item_ptr() **********/
 
-GLUI_Listbox_Item *GLUI_Listbox::get_item_ptr( const char *text )
+GLUI_Listbox_Item *GLUI_Listbox::get_item_ptr( const GLUI_String &text )
 {
   GLUI_Listbox_Item *item;
 

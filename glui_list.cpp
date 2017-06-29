@@ -280,7 +280,7 @@ void    GLUI_List::draw( int x, int y )
 
 /********************************* GLUI_List::draw_text() ****************/
 
-void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
+void    GLUI_List::draw_text(const GLUI_String &t, int selected, int x, int y )
 {
   int text_x, i, x_pos;
   int box_width;
@@ -310,7 +310,7 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
 
     glRasterPos2i( text_x, y+15);
     i = 0;
-    while( t[i] != '\0' && substring_width(t,0,i) < box_width) {
+    while( i<t.size() && substring_width(t,0,i) < box_width) {
       glutBitmapCharacter( get_font(), t[i] );
       x_pos += char_width( t[i] );
       i++;
@@ -321,7 +321,7 @@ void    GLUI_List::draw_text(const char *t, int selected, int x, int y )
     x_pos = text_x;
     glColor3f( 1., 1., 1. );
     glRasterPos2i( text_x, y+15);
-    while( t[i] != '\0' && substring_width(t,0,i) < box_width) {
+    while( i<t.size() &&  substring_width(t,0,i) < box_width) {
       glutBitmapCharacter( get_font(), t[i] );
       x_pos += char_width( t[i] );
       i++;
@@ -342,7 +342,7 @@ int      GLUI_List::get_box_width() {
 }
 
 /******************************** GLUI_List::substring_width() *********/
-int  GLUI_List::substring_width( const char *t, int start, int end )
+int  GLUI_List::substring_width( const GLUI_String &t, int start, int end )
 {
   int i, width;
 
@@ -410,7 +410,7 @@ void   GLUI_List::update_size()
 
 /**************************************** GLUI_Listbox::add_item() **********/
 
-int  GLUI_List::add_item( int id, const char *new_text )
+int  GLUI_List::add_item( int id, const GLUI_String &new_text )
 {
   GLUI_List_Item *new_node = new GLUI_List_Item;
   GLUI_List_Item *head;
@@ -460,7 +460,7 @@ int  GLUI_List::delete_all()
 
 /************************************** GLUI_Listbox::delete_item() **********/
 
-int  GLUI_List::delete_item( const char *text )
+int  GLUI_List::delete_item( const GLUI_String &text )
 {
   GLUI_List_Item *node = get_item_ptr( text );
 
@@ -496,7 +496,7 @@ int  GLUI_List::delete_item( int id )
 
 /************************************ GLUI_Listbox::get_item_ptr() **********/
 
-GLUI_List_Item *GLUI_List::get_item_ptr( const char *text )
+GLUI_List_Item *GLUI_List::get_item_ptr( const GLUI_String &text )
 {
   GLUI_List_Item *item;
 

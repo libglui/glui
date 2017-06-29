@@ -54,8 +54,8 @@ automatically save and restore all needed state.
 #define GLUI_DRAWINGSENTINAL_IDIOM  if (NOT can_draw()) return; GLUI_DrawingSentinal drawSentinal(this); drawSentinal.avoid_warning();
 
 /********** Bitmap strings *********************/
-int _glutBitmapWidthString( void *font, const char *s );
-void _glutBitmapString( void *font, const char *s );
+int _glutBitmapWidthString( void *font, const GLUI_String &s );
+void _glutBitmapString( void *font, const GLUI_String &s );
 
 /** Return the time, in seconds. */
 inline double GLUI_Time(void) {return 0.001*glutGet(GLUT_ELAPSED_TIME);}

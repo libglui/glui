@@ -37,7 +37,7 @@ enum {rollout_height_pixels=GLUI_DEFAULT_CONTROL_HEIGHT + 7};
 
 /****************************** GLUI_Rollout::GLUI_Rollout() **********/
 
-GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const char *name,
+GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const GLUI_String &name,
                             int open, int type )
 {
   common_init();

@@ -22,7 +22,7 @@
 
 /****************************** GLUI_TreePanel::GLUI_TreePanel() *********/
 
-GLUI_TreePanel::GLUI_TreePanel(GLUI_Node *parent, const char *name,
+GLUI_TreePanel::GLUI_TreePanel(GLUI_Node *parent, const GLUI_String &name,
                                bool open, int inset)
 {
   common_init();
@@ -61,7 +61,7 @@ void GLUI_TreePanel::set_level_color(float r, float g, float b)
 /****************************** GLUI_TreePanel::ab() *********/
 
 /* Adds branch to curr_root */
-GLUI_Tree *GLUI_TreePanel::ab(const char *name, GLUI_Tree *root)
+GLUI_Tree *GLUI_TreePanel::ab(const GLUI_String &name, GLUI_Tree *root)
 {
   GLUI_Tree *temp;
 

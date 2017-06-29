@@ -1043,7 +1043,7 @@ void   GLUI_TextBox::update_size()
 
 /****************************** GLUI_TextBox::set_text() **********/
 
-void    GLUI_TextBox::set_text( const char *new_text )
+void    GLUI_TextBox::set_text( const GLUI_String &new_text )
 {
   text = new_text;
 
@@ -1067,11 +1067,11 @@ void    GLUI_TextBox::set_text( const char *new_text )
 
 /*************************************** GLUI_TextBox::dump() **************/
 
-void   GLUI_TextBox::dump( FILE *out, const char *name )
+void   GLUI_TextBox::dump( FILE *out, const GLUI_String &name )
 {
   fprintf( out,
        "%s (edittext@%p):   line:%d ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%lu\n",
-       name, this, curr_line,
+       name.c_str(), this, curr_line,
        insertion_pt, substring_start, substring_end, sel_start, sel_end,
        (long unsigned) text.length());
 }

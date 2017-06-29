@@ -201,9 +201,9 @@ void   GLUI_Node::unlink()
 
 /**************************************** GLUI_Node::dump() **************/
 
-void GLUI_Node::dump( FILE *out, const char *name )
+void GLUI_Node::dump( FILE *out, const GLUI_String &name )
 {
-    fprintf( out, "GLUI_node: %s\n", name );
+    fprintf( out, "GLUI_node: %s\n", name.c_str() );
     fprintf( out, "   parent: %p     child_head: %p    child_tail: %p\n",
         (void *) parent_node,
         (void *) child_head,

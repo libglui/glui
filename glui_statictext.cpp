@@ -34,7 +34,7 @@
 #include "glui_internal_control.h"
 
 /****************************** GLUI_StaticText::GLUI_StaticText() **********/
-GLUI_StaticText::GLUI_StaticText( GLUI_Node *parent, const char *name )
+GLUI_StaticText::GLUI_StaticText( GLUI_Node *parent, const GLUI_String &name )
 {
   common_init();
   set_name( name );
@@ -53,7 +53,7 @@ void    GLUI_StaticText::draw( int x, int y )
 
 /****************************** GLUI_StaticText::set_text() **********/
 
-void    GLUI_StaticText::set_text( const char *text )
+void    GLUI_StaticText::set_text( const GLUI_String &text )
 {
   set_name( text );
   redraw();

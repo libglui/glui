@@ -508,9 +508,9 @@ void vec3::set(float x, float y, float z)   // set vector
     n[VZ] = z;
 }
 
-void vec3::print(FILE *file, const char *name) const  // print vector to a file
+void vec3::print(FILE *file, const std::string &name) const  // print vector to a file
 {
-    fprintf( file, "%s: <%f, %f, %f>\n", name, n[VX], n[VY], n[VZ] );
+    fprintf( file, "%s: <%f, %f, %f>\n", name.c_str(), n[VX], n[VY], n[VZ] );
 }
 
 // FRIENDS
@@ -781,9 +781,9 @@ vec4 &vec4::apply(V_FCT_PTR fct)
     return *this;
 }
 
-void vec4::print(FILE *file, const char *name) const // print vector to a file
+void vec4::print(FILE *file, const std::string &name) const // print vector to a file
 {
-    fprintf( file, "%s: <%f, %f, %f, %f>\n", name, n[VX], n[VY], n[VZ], n[VW]);
+    fprintf( file, "%s: <%f, %f, %f, %f>\n", name.c_str(), n[VX], n[VY], n[VZ], n[VW]);
 }
 
 void vec4::set(float x, float y, float z, float a)
@@ -1168,11 +1168,11 @@ void swap(mat3 &a, mat3 &b)
     b = tmp;
 }
 
-void mat3::print(FILE *file, const char *name) const
+void mat3::print(FILE *file, const std::string &name) const
 {
     int i, j;
 
-    fprintf( stderr, "%s:\n", name );
+    fprintf( stderr, "%s:\n", name.c_str() );
 
     for( i = 0; i < 3; i++ )
     {
@@ -1348,11 +1348,11 @@ mat4 &mat4::apply(V_FCT_PTR fct)
     return *this;
 }
 
-void mat4::print(FILE *file, const char *name) const
+void mat4::print(FILE *file, const std::string &name) const
 {
     int i, j;
 
-    fprintf( stderr, "%s:\n", name );
+    fprintf( stderr, "%s:\n", name.c_str() );
 
     for( i = 0; i < 4; i++ )
     {

@@ -39,7 +39,7 @@
 /********************** GLUI_Translation::GLUI_Translation() ***/
 
 GLUI_Translation::GLUI_Translation(
-  GLUI_Node *parent, const char *name,
+  GLUI_Node *parent, const GLUI_String &name,
   int trans_t, float *value_ptr,
   int id, GLUI_CB cb )
 {

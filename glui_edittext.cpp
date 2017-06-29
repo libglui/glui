@@ -37,7 +37,7 @@
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
 
-GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
+GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const GLUI_String &name,
                              int data_type, void *live_var,
                              int id, GLUI_CB callback )
 {
@@ -61,7 +61,7 @@ GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
 
-GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
+GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const GLUI_String &name,
                               int text_type, int id, GLUI_CB callback )
 {
   common_construct( parent, name, text_type, GLUI_LIVE_NONE, 0, id, callback);
@@ -69,7 +69,7 @@ GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
 
-GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
+GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const GLUI_String &name,
                               int *live_var,
                               int id, GLUI_CB callback )
 {
@@ -78,7 +78,7 @@ GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
 
-GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
+GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const GLUI_String &name,
                               float *live_var,
                               int id, GLUI_CB callback )
 {
@@ -87,8 +87,8 @@ GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
 
-GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
-                              char *live_var,
+GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const GLUI_String &name,
+                              GLUI_String *live_var,
                               int id, GLUI_CB callback )
 {
   common_construct( parent, name, GLUI_EDITTEXT_TEXT, GLUI_LIVE_TEXT, live_var, id, callback);
@@ -96,7 +96,7 @@ GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_EditText::GLUI_EditText() **********/
 
-GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
+GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const GLUI_String &name,
                               std::string &live_var,
                               int id, GLUI_CB callback )
 {
@@ -105,7 +105,7 @@ GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_EditText::common_construct() **********/
 
-void GLUI_EditText::common_construct( GLUI_Node *parent, const char *name,
+void GLUI_EditText::common_construct( GLUI_Node *parent, const GLUI_String &name,
                                       int data_t, int live_t, void *data, int id,
                                       GLUI_CB cb )
 {
@@ -1025,7 +1025,7 @@ void   GLUI_EditText::update_size()
 
 /****************************** GLUI_EditText::set_text() **********/
 
-void    GLUI_EditText::set_text( const char *new_text )
+void    GLUI_EditText::set_text( const GLUI_String &new_text )
 {
   text=new_text;
   substring_start = 0;
@@ -1167,7 +1167,7 @@ void    GLUI_EditText::set_numeric_text()
 
 /*************************************** GLUI_EditText::dump() **************/
 
-void   GLUI_EditText::dump( FILE *out, const char *name )
+void   GLUI_EditText::dump( FILE *out, const GLUI_String &name )
 {
   const GLUI_String buffer = tfm::format(
     "%s (edittext@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
