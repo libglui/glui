@@ -33,7 +33,7 @@
 
 #include "glui_internal_control.h"
 
-GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const char *name, int type )
+GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const GLUI_String &name, int type )
 {
   common_init();
   set_name( name );
@@ -142,10 +142,9 @@ void    GLUI_Panel::draw( int x, int y )
 
 /****************************** GLUI_Panel::set_name() **********/
 
-void    GLUI_Panel::set_name( const char *new_name )
+void    GLUI_Panel::set_name( const GLUI_String &new_name )
 {
-  name = new_name ? new_name : "";
-
+  name = new_name;
   update_size();
 
   if ( glui )

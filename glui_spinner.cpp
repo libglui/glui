@@ -75,7 +75,7 @@ void GLUI_Spinner::common_init()
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const GLUI_String &name,
                             int data_type, int id, GLUI_CB callback )
 {
   common_construct(parent, name, data_type, NULL, id, callback);
@@ -83,7 +83,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const GLUI_String &name,
                             int *live_var, int id, GLUI_CB callback )
 {
   common_construct(parent, name, GLUI_SPINNER_INT, live_var, id, callback);
@@ -91,7 +91,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
+GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const GLUI_String &name,
              float *live_var, int id, GLUI_CB callback )
 {
   common_construct(parent, name, GLUI_SPINNER_FLOAT, live_var, id, callback);
@@ -99,7 +99,7 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
 
 /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
-GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name,
+GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const GLUI_String &name,
                             int data_t, void *live_var,
                             int id, GLUI_CB callback )
 {
@@ -108,13 +108,13 @@ GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_Spinner::common_construct() ************/
 
-void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name,
+void GLUI_Spinner::common_construct( GLUI_Node* parent, const GLUI_String &name,
                                      int data_t, void *data,
                                      int id, GLUI_CB cb )
 {
   common_init();
 
-  if ( NOT strcmp( name, "Spinner Test" ))
+  if ( name!="Spinner Test" )
     id=id;
 
   int text_type;
@@ -616,12 +616,13 @@ void    GLUI_Spinner::increase_growth()
 
 /*************************************** GLUI_Spinner:get_text() *************/
 
-const char    *GLUI_Spinner::get_text()
+const GLUI_String &GLUI_Spinner::get_text()
 {
+  static GLUI_String def;
   if (edittext)
-    return edittext->text.c_str();
+    return edittext->text;
   else
-    return "";
+    return def;
 }
 
 

@@ -30,7 +30,7 @@
 
 
 /****************************** GLUI_Tree::GLUI_Tree() **********/
-GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name,
+GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const GLUI_String &name,
                      int open, int inset)
 {
   common_init();

@@ -142,7 +142,7 @@ void pointer_cb( GLUI_Control* control )
   }
   else if ( control == cmd_line ) {
     /*** User typed text into the 'command line' window ***/
-    printf( "Command (%d): %s\n", counter, cmd_line->get_text() );
+    printf( "Command (%d): %s\n", counter, cmd_line->get_text().c_str() );
     std::string text = cmd_line->get_text();
     if (text =="exit" || text == "quit")
       exit(0);

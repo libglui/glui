@@ -45,7 +45,7 @@
 #include <sys/stat.h>
 
 GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
-                                    const char *name,
+                                    const GLUI_String &name,
                                     int type,
                                     int id,
                                     GLUI_CB cb)
@@ -74,18 +74,17 @@ void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
   if (!me)
     return;
   int this_item;
-  const char *selected;
   this_item = list->get_current_item();
   if (this_item > 0) { /* file or directory selected */
-    selected = list->get_item_ptr( this_item )->text.c_str();
+    const std::string &selected = list->get_item_ptr( this_item )->text;
     if (selected[0] == '/' || selected[0] == '\\') {
       if (me->allow_change_dir) {
 #ifdef __GNUC__
-        int result = chdir(selected+1);
+        int result = chdir(selected.c_str()+1);
         assert(result==0);
 #endif
 #ifdef _WIN32
-        SetCurrentDirectory(selected+1);
+        SetCurrentDirectory(selected.c_str()+1);
 #endif
         me->fbreaddir(".");
       }
@@ -98,11 +97,11 @@ void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
 
 
 
-void GLUI_FileBrowser::fbreaddir(const char *d) {
+void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
   GLUI_String item;
   int i = 0;
 
-	if (!d)
+	if (d.empty())
     return;
 
 #ifdef _WIN32
@@ -143,7 +142,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
 
   if (list) {
     list->delete_all();
-    if ((dir = opendir(d)) == NULL)
+    if ((dir = opendir(d.c_str())) == NULL)
       perror("fbreaddir:");
     else {
       while ((dirp = readdir(dir)) != NULL)   /* open directory     */
@@ -162,11 +161,9 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
 #endif
 }
 
-void ProcessFiles(const char *path_name)
+void ProcessFiles(const GLUI_String &path_name)
 {
-
 }
-
 
 void GLUI_FileBrowser::set_w(int w)
 {

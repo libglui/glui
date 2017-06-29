@@ -341,7 +341,7 @@ void GLUI_Control::set_font(void *new_font)
 
 /********** GLUI_Control::draw_string() ************/
 
-void GLUI_Control::draw_string( const char *text )
+void GLUI_Control::draw_string( const GLUI_String &text )
 {
   _glutBitmapString( get_font(), text );
 }
@@ -357,7 +357,7 @@ void GLUI_Control::draw_char(char c)
 
 /*********** GLUI_Control::string_width() **********/
 
-int GLUI_Control::string_width(const char *text)
+int GLUI_Control::string_width(const GLUI_String &text)
 {
   return _glutBitmapWidthString( get_font(), text );
 }
@@ -1086,7 +1086,7 @@ void  GLUI_Control::get_float_array_val( float *array_ptr )
 
 /**** GLUI_Control::set_name() ********************/
 
-void   GLUI_Control::set_name( const char *str )
+void   GLUI_Control::set_name( const GLUI_String &str )
 {
   name = str;
   redraw();

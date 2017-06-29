@@ -48,7 +48,7 @@ enum {
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
 // Constructor, no live var
 GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
-                                const char *name,
+                                const GLUI_String &name,
                                 int horz_vert,
                                 int data_type,
                                 int id, GLUI_CB callback
@@ -61,7 +61,7 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent,
 
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
 // Constructor, int live var
-GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
+GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const GLUI_String &name,
                                 int horz_vert,
                                 int *live_var,
                                 int id, GLUI_CB callback
@@ -74,7 +74,7 @@ GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
 
 /****************************** GLUI_Scrollbar::GLUI_Scrollbar() **********/
 // Constructor, float live var
-GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
+GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const GLUI_String &name,
                                 int horz_vert,
                                 float *live_var,
                                 int id, GLUI_CB callback
@@ -117,7 +117,7 @@ void GLUI_Scrollbar::common_init()
 /****************************** GLUI_Scrollbar::common_construct() **********/
 void GLUI_Scrollbar::common_construct(
   GLUI_Node *parent,
-  const char *name,
+  const GLUI_String &name,
   int horz_vert,
   int data_type,
   void *data,
