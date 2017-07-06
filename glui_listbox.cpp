@@ -40,12 +40,10 @@
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
 GLUI_Listbox::GLUI_Listbox( GLUI_Node *parent,
                             const GLUI_String &name, int *value_ptr,
-                            int id,
                             GLUI_CB cb)
 {
   common_init();
   set_ptr_val( value_ptr );
-  user_id    = id;
   set_name( name );
   callback    = cb;
 

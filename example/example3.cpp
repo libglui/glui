@@ -48,15 +48,6 @@ GLUI_CommandLine *cmd_line;
 GLUI_Panel       *obj_panel;
 GLUI_Button      *open_console_btn;
 
-/********** User IDs for callbacks ********/
-#define OPEN_CONSOLE_ID      100
-#define CMD_HIST_RESET_ID    101
-#define CMD_CLOSE_ID         102
-#define LIGHT0_ENABLED_ID    200
-#define LIGHT1_ENABLED_ID    201
-#define LIGHT0_INTENSITY_ID  250
-#define LIGHT1_INTENSITY_ID  251
-
 /********** Miscellaneous global variables **********/
 
 GLfloat light0_ambient[] =  {0.1f, 0.1f, 0.3f, 1.0f};
@@ -66,98 +57,6 @@ GLfloat light0_position[] = {.5f, .5f, 1.0f, 0.0f};
 GLfloat light1_ambient[] =  {0.1f, 0.1f, 0.3f, 1.0f};
 GLfloat light1_diffuse[] =  {.9f, .6f, 0.0f, 1.0f};
 GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
-
-/**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
-
-void control_cb( int control )
-{
-  if ( control == LIGHT0_ENABLED_ID ) {
-    if ( light0_enabled ) {
-      glEnable( GL_LIGHT0 );
-      light0_spinner->enable();
-    }
-    else {
-      glDisable( GL_LIGHT0 ); 
-      light0_spinner->disable();
-    }
-  }
-  else if ( control == LIGHT1_ENABLED_ID ) {
-    if ( light1_enabled ) {
-      glEnable( GL_LIGHT1 );
-      light1_spinner->enable();
-    }
-    else {
-      glDisable( GL_LIGHT1 ); 
-      light1_spinner->disable();
-    }
-  }
-  else if ( control == LIGHT0_INTENSITY_ID ) {
-    float v[] = { light0_diffuse[0],  light0_diffuse[1],
-		  light0_diffuse[2],  light0_diffuse[3] };
-    
-    v[0] *= light0_intensity;
-    v[1] *= light0_intensity;
-    v[2] *= light0_intensity;
-
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, v );
-  }
-  else if ( control == LIGHT1_INTENSITY_ID ) {
-    float v[] = { light1_diffuse[0],  light1_diffuse[1],
-		  light1_diffuse[2],  light1_diffuse[3] };
-    
-    v[0] *= light1_intensity;
-    v[1] *= light1_intensity;
-    v[2] *= light1_intensity;
-
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, v );
-  }
-}
-
-/**************************************** pointer_cb() *******************/
-/* GLUI control pointer callback                                         */
-/* You can also use a function that takes a GLUI_Control pointer  as its */
-/* argument.  This can simplify things sometimes, and reduce the clutter */
-/* of global variables by giving you the control pointer directly.       */
-/* For instance here we didn't need an additional global ID for the      */
-/* cmd_line because we can just compare pointers directly.               */
-
-void pointer_cb( GLUI_Control* control )
-{
-  if (control->get_id() == OPEN_CONSOLE_ID ) {
-    /****** Make command line window ******/
-    cmd_line_glui = GLUI_Master.create_glui( "Enter command:",
-      0, 50, 500 );
-    
-    cmd_line = new GLUI_CommandLine( 
-      cmd_line_glui, "Command (try 'exit'):", NULL, -1, pointer_cb );
-    cmd_line->set_w( 400 );  /** Widen 'command line' control **/
-
-    GLUI_Panel *panel = new GLUI_Panel(cmd_line_glui,"", GLUI_PANEL_NONE);
-    new GLUI_Button(panel, "Clear History", CMD_HIST_RESET_ID, pointer_cb);
-    new GLUI_Column(panel, false);
-    new GLUI_Button(panel, "Close", CMD_CLOSE_ID, pointer_cb);
-    
-    cmd_line_glui->set_main_gfx_window( main_window );
-
-    control->disable();
-  }
-  else if ( control->get_id() == CMD_CLOSE_ID ) {
-    open_console_btn->enable();
-    control->glui->close();
-  }
-  else if ( control == cmd_line ) {
-    /*** User typed text into the 'command line' window ***/
-    printf( "Command (%d): %s\n", counter, cmd_line->get_text().c_str() );
-    std::string text = cmd_line->get_text();
-    if (text =="exit" || text == "quit")
-      exit(0);
-  }
-  else if ( control->get_id() == CMD_HIST_RESET_ID ) {
-    cmd_line->reset_history();
-  }
-
-}
 
 /**************************************** myGlutKeyboard() **********/
 
@@ -376,13 +275,13 @@ int main(int argc, char* argv[])
   /***** Control for the object type *****/
 
   GLUI_Panel *type_panel = new GLUI_Panel( obj_panel, "Type" );
-  radio = new GLUI_RadioGroup(type_panel,&obj_type,4,control_cb);
+  radio = new GLUI_RadioGroup(type_panel,&obj_type);
   new GLUI_RadioButton( radio, "Sphere" );
   new GLUI_RadioButton( radio, "Torus" );
   new GLUI_RadioButton( radio, "Teapot" );
 
   checkbox = 
-    new GLUI_Checkbox(obj_panel, "Wireframe", &wireframe, 1, control_cb );
+    new GLUI_Checkbox(obj_panel, "Wireframe", &wireframe);
   spinner =
     new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
@@ -402,20 +301,63 @@ int main(int argc, char* argv[])
   GLUI_Panel *light0 = new GLUI_Panel( glui, "Light 1" );
   GLUI_Panel *light1 = new GLUI_Panel( glui, "Light 2" );
 
-  new GLUI_Checkbox( light0, "Enabled", &light0_enabled, 
-                     LIGHT0_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light0, "Enabled", &light0_enabled, [&]() 
+    { 
+      if (light0_enabled)
+      {
+        glEnable( GL_LIGHT0 );
+        light0_spinner->enable();
+      }
+      else
+      {
+        glDisable( GL_LIGHT0 ); 
+        light0_spinner->disable();
+      }
+    });
+
   light0_spinner = 
     new GLUI_Spinner( light0, "Intensity:",
-                      &light0_intensity, LIGHT0_INTENSITY_ID,
-                      control_cb );
+                      &light0_intensity, [&]()
+      {
+        float v[] = { light0_diffuse[0],  light0_diffuse[1],
+          light0_diffuse[2],  light0_diffuse[3] };
+        
+        v[0] *= light0_intensity;
+        v[1] *= light0_intensity;
+        v[2] *= light0_intensity;
+
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, v);
+      });
   light0_spinner->set_float_limits( 0.0, 1.0 );
 
-  new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
-                     LIGHT1_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light1, "Enabled", &light1_enabled, [&]() 
+    { 
+      if (light1_enabled)
+      {
+        glEnable( GL_LIGHT1 );
+        light1_spinner->enable();
+      }
+      else
+      {
+        glDisable( GL_LIGHT1 ); 
+        light1_spinner->disable();
+      }
+    });
+
   light1_spinner = 
     new GLUI_Spinner( light1, "Intensity:", 
-                      &light1_intensity, LIGHT1_INTENSITY_ID,
-                      control_cb );
+                      &light1_intensity, [&]()
+      {
+        float v[] = { light1_diffuse[0],  light1_diffuse[1],
+          light1_diffuse[2],  light1_diffuse[3] };
+        
+        v[0] *= light1_intensity;
+        v[1] *= light1_intensity;
+        v[2] *= light1_intensity;
+
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, v);
+      });
+
   light1_spinner->set_float_limits( 0.0, 1.0 );
   light1_spinner->disable();   /* Disable this light initially */
 
@@ -427,11 +369,40 @@ int main(int argc, char* argv[])
 
   /****** Button to Open Command Line Window ******/
   open_console_btn = 
-    new GLUI_Button(glui, "Open Console", OPEN_CONSOLE_ID, pointer_cb);
+    new GLUI_Button(glui, "Open Console", [&]() 
+      {
+        /****** Make command line window ******/
+        cmd_line_glui = GLUI_Master.create_glui( "Enter command:",
+          0, 50, 500 );
+        
+        cmd_line = new GLUI_CommandLine( 
+          cmd_line_glui, "Command (try 'exit'):", NULL, [&]() 
+            { 
+              /*** User typed text into the 'command line' window ***/
+              printf( "Command (%d): %s\n", counter, cmd_line->get_text().c_str() );
+              std::string text = cmd_line->get_text();
+              if (text =="exit" || text == "quit")
+                exit(0);
+            });
+        cmd_line->set_w( 400 );  /** Widen 'command line' control **/
+
+        GLUI_Panel *panel = new GLUI_Panel(cmd_line_glui,"", GLUI_PANEL_NONE);
+        new GLUI_Button(panel, "Clear History", [&]() { cmd_line->reset_history(); });
+        new GLUI_Column(panel, false);
+        new GLUI_Button(panel, "Close", [&]() 
+          {
+            open_console_btn->enable();
+            cmd_line_glui->close();
+          });
+        
+        cmd_line_glui->set_main_gfx_window( main_window );
+
+        open_console_btn->disable();
+      });
 
   /****** A 'quit' button *****/
 
-  new GLUI_Button(glui, "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button(glui, "Quit", []() { exit(0); } );
 
   /**** Link windows to GLUI, and register idle callback ******/
   

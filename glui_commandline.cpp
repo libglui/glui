@@ -35,14 +35,13 @@
 
 /****************************** GLUI_CommandLine::GLUI_CommandLine() **********/
 GLUI_CommandLine::GLUI_CommandLine( GLUI_Node *parent, const GLUI_String &name,
-                                    void *data, int id, GLUI_CB cb )
+                                    void *data, GLUI_CB cb )
 {
   common_init();
   set_name( name );
 
   data_type   = GLUI_EDITTEXT_TEXT;
   ptr_val     = data;
-  user_id     = id;
   callback    = cb;
 
   live_type = GLUI_LIVE_TEXT;

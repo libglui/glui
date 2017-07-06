@@ -30,39 +30,12 @@ int   wireframe = 0;
 int   obj = 0;
 int   segments = 8;
 
-// Using a std::string as a live variable is safe.
 std::string text = "Hello World!";
-
-// Using a char buffer as a live var is also possible, but it is dangerous 
-// because GLUI doesn't know how big your buffer is.  
-// But still, it works as long as text doesn't happen to overflow.
-//char  text[200] = {"Hello World!"};
 
 GLUI_Checkbox   *checkbox;
 GLUI_Spinner    *spinner;
 GLUI_RadioGroup *radio;
 GLUI_EditText   *edittext;
-
-/**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
-
-void control_cb( int control )
-{
-  /********************************************************************
-    Here we'll print the user id of the control that generated the
-    callback, and we'll also explicitly get the values of each control.
-    Note that we really didn't have to explicitly get the values, since
-    they are already all contained within the live variables:
-    'wireframe',  'segments',  'obj',  and 'text'  
-    ********************************************************************/
-
-  printf( "callback: %d\n", control );
-  printf( "             checkbox: %d\n", checkbox->get_int_val() );
-  printf( "              spinner: %d\n", spinner->get_int_val() );
-  printf( "          radio group: %d\n", radio->get_int_val() );
-  printf( "                 text: %s\n", edittext->get_text().c_str() );
-  
-}
 
 /**************************************** myGlutKeyboard() **********/
 
@@ -106,7 +79,6 @@ void myGlutMouse(int button, int button_state, int x, int y )
     last_y = y;
   }
 }
-
 
 /***************************************** myGlutMotion() **********/
 
@@ -240,16 +212,16 @@ int main(int argc, char* argv[])
 								 x, and y */
   new GLUI_StaticText( glui, "GLUI Example 2" );
   new GLUI_Separator( glui );
-  checkbox = new GLUI_Checkbox( glui, "Wireframe", &wireframe, 1, control_cb );
-  spinner  = new GLUI_Spinner( glui, "Segments:", &segments, 2, control_cb );
+  checkbox = new GLUI_Checkbox( glui, "Wireframe", &wireframe, [&]() { printf("Wireframe: %d\n", wireframe); });
+  spinner  = new GLUI_Spinner( glui, "Segments:",  &segments,  [&]() { printf("Segments: %d\n", segments); });
   spinner->set_int_limits( 3, 60 );
-  edittext = new GLUI_EditText( glui, "Text:", text, 3, control_cb );
+  edittext = new GLUI_EditText( glui, "Text:", text, [&]() { printf("Text: %s\n", text.c_str()); });
   GLUI_Panel *obj_panel = new GLUI_Panel( glui, "Object Type" );
-  radio = new GLUI_RadioGroup( obj_panel,&obj,4,control_cb );
+  radio = new GLUI_RadioGroup( obj_panel,&obj, [&]() { printf("Object: %d\n", obj); });
   new GLUI_RadioButton( radio, "Sphere" );
   new GLUI_RadioButton( radio, "Torus" );
   new GLUI_RadioButton( radio, "Teapot" );
-  new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button( glui, "Quit", []() { printf("Exit\n"); exit(0); } );
  
   glui->set_main_gfx_window( main_window );
 

@@ -159,121 +159,6 @@ const char text_box[] =
  ";
 */
 
-/***************************************** myGlutDisplay() *****************/
-
-void control_cb(int control) {
-  int item;
-  GLUI_String text;
-  std::string file_name;
-  FILE  *file;
-  char c;
-  int i;
-  int format;
-  glutPostRedisplay();
-  item = hah->get_current_item();
-  
-  if (control == 7) {
-    i = 0;
-    file_name = "";
-    file_name = fb->get_file();
-    file = fopen(file_name.c_str(),"r"); 
-    if (file == NULL) 
-      printf("Error opening file\n");
-    else {
-      do {
-        c = getc(file);
-        text += c;
-        i++;
-      } while (c != EOF);
-      fclose(file);
-    } 
-
-    moo->set_text(text.c_str());
-  }
-
-
-  if ( control == 1 ) {
-    tree->hide();
-    if (item==0) {
-      moo->set_text(general);
-    }
-    if (item==1) {
-      moo->set_text(text_box);
-    }
-    if (item==2) {
-      moo->set_text(scroll);
-    }
-    if (item==3) {
-      moo->set_text(gstring);
-    }
-    if (item==4) {
-      moo->set_text(commandline);
-    }
-    if (item==5) {
-      tree->show();
-      moo->set_text(tree_txt);
-    }
-    if (item==6) {
-      moo->set_text(list);
-    }
-    if (item==7) {
-      moo->set_text(filebrowser);
-    }
-  }
-  if ( control == 2) {
-    tp->ab("foo");
-  }
-  if ( control == 3) {
-      tp->db();
-  }
-  if ( control == 4) {
-    tp->fb();
-  }
-  if ( control == 5) {
-      tp->resetToRoot();
-  }
-  if ( control == 6) {
-      tp->descendBranch();
-  }
-  if ( control == 8) {
-      tp->next();
-  }
-  if ( control == 9) {
-      tp->expand_all();
-  }
-  if ( control == 10) {
-      tp->collapse_all();
-  }
-  if ( control == 11) {
-    format = 0; 
-    format = GLUI_TREEPANEL_ALTERNATE_COLOR | 
-      GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY;
-    
-    if (num_display)
-      format = format | GLUI_TREEPANEL_DISPLAY_HIERARCHY;
-    if (num_format)
-      format = format | GLUI_TREEPANEL_HIERARCHY_NUMERICDOT;
-    else
-      format = format | GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY;
-    tp->set_format(format);
-    tp->update_all();
-  }
-  if (control == 12) {
-    if (enable_textbox) {
-      moo->enable();
-    } else {
-      moo->disable();
-    }
-  }
-}
-void textbox_cb(GLUI_Control *control) {
-    printf("Got textbox callback\n");
-}
-
-//void out_of_memory() {
-//  printf("Out of memory!\n\n");
-//} 
-
 /**************************************** main() ********************/
 
 int main(int argc, char* argv[])
@@ -284,7 +169,36 @@ int main(int argc, char* argv[])
   main_window = edit->get_glut_window_id();
   GLUI_Panel *ep = new GLUI_Panel(edit,"",true);
   new GLUI_StaticText(ep,"Widget Information:");
-  hah = new GLUI_List(ep,true,1,control_cb);
+  hah = new GLUI_List(ep,true,[&]()
+    {
+      tree->hide();
+      int item = hah->get_current_item();
+      if (item==0) {
+        moo->set_text(general);
+      }
+      if (item==1) {
+        moo->set_text(text_box);
+      }
+      if (item==2) {
+        moo->set_text(scroll);
+      }
+      if (item==3) {
+        moo->set_text(gstring);
+      }
+      if (item==4) {
+        moo->set_text(commandline);
+      }
+      if (item==5) {
+        tree->show();
+        moo->set_text(tree_txt);
+      }
+      if (item==6) {
+        moo->set_text(list);
+      }
+      if (item==7) {
+        moo->set_text(filebrowser);
+      }
+    });
   hah->add_item(0,"GLUI 2.3");
   hah->add_item(1,"TextBox");
   hah->add_item(2,"Scrollbar");
@@ -293,19 +207,51 @@ int main(int argc, char* argv[])
   hah->add_item(5,"Tree");
   hah->add_item(6,"List");
   hah->add_item(7,"FileBrowser");
+
   new GLUI_StaticText(ep,"Open Text File:");
-  fb = new GLUI_FileBrowser(ep, "", false, 7, control_cb);
+  fb = new GLUI_FileBrowser(ep, "", false, [&]()
+    {
+      std::string text;
+      std::string file_name = fb->get_file();
+      printf("Browse file: %s\n", file_name.c_str());
+      FILE *file = fopen(file_name.c_str(),"r"); 
+      if (file == NULL) 
+        printf("Error opening file\n");
+      else {
+        char c;
+        do {
+          c = getc(file);
+          text += c;
+        } while (c != EOF);
+        fclose(file);
+      } 
+      moo->set_text(text.c_str());
+      glutPostRedisplay();
+    });
   fb->set_h(180);
+
   hah->set_h(180);
   new GLUI_Column(ep,false); 
 
-  moo = new GLUI_TextBox(ep,true,1,textbox_cb);
+  moo = new GLUI_TextBox(ep, true, [&]()
+    {
+      printf("Got textbox callback\n");
+      glutPostRedisplay();
+    });
   moo->set_text(general);
   moo->set_h(400);
   moo->set_w(410);
   moo->disable();
   enable_textbox=0;
-  new GLUI_Checkbox(ep, "Enable text box:",&enable_textbox,12,control_cb);
+  new GLUI_Checkbox(ep, "Enable text box:",&enable_textbox, [&]()
+    {
+      if (enable_textbox) {
+        moo->enable();
+      } else {
+        moo->disable();
+      } 
+      glutPostRedisplay();
+    });
 
   tree = GLUI_Master.create_glui("Tree Test", 0);
   ep = new GLUI_Panel(tree, "Tree Controls");
@@ -315,17 +261,31 @@ int main(int argc, char* argv[])
   GLUI_RadioGroup *rg = new GLUI_RadioGroup(ep, &num_format);
   new GLUI_RadioButton(rg, "Level Only");
   new GLUI_RadioButton(rg, "Hierarchal");
-  new GLUI_Button(ep, "Update Format", 11, control_cb); 
+  new GLUI_Button(ep, "Update Format", [&]()
+    {
+      int format = GLUI_TREEPANEL_ALTERNATE_COLOR | 
+        GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY;
+      
+      if (num_display)
+        format = format | GLUI_TREEPANEL_DISPLAY_HIERARCHY;
+      if (num_format)
+        format = format | GLUI_TREEPANEL_HIERARCHY_NUMERICDOT;
+      else
+        format = format | GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY;
+      tp->set_format(format);
+      tp->update_all();
+      glutPostRedisplay();
+    });
   new GLUI_Column(ep);
-  new GLUI_Button(ep, "Add Branch", 2, control_cb); 
-  new GLUI_Button(ep, "Del Branch", 3, control_cb);
-  new GLUI_Button(ep, "Up Branch", 4, control_cb); 
-  new GLUI_Button(ep, "Goto Root", 5, control_cb);
+  new GLUI_Button(ep, "Add Branch", [&]() { glutPostRedisplay(); tp->ab("foo"); }); 
+  new GLUI_Button(ep, "Del Branch", [&]() { glutPostRedisplay(); tp->db(); }); 
+  new GLUI_Button(ep, "Up Branch",  [&]() { glutPostRedisplay(); tp->fb(); }); 
+  new GLUI_Button(ep, "Goto Root",  [&]() { glutPostRedisplay(); tp->resetToRoot(); }); 
   new GLUI_Column(ep);
-  new GLUI_Button(ep, "Descend to Leaf", 6, control_cb); 
-  new GLUI_Button(ep, "Next Branch", 8, control_cb); 
-  new GLUI_Button(ep, "Expand All", 9, control_cb); 
-  new GLUI_Button(ep, "Collapse All", 10, control_cb); 
+  new GLUI_Button(ep, "Descend to Leaf", [&]() { glutPostRedisplay(); tp->descendBranch(); }); 
+  new GLUI_Button(ep, "Next Branch",     [&]() { glutPostRedisplay(); tp->next(); }); 
+  new GLUI_Button(ep, "Expand All",      [&]() { glutPostRedisplay(); tp->expand_all(); }); 
+  new GLUI_Button(ep, "Collapse All",    [&]() { glutPostRedisplay(); tp->collapse_all(); }); 
   tp = new GLUI_TreePanel(tree,"Tree Test");
   tp->set_format(GLUI_TREEPANEL_ALTERNATE_COLOR | 
                  GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY |
@@ -334,7 +294,6 @@ int main(int argc, char* argv[])
   tp->set_level_color(1,1,1);
   tp->ab("foo you");
   tree->hide();
- 
   edit->set_main_gfx_window(main_window); 
   tree->set_main_gfx_window(main_window); 
 

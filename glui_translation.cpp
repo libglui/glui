@@ -43,12 +43,11 @@
 GLUI_Translation::GLUI_Translation(
   GLUI_Node *parent, const GLUI_String &name,
   int trans_t, float *value_ptr,
-  int id, GLUI_CB cb )
+  GLUI_CB cb )
 {
   common_init();
 
   set_ptr_val( value_ptr );
-  user_id    = id;
   set_name( name );
   callback    = cb;
   parent->add_control( this );

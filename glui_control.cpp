@@ -996,9 +996,7 @@ void GLUI_Control::execute_callback()
   if ( glui AND glui->main_gfx_window_id != -1 )
     glutSetWindow( glui->main_gfx_window_id );
 
-  this->callback( this );
-//  if ( this->callback )
-//    this->callback( this->user_id );
+  if (callback) callback();
 
   glutSetWindow( old_window );
 }

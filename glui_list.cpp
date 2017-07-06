@@ -38,23 +38,18 @@
 /****************************** GLUI_List::GLUI_List() **********/
 
 GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
-                      int id, GLUI_CB callback
-                      /*,GLUI_Control *object
-                      GLUI_InterObject_CB obj_cb*/)
+                      GLUI_CB callback)
 {
-  common_construct(parent, NULL, scroll, id, callback/*, object, obj_cb*/);
+  common_construct(parent, NULL, scroll, callback);
 }
 
 /****************************** GLUI_List::GLUI_List() **********/
 
 GLUI_List::GLUI_List( GLUI_Node *parent,
                       GLUI_String& live_var, bool scroll,
-                      int id,
-                      GLUI_CB callback
-                      /* ,GLUI_Control *object
-                      ,GLUI_InterObject_CB obj_cb*/ )
+                      GLUI_CB callback)
 {
-  common_construct(parent, &live_var, scroll, id, callback/*, object, obj_cb*/);
+  common_construct(parent, &live_var, scroll, callback);
 }
 
 /****************************** GLUI_List::common_construct() **********/
@@ -62,7 +57,6 @@ GLUI_List::GLUI_List( GLUI_Node *parent,
 void GLUI_List::common_construct(
   GLUI_Node *parent,
   GLUI_String* data, bool scroll,
-  int id,
   GLUI_CB callback
   /*,GLUI_Control *object
   , GLUI_InterObject_CB obj_cb*/)
@@ -79,7 +73,6 @@ void GLUI_List::common_construct(
   if (data) {
     this->live_type = GLUI_LIVE_STRING;
   }
-  this->user_id     = id;
   this->callback    = callback;
   this->name        = "list";
   list_panel->add_control( this );
@@ -91,7 +84,7 @@ void GLUI_List::common_construct(
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
                          GLUI_SCROLL_INT);
-    scrollbar->set_object_callback(GLUI_List::scrollbar_callback, this);
+    scrollbar->set_object_callback([=]() { GLUI_List::scrollbar_callback(this); });
     scrollbar->set_alignment(GLUI_ALIGN_LEFT);
     // scrollbar->can_activate = false; //kills ability to mouse drag too
   }
@@ -121,14 +114,10 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
     this->execute_callback();
     if (associated_object != NULL)
       if (cb_click_type == GLUI_SINGLE_CLICK) {
-        if (obj_cb) {
-          // obj_cb(associated_object, user_id);
-          obj_cb(this);
-        }
+        if (obj_cb) obj_cb();
       } else {
         if (last_line == curr_line && (ms - last_click_time) < 300) {
-          //obj_cb(associated_object, user_id);
-          obj_cb(this);
+          if (obj_cb) obj_cb();
         } else {
           last_click_time = ms;
           last_line = curr_line;

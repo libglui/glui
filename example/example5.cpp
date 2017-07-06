@@ -52,17 +52,6 @@ GLUI_Spinner    *light0_spinner, *light1_spinner;
 GLUI_RadioGroup *radio;
 GLUI_Panel      *obj_panel;
 
-/********** User IDs for callbacks ********/
-#define LIGHT0_ENABLED_ID    200
-#define LIGHT1_ENABLED_ID    201
-#define LIGHT0_INTENSITY_ID  250
-#define LIGHT1_INTENSITY_ID  260
-#define ENABLE_ID            300
-#define DISABLE_ID           301
-#define SHOW_ID              302
-#define HIDE_ID              303
-
-
 /********** Miscellaneous global variables **********/
 
 GLfloat light0_ambient[] =  {0.1f, 0.1f, 0.3f, 1.0f};
@@ -74,71 +63,6 @@ GLfloat light1_diffuse[] =  {.9f, .6f, 0.0f, 1.0f};
 GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
 
 GLfloat lights_rotation[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
-
-/**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
-
-void control_cb( int control )
-{
-  if ( control == LIGHT0_ENABLED_ID ) {
-    if ( light0_enabled ) {
-      glEnable( GL_LIGHT0 );
-      light0_spinner->enable();
-    }
-    else {
-      glDisable( GL_LIGHT0 ); 
-      light0_spinner->disable();
-    }
-  }
-  else if ( control == LIGHT1_ENABLED_ID ) {
-    if ( light1_enabled ) {
-      glEnable( GL_LIGHT1 );
-      light1_spinner->enable();
-    }
-    else {
-      glDisable( GL_LIGHT1 ); 
-      light1_spinner->disable();
-    }
-  }
-  else if ( control == LIGHT0_INTENSITY_ID ) {
-    float v[] = { 
-      light0_diffuse[0],  light0_diffuse[1],
-      light0_diffuse[2],  light0_diffuse[3] };
-    
-    v[0] *= light0_intensity;
-    v[1] *= light0_intensity;
-    v[2] *= light0_intensity;
-
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, v );
-  }
-  else if ( control == LIGHT1_INTENSITY_ID ) {
-    float v[] = { 
-      light1_diffuse[0],  light1_diffuse[1],
-      light1_diffuse[2],  light1_diffuse[3] };
-    
-    v[0] *= light1_intensity;
-    v[1] *= light1_intensity;
-    v[2] *= light1_intensity;
-
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, v );
-  }
-  else if ( control == ENABLE_ID )
-  {
-    glui2->enable();
-  }
-  else if ( control == DISABLE_ID )
-  {
-    glui2->disable();
-  }
-  else if ( control == SHOW_ID )
-  {
-    glui2->show();
-  }
-  else if ( control == HIDE_ID )
-  {
-    glui2->hide();
-  }
-}
 
 /**************************************** myGlutKeyboard() **********/
 
@@ -313,6 +237,28 @@ void myGlutDisplay()
   glutSwapBuffers(); 
 }
 
+void lightEnable(int enable, GLenum light, GLUI_Control * control)
+{
+  if (enable)
+  {
+    glEnable( light );
+    if (control) control->enable();
+  }
+  else
+  {
+    glDisable( light ); 
+    if (control) control->disable();
+  }
+}
+
+void lightIntensity(const float * const diffuse, float intensity, GLenum light)
+{
+  float v[] = { diffuse[0],  diffuse[1], diffuse[2],  diffuse[3] };
+  v[0] *= intensity;
+  v[1] *= intensity;
+  v[2] *= intensity;
+  glLightfv(light, GL_DIFFUSE, v );
+}
 
 /**************************************** main() ********************/
 
@@ -372,7 +318,7 @@ int main(int argc, char* argv[])
 
   /***** Control for object params *****/
 
-  new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
+  new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe);
   GLUI_Spinner *spinner = 
     new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
@@ -391,38 +337,38 @@ int main(int argc, char* argv[])
   GLUI_Panel *light0 = new GLUI_Panel( roll_lights, "Light 1" );
   GLUI_Panel *light1 = new GLUI_Panel( roll_lights, "Light 2" );
 
-  new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
-                     LIGHT0_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light0, "Enabled", &light0_enabled, std::bind(lightEnable, std::cref(light0_enabled), GL_LIGHT0, light0_spinner));
+
   light0_spinner = 
     new GLUI_Spinner( light0, "Intensity:", 
-                      &light0_intensity, LIGHT0_INTENSITY_ID,
-                      control_cb );
+                      &light0_intensity, std::bind(lightIntensity, light0_diffuse, std::cref(light0_intensity), GL_LIGHT0) );
   light0_spinner->set_float_limits( 0.0, 1.0 );
+
   GLUI_Scrollbar *sb;
   sb = new GLUI_Scrollbar( light0, "Red",GLUI_SCROLL_HORIZONTAL,
-                           &light0_diffuse[0],LIGHT0_INTENSITY_ID,control_cb);
+                           &light0_diffuse[0],std::bind(lightIntensity, light0_diffuse, std::cref(light0_intensity), GL_LIGHT0));
   sb->set_float_limits(0,1);
   sb = new GLUI_Scrollbar( light0, "Green",GLUI_SCROLL_HORIZONTAL,
-                           &light0_diffuse[1],LIGHT0_INTENSITY_ID,control_cb);
+                           &light0_diffuse[1],std::bind(lightIntensity, light0_diffuse, std::cref(light0_intensity), GL_LIGHT0));
   sb->set_float_limits(0,1);
   sb = new GLUI_Scrollbar( light0, "Blue",GLUI_SCROLL_HORIZONTAL,
-                           &light0_diffuse[2],LIGHT0_INTENSITY_ID,control_cb);
+                           &light0_diffuse[2],std::bind(lightIntensity, light0_diffuse, std::cref(light0_intensity), GL_LIGHT0));
   sb->set_float_limits(0,1);
-  new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
-                     LIGHT1_ENABLED_ID, control_cb );
+
+  new GLUI_Checkbox( light1, "Enabled", &light1_enabled, std::bind(lightEnable, std::cref(light1_enabled), GL_LIGHT1, light1_spinner));
+
   light1_spinner = 
-    new GLUI_Spinner( light1, "Intensity:",
-                      &light1_intensity, LIGHT1_INTENSITY_ID,
-                      control_cb );
+    new GLUI_Spinner( light1, "Intensity:", 
+                      &light1_intensity, std::bind(lightIntensity, light1_diffuse, std::cref(light1_intensity), GL_LIGHT1) );
   light1_spinner->set_float_limits( 0.0, 1.0 );
   sb = new GLUI_Scrollbar( light1, "Red",GLUI_SCROLL_HORIZONTAL,
-                           &light1_diffuse[0],LIGHT1_INTENSITY_ID,control_cb);
+                          &light1_intensity, std::bind(lightIntensity, light1_diffuse, std::cref(light1_intensity), GL_LIGHT1) );
   sb->set_float_limits(0,1);
   sb = new GLUI_Scrollbar( light1, "Green",GLUI_SCROLL_HORIZONTAL,
-                           &light1_diffuse[1],LIGHT1_INTENSITY_ID,control_cb);
+                          &light1_intensity, std::bind(lightIntensity, light1_diffuse, std::cref(light1_intensity), GL_LIGHT1) );
   sb->set_float_limits(0,1);
   sb = new GLUI_Scrollbar( light1, "Blue",GLUI_SCROLL_HORIZONTAL,
-                           &light1_diffuse[2],LIGHT1_INTENSITY_ID,control_cb);
+                          &light1_intensity, std::bind(lightIntensity, light1_diffuse, std::cref(light1_intensity), GL_LIGHT1) );
   sb->set_float_limits(0,1);
 
 
@@ -444,15 +390,15 @@ int main(int argc, char* argv[])
 
 
   /*** Disable/Enable buttons ***/
-  new GLUI_Button( glui, "Disable movement", DISABLE_ID, control_cb );
-  new GLUI_Button( glui, "Enable movement", ENABLE_ID, control_cb );
-  new GLUI_Button( glui, "Hide", HIDE_ID, control_cb );
-  new GLUI_Button( glui, "Show", SHOW_ID, control_cb );
+  new GLUI_Button( glui, "Disable movement", [&]() { glui2->disable(); } );
+  new GLUI_Button( glui, "Enable movement",  [&]() { glui2->enable(); } );
+  new GLUI_Button( glui, "Hide", [&]() { glui2->hide(); } );
+  new GLUI_Button( glui, "Show", [&]() { glui2->show(); } );
 
   new GLUI_StaticText( glui, "" );
 
   /****** A 'quit' button *****/
-  new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button( glui, "Quit", []() { exit(0); });
 
 
   /**** Link windows to GLUI, and register idle callback ******/

@@ -41,23 +41,23 @@ static const int LINE_HEIGHT = 15;
 /****************************** GLUI_TextBox::GLUI_TextBox() **********/
 
 GLUI_TextBox::GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
-                           bool scroll, int id, GLUI_CB callback )
+                           bool scroll, GLUI_CB callback )
 {
-  common_construct(parent, &live_var, scroll, id, callback);
+  common_construct(parent, &live_var, scroll, callback);
 }
 
 /****************************** GLUI_TextBox::GLUI_TextBox() **********/
 
-GLUI_TextBox::GLUI_TextBox( GLUI_Node *parent, bool scroll, int id,
+GLUI_TextBox::GLUI_TextBox( GLUI_Node *parent, bool scroll,
                             GLUI_CB callback )
 {
-  common_construct(parent, NULL, scroll, id, callback);
+  common_construct(parent, NULL, scroll, callback);
 }
 
 /****************************** GLUI_TextBox::common_construct() **********/
 void GLUI_TextBox::common_construct(
   GLUI_Node *parent, GLUI_String *data,
-  bool scroll, int id, GLUI_CB callback)
+  bool scroll, GLUI_CB callback)
 {
   common_init();
 
@@ -74,7 +74,6 @@ void GLUI_TextBox::common_construct(
   } else {
     this->live_type = GLUI_LIVE_NONE;
   }
-  this->user_id     = id;
   this->callback    = callback;
   this->name        = "textbox";
   tb_panel->add_control( this );
@@ -85,7 +84,7 @@ void GLUI_TextBox::common_construct(
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
                          GLUI_SCROLL_INT);
-    scrollbar->set_object_callback(GLUI_TextBox::scrollbar_callback, this);
+    scrollbar->set_object_callback( [=]() { GLUI_TextBox::scrollbar_callback(this); });
     scrollbar->set_alignment(GLUI_ALIGN_LEFT);
     // scrollbar->can_activate = false; //kills ability to mouse drag too
   }

@@ -42,7 +42,6 @@ GLUI_Rollout::GLUI_Rollout( GLUI_Node *parent, const GLUI_String &name,
 {
   common_init();
   set_name( name );
-  user_id    = -1;
   int_val    = type;
 
   if ( NOT open ) {

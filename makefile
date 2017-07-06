@@ -37,7 +37,7 @@ endif
 ifeq ($(UNAME), Darwin)
 CXX      ?= g++
 CPPFLAGS += $(OPTS) -Wall -pedantic
-LIBGL     = -framework OpenGL
+LIBGL     = -framework OpenGL -framework Carbon
 LIBGLUT   = -framework GLUT
 endif
 

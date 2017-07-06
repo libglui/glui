@@ -44,12 +44,6 @@ GLUI_Spinner    *spinner, *light0_spinner, *light1_spinner;
 GLUI_RadioGroup *radio;
 GLUI_Panel      *obj_panel;
 
-/********** User IDs for callbacks ********/
-#define LIGHT0_ENABLED_ID    200
-#define LIGHT1_ENABLED_ID    201
-#define LIGHT0_INTENSITY_ID  250
-#define LIGHT1_INTENSITY_ID  251
-
 /********** Miscellaneous global variables **********/
 
 GLfloat light0_ambient[] =  {0.1f, 0.1f, 0.3f, 1.0f};
@@ -59,53 +53,6 @@ GLfloat light0_position[] = {.5f, .5f, 1.0f, 0.0f};
 GLfloat light1_ambient[] =  {0.1f, 0.1f, 0.3f, 1.0f};
 GLfloat light1_diffuse[] =  {.9f, .6f, 0.0f, 1.0f};
 GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
-
-/**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
-
-void control_cb( int control )
-{
-  if ( control == LIGHT0_ENABLED_ID ) {
-    if ( light0_enabled ) {
-      glEnable( GL_LIGHT0 );
-      light0_spinner->enable();
-    }
-    else {
-      glDisable( GL_LIGHT0 ); 
-      light0_spinner->disable();
-    }
-  }
-  else if ( control == LIGHT1_ENABLED_ID ) {
-    if ( light1_enabled ) {
-      glEnable( GL_LIGHT1 );
-      light1_spinner->enable();
-    }
-    else {
-      glDisable( GL_LIGHT1 ); 
-      light1_spinner->disable();
-    }
-  }
-  else if ( control == LIGHT0_INTENSITY_ID ) {
-    float v[] = { light0_diffuse[0],  light0_diffuse[1],
-		  light0_diffuse[2],  light0_diffuse[3] };
-    
-    v[0] *= light0_intensity;
-    v[1] *= light0_intensity;
-    v[2] *= light0_intensity;
-
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, v );
-  }
-  else if ( control == LIGHT1_INTENSITY_ID ) {
-    float v[] = { light1_diffuse[0],  light1_diffuse[1],
-		  light1_diffuse[2],  light1_diffuse[3] };
-    
-    v[0] *= light1_intensity;
-    v[1] *= light1_intensity;
-    v[2] *= light1_intensity;
-
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, v );
-  }
-}
 
 /**************************************** myGlutKeyboard() **********/
 
@@ -301,7 +248,7 @@ int main(int argc, char* argv[])
   /***** Control for object params *****/
 
   checkbox = 
-    new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
+    new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe);
   spinner  = new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
@@ -326,27 +273,70 @@ int main(int argc, char* argv[])
   GLUI_Panel *light0 = new GLUI_Panel( panel1, "Light 1" );
   GLUI_Panel *light1 = new GLUI_Panel( panel1, "Light 2" );
 
-  new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
-                     LIGHT0_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light0, "Enabled", &light0_enabled, [&]() 
+    { 
+      if (light0_enabled)
+      {
+        glEnable( GL_LIGHT0 );
+        light0_spinner->enable();
+      }
+      else
+      {
+        glDisable( GL_LIGHT0 ); 
+        light0_spinner->disable();
+      }
+    });
+
   light0_spinner = 
-    new GLUI_Spinner( light0, "Intensity:", 
-                      &light0_intensity, LIGHT0_INTENSITY_ID,
-                      control_cb );
+    new GLUI_Spinner( light0, "Intensity:",
+                      &light0_intensity, [&]()
+      {
+        float v[] = { light0_diffuse[0],  light0_diffuse[1],
+          light0_diffuse[2],  light0_diffuse[3] };
+        
+        v[0] *= light0_intensity;
+        v[1] *= light0_intensity;
+        v[2] *= light0_intensity;
+
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, v);
+      });
   light0_spinner->set_float_limits( 0.0, 1.0 );
 
-  new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
-                     LIGHT1_ENABLED_ID, control_cb );
+  new GLUI_Checkbox( light1, "Enabled", &light1_enabled, [&]() 
+    { 
+      if (light1_enabled)
+      {
+        glEnable( GL_LIGHT1 );
+        light1_spinner->enable();
+      }
+      else
+      {
+        glDisable( GL_LIGHT1 ); 
+        light1_spinner->disable();
+      }
+    });
+
   light1_spinner = 
-    new GLUI_Spinner( light1, "Intensity:",
-                      &light1_intensity, LIGHT1_INTENSITY_ID,
-                      control_cb );
+    new GLUI_Spinner( light1, "Intensity:", 
+                      &light1_intensity, [&]()
+      {
+        float v[] = { light1_diffuse[0],  light1_diffuse[1],
+          light1_diffuse[2],  light1_diffuse[3] };
+        
+        v[0] *= light1_intensity;
+        v[1] *= light1_intensity;
+        v[2] *= light1_intensity;
+
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, v);
+      });
+
   light1_spinner->set_float_limits( 0.0, 1.0 );
   light1_spinner->disable();   /* Disable this light initially */
 
   
   /****** A 'quit' button *****/
 
-  new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button( glui, "Quit", []() { exit(0); });
 
 
   /**** Link windows to GLUI ******/
