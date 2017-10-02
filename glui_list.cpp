@@ -102,7 +102,7 @@ void GLUI_List::common_construct(
 int    GLUI_List::mouse_down_handler( int local_x, int local_y )
 {
   int tmp_line;
-  unsigned long int ms;
+  uint64_t ms;
   timeb time;
   ftime(&time);
   ms = time.millitm + (time.time)*1000;
@@ -126,7 +126,7 @@ int    GLUI_List::mouse_down_handler( int local_x, int local_y )
           obj_cb(this);
         }
       } else {
-        if (last_line == curr_line && (ms - last_click_time) < 300) {
+        if (last_line == curr_line && last_click_time && (ms - last_click_time) < 300) {
           //obj_cb(associated_object, user_id);
           obj_cb(this);
         } else {

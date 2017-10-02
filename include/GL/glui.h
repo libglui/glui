@@ -44,6 +44,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <cstdint>
 #include <cstring>
 
 #include <array>
@@ -2031,7 +2032,7 @@ public:
     GLUI_CB             obj_cb;
     int                 cb_click_type;
     int                 last_line;
-    int                 last_click_time;
+    uint64_t            last_click_time;
 
     int  mouse_down_handler( int local_x, int local_y ) override;
     int  mouse_up_handler( int local_x, int local_y, bool inside ) override;
