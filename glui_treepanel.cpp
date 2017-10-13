@@ -182,10 +182,10 @@ void GLUI_TreePanel::formatNode(GLUI_Tree *temp)
     return;
   int level = temp->get_level();
   int child_number = temp->get_child_number();
-  GLUI_String level_name="";
-  GLUI_String full_name="";
+  GLUI_String level_name;
+  GLUI_String full_name;
 
-  temp->level_name == "";
+  temp->level_name.clear();
 
   if (format & GLUI_TREEPANEL_DISPLAY_HIERARCHY) {
     if (format & GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY) {
