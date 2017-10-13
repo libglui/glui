@@ -1645,7 +1645,7 @@ public:
     void deactivate() override;
 
     virtual const GLUI_String &get_history( int command_number ) const
-    { return hist_list[command_number - oldest_hist].c_str(); }
+    { return hist_list[command_number - oldest_hist]; }
     virtual GLUI_String& get_history_str( int command_number )
     { return hist_list[command_number - oldest_hist]; }
     virtual const GLUI_String& get_history_str( int command_number ) const
