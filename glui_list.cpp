@@ -456,6 +456,7 @@ int  GLUI_List::delete_all()
 
   num_lines = 0;
   curr_line = 0;
+  start_line = 0;
 
   return true;
 }
