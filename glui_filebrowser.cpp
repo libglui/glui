@@ -161,6 +161,98 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
 #endif
 }
 
+/* Private functions to add and delete child items of local_list */
+
+int GLUI_FileBrowser::add_list_item(GLUI_List_Item *local_list, int id, const char *text)
+{
+  GLUI_List_Item *new_node = new GLUI_List_Item;
+
+//  printf(" Enter GLUI_FileBrowser::add_item\n");
+//  printf("  id = %i,  text = :%s:\n",id,text);
+//  printf(" new new_node\n");
+//  print_list_all(new_node);
+
+  new_node->text = text;
+  new_node->id   = id;
+//  printf(" new_node before addition\n");
+//  print_list_all(new_node);
+//  printf(" local_list before addition\n");
+//  print_list_all(local_list);
+
+  new_node->link_this_to_parent_last( local_list );
+
+//  printf(" new_node after addition\n");
+//  print_list_all(new_node);
+//  printf(" local_list after addition\n");
+//  print_list_all(local_list);
+//  abort();
+
+  return true;
+}
+
+int delete_list_item(GLUI_List_Item *list_item)
+{
+  printf(" Enter GLUI_File_Browser::delete_list_item\n");
+  printf(" ERROR: Function not implemented\n");
+  return false;
+}
+
+int GLUI_FileBrowser::delete_list_all(GLUI_List_Item *local_list)
+{
+  GLUI_List_Item *item;
+  printf(" Enter GLUI_File_Browser::delete_all\n");
+
+  item = (GLUI_List_Item *)local_list->first_child();
+  while( item ) {
+    item->unlink();
+    delete item;
+    item = (GLUI_List_Item *) local_list->first_child();
+  }
+  return true;
+}
+
+int GLUI_FileBrowser::copy_list(GLUI_List_Item p1, GLUI_List_Item p2)
+{
+  GLUI_List_Item *item;
+  printf(" Enter GLUI_File_Browser::delete_all\n");
+
+  item = (GLUI_List_Item *)local_list->first_child();
+  while( item ) {
+    item->unlink();
+    delete item;
+    item = (GLUI_List_Item *) local_list->first_child();
+  }
+  return true;
+}
+
+int GLUI_FileBrowser::print_list_all(GLUI_List_Item *local_list)
+{
+  GLUI_List_Item *item;
+  printf(" Enter GLUI_FileBrowser::print_list_all.  local_list= = %p\n",
+                                        local_list);
+
+  if(!local_list){
+    printf(" local_list not valid\n");
+    return false;
+  }
+  printf(" local_list = %p\n",local_list);
+  printf(" local_list = %p %p :  %p %p : %p %p : %i\n", local_list,
+         local_list->parent(),  local_list->prev(),local_list->next(),
+         local_list-> first_child(), local_list->last_child(),
+         local_list->id) ;
+
+  item = (GLUI_List_Item *) local_list-> first_child();
+  while(item){
+    printf("   item = %p %p : %p %p : %p %p : %2i :%s:\n", item,
+         item->parent(),item->prev(),item->next(),
+         item-> first_child(), item->last_child(),
+         item->id, item->text.c_str()) ;
+    item = (GLUI_List_Item *) item->next();
+  }
+  printf("\n");
+  return true;
+}
+
 void ProcessFiles(const GLUI_String &path_name)
 {
 }
