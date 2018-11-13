@@ -830,7 +830,7 @@ void     GLUI_TextBox::draw_insertion_pt()
                                           between the text and the box       **/
 
   curr_x += substring_width(sol,insertion_pt-1);
-  if ((insertion_pt == text.length() && text[text.length()-1] == '\n')
+  if ((insertion_pt == (int)text.length() && text[text.length()-1] == '\n')
       || curr_x-this->x_abs > (w - 2 - GLUI_TEXTBOX_BOXINNERMARGINX)) { // Insert on the next line
     curr_x = this->x_abs + GLUI_TEXTBOX_BOXINNERMARGINX;
     line++;
@@ -1072,7 +1072,7 @@ void   GLUI_TextBox::dump( FILE *out, const GLUI_String &name )
 {
   fprintf( out,
        "%s (edittext@%p):   line:%d ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%lu\n",
-       name.c_str(), this, curr_line,
+       name.c_str(), (void*)this, curr_line,
        insertion_pt, substring_start, substring_end, sel_start, sel_end,
        (long unsigned) text.length());
 }

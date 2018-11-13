@@ -190,7 +190,7 @@ void   GLUI_CommandLine::dump( FILE *out, const GLUI_String &name )
 {
   fprintf( out,
 	   "%s (commandline@%p):  ins_pt:%d  subs:%d/%d  sel:%d/%d   len:%d\n",
-	   name.c_str(), this,
+	   name.c_str(), (void*)this,
 	   insertion_pt, substring_start, substring_end, sel_start, sel_end,
 	   (int)text.length());
 }

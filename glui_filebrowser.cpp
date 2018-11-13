@@ -209,8 +209,9 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
       GLUI_List_Item  *p_item;
       p_item = (GLUI_List_Item *)list->items_list.first_child();
       while(p_item){
-        if(iprint)printf(" AA item : %p %p %p %p :%i :%s:  \n",p_item,
-                    p_item->parent(), p_item->next(), p_item->prev(),
+        if(iprint)printf(" AA item : %p %p %p %p :%i :%s:  \n",
+                    (void*)p_item, (void*)p_item->parent(),
+                    (void*)p_item->next(), (void*)p_item->prev(),
                     p_item->id, p_item->text.c_str() );
         p_item = (GLUI_List_Item *)p_item->next();
       }
@@ -230,8 +231,9 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
         for(i=0;i<n_list;i++){ p_list[i] = list->get_item_ptr(i); }
         for(i=0;i<n_list;i++){
            p_item = p_list[i];
-           if(iprint)printf(" BB item : %p %p %p %p :%i :%s:  \n",p_item,
-                    p_item->parent(), p_item->next(), p_item->prev(),
+           if(iprint)printf(" BB item : %p %p %p %p :%i :%s:  \n",
+                    (void*)p_item, (void*)p_item->parent(),
+                    (void*)p_item->next(), (void*)p_item->prev(),
                     p_item->id, p_item->text.c_str() );
         }
         if(iprint)printf("\n");
@@ -240,8 +242,9 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
         qsort(p_list,n_list,sizeof(p_list[0]),fb_list_compare);
         for(i=0;i<n_list;i++){
             p_item = p_list[i];
-            if(iprint)printf(" CC item : %p %p %p %p :%i :%s:  \n",p_item,
-                    p_item->parent(), p_item->next(), p_item->prev(),
+            if(iprint)printf(" CC item : %p %p %p %p :%i :%s:  \n",
+                    (void*)p_item, (void*)p_item->parent(),
+                    (void*)p_item->next(), (void*)p_item->prev(),
                     p_item->id, p_item->text.c_str() );
         }
         if(iprint)printf("\n");
@@ -251,8 +254,9 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
         for(i=0;i<n_list;i++){ p_list[i]->unlink(); }
         for(i=0;i<n_list;i++){
             p_item = p_list[i];
-            if(iprint)printf(" DD item : %p %p %p %p :%i :%s:  \n",p_item,
-                    p_item->parent(), p_item->next(), p_item->prev(),
+            if(iprint)printf(" DD item : %p %p %p %p :%i :%s:  \n",
+                    (void*)p_item, (void*)p_item->parent(),
+                    (void*)p_item->next(), (void*)p_item->prev(),
                     p_item->id, p_item->text.c_str() );
         }
         if(iprint)printf("\n");
@@ -270,16 +274,18 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
         }
         for(i=0;i<n_list;i++){
             p_item = p_list[i];
-            if(iprint)printf(" EE item : %p %p %p %p :%i :%s:  \n",p_item,
-                    p_item->parent(), p_item->next(), p_item->prev(),
+            if(iprint)printf(" EE item : %p %p %p %p :%i :%s:  \n",
+                    (void*)p_item, (void*)p_item->parent(),
+                    (void*)p_item->next(), (void*)p_item->prev(),
                     p_item->id, p_item->text.c_str() );
         }
         if(iprint)printf("\n");
 
         p_item = (GLUI_List_Item *)list->items_list.first_child();
         while(p_item){
-            if(iprint)printf(" FF item : %p %p %p %p :%i :%s:  \n",p_item,
-                        p_item->parent(), p_item->next(), p_item->prev(),
+            if(iprint)printf(" FF item : %p %p %p %p :%i :%s:  \n",
+                        (void*)p_item, (void*)p_item->parent(),
+                        (void*)p_item->next(), (void*)p_item->prev(),
                         p_item->id, p_item->text.c_str() );
             p_item = (GLUI_List_Item *)p_item->next();
         }
@@ -289,8 +295,9 @@ void GLUI_FileBrowser::fbreaddir(const GLUI_String &d) {
         i = 0;
         while(p_item){
             p_item->id = i;
-            if(iprint)printf(" GG item : %p %p %p %p :%i :%s:  \n",p_item,
-                        p_item->parent(), p_item->next(), p_item->prev(),
+            if(iprint)printf(" GG item : %p %p %p %p :%i :%s:  \n",
+                        (void*)p_item,(void*)p_item->parent(),
+                        (void*)p_item->next(), (void*)p_item->prev(),
                         p_item->id, p_item->text.c_str() );
             p_item = (GLUI_List_Item *)p_item->next();
             i++;
@@ -377,23 +384,24 @@ int GLUI_FileBrowser::print_list_all(GLUI_List_Item *local_list)
 {
   GLUI_List_Item *item;
   printf(" Enter GLUI_FileBrowser::print_list_all.  local_list= = %p\n",
-                                        local_list);
+                                        (void*)local_list);
 
   if(!local_list){
     printf(" local_list not valid\n");
     return false;
   }
-  printf(" local_list = %p\n",local_list);
-  printf(" local_list = %p %p :  %p %p : %p %p : %i\n", local_list,
-         local_list->parent(),  local_list->prev(),local_list->next(),
-         local_list-> first_child(), local_list->last_child(),
+  printf(" local_list = %p\n",(void*)local_list);
+  printf(" local_list = %p %p :  %p %p : %p %p : %i\n", (void*)local_list,
+         (void*)local_list->parent(),  (void*)local_list->prev(),
+         (void*)local_list->next(),(void*)local_list-> first_child(),
+         (void*)local_list->last_child(),
          local_list->id) ;
 
   item = (GLUI_List_Item *) local_list-> first_child();
   while(item){
-    printf("   item = %p %p : %p %p : %p %p : %2i :%s:\n", item,
-         item->parent(),item->prev(),item->next(),
-         item-> first_child(), item->last_child(),
+    printf("   item = %p %p : %p %p : %p %p : %2i :%s:\n", (void*)item,
+         (void*)item->parent(),(void*)item->prev(),(void*)item->next(),
+         (void*)item-> first_child(), (void*)item->last_child(),
          item->id, item->text.c_str()) ;
     item = (GLUI_List_Item *) item->next();
   }
