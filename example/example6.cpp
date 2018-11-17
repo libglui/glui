@@ -6,7 +6,7 @@
   No callbacks are used.
 
   -----------------------------------------------------------------------
-  9/17/04 John Kew - Natural Selection, Inc. (jkew@natural-selection.com)   
+  9/17/04 John Kew - Natural Selection, Inc. (jkew@natural-selection.com)
   9/9/98 Paul Rademacher (rademach@cs.unc.edu)
 
 ****************************************************************************/
@@ -25,6 +25,8 @@ int main_window;
 int num_display  = 0;
 int num_format  = 0;
 int enable_textbox = 0;
+std::string fb_filter = "";
+
 GLUI_StaticText  *text;
 GLUI_List        *hah;
 GLUI_TextBox     *moo;
@@ -32,6 +34,8 @@ GLUI             *tree;
 GLUI_TreePanel   *tp;
 GLUI_FileBrowser *fb;
 GLUI_EditText    *bedit;
+GLUI_EditText    *edittext;
+
 
 const char general[] =
   "GLUI 2.3 Widgets\n"
@@ -45,7 +49,7 @@ const char general[] =
   "  * GLUI_Tree        - Hierarchical tree widget\n"
   "  * GLUI_TreePanel   - Manager for the tree widget\n";
 
-const char scroll[] = 
+const char scroll[] =
   "Scrollbar Widget\n"
   "\n"
   "The GLUI_Scrollbar can be used more or less like a GLUI_Spinner.\n"
@@ -64,7 +68,7 @@ const char scroll[] =
 
 const char tree_txt[] = "Tree Widget";
 
-const char commandline[] = 
+const char commandline[] =
   "CommandLine Widget\n"
   "\n"
   "The GLUI_CommandLine is a GLUI_EditText with some special functionality\n"
@@ -72,7 +76,7 @@ const char commandline[] =
   "The main feature is that it maintains a command history buffer so that\n"
   "users can recall previous commands.\n";
 
-const char gstring[] = 
+const char gstring[] =
   "GLUI_String\n"
   "\n"
   "The GLUI string class used to be wrapper class around \n"
@@ -92,7 +96,7 @@ const char list[] =
   "\n"
   "As seen on the left side of this window.";
 
-const char filebrowser[] = 
+const char filebrowser[] =
   "FileBrowserWidget\n"
   "\n"
   "As seen in the lower left corner of this window.\n"
@@ -103,7 +107,7 @@ const char filebrowser[] =
   "Go ahead and give it a try!  Navigate and select files by double-clicking.\n"
   "If you pick a text file it will be displayed in this GLUI_TextBox.\n";
 
-const char text_box[] = 
+const char text_box[] =
   "TextBox w/ optional Scrollbar\n"
   "\n"
   "A TextBox is a multiline editing box that supports basic navigation, \n"
@@ -147,7 +151,7 @@ const char text_box[] =
   "* Multicolour text\n"
   "* Current word selection\n"
   "* copy/paste\n";
-  
+
 /*Bugs:\n\
  * fewer Mouse Drag calls  with large texts\n\
  * Insertion Pt sometimes drawn on wrong line.\n\
@@ -171,13 +175,13 @@ void control_cb(int control) {
   int format;
   glutPostRedisplay();
   item = hah->get_current_item();
-  
+
   if (control == 7) {
     i = 0;
     file_name = "";
     file_name = fb->get_file();
-    file = fopen(file_name.c_str(),"r"); 
-    if (file == NULL) 
+    file = fopen(file_name.c_str(),"r");
+    if (file == NULL)
       printf("Error opening file\n");
     else {
       do {
@@ -186,7 +190,7 @@ void control_cb(int control) {
         i++;
       } while (c != EOF);
       fclose(file);
-    } 
+    }
 
     moo->set_text(text.c_str());
   }
@@ -245,10 +249,10 @@ void control_cb(int control) {
       tp->collapse_all();
   }
   if ( control == 11) {
-    format = 0; 
-    format = GLUI_TREEPANEL_ALTERNATE_COLOR | 
+    format = 0;
+    format = GLUI_TREEPANEL_ALTERNATE_COLOR |
       GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY;
-    
+
     if (num_display)
       format = format | GLUI_TREEPANEL_DISPLAY_HIERARCHY;
     if (num_format)
@@ -267,12 +271,18 @@ void control_cb(int control) {
   }
 }
 void textbox_cb(GLUI_Control *control) {
-    printf("Got textbox callback\n");
+//    printf("Got textbox callback\n");
+}
+void filter_cb(GLUI_Control *control) {
+//    printf("Got filter callback\n");
+//    printf(" fb_filter = :%s:\n",fb_filter.c_str());
+    fb->set_filter(fb_filter.c_str());
+    fb->fbreaddir("./");
 }
 
 //void out_of_memory() {
 //  printf("Out of memory!\n\n");
-//} 
+//}
 
 /**************************************** main() ********************/
 
@@ -297,7 +307,12 @@ int main(int argc, char* argv[])
   fb = new GLUI_FileBrowser(ep, "", false, 7, control_cb);
   fb->set_h(180);
   hah->set_h(180);
-  new GLUI_Column(ep,false); 
+
+  edittext = new GLUI_EditText( ep, "Filter:",fb_filter,99,filter_cb );
+  edittext->set_w( 150 );
+
+
+  new GLUI_Column(ep,false);
 
   moo = new GLUI_TextBox(ep,true,1,textbox_cb);
   moo->set_text(general);
@@ -315,28 +330,28 @@ int main(int argc, char* argv[])
   GLUI_RadioGroup *rg = new GLUI_RadioGroup(ep, &num_format);
   new GLUI_RadioButton(rg, "Level Only");
   new GLUI_RadioButton(rg, "Hierarchal");
-  new GLUI_Button(ep, "Update Format", 11, control_cb); 
+  new GLUI_Button(ep, "Update Format", 11, control_cb);
   new GLUI_Column(ep);
-  new GLUI_Button(ep, "Add Branch", 2, control_cb); 
+  new GLUI_Button(ep, "Add Branch", 2, control_cb);
   new GLUI_Button(ep, "Del Branch", 3, control_cb);
-  new GLUI_Button(ep, "Up Branch", 4, control_cb); 
+  new GLUI_Button(ep, "Up Branch", 4, control_cb);
   new GLUI_Button(ep, "Goto Root", 5, control_cb);
   new GLUI_Column(ep);
-  new GLUI_Button(ep, "Descend to Leaf", 6, control_cb); 
-  new GLUI_Button(ep, "Next Branch", 8, control_cb); 
-  new GLUI_Button(ep, "Expand All", 9, control_cb); 
-  new GLUI_Button(ep, "Collapse All", 10, control_cb); 
+  new GLUI_Button(ep, "Descend to Leaf", 6, control_cb);
+  new GLUI_Button(ep, "Next Branch", 8, control_cb);
+  new GLUI_Button(ep, "Expand All", 9, control_cb);
+  new GLUI_Button(ep, "Collapse All", 10, control_cb);
   tp = new GLUI_TreePanel(tree,"Tree Test");
-  tp->set_format(GLUI_TREEPANEL_ALTERNATE_COLOR | 
+  tp->set_format(GLUI_TREEPANEL_ALTERNATE_COLOR |
                  GLUI_TREEPANEL_CONNECT_CHILDREN_ONLY |
-                 GLUI_TREEPANEL_DISPLAY_HIERARCHY | 
+                 GLUI_TREEPANEL_DISPLAY_HIERARCHY |
                  GLUI_TREEPANEL_HIERARCHY_NUMERICDOT);
   tp->set_level_color(1,1,1);
   tp->ab("foo you");
   tree->hide();
- 
-  edit->set_main_gfx_window(main_window); 
-  tree->set_main_gfx_window(main_window); 
+
+  edit->set_main_gfx_window(main_window);
+  tree->set_main_gfx_window(main_window);
 
   glutMainLoop();
   return 0;
