@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_listbox - GLUI_ListBox control class
@@ -119,15 +119,15 @@ namespace glui {
 
 
     if ( enabled ) {
-      glui->std_bitmaps.
+      context->std_bitmaps.
         draw(GLUI_STDBITMAP_LISTBOX_UP,
-             w-glui->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
+             w-context->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
              2 );
     }
     else {
-      glui->std_bitmaps.
+      context->std_bitmaps.
         draw(GLUI_STDBITMAP_LISTBOX_UP_DIS,
-             w-glui->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
+             w-context->std_bitmaps.width(GLUI_STDBITMAP_LISTBOX_UP)-1,
              2 );
     }
   }
@@ -171,10 +171,10 @@ namespace glui {
       do_selection( id );
       last_live_int = id;
 
-      if( glui )
-        glui->post_update_main_gfx();
+      if(context)
+        context->post_update_main_gfx();
     }
-    if (recalculate_item_width()) glui->refresh();
+    if (recalculate_item_width()) context->refresh();
 
     return true;
   }
@@ -192,7 +192,7 @@ namespace glui {
         delete node;
         return true;
       }
-    if (recalculate_item_width()) glui->refresh();
+    if (recalculate_item_width()) context->refresh();
 
     return false;
   }
@@ -210,7 +210,7 @@ namespace glui {
         delete node;
         return true;
       }
-    if (recalculate_item_width()) glui->refresh();
+    if (recalculate_item_width()) context->refresh();
 
     return false;
   }
@@ -424,7 +424,7 @@ namespace glui {
   {
     int item_text_size;
 
-    if ( NOT glui )
+    if (!context)
       return false;
 
     /* Find the title size */

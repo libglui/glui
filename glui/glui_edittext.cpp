@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_edittext.cpp - GLUI_EditText control class
@@ -142,8 +142,8 @@ namespace glui {
 
     tmp_insertion_pt = find_insertion_pt( local_x, local_y );
     if ( tmp_insertion_pt == -1 ) {
-      if ( glui )
-        glui->deactivate_current_control(  );
+      if (context)
+        context->deactivate_current_control(  );
       return false;
     }
 
@@ -202,7 +202,7 @@ namespace glui {
     int i, regular_key;
     /* int has_selection;              */
 
-    if ( NOT glui )
+    if (!context)
       return false;
 
     regular_key = false;
@@ -210,14 +210,14 @@ namespace glui {
     /*  has_selection = (sel_start != sel_end);              */
 
     if ( key == CTRL('m') ) {           /* RETURN */
-      /*    glui->deactivate_current_control();              */
+      /*    context->deactivate_current_control();              */
       deactivate();  /** Force callbacks, etc **/
       activate(GLUI_ACTIVATE_TAB);     /** Reselect all text **/
       redraw();
       return true;
     }
     else if ( key  == CTRL('[')) {         /* ESCAPE */
-      glui->deactivate_current_control();
+      context->deactivate_current_control();
       return true;
     }
     else if ( (key == 127 AND !ctrl_down) OR  /* FORWARD DELETE */
@@ -456,7 +456,7 @@ namespace glui {
 
     active = false;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     sel_start = sel_end = insertion_pt = -1;
@@ -836,7 +836,7 @@ namespace glui {
 
   int    GLUI_EditText::special_handler( int key,int modifiers )
   {
-    if ( NOT glui )
+    if (!context)
       return false;
 
     if ( key == GLUT_KEY_LEFT ) {
@@ -959,7 +959,7 @@ namespace glui {
   {
     int text_size, delta;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     text_size = string_width( name );

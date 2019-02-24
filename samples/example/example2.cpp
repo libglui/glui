@@ -2,7 +2,7 @@
 
   example2.cpp
 
-  A simple GLUT program using the GLUI User Interface Library
+  A simple GLUT program using the GLUI_Context *User Interface Library
 
   -----------------------------------------------------------------------
 	   
@@ -21,7 +21,7 @@ float rotationX = 0.0, rotationY = 0.0;
 int   main_window;
 
 
-/** These are the live variables passed into GLUI ***/
+/** These are the live variables passed into GLUI_Context ****/
 int   wireframe = 0;
 int   obj = 0;
 int   segments = 8;
@@ -30,7 +30,7 @@ int   segments = 8;
 std::string text = "Hello World!";
 
 // Using a char buffer as a live var is also possible, but it is dangerous 
-// because GLUI doesn't know how big your buffer is.  
+// because GLUI_Context *doesn't know how big your buffer is.  
 // But still, it works as long as text doesn't happen to overflow.
 //char  text[200] = {"Hello World!"};
 
@@ -40,7 +40,7 @@ GLUI_RadioGroup *radio;
 GLUI_EditText   *edittext;
 
 /**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
+/* GLUI_Context *control callback                                                 */
 
 void control_cb( int control )
 {
@@ -146,7 +146,7 @@ void myGlutDisplay( void )
 
   /*** Now we render object, using the variables 'obj', 'segments', and
     'wireframe'.  These are _live_ variables, which are transparently 
-    updated by GLUI ***/
+    updated by GLUI_Context ****/
   
   if ( obj == 0 ) {
     if ( wireframe )      
@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
  
-  main_window = glutCreateWindow( "GLUI Example 2" );
+  main_window = glutCreateWindow( "GLUI_Context *Example 2" );
   glutDisplayFunc( myGlutDisplay );
   glutReshapeFunc( myGlutReshape );  
   glutKeyboardFunc( myGlutKeyboard );
@@ -229,28 +229,26 @@ int main(int argc, char* argv[])
   glEnable(GL_DEPTH_TEST);
 
   /****************************************/
-  /*         Here's the GLUI code         */
+  /*         Here's the GLUI_Context *code         */
   /****************************************/
 
-  GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 ); /* name, flags,
+  GLUI_Context *context = GLUI_Master.create_glui( "GLUI", 0, 400, 50 ); /* name, flags,
 								 x, and y */
-  new GLUI_StaticText( glui, "GLUI Example 2" );
-  new GLUI_Separator( glui );
-  checkbox = new GLUI_Checkbox( glui, "Wireframe", &wireframe, 1, control_cb );
-  spinner  = new GLUI_Spinner( glui, "Segments:", &segments, 2, control_cb );
+  new GLUI_StaticText( context, "GLUI Example 2" );
+  new GLUI_Separator(context);
+  checkbox = new GLUI_Checkbox( context, "Wireframe", &wireframe, 1, control_cb );
+  spinner  = new GLUI_Spinner( context, "Segments:", &segments, 2, control_cb );
   spinner->set_int_limits( 3, 60 );
-  edittext = new GLUI_EditText( glui, "Text:", text, 3, control_cb );
-  GLUI_Panel *obj_panel = new GLUI_Panel( glui, "Object Type" );
+  edittext = new GLUI_EditText( context, "Text:", text, 3, control_cb );
+  GLUI_Panel *obj_panel = new GLUI_Panel( context, "Object Type" );
   radio = new GLUI_RadioGroup( obj_panel,&obj,4,control_cb );
   new GLUI_RadioButton( radio, "Sphere" );
   new GLUI_RadioButton( radio, "Torus" );
   new GLUI_RadioButton( radio, "Teapot" );
-  new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
+  new GLUI_Button( context, "Quit", 0,(GLUI_Update_CB)exit );
  
-  glui->set_main_gfx_window( main_window );
+  context->set_main_gfx_window( main_window );
 
-  /* We register the idle callback with GLUI, *not* with GLUT */
-  //GLUI_Master.set_glutIdleFunc( myGlutIdle );
   GLUI_Master.set_glutIdleFunc( NULL );
 
   glutMainLoop();

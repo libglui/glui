@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_bitmaps.cpp
@@ -123,7 +123,7 @@ namespace glui {
 
 
   /* Create bitmap from color int array.
-     (OSL) This used to be how all GLUI bitmaps were stored, which was horribly
+     (OSL) This used to be how all GLUI_Context *bitmaps were stored, which was horribly
      inefficient--three ints per pixel, or 12 bytes per pixel!
   */
   void GLUI_Bitmap::init(int *array)

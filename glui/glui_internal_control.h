@@ -1,5 +1,5 @@
 /*
-  Header file for use by GLUI controls.
+  Header file for use by GLUI_Context *controls.
   Everything you need is right here.
 
   This software is provided 'as-is', without any express or implied
@@ -21,7 +21,7 @@
 */
 #pragma once
 
-/* This is the main GLUI external header */
+/* This is the main GLUI_Context *external header */
 #include "GL/glui.h"
 
 /* Here's some utility routines */

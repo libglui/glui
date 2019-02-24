@@ -80,8 +80,8 @@ namespace glui {
     if (dynamic_cast<GLUI_Tree*>(temp))
       ((GLUI_Tree *)temp)->set_current(true);
     //refresh();
-    //  glui->deactivate_current_control();
-    //glui->activate_control( temp, GLUI_ACTIVATE_TAB );
+    //  context->deactivate_current_control();
+    //context->activate_control( temp, GLUI_ACTIVATE_TAB );
     return temp;
 
   }
@@ -143,8 +143,8 @@ namespace glui {
 
   void GLUI_TreePanel::refresh()
   {
-    glui->deactivate_current_control();
-    glui->activate_control( curr_root, GLUI_ACTIVATE_TAB );
+    context->deactivate_current_control();
+    context->activate_control( curr_root, GLUI_ACTIVATE_TAB );
 
     redraw();
   }

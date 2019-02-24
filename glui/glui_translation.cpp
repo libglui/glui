@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_translation - GLUI_Translation control class
@@ -89,7 +89,7 @@ namespace glui {
       center_x = w/2;
       center_y = (h-18)/2;
 
-      if ( glui->curr_modifiers & GLUT_ACTIVE_ALT ) {
+      if ( context->curr_modifiers & GLUT_ACTIVE_ALT ) {
         if ( ABS(local_y-center_y) > ABS(local_x-center_x) ) {
           locked = GLUI_TRANSLATION_LOCK_Y;
           glutSetCursor( GLUT_CURSOR_UP_DOWN );
@@ -149,11 +149,11 @@ namespace glui {
     x_off = scale_factor * (float)(local_x - down_x);
     y_off = -scale_factor * (float)(local_y - down_y);
 
-    if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT ) {
+    if ( context->curr_modifiers & GLUT_ACTIVE_SHIFT ) {
       x_off *= 100.0f;
       y_off *= 100.0f;
     }
-    else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL ) {
+    else if ( context->curr_modifiers & GLUT_ACTIVE_CTRL ) {
       x_off *= .01f;
       y_off *= .01f;
     }
@@ -354,10 +354,10 @@ namespace glui {
       bkgd(.7,.7,.7);
     int   c_off=0; /* color index offset */
 
-    if ( glui )
-      bkgd.set(glui->bkgd_color_f[0],
-               glui->bkgd_color_f[1],
-               glui->bkgd_color_f[2]);
+    if (context)
+      bkgd.set(context->bkgd_color_f[0],
+               context->bkgd_color_f[1],
+               context->bkgd_color_f[2]);
 
     /*	bkgd[0] = 255.0; bkgd[1] = 0;              */
 
@@ -540,8 +540,6 @@ namespace glui {
 
   void  GLUI_Translation::set_one_val( float val, int index )
   {
-    float *fp;
-
     float_array_val[index] = val;	  /* set value in array              */
 
     /*** The code below is like output_live, except it only operates on
@@ -551,13 +549,13 @@ namespace glui {
     if ( ptr_val == NULL OR NOT live_inited )
       return;
 
-    fp = (float*) ptr_val;
+    float *fp = (float*) ptr_val;
     fp[index]                    = float_array_val[index];
     last_live_float_array[index] = float_array_val[index];
 
     /** Update the main gfx window? **/
-    if ( this->glui != NULL ) {
-      this->glui->post_update_main_gfx();
+    if (context) {
+      context->post_update_main_gfx();
     }
   }
 }

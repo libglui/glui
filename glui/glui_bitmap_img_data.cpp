@@ -1,5 +1,5 @@
 /**
-   Bitmaps for all GLUI images.
+   Bitmaps for all GLUI_Context *images.
 
    These were converted from original PPM images
    (mostly lost) with the tools/ppm2array program.

@@ -1,9 +1,9 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
-     glui_add_controls.cpp - Routines for adding controls to a GLUI window
+     glui_add_controls.cpp - Routines for adding controls to a GLUI_Context *window
 
 Note: these routines are all deprecated.  Keeping them all here
 prevents the linker from dragging in all the .o files, even for controls

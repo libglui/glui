@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_rotation - GLUI_Rotation control class
@@ -76,7 +76,7 @@ namespace glui {
   int    GLUI_Rotation::iaction_mouse_held_down_handler( int local_x, int local_y,
                                                          bool inside)
   {
-    if ( NOT glui )
+    if (!context)
       return 0;
 
     copy_float_array_to_ball();
@@ -86,8 +86,8 @@ namespace glui {
     /*	printf( "%d %d\n", local_x, local_y );              */
 
     ball->mouse_motion( local_x, local_y, 0,
-                        (glui->curr_modifiers & GLUT_ACTIVE_ALT) != 0,
-                        (glui->curr_modifiers & GLUT_ACTIVE_CTRL) != 0 );
+                        (context->curr_modifiers & GLUT_ACTIVE_ALT) != 0,
+                        (context->curr_modifiers & GLUT_ACTIVE_CTRL) != 0 );
 
     copy_ball_to_float_array();
 

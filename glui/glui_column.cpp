@@ -1,5 +1,5 @@
 /****************************************************************************
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_column.cpp - GLUI_Column control class

@@ -2,7 +2,7 @@
 
   example5.cpp
 
-  A GLUI program demonstrating subwindows, rotation controls,
+  A GLUI_Context *program demonstrating subwindows, rotation controls,
 	translation controls, and listboxes
 
   -----------------------------------------------------------------------
@@ -20,7 +20,7 @@ float xy_aspect;
 int   last_x, last_y;
 float rotationX = 0.0, rotationY = 0.0;
 
-/** These are the live variables passed into GLUI ***/
+/** These are the live variables passed into GLUI_Context ****/
 int   wireframe = 0;
 int   obj_type = 1;
 int   segments = 8;
@@ -43,7 +43,7 @@ const char *string_list[] = { "Hello World!", "Foo", "Testing...", "Bounding box
 int   curr_string = 0;
 
 /** Pointers to the windows and some of the controls we'll create **/
-GLUI *glui_context, *glui2;
+GLUI_Context    *glui_context, *glui2;
 GLUI_Spinner    *light0_spinner, *light1_spinner;
 GLUI_RadioGroup *radio;
 GLUI_Panel      *obj_panel;
@@ -72,7 +72,7 @@ GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
 GLfloat lights_rotation[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 
 /**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
+/* GLUI_Context *control callback                                                 */
 
 void control_cb( int control )
 {
@@ -260,7 +260,7 @@ void myGlutDisplay( void )
 
   /*** Now we render object, using the variables 'obj_type', 'segments', and
     'wireframe'.  These are _live_ variables, which are transparently 
-    updated by GLUI ***/
+    updated by GLUI_Context ****/
 
   glPushMatrix();
   glTranslatef( -.5, 0.0, 0.0 );
@@ -323,7 +323,7 @@ int main(int argc, char* argv[])
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 800, 600 );
  
-  main_window = glutCreateWindow( "GLUI Example 5" );
+  main_window = glutCreateWindow( "GLUI_Context *Example 5" );
   glutDisplayFunc( myGlutDisplay );
   GLUI_Master.set_glutReshapeFunc( myGlutReshape );  
   GLUI_Master.set_glutKeyboardFunc( myGlutKeyboard );
@@ -355,10 +355,10 @@ int main(int argc, char* argv[])
   glEnable(GL_DEPTH_TEST);
 
   /****************************************/
-  /*         Here's the GLUI code         */
+  /*         Here's the GLUI_Context *code         */
   /****************************************/
 
-  printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
+  printf( "GLUI_Context *version: %3.2f\n", GLUI_Master.get_version() );
 
   /*** Create the side subwindow ***/
   glui_context = GLUI_Master.create_glui_subwindow( main_window, 
@@ -451,7 +451,7 @@ int main(int argc, char* argv[])
   new GLUI_Button( glui_context, "Quit", 0,(GLUI_Update_CB)exit );
 
 
-  /**** Link windows to GLUI, and register idle callback ******/
+  /**** Link windows to GLUI_Context *, and register idle callback ******/
   
   glui_context->set_main_gfx_window( main_window );
 
@@ -488,11 +488,6 @@ int main(int argc, char* argv[])
   GLUI_Translation *trans_z = 
     new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
   trans_z->set_speed( .005 );
-
-#if 0
-  /**** We register the idle callback with GLUI, *not* with GLUT ****/
-  GLUI_Master.set_glutIdleFunc( myGlutIdle );
-#endif
 
   /**** Regular GLUT main loop ****/
   

@@ -5,10 +5,10 @@
 
           --------------------------------------------------
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   Copyright (c) 1998 Paul Rademacher
      Feb 1998, Paul Rademacher (rademach@cs.unc.edu)
-     Oct 2003, Nigel Stewart - GLUI Code Cleaning
+     Oct 2003, Nigel Stewart - GLUI_Context *Code Cleaning
 
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496

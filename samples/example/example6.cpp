@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  A simple GLUT program using the GLUI User Interface Library
+  A simple GLUT program using the GLUI_Context *User Interface Library
 
   This program sets up a checkbox and a spinner, both with live variables.
   No callbacks are used.
@@ -16,7 +16,7 @@
 
 using namespace glui;
 
-/** These are the live variables passed into GLUI ***/
+/** These are the live variables passed into GLUI_Context ****/
 int main_window;
 int num_display  = 0;
 int num_format  = 0;
@@ -24,15 +24,15 @@ int enable_textbox = 0;
 GLUI_StaticText  *text;
 GLUI_List        *hah;
 GLUI_TextBox     *moo;
-GLUI             *tree;
+GLUI_Context     *tree;
 GLUI_TreePanel   *tp;
 GLUI_FileBrowser *fb;
 GLUI_EditText    *bedit;
 
 const char general[] =
-  "GLUI 2.3 Widgets\n"
+  "GLUI_2.3 Widgets\n"
   "\n"
-  "A number of widgets have been introduced in GLUI 2.3\n"
+  "A number of widgets have been introduced in GLUI_2.3\n"
   "\n"
   "  * GLUI_Scrollbar   - A scrollbar slider widget\n"
   "  * GLUI_TextBox     - A multi-line text widget\n"
@@ -71,7 +71,7 @@ const char commandline[] =
 const char gstring[] = 
   "GLUI_String\n"
   "\n"
-  "The GLUI string class used to be wrapper class around \n"
+  "The GLUI_string class used to be wrapper class around \n"
   "a fixed 300 char buffer.\n"
   "Now GLUI_String is just a typedef for std::string.\n"
   "\n"
@@ -109,7 +109,7 @@ const char text_box[] =
   "be associated with objects that have a specified callback routine.\n"
   "\n"
   "new GLUI_TextBox\n"
-  "Adds a new textbox to a GLUI window, optionally nested within another \n"
+  "Adds a new textbox to a GLUI_window, optionally nested within another \n"
   "rollout or panel.\n"
   "\n"
   "Usage:\n"
@@ -276,12 +276,12 @@ int main(int argc, char* argv[])
 {
   glutInit(&argc, argv);
 
-  GLUI *edit = GLUI_Master.create_glui("Help on GLUI Widgets", 0);
+  GLUI_Context *edit = GLUI_Master.create_glui("Help on GLUI_Widgets", 0);
   main_window = edit->get_glut_window_id();
   GLUI_Panel *ep = new GLUI_Panel(edit,"",true);
   new GLUI_StaticText(ep,"Widget Information:");
   hah = new GLUI_List(ep,true,1,control_cb);
-  hah->add_item(0,"GLUI 2.3");
+  hah->add_item(0,"GLUI_2.3");
   hah->add_item(1,"TextBox");
   hah->add_item(2,"Scrollbar");
   hah->add_item(3,"GLUI_String");

@@ -2,7 +2,7 @@
 
   glui_window.cpp - GLUI_Button control class
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   Copyright (c) 1998 Paul Rademacher
 
   WWW:    http://sourceforge.net/projects/glui/

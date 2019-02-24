@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_panel.cpp - GLUI_Panel control class
@@ -126,8 +126,8 @@ namespace glui {
 
           str_width = string_width(name);
 
-          if ( glui )
-            glColor3ubv(glui->bkgd_color);
+          if (context)
+            glColor3ubv(context->bkgd_color);
           glDisable( GL_CULL_FACE );
           glBegin( GL_QUADS );
           glVertex2i( left-3, 0 );               glVertex2i( left+str_width+3, 0 );
@@ -149,8 +149,8 @@ namespace glui {
 
     update_size();
 
-    if ( glui )
-      glui->refresh();
+    if (context)
+      context->refresh();
   }
 
 
@@ -172,7 +172,7 @@ namespace glui {
   {
     int text_size;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     text_size = string_width(name);

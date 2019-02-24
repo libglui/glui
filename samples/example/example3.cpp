@@ -2,7 +2,7 @@
 
   example3.cpp
 
-  A GLUT program using all the features of the GLUI User Interface Library
+  A GLUT program using all the features of the GLUI_Context *User Interface Library
   (except columns, featured in example4.cpp)
 
   -----------------------------------------------------------------------
@@ -20,7 +20,7 @@ float xy_aspect;
 int   last_x, last_y;
 float rotationX = 0.0, rotationY = 0.0;
 
-/** These are the live variables passed into GLUI ***/
+/** These are the live variables passed into GLUI_Context ****/
 int   wireframe = 0;
 int   obj_type = 1;
 int   segments = 8;
@@ -35,7 +35,7 @@ int   counter = 0;
 float scale = 1.0;
 
 /** Pointers to the windows and some of the controls we'll create **/
-GLUI *cmd_line_glui=0, *glui_context;
+GLUI_Context     *cmd_line_context=0, *glui_context;
 GLUI_Checkbox    *checkbox;
 GLUI_Spinner     *spinner, *light0_spinner, *light1_spinner, *scale_spinner;
 GLUI_RadioGroup  *radio;
@@ -64,7 +64,7 @@ GLfloat light1_diffuse[] =  {.9f, .6f, 0.0f, 1.0f};
 GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
 
 /**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
+/* GLUI_Context *control callback                                                 */
 
 void control_cb( int control )
 {
@@ -111,7 +111,7 @@ void control_cb( int control )
 }
 
 /**************************************** pointer_cb() *******************/
-/* GLUI control pointer callback                                         */
+/* GLUI_Context *control pointer callback                                         */
 /* You can also use a function that takes a GLUI_Control pointer  as its */
 /* argument.  This can simplify things sometimes, and reduce the clutter */
 /* of global variables by giving you the control pointer directly.       */
@@ -122,25 +122,24 @@ void pointer_cb( GLUI_Control* control )
 {
   if (control->get_id() == OPEN_CONSOLE_ID ) {
     /****** Make command line window ******/
-    cmd_line_glui = GLUI_Master.create_glui( "Enter command:",
-      0, 50, 500 );
+    cmd_line_context = GLUI_Master.create_glui( "Enter command:", 0, 50, 500 );
     
     cmd_line = new GLUI_CommandLine( 
-      cmd_line_glui, "Command (try 'exit'):", NULL, -1, pointer_cb );
+      cmd_line_context, "Command (try 'exit'):", NULL, -1, pointer_cb );
     cmd_line->set_w( 400 );  /** Widen 'command line' control **/
 
-    GLUI_Panel *panel = new GLUI_Panel(cmd_line_glui,"", GLUI_PANEL_NONE);
+    GLUI_Panel *panel = new GLUI_Panel(cmd_line_context,"", GLUI_PANEL_NONE);
     new GLUI_Button(panel, "Clear History", CMD_HIST_RESET_ID, pointer_cb);
     new GLUI_Column(panel, false);
     new GLUI_Button(panel, "Close", CMD_CLOSE_ID, pointer_cb);
     
-    cmd_line_glui->set_main_gfx_window( main_window );
+    cmd_line_context->set_main_gfx_window( main_window );
 
     control->disable();
   }
   else if ( control->get_id() == CMD_CLOSE_ID ) {
     open_console_btn->enable();
-    control->glui->close();
+    control->context->close();
   }
   else if ( control == cmd_line ) {
     /*** User typed text into the 'command line' window ***/
@@ -204,7 +203,7 @@ void myGlutIdle( void )
   glutPostRedisplay();
 
   /****************************************************************/
-  /*            This demonstrates GLUI::sync_live()               */
+  /*            This demonstrates GLUI_Context *::sync_live()               */
   /*   We change the value of a variable that is 'live' to some   */
   /*   control.  We then call sync_live, and the control          */
   /*   associated with that variable is automatically updated     */
@@ -275,7 +274,7 @@ void myGlutDisplay( void )
 
   /*** Now we render object, using the variables 'obj_type', 'segments', and
     'wireframe'.  These are _live_ variables, which are transparently 
-    updated by GLUI ***/
+    updated by GLUI_Context ***/
   
   if ( obj_type == 0 ) {
     if ( wireframe )      
@@ -329,7 +328,7 @@ int main(int argc, char* argv[])
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
  
-  main_window = glutCreateWindow( "GLUI Example 3" );
+  main_window = glutCreateWindow( "GLUI_Context *Example 3" );
   glutDisplayFunc( myGlutDisplay );
   glutReshapeFunc( myGlutReshape );  
   glutKeyboardFunc( myGlutKeyboard );
@@ -359,14 +358,14 @@ int main(int argc, char* argv[])
   glEnable(GL_DEPTH_TEST);
 
   /****************************************/
-  /*         Here's the GLUI code         */
+  /*         Here's the GLUI_Context *code         */
   /****************************************/
 
-  printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
+  printf( "GLUI_Context *version: %3.2f\n", GLUI_Master.get_version() );
 
-  glui_context = GLUI_Master.create_glui( "GLUI", 0, 400, 50 ); /* name, flags,
+  glui_context = GLUI_Master.create_glui( "GLUI_Context *", 0, 400, 50 ); /* name, flags,
 							   x, and y */
-  new GLUI_StaticText( glui_context, "GLUI Example 3" ); 
+  new GLUI_StaticText( glui_context, "GLUI_Context *Example 3" ); 
   obj_panel = new GLUI_Panel(glui_context, "Object" );
 
   /***** Control for the object type *****/
@@ -429,11 +428,11 @@ int main(int argc, char* argv[])
 
   new GLUI_Button(glui_context, "Quit", 0,(GLUI_Update_CB)exit );
 
-  /**** Link windows to GLUI, and register idle callback ******/
+  /**** Link windows to GLUI_Context *, and register idle callback ******/
   
   glui_context->set_main_gfx_window( main_window );
 
-  /* We register the idle callback with GLUI, not with GLUT */
+  /* We register the idle callback with GLUI_Context *, not with GLUT */
   GLUI_Master.set_glutIdleFunc( myGlutIdle );
 
   /**** Regular GLUT main loop ****/  

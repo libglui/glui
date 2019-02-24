@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_spinner.cpp - GLUI_Spinner class
@@ -260,29 +260,29 @@ namespace glui {
       if ( enabled ) {
         /*** Draw the up arrow either pressed or unrpessed ***/
         if ( state == GLUI_SPINNER_STATE_UP OR state == GLUI_SPINNER_STATE_BOTH )
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_ON,
+          context->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_ON,
                                   w-GLUI_SPINNER_ARROW_WIDTH-1,
                                   GLUI_SPINNER_ARROW_Y);
         else
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_OFF,
+          context->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_OFF,
                                   w-GLUI_SPINNER_ARROW_WIDTH-1,
                                   GLUI_SPINNER_ARROW_Y);
 
         /*** Draw the down arrow either pressed or unrpessed ***/
         if (state == GLUI_SPINNER_STATE_DOWN OR state == GLUI_SPINNER_STATE_BOTH)
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_ON,
+          context->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_ON,
                                   w-GLUI_SPINNER_ARROW_WIDTH-1,
                                   GLUI_SPINNER_ARROW_HEIGHT+GLUI_SPINNER_ARROW_Y);
         else
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_OFF,
+          context->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_OFF,
                                   w-GLUI_SPINNER_ARROW_WIDTH-1,
                                   GLUI_SPINNER_ARROW_HEIGHT+GLUI_SPINNER_ARROW_Y);
       }
       else {  /**** The spinner is disabled ****/
-        glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_DIS,
+        context->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_UP_DIS,
                                 w-GLUI_SPINNER_ARROW_WIDTH-1,
                                 GLUI_SPINNER_ARROW_Y);
-        glui->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_DIS,
+        context->std_bitmaps.draw( GLUI_STDBITMAP_SPINNER_DOWN_DIS,
                                 w-GLUI_SPINNER_ARROW_WIDTH-1,
                                 GLUI_SPINNER_ARROW_HEIGHT+GLUI_SPINNER_ARROW_Y);
       }
@@ -293,7 +293,7 @@ namespace glui {
       glLineStipple( 1, 0x5555 );
     }
     else {
-      glColor3ubv( glui->bkgd_color );
+      glColor3ubv( context->bkgd_color );
     }
 
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -408,10 +408,10 @@ namespace glui {
     increase_growth();
 
     modifier_factor = 1.0;
-    if ( glui ) {
-      if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT )
+    if (context) {
+      if ( context->curr_modifiers & GLUT_ACTIVE_SHIFT )
         modifier_factor = 100.0f;
-      else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL )
+      else if ( context->curr_modifiers & GLUT_ACTIVE_CTRL )
         modifier_factor = .01f;
     }
 
@@ -439,10 +439,10 @@ namespace glui {
     /* int delta_x;              */
 
     modifier_factor = 1.0f;
-    if ( glui ) {
-      if ( glui->curr_modifiers & GLUT_ACTIVE_SHIFT )
+    if (context) {
+      if ( context->curr_modifiers & GLUT_ACTIVE_SHIFT )
         modifier_factor = 100.0f;
-      else if ( glui->curr_modifiers & GLUT_ACTIVE_CTRL )
+      else if ( context->curr_modifiers & GLUT_ACTIVE_CTRL )
         modifier_factor = .01f;
     }
 

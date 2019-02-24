@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_list.cpp - GLUI_List control class
@@ -107,8 +107,8 @@ namespace glui {
 
     tmp_line = find_line( local_x-x_abs, local_y-y_abs-5 );
     if ( tmp_line == -1 ) {
-      if ( glui )
-        glui->deactivate_current_control(  );
+      if (context)
+        context->deactivate_current_control(  );
       return false;
     }
 
@@ -371,7 +371,7 @@ namespace glui {
 
   int    GLUI_List::special_handler( int key,int modifiers )
   {
-    if ( NOT glui )
+    if (!context)
       return false;
 
     if ( key == GLUT_KEY_DOWN ) {
@@ -399,7 +399,7 @@ namespace glui {
 
   void   GLUI_List::update_size( void )
   {
-    if ( NOT glui )
+    if (!context)
       return;
 
     if ( w < GLUI_LIST_MIN_TEXT_WIDTH )
@@ -426,8 +426,8 @@ namespace glui {
       //    do_selection( id );
       last_live_int = id;
 
-      if( glui )
-        glui->post_update_main_gfx();
+      if(context)
+        context->post_update_main_gfx();
     }
     num_lines++;
     if (scrollbar)

@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_textbox.cpp - GLUI_TextBox control class
@@ -99,8 +99,8 @@ namespace glui {
 
     tmp_insertion_pt = find_insertion_pt( local_x, local_y );
     if ( tmp_insertion_pt == -1 ) {
-      if ( glui )
-        glui->deactivate_current_control(  );
+      if (context)
+        context->deactivate_current_control(  );
       return false;
     }
 
@@ -160,7 +160,7 @@ namespace glui {
     int regular_key;
     /* int has_selection;              */
 
-    if ( NOT glui )
+    if (!context)
       return false;
 
     regular_key = false;
@@ -168,7 +168,7 @@ namespace glui {
     /*  has_selection = (sel_start != sel_end);              */
 
     if ( key  == CTRL('[')) {         /* ESCAPE */
-      glui->deactivate_current_control();
+      context->deactivate_current_control();
       return true;
     }
     else if ( (key == 127 AND !ctrl_down) OR  /* FORWARD DELETE */
@@ -339,7 +339,7 @@ namespace glui {
   {
     active = false;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     sel_start = sel_end = insertion_pt = -1;
@@ -852,7 +852,7 @@ namespace glui {
   int    GLUI_TextBox::special_handler( int key,int modifiers )
   {
     int tmp_insertion_pt;
-    if ( NOT glui )
+    if (!context)
       return false;
 
     if ( key == GLUT_KEY_DOWN ) {
@@ -988,7 +988,7 @@ namespace glui {
 
   void   GLUI_TextBox::update_size( void )
   {
-    if ( NOT glui )
+    if (!context)
       return;
 
     if ( w < GLUI_TEXTBOX_MIN_TEXT_WIDTH )

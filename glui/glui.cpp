@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui.cpp
@@ -35,7 +35,7 @@ namespace glui {
   /**
      Note: moving this routine here from glui_add_controls.cpp prevents the linker
      from touching glui_add_controls.o in non-deprecated programs, which
-     descreases the linked size of small GLUI programs substantially (100K+). (OSL 2006/06)
+     descreases the linked size of small GLUI_Context *programs substantially (100K+). (OSL 2006/06)
   */
   void GLUI_Node::add_child_to_control(GLUI_Node *parent,GLUI_Control *child)
   {
@@ -98,7 +98,7 @@ namespace glui {
 
 
 
-  /*** This object must be used to create a GLUI ***/
+  /*** This object must be used to create a GLUI_Context ****/
 
   GLUI_Master_Object GLUI_Master;
 
@@ -119,7 +119,7 @@ namespace glui {
   }
 
 
-  /************************************************ GLUI::GLUI() **********/
+  /************************************************ GLUI_Context *::GLUI_Context *() **********/
 
   int GLUI_Context::init(const char *text, long flags, int x, int y, int parent_window)
   {
@@ -227,7 +227,7 @@ namespace glui {
     if (context) {
       context->display();
       /*
-        Do not do anything after the above line, b/c the GLUI
+        Do not do anything after the above line, b/c the GLUI_Context *
         window might have just closed itself
       */
     }
@@ -264,7 +264,7 @@ namespace glui {
       }
     }
     else {
-      /***  A standalone GLUI window  ***/
+      /***  A standalone GLUI_Context *window  ***/
 
       context = GLUI_Master.find_glui_by_window_id(current_window);
 
@@ -288,10 +288,10 @@ namespace glui {
     /*printf("key: %d\n", current_window);          */
 
     if (glut_window) { /**  Was event in a GLUT window?  **/
-      if (GLUI_Master.active_control_glui AND GLUI_Master.active_control) {
-        glutSetWindow(GLUI_Master.active_control_glui->get_glut_window_id());
+      if (GLUI_Master.active_control_context AND GLUI_Master.active_control) {
+        glutSetWindow(GLUI_Master.active_control_context->get_glut_window_id());
 
-        GLUI_Master.active_control_glui->keyboard(key,x,y);
+        GLUI_Master.active_control_context->keyboard(key,x,y);
         finish_drawing();
 
         glutSetWindow(current_window);
@@ -301,7 +301,7 @@ namespace glui {
           glut_window->glut_keyboard_CB(key, x, y);
       }
     }
-    else {   /***  Nope, event was in a standalone GLUI window  **/
+    else {   /***  Nope, event was in a standalone GLUI_Context *window  **/
       context = GLUI_Master.find_glui_by_window_id(glutGetWindow());
 
       if (context) {
@@ -325,11 +325,11 @@ namespace glui {
 
     if (glut_window) /**  Was event in a GLUT window?  **/
       {
-        if (GLUI_Master.active_control_glui AND GLUI_Master.active_control)
+        if (GLUI_Master.active_control_context AND GLUI_Master.active_control)
           {
-            glutSetWindow(GLUI_Master.active_control_glui->get_glut_window_id());
+            glutSetWindow(GLUI_Master.active_control_context->get_glut_window_id());
 
-            GLUI_Master.active_control_glui->special(key,x,y);
+            GLUI_Master.active_control_context->special(key,x,y);
             finish_drawing();
 
             glutSetWindow(current_window);
@@ -340,7 +340,7 @@ namespace glui {
               glut_window->glut_special_CB(key, x, y);
           }
       }
-    else /***  Nope, event was in a standalone GLUI window  **/
+    else /***  Nope, event was in a standalone GLUI_Context *window  **/
       {
         context = GLUI_Master.find_glui_by_window_id(glutGetWindow());
 
@@ -364,14 +364,14 @@ namespace glui {
     glut_window = GLUI_Master.find_glut_window(current_window);
 
     if (glut_window) { /**  Was event in a GLUT window?  **/
-      if (GLUI_Master.active_control_glui != NULL)
-        GLUI_Master.active_control_glui->deactivate_current_control();
+      if (GLUI_Master.active_control_context != NULL)
+        GLUI_Master.active_control_context->deactivate_current_control();
 
       if (glut_window->glut_mouse_CB)
         glut_window->glut_mouse_CB(button, state, x, y);
       finish_drawing();
     }
-    else {               /**  Nope - event was in a GLUI standalone window  **/
+    else {               /**  Nope - event was in a GLUI_Context *standalone window  **/
       context = GLUI_Master.find_glui_by_window_id(glutGetWindow());
       if (context) {
         context->passive_motion(0,0);
@@ -433,7 +433,7 @@ namespace glui {
   {
     GLUI_Context *context;
 
-    /*  printf("IN GLUI VISIBILITY()\n");          */
+    /*  printf("IN GLUI_Context *VISIBILITY()\n");          */
     /*  fflush(stdout);          */
 
     context = GLUI_Master.find_glui_by_window_id(glutGetWindow());
@@ -445,7 +445,7 @@ namespace glui {
 
 
   /********************************************** glui_idle_func() ********/
-  /* Send idle event to each glui, then to the main window            */
+  /* Send idle event to each context, then to the main window            */
 
   void glui_idle_func(void)
   {
@@ -582,7 +582,7 @@ namespace glui {
       return;
     }
 
-    /*******    Draw GLUI window     ******/
+    /*******    Draw GLUI_Context *window     ******/
     glClearColor(bkgd_color[0] / 255.0f,
                   bkgd_color[1] / 255.0f,
                   bkgd_color[2] / 255.0f,
@@ -1212,9 +1212,9 @@ namespace glui {
   {
     /** Are we not activating a control in the same window as the
         previous active control? */
-    if (GLUI_Master.active_control_glui AND
-         this != (GLUI_Main*) GLUI_Master.active_control_glui) {
-      GLUI_Master.active_control_glui->deactivate_current_control();
+    if (GLUI_Master.active_control_context AND
+         this != (GLUI_Main*) GLUI_Master.active_control_context) {
+      GLUI_Master.active_control_context->deactivate_current_control();
     }
 
     /*******      Now activate it      *****/
@@ -1234,7 +1234,7 @@ namespace glui {
 
     /*  printf("activate: %d\n", glutGetWindow());          */
     GLUI_Master.active_control      = active_control;
-    GLUI_Master.active_control_glui = (GLUI_Context *) this;
+    GLUI_Master.active_control_context = (GLUI_Context *) this;
   }
 
 
@@ -1265,7 +1265,7 @@ namespace glui {
 
     /*  printf("deactivate: %d\n", glutGetWindow());          */
     GLUI_Master.active_control      = NULL;
-    GLUI_Master.active_control_glui = NULL;
+    GLUI_Master.active_control_context = NULL;
   }
 
 
@@ -1490,9 +1490,9 @@ namespace glui {
 
     this->unlink();
 
-    if (GLUI_Master.active_control_glui == this) {
+    if (GLUI_Master.active_control_context == this) {
       GLUI_Master.active_control      = NULL;
-      GLUI_Master.active_control_glui = NULL;
+      GLUI_Master.active_control_context = NULL;
     }
 
     if (parent_window != -1) {
@@ -1731,10 +1731,10 @@ namespace glui {
 
     current_window = glutGetWindow();
 
-    if (GLUI_Master.active_control_glui AND GLUI_Master.active_control) {
-      glutSetWindow(GLUI_Master.active_control_glui->get_glut_window_id());
+    if (GLUI_Master.active_control_context AND GLUI_Master.active_control) {
+      glutSetWindow(GLUI_Master.active_control_context->get_glut_window_id());
 
-      GLUI_Master.active_control_glui->keyboard(key,x,y);
+      GLUI_Master.active_control_context->keyboard(key,x,y);
 
       glutSetWindow(current_window);
     }
@@ -1766,8 +1766,8 @@ namespace glui {
 
     /**  If clicking in the main area of a window w/subwindows,
          deactivate any current control  **/
-    if (GLUI_Master.active_control_glui != NULL)
-      GLUI_Master.active_control_glui->deactivate_current_control();
+    if (GLUI_Master.active_control_context != NULL)
+      GLUI_Master.active_control_context->deactivate_current_control();
 
     /***   Now pass on the mouse event   ***/
 
@@ -1797,8 +1797,8 @@ namespace glui {
 
     /**  If clicking in the main area of a window w/subwindows,
          deactivate any current control  **/
-    if (GLUI_Master.active_control_glui != NULL)
-      GLUI_Master.active_control_glui->deactivate_current_control();
+    if (GLUI_Master.active_control_context != NULL)
+      GLUI_Master.active_control_context->deactivate_current_control();
 
 
     /***   Now pass on the mouse event   ***/
@@ -1957,12 +1957,12 @@ namespace glui {
 
 
     if (TEST_AND(this->flags, GLUI_SUBWINDOW)) {
-      /*** GLUI subwindow ***/
+      /*** GLUI_Context *subwindow ***/
 
       check_subwindow_position();
     }
     else {
-      /*** Standalone GLUI window ***/
+      /*** Standalone GLUI_Context *window ***/
 
       glutReshapeWindow(this->h, this->w);
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_statictext.cpp - GLUI_StaticText Control
@@ -67,7 +67,7 @@ namespace glui {
   {
     int text_size;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     text_size = string_width( name );

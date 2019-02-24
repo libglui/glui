@@ -2,7 +2,7 @@
 
   example4.cpp
 
-  A GLUI program demonstrating nested columns
+  A GLUI_Context *program demonstrating nested columns
 
   -----------------------------------------------------------------------
 	   
@@ -19,7 +19,7 @@ float xy_aspect;
 int   last_x, last_y;
 float rotationX = 0.0, rotationY = 0.0;
 
-/** These are the live variables passed into GLUI ***/
+/** These are the live variables passed into GLUI_Context ****/
 int   wireframe = 0;
 int   obj_type = 1;
 int   segments = 8;
@@ -34,7 +34,7 @@ int   show_sphere=1;
 int   show_torus=1;
 
 /** Pointers to the windows and some of the controls we'll create **/
-GLUI *glui_context;
+GLUI_Context    *glui_context;
 GLUI_Checkbox   *checkbox;
 GLUI_Spinner    *spinner, *light0_spinner, *light1_spinner;
 GLUI_RadioGroup *radio;
@@ -57,7 +57,7 @@ GLfloat light1_diffuse[] =  {.9f, .6f, 0.0f, 1.0f};
 GLfloat light1_position[] = {-1.0f, -1.0f, 1.0f, 0.0f};
 
 /**************************************** control_cb() *******************/
-/* GLUI control callback                                                 */
+/* GLUI_Context *control callback                                                 */
 
 void control_cb( int control )
 {
@@ -210,7 +210,7 @@ void myGlutDisplay( void )
 
   /*** Now we render object, using the variables 'obj_type', 'segments', and
     'wireframe'.  These are _live_ variables, which are transparently 
-    updated by GLUI ***/
+    updated by GLUI_Context ****/
 
   glPushMatrix();
   glTranslatef( -.5, 0.0, 0.0 );
@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
  
-  main_window = glutCreateWindow( "GLUI Example 4" );
+  main_window = glutCreateWindow( "GLUI_Context *Example 4" );
   glutDisplayFunc( myGlutDisplay );
   glutReshapeFunc( myGlutReshape );  
   glutKeyboardFunc( myGlutKeyboard );
@@ -281,10 +281,10 @@ int main(int argc, char* argv[])
   glEnable(GL_DEPTH_TEST);
 
   /****************************************/
-  /*         Here's the GLUI code         */
+  /*         Here's the GLUI_Context *code         */
   /****************************************/
 
-  printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
+  printf( "GLUI_version: %3.2f\n", GLUI_Master.get_version() );
 
   glui_context = GLUI_Master.create_glui( "GLUI", 0, 400, 50 ); /* name, flags,
 							   x, and y */
@@ -345,7 +345,7 @@ int main(int argc, char* argv[])
   new GLUI_Button( glui_context, "Quit", 0,(GLUI_Update_CB)exit );
 
 
-  /**** Link windows to GLUI ******/
+  /**** Link windows to GLUI_Context *******/
   
   glui_context->set_main_gfx_window( main_window );
 

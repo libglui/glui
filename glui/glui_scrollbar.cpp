@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_scrollbar.cpp - GLUI_Scrollbar class
@@ -334,10 +334,10 @@ namespace glui {
         return; /* tri is NULL */
       }
 
-    glColor3ubv(glui->bkgd_color);
+    glColor3ubv(context->bkgd_color);
     glRecti(x,y,x+GLUI_SCROLL_ARROW_WIDTH,y+GLUI_SCROLL_ARROW_HEIGHT);
     if (!offset) {
-      glui->draw_raised_box(x,y+1,GLUI_SCROLL_ARROW_WIDTH-1,GLUI_SCROLL_ARROW_HEIGHT-1);
+      context->draw_raised_box(x,y+1,GLUI_SCROLL_ARROW_WIDTH-1,GLUI_SCROLL_ARROW_HEIGHT-1);
     } else {
       glColor3ub(128,128,128);
       glBegin(GL_LINE_LOOP);
@@ -426,9 +426,9 @@ namespace glui {
   void GLUI_Scrollbar::draw_scroll_box(int x, int y, int w, int h)
   {
     if (!enabled) return;
-    glColor3ubv(glui->bkgd_color);
+    glColor3ubv(context->bkgd_color);
     glRecti(x,y,x+w,y+h);
-    glui->draw_raised_box(x,y, w-1, h-1);
+    context->draw_raised_box(x,y, w-1, h-1);
 
     if (active) {
       glEnable( GL_LINE_STIPPLE );

@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  A simple GLUT program using the GLUI User Interface Library
+  A simple GLUT program using the GLUI_Context *User Interface Library
 
   This program sets up a checkbox and a spinner, both with live variables.
   No callbacks are used.
@@ -16,7 +16,7 @@
 
 using namespace glui;
 
-/** These are the live variables passed into GLUI ***/
+/** These are the live variables passed into GLUI_Context ****/
 int   wireframe = 0;
 int   segments = 8;
 int   main_window;
@@ -73,7 +73,7 @@ void myGlutDisplay( void )
 
   /*** Now we render object, using the variables 'segments' and
     'wireframe'.  These are _live_ variables, which are transparently 
-    updated by GLUI ***/
+    updated by GLUI_Context ****/
   
   if ( wireframe )
     glutWireTorus( .2,.5,16,segments );
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
  
-  main_window = glutCreateWindow( "GLUI Example 1" );
+  main_window = glutCreateWindow( "GLUI_Context *Example 1" );
   glutDisplayFunc( myGlutDisplay );
   glutReshapeFunc( myGlutReshape );  
 
@@ -123,17 +123,17 @@ int main(int argc, char* argv[])
 
 
   /****************************************/
-  /*         Here's the GLUI code         */
+  /*         Here's the GLUI_Context *code         */
   /****************************************/
   
-  GLUI *glui = GLUI_Master.create_glui( "GLUI" );
-  new GLUI_Checkbox( glui, "Wireframe", &wireframe );
-  (new GLUI_Spinner( glui, "Segments:", &segments ))
+  GLUI_Context *context = GLUI_Master.create_glui( "GLUI" );
+  new GLUI_Checkbox( context, "Wireframe", &wireframe );
+  (new GLUI_Spinner( context, "Segments:", &segments ))
     ->set_int_limits( 3, 60 ); 
    
-  glui->set_main_gfx_window( main_window );
+  context->set_main_gfx_window( main_window );
 
-  /* We register the idle callback with GLUI, *not* with GLUT */
+  /* We register the idle callback with GLUI_Context *, *not* with GLUT */
   GLUI_Master.set_glutIdleFunc( myGlutIdle ); 
 
   glutMainLoop();

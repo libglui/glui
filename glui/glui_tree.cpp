@@ -1,6 +1,6 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui_panel.cpp - GLUI_Panel control class
@@ -74,7 +74,7 @@ namespace glui {
       ((GLUI_Control*) child_head)->unhide_internal( true );
     }
 
-    glui->refresh();
+    context->refresh();
   }
 
 
@@ -82,7 +82,7 @@ namespace glui {
 
   void    GLUI_Tree::close( void )
   {
-    if ( NOT glui )
+    if (!context)
       return;
 
     if ( NOT is_open )
@@ -103,7 +103,7 @@ namespace glui {
 
     this->h = GLUI_DEFAULT_CONTROL_HEIGHT + 7;
 
-    glui->refresh();
+    context->refresh();
   }
 
 
@@ -175,10 +175,10 @@ namespace glui {
     bottom = 3+16;
     delta_x = 0;
 
-    glui->draw_raised_box( left, top, 16, 16 );
+    context->draw_raised_box( left, top, 16, 16 );
 
-    if ( glui )
-      glColor3ubv(glui->bkgd_color);
+    if (context)
+      glColor3ubv(context->bkgd_color);
     glDisable( GL_CULL_FACE );
     glBegin( GL_QUADS );
     glVertex2i( left+17, top+1 );      glVertex2i( right-1, top+1 );
@@ -249,7 +249,7 @@ namespace glui {
   {
     int text_size = 0, delta_x = 0;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     text_size = string_width(name);

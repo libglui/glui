@@ -1,9 +1,9 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
-     glui_mouse_iaction - GLUI Mouse Interaction control class
+     glui_mouse_iaction - GLUI_Context *Mouse Interaction control class
 
 
           --------------------------------------------------
@@ -42,7 +42,7 @@ namespace glui {
 
     /*	iaction_mouse_down_handler( local_x, local_y );              */
     iaction_mouse_down_handler( local_x-x_abs, local_y-y_abs );
-    /*local_x-x_abs, ((glui->h-local_y)-y_abs) );              */
+    /*local_x-x_abs, ((context->h-local_y)-y_abs) );              */
     redraw();
 
     return false;
@@ -68,8 +68,8 @@ namespace glui {
     redraw();
 
     /** Tell the main graphics window to update iteself **/
-    if( glui )
-      glui->post_update_main_gfx();
+    if(context)
+      context->post_update_main_gfx();
 
     execute_callback();
 
@@ -100,7 +100,7 @@ namespace glui {
 
   void   GLUI_Mouse_Interaction::update_size( void )
   {
-    if ( NOT glui )
+    if (!context)
       return;
 
     int text_width = string_width( this->name );
@@ -174,7 +174,7 @@ namespace glui {
     /***   Setup and draw the interaction control's perspective elements   ***/
 
     /***  Set the viewport to just the square of the drawing area  ***/
-    /* glViewport( this->x_abs , glui->main_panel->h - this->y_abs - this->h,*/
+    /* glViewport( this->x_abs , context->main_panel->h - this->y_abs - this->h,*/
     /*glViewport( this->x_abs+1+(this->w/2-viewport_size/2),
       this->h-this->y_abs-viewport_size-1,
       viewport_size, viewport_size );*/
@@ -204,8 +204,8 @@ namespace glui {
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix();
 
-    glui->set_viewport();
-    glui->set_ortho_projection();
+    context->set_viewport();
+    context->set_ortho_projection();
 
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix();

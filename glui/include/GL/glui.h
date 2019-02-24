@@ -1,10 +1,10 @@
 /****************************************************************************
 
-  GLUI User Interface Toolkit
+  GLUI_Context *User Interface Toolkit
   ---------------------------
 
      glui.h - Main (and only) external header for 
-        GLUI User Interface Toolkit
+        GLUI_Context *User Interface Toolkit
 
           --------------------------------------------------
 
@@ -39,14 +39,14 @@
 
 #if defined(GLUI_FREEGLUT)
 
-// FreeGLUT does not yet work perfectly with GLUI
+// FreeGLUT does not yet work perfectly with GLUI_Context *
 //  - use at your own risk.
   
 #include <GL/freeglut.h>
 
 #elif defined(GLUI_OPENGLUT)
 
-// OpenGLUT does not yet work properly with GLUI
+// OpenGLUT does not yet work properly with GLUI_Context *
 //  - use at your own risk.
   
 #include <GL/openglut.h>
@@ -66,23 +66,23 @@
 #include <string>
 #include <vector>
 
-/* GLUI API shared library export/import declarations. */
+/* GLUI_API shared library export/import declarations. */
 #if defined(_WIN32)
 # ifdef GLUI_BUILDING_LIB
-#  ifdef GLUIDLL
-#   define GLUIAPI __declspec(dllexport)
+#  ifdef GLUI_Context *DLL
+#   define GLUI_API __declspec(dllexport)
 #  else
-#   define GLUIAPI
+#   define GLUI_API
 #  endif
 # else
-#  ifdef GLUIDLL
-#   define GLUIAPI __declspec(dllimport)
+#  ifdef GLUI_Context *DLL
+#   define GLUI_API __declspec(dllimport)
 #  else
-#   define GLUIAPI
+#   define GLUI_API
 #  endif
 # endif
 #else
-#define GLUIAPI
+#define GLUI_API
 #endif
 
 namespace glui {
@@ -198,7 +198,7 @@ namespace glui {
 #define GLUI_TREEPANEL_HIERARCHY_NUMERICDOT  64 // display hierarchy in 1.3.2 (etc... ) format
 #define GLUI_TREEPANEL_HIERARCHY_LEVEL_ONLY 128 // display hierarchy as only the level depth
  
-  /******************* GLUI Scrollbar Defaults - JVK ***************************/
+  /******************* GLUI_Context *Scrollbar Defaults - JVK ***************************/
 #define  GLUI_SCROLL_ARROW_WIDTH     16
 #define  GLUI_SCROLL_ARROW_HEIGHT    16
 #define  GLUI_SCROLL_BOX_MIN_HEIGHT   5
@@ -236,7 +236,7 @@ namespace glui {
   /************ A string type for us to use **********/
   
   typedef std::string GLUI_String;
-  GLUIAPI GLUI_String& glui_format_str(GLUI_String &str, const char* fmt, ...);
+  GLUI_API GLUI_String& glui_format_str(GLUI_String &str, const char* fmt, ...);
 
   /********* Pre-declare classes as needed *********/
 
@@ -256,7 +256,7 @@ namespace glui {
 
   class Arcball;
 
-  /*** Flags for GLUI class constructor ***/
+  /*** Flags for GLUI_Context *class constructor ***/
 #define  GLUI_SUBWINDOW          ((long)(1<<1))
 #define  GLUI_SUBWINDOW_TOP      ((long)(1<<2))
 #define  GLUI_SUBWINDOW_BOTTOM   ((long)(1<<3))
@@ -289,7 +289,7 @@ namespace glui {
      like a GLUI_Update_CB function pointer--which takes an int;
      and a GLUI_Control_CB function pointer--which takes a GUI_Control object.
   */
-  class GLUIAPI CallBack
+  class GLUI_API CallBack
   {
   public:
     CallBack() : idCB(0),objCB(0) {}
@@ -315,14 +315,14 @@ namespace glui {
   class GLUI_Control;
 
   /**
-     GLUI_Node is a node in a sort of tree of GLUI controls.
+     GLUI_Node is a node in a sort of tree of GLUI_Context *controls.
      Each GLUI_Node has a list of siblings (in a circular list)
      and a linked list of children.
  
      Everything onscreen is a GLUI_Node--windows, buttons, etc.
      The nodes are traversed for event processing, sizing, redraws, etc.
   */
-  class GLUIAPI GLUI_Node 
+  class GLUI_API GLUI_Node 
   {
     friend class GLUI_Tree;     /* JVK */
     friend class GLUI_Rollout;
@@ -405,7 +405,7 @@ namespace glui {
      to represent small textures like checkboxes, arrows, etc.
      via the GLUI_StdBitmaps class.
   */
-  class GLUIAPI GLUI_Bitmap 
+  class GLUI_API GLUI_Bitmap 
   {
     friend class GLUI_StdBitmaps;
 
@@ -436,7 +436,7 @@ namespace glui {
      Keeps an array of GLUI_Bitmap objects to represent all the 
      images used in the UI: checkboxes, arrows, etc.
   */
-  class GLUIAPI GLUI_StdBitmaps
+  class GLUI_API GLUI_StdBitmaps
   {
   public:
     GLUI_StdBitmaps(); 
@@ -458,7 +458,7 @@ namespace glui {
 
   /************************************************************/
   /*                                                          */
-  /*                     Master GLUI Class                    */
+  /*                     Master GLUI_Context *Class                    */
   /*                                                          */
   /************************************************************/
 
@@ -466,7 +466,7 @@ namespace glui {
      The master manages our interaction with GLUT.
      There's only one GLUI_Master_Object.
   */
-  class GLUIAPI GLUI_Master_Object 
+  class GLUI_API GLUI_Master_Object 
   {
 
     friend void glui_idle_func();
@@ -478,7 +478,7 @@ namespace glui {
 
     GLUI_Node     gluis;
     GLUI_Control *active_control, *curr_left_button_glut_menu;
-    GLUI_Context *active_control_glui;
+    GLUI_Context *active_control_context;
     int           glui_id_counter;
 
     GLUI_Glut_Window   *find_glut_window( int window_id );
@@ -548,7 +548,7 @@ namespace glui {
   /**
      This is the only GLUI_Master_Object in existence.
   */
-  extern GLUIAPI GLUI_Master_Object GLUI_Master;
+  extern GLUI_API GLUI_Master_Object GLUI_Master;
 
   /************************************************************/
   /*                                                          */
@@ -562,9 +562,9 @@ namespace glui {
      (see GLUI_Master_Object::set_glutKeyboardFunc).
  
      This entire approach seems to be superceded by the "subwindow" flavor
-     of GLUI.
+     of GLUI_Context *.
   */
-  class GLUIAPI GLUI_Glut_Window : public GLUI_Node 
+  class GLUI_API GLUI_Glut_Window : public GLUI_Node 
   {
   public:
     GLUI_Glut_Window();
@@ -585,13 +585,13 @@ namespace glui {
 
   /************************************************************/
   /*                                                          */
-  /*       Main Window GLUI class (not user-level)            */
+  /*       Main Window GLUI_Context *class (not user-level)            */
   /*                                                          */
   /************************************************************/
 
   /**
      A GLUI_Main handles GLUT events for one window, routing them to the 
-     appropriate controls.  The central user-visible "GLUI" class 
+     appropriate controls.  The central user-visible "GLUI_Context *" class 
      inherits from this class; users should not allocate GLUT_Main objects.
   
      There's a separate GLUI_Main object for:
@@ -602,14 +602,14 @@ namespace glui {
      A better name for this class might be "GLUI_Environment";
      this class provides the window-level context for every control.
   */
-  class GLUIAPI GLUI_Main : public GLUI_Node 
+  class GLUI_API GLUI_Main : public GLUI_Node 
   {
     /********** Friend classes *************/
 
     friend class GLUI_Control;
     friend class GLUI_Rotation;
     friend class GLUI_Translation;
-    friend class GLUI;
+    friend class GLUI_Context;
     friend class GLUI_Master_Object;
 
     /*********** Friend functions **********/
@@ -754,7 +754,7 @@ namespace glui {
      should be directly accessed by users (they should be protected,
      not public); only subclasses.
   */
-  class GLUIAPI GLUI_Control : public GLUI_Node 
+  class GLUI_API GLUI_Control : public GLUI_Node 
   {
   public:
 
@@ -949,7 +949,7 @@ namespace glui {
      can be clicked.  When clicked, a button
      calls its CallBack callback with its ID.
   */
-  class GLUIAPI GLUI_Button : public GLUI_Control
+  class GLUI_API GLUI_Button : public GLUI_Control
   {
   public:
     bool currently_inside;
@@ -968,7 +968,7 @@ namespace glui {
     /**
        Create a new button.
  
-       @param parent The panel our object is inside; or the main GLUI object.
+       @param parent The panel our object is inside; or the main GLUI_Context *object.
        @param name The text inside the button.
        @param id Optional ID number, to pass to the optional callback function.
        @param callback Optional callback function, taking either the int ID or control.
@@ -998,7 +998,7 @@ namespace glui {
      A checkbox, which can be checked on or off.  Can be linked
      to an int value, which gets 1 for on and 0 for off.
   */
-  class GLUIAPI GLUI_Checkbox : public GLUI_Control
+  class GLUI_API GLUI_Checkbox : public GLUI_Control
   {
   public:
     int  orig_value;
@@ -1021,7 +1021,7 @@ namespace glui {
     /**
        Create a new checkbox object.
  
-       @param parent The panel our object is inside; or the main GLUI object.
+       @param parent The panel our object is inside; or the main GLUI_Context *object.
        @param name Label next to our checkbox.
        @param value_ptr Optional integer value to attach to this checkbox.  When the 
        checkbox is checked or unchecked, *value_ptr will also be changed. ("Live Vars").
@@ -1054,7 +1054,7 @@ namespace glui {
      A GLUI_Column object separates all previous controls
      from subsequent controls with a vertical bar.
   */
-  class GLUIAPI GLUI_Column : public GLUI_Control
+  class GLUI_API GLUI_Column : public GLUI_Control
   {
   public:
     void draw( int x, int y );
@@ -1063,7 +1063,7 @@ namespace glui {
        Create a new column, which separates the previous controls
        from subsequent controls.
  
-       @param parent The panel our object is inside; or the main GLUI object.
+       @param parent The panel our object is inside; or the main GLUI_Context *object.
        @param draw_bar If true, draw a visible bar between new and old controls.
     */
     GLUI_Column( GLUI_Node *parent, int draw_bar = true );
@@ -1088,14 +1088,14 @@ namespace glui {
   /**
      A GLUI_Panel contains a group of related controls.
   */
-  class GLUIAPI GLUI_Panel : public GLUI_Control
+  class GLUI_API GLUI_Panel : public GLUI_Control
   {
   public:
 
     /**
        Create a new panel.  A panel groups together a set of related controls.
  
-       @param parent The outer panel our panel is inside; or the main GLUI object.
+       @param parent The outer panel our panel is inside; or the main GLUI_Context *object.
        @param name The string name at the top of our panel.
        @param type Optional style to display the panel with--GLUI_PANEL_EMBOSSED by default.
        GLUI_PANEL_RAISED causes the panel to appear higher than the surroundings.
@@ -1132,13 +1132,13 @@ namespace glui {
   /**
      A list of files the user can select from.
   */
-  class GLUIAPI GLUI_FileBrowser : public GLUI_Panel
+  class GLUI_API GLUI_FileBrowser : public GLUI_Panel
   {
   public:
     /**
        Create a new list of files the user can select from.
  
-       @param parent The panel our object is inside; or the main GLUI object.
+       @param parent The panel our object is inside; or the main GLUI_Context *object.
        @param name Prompt to give to the user at the top of the file browser.
        @param frame_type Optional style to display the panel with--GLUI_PANEL_EMBOSSED by default.
        GLUI_PANEL_RAISED causes the panel to appear higher than the surroundings.
@@ -1196,7 +1196,7 @@ namespace glui {
      A rollout contains a set of controls,
      like a panel, but can be collapsed to just the name.
   */
-  class GLUIAPI GLUI_Rollout : public GLUI_Panel
+  class GLUI_API GLUI_Rollout : public GLUI_Panel
   {
   public:
 
@@ -1204,7 +1204,7 @@ namespace glui {
        Create a new rollout.  A rollout contains a set of controls,
        like a panel, but can be collapsed to just the name.
  
-       @param parent The panel our object is inside; or the main GLUI object.
+       @param parent The panel our object is inside; or the main GLUI_Context *object.
        @param name String to show at the top of the rollout.
        @param open Optional boolean.  If true (the default), the rollout's controls are displayed.
        If false, the rollout is closed to display only the name.
@@ -1254,7 +1254,7 @@ namespace glui {
   /**
      One collapsible entry in a GLUI_TreePanel.
   */
-  class GLUIAPI GLUI_Tree : public GLUI_Panel
+  class GLUI_API GLUI_Tree : public GLUI_Panel
   {
   public:
     GLUI_Tree(GLUI_Node *parent, const char *name, 
@@ -1354,7 +1354,7 @@ namespace glui {
   
      FIXME: There's an infinite loop in the traversal code (OSL 2006/06)
   */
-  class GLUIAPI GLUI_TreePanel : public GLUI_Panel 
+  class GLUI_API GLUI_TreePanel : public GLUI_Panel 
   {
   public:
     GLUI_TreePanel(GLUI_Node *parent, const char *name,
@@ -1417,7 +1417,7 @@ namespace glui {
 
   /************************************************************/
   /*                                                          */
-  /*                     User-Level GLUI class                */
+  /*                     User-Level GLUI_Context *class                */
   /*                                                          */
   /************************************************************/
 
@@ -1425,13 +1425,13 @@ namespace glui {
   class GLUI_Translation;
 
   /**
-     The main user-visible interface object to GLUI.
+     The main user-visible interface object to GLUI_Context *.
  
   */
-  class GLUIAPI GLUI_Context : public GLUI_Main 
+  class GLUI_API GLUI_Context : public GLUI_Main 
   {
   public:
-    /** DEPRECATED interface for creating new GLUI objects */
+    /** DEPRECATED interface for creating new GLUI_Context *objects */
     int   add_control( GLUI_Control *control ) { return main_panel->add_control(control); }
 
     void  add_column( int draw_bar = true );
@@ -1572,7 +1572,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_EditText : public GLUI_Control
+  class GLUI_API GLUI_EditText : public GLUI_Control
   {
   public:
     int                 has_limits;
@@ -1690,11 +1690,11 @@ namespace glui {
 
 #ifdef _MSC_VER
   // Explicit template instantiation needed for dll
-  template class GLUIAPI std::allocator<GLUI_String>;
-  template class GLUIAPI std::vector<GLUI_String, std::allocator<GLUI_String> >;
+  template class GLUI_API std::allocator<GLUI_String>;
+  template class GLUI_API std::vector<GLUI_String, std::allocator<GLUI_String> >;
 #endif
 
-  class GLUIAPI GLUI_CommandLine : public GLUI_EditText
+  class GLUI_API GLUI_CommandLine : public GLUI_EditText
   {
   public:
     typedef GLUI_EditText Super;
@@ -1746,7 +1746,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_RadioGroup : public GLUI_Control
+  class GLUI_API GLUI_RadioGroup : public GLUI_Control
   {
   public:
     int  num_buttons;
@@ -1783,7 +1783,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_RadioButton : public GLUI_Control
+  class GLUI_API GLUI_RadioButton : public GLUI_Control
   {
   public:
     int orig_value;
@@ -1824,7 +1824,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_Separator : public GLUI_Control
+  class GLUI_API GLUI_Separator : public GLUI_Control
   {
   public:
     void draw( int x, int y );
@@ -1857,7 +1857,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
  
-  class GLUIAPI GLUI_Spinner : public GLUI_Control
+  class GLUI_API GLUI_Spinner : public GLUI_Control
   {
   public:
     // Constructor, no live var
@@ -1950,7 +1950,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_StaticText : public GLUI_Control
+  class GLUI_API GLUI_StaticText : public GLUI_Control
   {
   public:
     void set_text( const char *text );
@@ -1976,10 +1976,10 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_TextBox : public GLUI_Control
+  class GLUI_API GLUI_TextBox : public GLUI_Control
   {
   public:
-    /* GLUI Textbox - JVK */
+    /* GLUI_Context *Textbox - JVK */
     GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
                  bool scroll = false, int id=-1, CallBack callback=CallBack() );
     GLUI_TextBox( GLUI_Node *parent,
@@ -2077,7 +2077,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_List_Item : public GLUI_Node 
+  class GLUI_API GLUI_List_Item : public GLUI_Node 
   {
   public:
     GLUI_String text;
@@ -2090,10 +2090,10 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_List : public GLUI_Control
+  class GLUI_API GLUI_List : public GLUI_Control
   {
   public:
-    /* GLUI List - JVK */
+    /* GLUI_Context *List - JVK */
     GLUI_List( GLUI_Node *parent, bool scroll = false,
                int id=-1, CallBack callback=CallBack() );
     /*, GLUI_Control *object = NULL 
@@ -2195,7 +2195,7 @@ namespace glui {
   /*                                                          */
   /************************************************************/
  
-  class GLUIAPI GLUI_Scrollbar : public GLUI_Control
+  class GLUI_API GLUI_Scrollbar : public GLUI_Control
   {
   public:
     // Constructor, no live var
@@ -2308,14 +2308,14 @@ namespace glui {
   /*                                                          */
   /************************************************************/
 
-  class GLUIAPI GLUI_Listbox_Item : public GLUI_Node 
+  class GLUI_API GLUI_Listbox_Item : public GLUI_Node 
   {
   public:
     GLUI_String text;
     int         id;
   };
 
-  class GLUIAPI GLUI_Listbox : public GLUI_Control
+  class GLUI_API GLUI_Listbox : public GLUI_Control
   {
   public:
     GLUI_String       curr_text;
@@ -2385,7 +2385,7 @@ namespace glui {
   /**
      This is the superclass of translation and rotation widgets.
   */
-  class GLUIAPI GLUI_Mouse_Interaction : public GLUI_Control
+  class GLUI_API GLUI_Mouse_Interaction : public GLUI_Control
   {
   public:
     /*int  get_main_area_size( void ) { return MIN( h-18,  */
@@ -2431,7 +2431,7 @@ namespace glui {
      An onscreen rotation controller--allows the user to interact with
      a 3D rotation via a spaceball-like interface.
   */
-  class GLUIAPI GLUI_Rotation : public GLUI_Mouse_Interaction
+  class GLUI_API GLUI_Rotation : public GLUI_Mouse_Interaction
   {
   public:
     Arcball        *ball;
@@ -2486,7 +2486,7 @@ namespace glui {
      An onscreen translation controller--allows the user to interact with
      a 3D translation.
   */
-  class GLUIAPI GLUI_Translation : public GLUI_Mouse_Interaction
+  class GLUI_API GLUI_Translation : public GLUI_Mouse_Interaction
   {
   public:
     int trans_type;  /* Is this an XY or a Z controller? */
