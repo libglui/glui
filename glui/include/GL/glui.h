@@ -483,22 +483,9 @@ namespace glui {
 
     GLUI_Glut_Window   *find_glut_window( int window_id );
 
-    void           set_glutIdleFunc(void (*f)(void));
+    void set_glutIdleFunc(void (*f)(void));
 
-    /**************
-    void (*glut_keyboard_CB)(unsigned char, int, int);
-    void (*glut_reshape_CB)(int, int);
-    void (*glut_special_CB)(int, int, int);
-    void (*glut_mouse_CB)(int,int,int,int);
-
-    void (*glut_passive_motion_CB)(int,int);
-    void (*glut_visibility_CB)(int);
-    void (*glut_motion_CB)(int,int);
-    void (*glut_display_CB)(void);
-    void (*glut_entry_CB)(int);
-    **********/
-
-    void  set_left_button_glut_menu_control( GLUI_Control *control );
+    void set_left_button_glut_menu_control( GLUI_Control *control );
 
     /********** GLUT callthroughs **********/
     /* These are the glut callbacks that we do not handle */
@@ -524,9 +511,9 @@ namespace glui {
     void set_glutDialsFunc(Int2_CB f)                      {glutDialsFunc(f);}  
   
 
-    GLUI_Context          *create_glui( const char *name, long flags=0, int x=-1, int y=-1 ); 
-    GLUI_Context          *create_glui_subwindow( int parent_window, long flags=0 );
-    GLUI_Context          *find_glui_by_window_id( int window_id );
+    GLUI_Context  *create_glui( const char *name, long flags=0, int x=-1, int y=-1 ); 
+    GLUI_Context  *create_glui_subwindow( int parent_window, long flags=0 );
+    GLUI_Context  *find_glui_by_window_id( int window_id );
     void           get_viewport_area( int *x, int *y, int *w, int *h );
     void           auto_set_viewport();
     void           close_all();
@@ -2565,20 +2552,20 @@ namespace glui {
      glut callbacks.  
   */
 
-  void glui_display_func( void );
-  void glui_reshape_func( int w, int h );
-  void glui_keyboard_func(unsigned char key, int x, int y);
-  void glui_special_func(int key, int x, int y);
-  void glui_mouse_func(int button, int state, int x, int y);
-  void glui_motion_func(int x, int y);
-  void glui_passive_motion_func(int x, int y);
-  void glui_entry_func(int state);
-  void glui_visibility_func(int state);
-  void glui_idle_func(void);
+  // void glui_display_func( void );
+  // void glui_reshape_func( int w, int h );
+  // void glui_keyboard_func(unsigned char key, int x, int y);
+  // void glui_special_func(int key, int x, int y);
+  // void glui_mouse_func(int button, int state, int x, int y);
+  // void glui_motion_func(int x, int y);
+  // void glui_passive_motion_func(int x, int y);
+  // void glui_entry_func(int state);
+  // void glui_visibility_func(int state);
+  // void glui_idle_func(void);
 
-  void glui_parent_window_reshape_func( int w, int h );
-  void glui_parent_window_keyboard_func(unsigned char key, int x, int y);
-  void glui_parent_window_mouse_func(int, int, int, int );
-  void glui_parent_window_special_func(int key, int x, int y);
+  // void glui_parent_window_reshape_func( int w, int h );
+  // void glui_parent_window_keyboard_func(unsigned char key, int x, int y);
+  // void glui_parent_window_mouse_func(int, int, int, int );
+  // void glui_parent_window_special_func(int key, int x, int y);
 
 }

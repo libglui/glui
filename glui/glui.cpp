@@ -32,6 +32,24 @@
 #include "glui_internal_control.h"
 
 namespace glui {
+
+  void glui_display_func( void );
+  void glui_reshape_func( int w, int h );
+  void glui_keyboard_func(unsigned char key, int x, int y);
+  void glui_special_func(int key, int x, int y);
+  void glui_mouse_func(int button, int state, int x, int y);
+  void glui_motion_func(int x, int y);
+  void glui_passive_motion_func(int x, int y);
+  void glui_entry_func(int state);
+  void glui_visibility_func(int state);
+  void glui_idle_func(void);
+
+  void glui_parent_window_reshape_func( int w, int h );
+  void glui_parent_window_keyboard_func(unsigned char key, int x, int y);
+  void glui_parent_window_mouse_func(int, int, int, int );
+  void glui_parent_window_special_func(int key, int x, int y);
+
+
   /**
      Note: moving this routine here from glui_add_controls.cpp prevents the linker
      from touching glui_add_controls.o in non-deprecated programs, which
