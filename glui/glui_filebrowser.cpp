@@ -49,7 +49,7 @@ namespace glui {
                                       const char *name,
                                       int type,
                                       int id,
-                                      GLUI_CB cb)
+                                      CallBack cb)
   {
     common_init();
 

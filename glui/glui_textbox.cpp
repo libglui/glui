@@ -40,7 +40,7 @@ namespace glui {
   /****************************** GLUI_TextBox::GLUI_TextBox() **********/
 
   GLUI_TextBox::GLUI_TextBox(GLUI_Node *parent, GLUI_String &live_var,
-                             bool scroll, int id, GLUI_CB callback )
+                             bool scroll, int id, CallBack callback )
   {
     common_construct(parent, &live_var, scroll, id, callback);
   }
@@ -48,7 +48,7 @@ namespace glui {
   /****************************** GLUI_TextBox::GLUI_TextBox() **********/
 
   GLUI_TextBox::GLUI_TextBox( GLUI_Node *parent, bool scroll, int id,
-                              GLUI_CB callback )
+                              CallBack callback )
   {
     common_construct(parent, NULL, scroll, id, callback);
   }
@@ -56,7 +56,7 @@ namespace glui {
   /****************************** GLUI_TextBox::common_construct() **********/
   void GLUI_TextBox::common_construct(
                                       GLUI_Node *parent, GLUI_String *data,
-                                      bool scroll, int id, GLUI_CB callback)
+                                      bool scroll, int id, CallBack callback)
   {
     common_init();
 
@@ -97,8 +97,6 @@ namespace glui {
   {
     int tmp_insertion_pt;
 
-    if ( debug )    dump( stdout, "-> MOUSE DOWN" );
-
     tmp_insertion_pt = find_insertion_pt( local_x, local_y );
     if ( tmp_insertion_pt == -1 ) {
       if ( glui )
@@ -114,8 +112,6 @@ namespace glui {
 
     if ( can_draw())
       update_and_draw_text();
-
-    if ( debug )    dump( stdout, "<- MOUSE UP" );
 
     return true;
   }
@@ -138,8 +134,6 @@ namespace glui {
 
     if ( NOT new_inside )     return false;
 
-    if ( debug )    dump( stdout, "-> HELD DOWN" );
-
     tmp_pt = find_insertion_pt( local_x, local_y );
     keygoal_x = insert_x;
 
@@ -156,9 +150,6 @@ namespace glui {
       update_and_draw_text();
     }
 
-    if ( debug )
-      dump( stdout, "<- HELD DOWN" );
-
     return false;
   }
 
@@ -171,9 +162,6 @@ namespace glui {
 
     if ( NOT glui )
       return false;
-
-    if ( debug )
-      dump( stdout, "-> KEY HANDLER" );
 
     regular_key = false;
     bool ctrl_down = (modifiers & GLUT_ACTIVE_CTRL)!=0;
@@ -309,10 +297,6 @@ namespace glui {
     update_and_draw_text();
     draw_text_only = false;
 
-
-    if ( debug )
-      dump( stdout, "<- KEY HANDLER" );
-
     return true;
   }
 
@@ -336,8 +320,6 @@ namespace glui {
 
   void    GLUI_TextBox::activate( int how )
   {
-    if ( debug )
-      dump( stdout, "-> ACTIVATE" );
     active = true;
 
     orig_text = text;
@@ -348,8 +330,6 @@ namespace glui {
     sel_start    = 0;
     sel_end      = text.length();
     insertion_pt = 0;
-    if ( debug )
-      dump( stdout, "<- ACTIVATE" );
   }
 
 
@@ -361,9 +341,6 @@ namespace glui {
 
     if ( NOT glui )
       return;
-
-    if ( debug )
-      dump( stdout, "-> DISACTIVATE" );
 
     sel_start = sel_end = insertion_pt = -1;
 
@@ -382,10 +359,6 @@ namespace glui {
 
 
     }
-
-
-    if ( debug )
-      dump( stdout, "<- DISACTIVATE" );
   }
 
   /****************************** GLUI_TextBox::draw() **********/
@@ -510,8 +483,6 @@ namespace glui {
     CLAMP( substring_end, 0, MAX(text_len-1,0) );
     CLAMP( substring_start, 0, MAX(text_len-1,0) );
 
-    if ( debug )    dump( stdout, "-> UPDATE SS" );
-
     if ( insertion_pt >= 0 AND
          insertion_pt < substring_start ) {   /* cursor moved left */
       substring_start = insertion_pt;
@@ -548,8 +519,6 @@ namespace glui {
       sel_start = sel_end = 0;
     }
 
-    if ( debug )    dump( stdout, "<- UPDATE SS" );
-
     if ( substring_start == old_start AND substring_end == old_end )
       return false;  /*** bounds did not change ***/
     else
@@ -571,8 +540,6 @@ namespace glui {
   {
     GLUI_DRAWINGSENTINAL_IDIOM
       int text_x, i, sel_lo, sel_hi, x_pos;
-
-    if ( debug )    dump( stdout, "-> DRAW_TEXT" );
 
     /** Find where to draw the text **/
 
@@ -655,8 +622,6 @@ namespace glui {
         x_pos += char_width( text[i] );
       }
     }
-
-    if ( debug )    dump( stdout, "<- DRAW_TEXT" );
   }
 
 
@@ -776,8 +741,6 @@ namespace glui {
       return;  /* Don't draw insertion point if there is a current selection */
     }
 
-    if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
-
     /*    printf( "insertion pt: %d\n", insertion_pt );              */
 
     box_width = get_box_width();
@@ -848,9 +811,6 @@ namespace glui {
     glVertex2i( curr_x+1, (curr_line-start_line)*LINE_HEIGHT + 16 );
     glVertex2i( curr_x,   (curr_line-start_line)*LINE_HEIGHT + 16 );
     glEnd();
-
-
-    if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
   }
 
 
@@ -894,11 +854,6 @@ namespace glui {
     int tmp_insertion_pt;
     if ( NOT glui )
       return false;
-
-    if ( debug )
-      printf( "SPECIAL:%d - mod:%d   subs:%d/%d  ins:%d  sel:%d/%d\n",
-              key, modifiers, substring_start, substring_end,insertion_pt,
-              sel_start, sel_end );
 
     if ( key == GLUT_KEY_DOWN ) {
       if (insert_x == -1 || insert_y == -1)

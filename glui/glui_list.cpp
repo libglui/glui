@@ -36,7 +36,7 @@ namespace glui {
   /****************************** GLUI_List::GLUI_List() **********/
 
   GLUI_List::GLUI_List( GLUI_Node *parent, bool scroll,
-                        int id, GLUI_CB callback
+                        int id, CallBack callback
                         /*,GLUI_Control *object
                           GLUI_InterObject_CB obj_cb*/)
   {
@@ -48,7 +48,7 @@ namespace glui {
   GLUI_List::GLUI_List( GLUI_Node *parent,
                         GLUI_String& live_var, bool scroll,
                         int id,
-                        GLUI_CB callback
+                        CallBack callback
                         /* ,GLUI_Control *object
                            ,GLUI_InterObject_CB obj_cb*/ )
   {
@@ -61,7 +61,7 @@ namespace glui {
                                    GLUI_Node *parent,
                                    GLUI_String* data, bool scroll,
                                    int id,
-                                   GLUI_CB callback
+                                   CallBack callback
                                    /*,GLUI_Control *object
                                      , GLUI_InterObject_CB obj_cb*/)
   {
@@ -177,13 +177,10 @@ namespace glui {
 
   void    GLUI_List::activate( int how )
   {
-    //   if ( debug )
-    //     dump( stdout, "-> ACTIVATE" );
     active = true;
 
     if ( how == GLUI_ACTIVATE_MOUSE )
       return;  /* Don't select everything if activated with mouse */
-
   }
 
 

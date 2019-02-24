@@ -39,7 +39,7 @@ namespace glui {
 
   GLUI_RadioGroup::GLUI_RadioGroup(GLUI_Node *parent,
                                    int *value_ptr,
-                                   int id, GLUI_CB cb)
+                                   int id, CallBack cb)
   {
     common_init();
     GLUI_String      buf;

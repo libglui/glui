@@ -40,7 +40,7 @@ namespace glui {
   GLUI_Checkbox::GLUI_Checkbox( GLUI_Node *parent,
                                 const char *name, int *value_ptr,
                                 int id,
-                                GLUI_CB cb )
+                                CallBack cb )
   {
     common_init();
 
@@ -119,15 +119,15 @@ namespace glui {
 
       if ( int_val != 0 ) {
         if ( enabled )
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_ON, 0, 0 );
+          context->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_ON, 0, 0 );
         else
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_ON_DIS, 0, 0 );
+          context->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_ON_DIS, 0, 0 );
       }
       else {
         if ( enabled )
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_OFF, 0, 0 );
+          context->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_OFF, 0, 0 );
         else
-          glui->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_OFF_DIS, 0, 0 );
+          context->std_bitmaps.draw( GLUI_STDBITMAP_CHECKBOX_OFF_DIS, 0, 0 );
       }
 
     draw_active_area();
@@ -142,7 +142,7 @@ namespace glui {
     GLUI_DRAWINGSENTINAL_IDIOM
       int text_width, left, right;
 
-    text_width = _glutBitmapWidthString( glui->font, name.c_str() );
+    text_width = _glutBitmapWidthString( context->font, name.c_str() );
     left       = text_x_offset-3;
     right      = left + 7 + text_width;
 
@@ -151,7 +151,7 @@ namespace glui {
       glLineStipple( 1, 0x5555 );
       glColor3f( 0., 0., 0. );
     } else {
-      glColor3ubv( glui->bkgd_color );
+      glColor3ubv( context->bkgd_color );
     }
 
     glBegin( GL_LINE_LOOP );
@@ -167,12 +167,10 @@ namespace glui {
 
   void   GLUI_Checkbox::update_size( void )
   {
-    int text_size;
-
-    if ( NOT glui )
+    if (!context)
       return;
 
-    text_size = _glutBitmapWidthString( glui->font, name.c_str() );
+    int text_size = _glutBitmapWidthString( context->font, name.c_str() );
 
     /*  if ( w < text_x_offset + text_size + 6 )              */
     w = text_x_offset + text_size + 6 ;

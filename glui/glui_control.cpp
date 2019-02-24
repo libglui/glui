@@ -39,16 +39,18 @@ namespace glui {
   /*************************** Drawing Utility routines *********************/
 
   /* Redraw this control. */
-  void	      GLUI_Control::redraw(void) {
-    if (glui==NULL || hidden) return;
-    if (glui->should_redraw_now(this))
+  void	      GLUI_Control::redraw(void)
+  {
+    if (!context || hidden) return;
+    if (context->should_redraw_now(this))
       translate_and_draw_front();
   }
 
   /** Redraw everybody in our window. */
-  void	     GLUI_Control::redraw_window(void) {
-    if (glui==NULL || hidden) return;
-    if ( glui->get_glut_window_id() == -1 ) return;
+  void	     GLUI_Control::redraw_window(void)
+  {
+    if (!context || hidden) return;
+    if ( context->get_glut_window_id() == -1 ) return;
     int orig = set_to_glut_window();
     glutPostRedisplay();
     restore_window(orig);
@@ -74,10 +76,10 @@ namespace glui {
 
   void GLUI_Control::set_to_bkgd_color( void )
   {
-    if ( NOT glui )
+    if (!context)
       return;
 
-    glColor3ubv( glui->bkgd_color );
+    glColor3ubv( context->bkgd_color );
   }
 
   /******** GLUI_Control::draw_box_inwards_outline() ********/
@@ -112,7 +114,7 @@ namespace glui {
 
   void GLUI_Control::draw_box( int x_min, int x_max, int y_min, int y_max, float r, float g, float b)
   {
-    if ( r == 1.0 AND g == 1.0 AND b == 1.0 AND NOT enabled AND glui ) {
+    if ( r == 1.0 && g == 1.0 && b == 1.0 && !enabled && context) {
       draw_bkgd_box( x_min, x_max, y_min, y_max );
       return;
     }
@@ -252,12 +254,12 @@ namespace glui {
   {
     int orig_window;
 
-    if ( NOT glui)
+    if (!context)
       return 1;
 
     orig_window = glutGetWindow();
 
-    glutSetWindow( glui->get_glut_window_id());
+    glutSetWindow( context->get_glut_window_id());
 
     return orig_window;
   }
@@ -332,8 +334,8 @@ namespace glui {
       return this->font;
 
     /*** Does the parent glui have a font? ***/
-    if ( glui )
-      return glui->font;
+    if (context)
+      return context->font;
 
     /*** Return the default font ***/
     return GLUT_BITMAP_HELVETICA_12;
@@ -458,7 +460,7 @@ namespace glui {
     /*** Record start of this set of columns ***/
     y_top_column = curr_y;
     column_x     = 0;
-    if ( this == glui->main_panel ) {
+    if ( this == context->main_panel ) {
       x=x;
     }
     /*** Iterate over children, packing them first ***/
@@ -773,16 +775,16 @@ namespace glui {
 
     /*** If this is currently active control, and mouse button is down,
          don't sync ***/
-    if ( glui )
+    if (context)
       {
-        if ( this == glui->active_control AND glui->mouse_button_down )
+        if ( this == context->active_control AND context->mouse_button_down )
           sync_it = false;
 
         /*** Actually, just disable syncing if button is down ***/
         /*** Nope, go ahead and sync if mouse is down - this allows syncing in
              callbacks ***/
         if ( 0 ) { /* THIS CODE BELOW SHOULD NOT BE EXECUTED */
-          if ( glui->mouse_button_down ) {
+          if ( context->mouse_button_down ) {
             /* printf( "Can't sync\n" );              */
             return;
           }
@@ -922,9 +924,8 @@ namespace glui {
     }
 
     /** Update the main gfx window? **/
-    if ( update_main_gfx AND this->glui != NULL ) {
-      this->glui->post_update_main_gfx();
-    }
+    if (update_main_gfx && context ) 
+      context->post_update_main_gfx();
   }
 
 
@@ -932,12 +933,10 @@ namespace glui {
 
   void GLUI_Control::execute_callback()
   {
-    int old_window;
+    int old_window = glutGetWindow();
 
-    old_window = glutGetWindow();
-
-    if ( glui AND glui->main_gfx_window_id != -1 )
-      glutSetWindow( glui->main_gfx_window_id );
+    if (context && context->main_gfx_window_id != -1 )
+      glutSetWindow( context->main_gfx_window_id );
 
     this->callback( this );
     //  if ( this->callback )
@@ -1045,7 +1044,7 @@ namespace glui {
 
     enabled = true;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     redraw();
@@ -1068,11 +1067,11 @@ namespace glui {
 
     enabled = false;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
-    if ( glui->active_control == this )
-      glui->deactivate_current_control();
+    if ( context->active_control == this )
+      context->deactivate_current_control();
     redraw();
 
     /*** Now recursively disable all buttons below it ***/
@@ -1089,7 +1088,7 @@ namespace glui {
   {
     w = new_w;
     update_size();  /* Make sure control is big enough to fit text */
-    if (glui) glui->refresh();
+    if (context) context->refresh();
   }
 
 
@@ -1099,7 +1098,7 @@ namespace glui {
   {
     h = new_h;
     update_size();  /* Make sure control is big enough to fit text */
-    if (glui) glui->refresh();
+    if (context) context->refresh();
   }
 
 
@@ -1109,11 +1108,10 @@ namespace glui {
   {
     alignment = new_align;
 
-    if ( glui )
-      {
-        glui->align_controls(this);
-        redraw_window();
-      }
+    if (context) {
+      context->align_controls(this);
+      redraw_window();
+    }
   }
 
 

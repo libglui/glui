@@ -36,11 +36,11 @@
 namespace glui {
   /****************************** GLUI_CommandLine::GLUI_CommandLine() **********/
   GLUI_CommandLine::GLUI_CommandLine( GLUI_Node *parent, const char *name,
-                                      void *data, int id, GLUI_CB cb )
+                                      void *data, int id, CallBack cb )
   {
     common_init();
     set_name( name );
-
+    
     data_type   = GLUI_EDITTEXT_TEXT;
     ptr_val     = data;
     user_id     = id;
@@ -59,20 +59,14 @@ namespace glui {
   {
     int ret;
 
-    if ( NOT glui )
+    if (!context)
       return false;
-
-    if ( debug )
-      dump( stdout, "-> CMD_TEXT KEY HANDLER" );
 
     if ( key == 13 ) {           /* RETURN */
       commit_flag = true;
     }
 
     ret = Super::key_handler( key, modifiers );
-
-    if ( debug )
-      dump( stdout, "<- CMD_TEXT KEY HANDLER" );
 
     return ret;
   }
@@ -105,13 +99,8 @@ namespace glui {
 
   int    GLUI_CommandLine::special_handler( int key,int modifiers )
   {
-    if ( NOT glui )
+    if (!context)
       return false;
-
-    if ( debug )
-      printf( "CMD_TEXT SPECIAL:%d - mod:%d   subs:%d/%d  ins:%d  sel:%d/%d\n",
-              key, modifiers, substring_start, substring_end,insertion_pt,
-              sel_start, sel_end );
 
     if ( key == GLUT_KEY_UP )  // PREVIOUS HISTORY
       {

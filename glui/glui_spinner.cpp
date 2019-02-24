@@ -48,7 +48,6 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
 #include <cassert>
 
 namespace glui {
-  /*static int __debug=0;              */
 
 #define  GLUI_SPINNER_GROWTH_STEPS         800
 #define  GLUI_SPINNER_MIN_GROWTH_STEPS     100
@@ -58,7 +57,7 @@ namespace glui {
   /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
   GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
-                              int data_type, int id, GLUI_CB callback )
+                              int data_type, int id, CallBack callback )
   {
     common_construct(parent, name, data_type, NULL, id, callback);
   }
@@ -66,7 +65,7 @@ namespace glui {
   /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
   GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
-                              int *live_var, int id, GLUI_CB callback )
+                              int *live_var, int id, CallBack callback )
   {
     common_construct(parent, name, GLUI_SPINNER_INT, live_var, id, callback);
   }
@@ -74,7 +73,7 @@ namespace glui {
   /****************************** GLUI_Spinner::GLUI_Spinner() ****************/
 
   GLUI_Spinner::GLUI_Spinner( GLUI_Node* parent, const char *name,
-                              float *live_var, int id, GLUI_CB callback )
+                              float *live_var, int id, CallBack callback )
   {
     common_construct(parent, name, GLUI_SPINNER_FLOAT, live_var, id, callback);
   }
@@ -83,7 +82,7 @@ namespace glui {
 
   GLUI_Spinner::GLUI_Spinner( GLUI_Node *parent, const char *name,
                               int data_t, void *live_var,
-                              int id, GLUI_CB callback )
+                              int id, CallBack callback )
   {
     common_construct(parent, name, data_t, live_var, id, callback);
   }
@@ -92,7 +91,7 @@ namespace glui {
 
   void GLUI_Spinner::common_construct( GLUI_Node* parent, const char *name,
                                        int data_t, void *data,
-                                       int id, GLUI_CB cb )
+                                       int id, CallBack cb )
   {
     common_init();
 

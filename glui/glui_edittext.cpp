@@ -39,7 +39,7 @@ namespace glui {
 
   GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
                                 int data_type, void *live_var,
-                                int id, GLUI_CB callback )
+                                int id, CallBack callback )
   {
     if (data_type == GLUI_EDITTEXT_TEXT) {
       live_type = GLUI_LIVE_TEXT;
@@ -62,7 +62,7 @@ namespace glui {
   /****************************** GLUI_EditText::GLUI_EditText() **********/
 
   GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
-                                int text_type, int id, GLUI_CB callback )
+                                int text_type, int id, CallBack callback )
   {
     common_construct( parent, name, text_type, GLUI_LIVE_NONE, 0, id, callback);
   }
@@ -71,7 +71,7 @@ namespace glui {
 
   GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
                                 int *live_var,
-                                int id, GLUI_CB callback )
+                                int id, CallBack callback )
   {
     common_construct( parent, name, GLUI_EDITTEXT_INT, GLUI_LIVE_INT, live_var, id, callback);
   }
@@ -80,7 +80,7 @@ namespace glui {
 
   GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
                                 float *live_var,
-                                int id, GLUI_CB callback )
+                                int id, CallBack callback )
   {
     common_construct( parent, name, GLUI_EDITTEXT_FLOAT, GLUI_LIVE_FLOAT, live_var, id, callback);
   }
@@ -89,7 +89,7 @@ namespace glui {
 
   GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
                                 char *live_var,
-                                int id, GLUI_CB callback )
+                                int id, CallBack callback )
   {
     common_construct( parent, name, GLUI_EDITTEXT_TEXT, GLUI_LIVE_TEXT, live_var, id, callback);
   }
@@ -98,7 +98,7 @@ namespace glui {
 
   GLUI_EditText::GLUI_EditText( GLUI_Node *parent, const char *name,
                                 std::string &live_var,
-                                int id, GLUI_CB callback )
+                                int id, CallBack callback )
   {
     common_construct( parent, name, GLUI_EDITTEXT_TEXT, GLUI_LIVE_STRING, &live_var, id, callback);
   }
@@ -107,7 +107,7 @@ namespace glui {
 
   void GLUI_EditText::common_construct( GLUI_Node *parent, const char *name,
                                         int data_t, int live_t, void *data, int id,
-                                        GLUI_CB cb )
+                                        CallBack cb )
   {
     common_init();
     set_name( name );
@@ -140,8 +140,6 @@ namespace glui {
   {
     int tmp_insertion_pt;
 
-    if ( debug )    dump( stdout, "-> MOUSE DOWN" );
-
     tmp_insertion_pt = find_insertion_pt( local_x, local_y );
     if ( tmp_insertion_pt == -1 ) {
       if ( glui )
@@ -155,8 +153,6 @@ namespace glui {
 
     if ( can_draw())
       update_and_draw_text();
-
-    if ( debug )    dump( stdout, "<- MOUSE UP" );
 
     return true;
   }
@@ -180,8 +176,6 @@ namespace glui {
     if ( NOT new_inside )
       return false;
 
-    if ( debug )    dump( stdout, "-> HELD DOWN" );
-
     tmp_pt = find_insertion_pt( local_x, local_y );
 
     if ( tmp_pt == -1 AND sel_end != 0 ) {    /* moved mouse past left edge */
@@ -197,9 +191,6 @@ namespace glui {
       update_and_draw_text();
     }
 
-    if ( debug )
-      dump( stdout, "<- HELD DOWN" );
-
     return false;
   }
 
@@ -213,9 +204,6 @@ namespace glui {
 
     if ( NOT glui )
       return false;
-
-    if ( debug )
-      dump( stdout, "-> KEY HANDLER" );
 
     regular_key = false;
     bool ctrl_down = (modifiers & GLUT_ACTIVE_CTRL)!=0;
@@ -431,9 +419,6 @@ namespace glui {
     draw_text_only = false;
 
 
-    if ( debug )
-      dump( stdout, "<- KEY HANDLER" );
-
     /*** Now look to see if this string has a period ***/
     num_periods = 0;
     for( i=0; i<(int)text.length(); i++ )
@@ -448,9 +433,6 @@ namespace glui {
 
   void    GLUI_EditText::activate( int how )
   {
-    if ( debug )
-      dump( stdout, "-> ACTIVATE" );
-
     active = true;
 
     if ( how == GLUI_ACTIVATE_MOUSE )
@@ -462,8 +444,6 @@ namespace glui {
     sel_end      = (int)text.length();
     insertion_pt = 0;
 
-    if ( debug )
-      dump( stdout, "<- ACTIVATE" );
   }
 
 
@@ -478,9 +458,6 @@ namespace glui {
 
     if ( NOT glui )
       return;
-
-    if ( debug )
-      dump( stdout, "-> DISACTIVATE" );
 
     sel_start = sel_end = insertion_pt = -1;
 
@@ -529,8 +506,6 @@ namespace glui {
       }
     }
 
-    if ( debug )
-      dump( stdout, "<- DISACTIVATE" );
   }
 
   /****************************** GLUI_EditText::draw() **********/
@@ -592,8 +567,6 @@ namespace glui {
     CLAMP( substring_end, 0, MAX(text_len-1,0) );
     CLAMP( substring_start, 0, MAX(text_len-1,0) );
 
-    if ( debug )    dump( stdout, "-> UPDATE SS" );
-
     if ( insertion_pt >= 0 AND
          insertion_pt < substring_start ) {   /* cursor moved left */
       substring_start = insertion_pt;
@@ -630,8 +603,6 @@ namespace glui {
       sel_start = sel_end = 0;
     }
 
-    if ( debug )    dump( stdout, "<- UPDATE SS" );
-
     if ( substring_start == old_start AND substring_end == old_end )
       return false;  /*** bounds did not change ***/
     else
@@ -652,8 +623,6 @@ namespace glui {
   {
     GLUI_DRAWINGSENTINAL_IDIOM
       int text_x, i, sel_lo, sel_hi;
-
-    if ( debug )    dump( stdout, "-> DRAW_TEXT" );
 
     if ( NOT draw_text_only ) {
       if ( enabled )
@@ -734,7 +703,6 @@ namespace glui {
       }
     }
 
-    if ( debug )    dump( stdout, "<- DRAW_TEXT" );
   }
 
 
@@ -800,8 +768,6 @@ namespace glui {
     if ( NOT enabled )
       return;
 
-    if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
-
     if ( sel_start != sel_end OR insertion_pt < 0 ) {
       return;  /* Don't draw insertion point if there is a current selection */
     }
@@ -833,7 +799,6 @@ namespace glui {
     glVertex2i( curr_x, 0 + h - 3 );
     glEnd();
 
-    if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
   }
 
 
@@ -873,11 +838,6 @@ namespace glui {
   {
     if ( NOT glui )
       return false;
-
-    if ( debug )
-      printf( "SPECIAL:%d - mod:%d   subs:%d/%d  ins:%d  sel:%d/%d\n",
-              key, modifiers, substring_start, substring_end,insertion_pt,
-              sel_start, sel_end );
 
     if ( key == GLUT_KEY_LEFT ) {
       if ( (modifiers & GLUT_ACTIVE_CTRL) != 0 ) {

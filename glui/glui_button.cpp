@@ -34,7 +34,7 @@ namespace glui {
   /****************************** GLUI_Button::GLUI_Button() **********/
 
   GLUI_Button::GLUI_Button( GLUI_Node *parent, const char *name,
-                            int id, GLUI_CB cb )
+                            int id, CallBack cb )
   {
     common_init();
     user_id     = id;
@@ -105,7 +105,7 @@ namespace glui {
   {
     if (currently_inside) draw_pressed();
     else {
-      glui->draw_raised_box( 0, 0, w, h );
+      context->draw_raised_box( 0, 0, w, h );
       draw_text( 0 );
     }
   }
@@ -137,7 +137,7 @@ namespace glui {
   {
     int string_width;
 
-    glColor3ubv( glui->bkgd_color );
+    glColor3ubv( context->bkgd_color );
     glDisable( GL_CULL_FACE );
     glBegin( GL_QUADS );
     glVertex2i( 2, 2 );         glVertex2i( w-2, 2 );
@@ -146,7 +146,7 @@ namespace glui {
 
     glColor3ub( 0,0,0 );
 
-    string_width = _glutBitmapWidthString( glui->font,
+    string_width = _glutBitmapWidthString( context->font,
                                            this->name.c_str() );
     if ( NOT sunken ) {
       draw_name( MAX((w-string_width),0)/2, 13);
@@ -177,7 +177,7 @@ namespace glui {
   {
     int text_size;
 
-    if ( NOT glui )
+    if (!context)
       return;
 
     text_size = string_width( name );

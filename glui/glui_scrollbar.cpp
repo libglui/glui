@@ -32,7 +32,6 @@
 #include <cassert>
 
 namespace glui {
-  /*static int __debug=0;              */
 
 #define  GLUI_SCROLL_GROWTH_STEPS         800
 #define  GLUI_SCROLL_MIN_GROWTH_STEPS     100
@@ -52,7 +51,7 @@ namespace glui {
                                   const char *name,
                                   int horz_vert,
                                   int data_type,
-                                  int id, GLUI_CB callback
+                                  int id, CallBack callback
                                   /*,GLUI_Control *object
                                     ,GLUI_InterObject_CB obj_cb*/
                                   )
@@ -65,7 +64,7 @@ namespace glui {
   GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
                                   int horz_vert,
                                   int *live_var,
-                                  int id, GLUI_CB callback
+                                  int id, CallBack callback
                                   /*,GLUI_Control *object
                                     ,GLUI_InterObject_CB obj_cb*/
                                   )
@@ -78,7 +77,7 @@ namespace glui {
   GLUI_Scrollbar::GLUI_Scrollbar( GLUI_Node *parent, const char *name,
                                   int horz_vert,
                                   float *live_var,
-                                  int id, GLUI_CB callback
+                                  int id, CallBack callback
                                   /*,GLUI_Control *object
                                     ,GLUI_InterObject_CB obj_cb*/
                                   )
@@ -122,7 +121,7 @@ namespace glui {
                                         int horz_vert,
                                         int data_type,
                                         void *data,
-                                        int id, GLUI_CB callback
+                                        int id, CallBack callback
                                         /*,GLUI_Control *object,
                                           GLUI_InterObject_CB obj_cb*/
                                         )
