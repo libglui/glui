@@ -1684,7 +1684,7 @@ void GLUI_Master_Object::set_glutTabletButtonFunc(Int4_CB f)        {glutTabletB
 void GLUI_Master_Object::set_glutMenuStatusFunc(Int3_CB f)            {glutMenuStatusFunc(f);}
 void GLUI_Master_Object::set_glutMenuStateFunc(Int1_CB f)              {glutMenuStateFunc(f);}
 void GLUI_Master_Object::set_glutButtonBoxFunc(Int2_CB f)              {glutButtonBoxFunc(f);}
-void GLUI_Master_Object::set_glutDialsFunc(Int2_CB f)                      {glutDialsFunc(f);}  
+void GLUI_Master_Object::set_glutDialsFunc(Int2_CB f)                      {glutDialsFunc(f);}
 
 /****************************** glui_parent_window_reshape_func() **********/
 /* This is the reshape callback for a window that contains subwindows      */

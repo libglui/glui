@@ -6,7 +6,7 @@
   (except columns, featured in example4.cpp)
 
   -----------------------------------------------------------------------
-	   
+
   9/9/98 Paul Rademacher (rademach@cs.unc.edu)
 
 ****************************************************************************/
@@ -78,7 +78,7 @@ void control_cb( int control )
       light0_spinner->enable();
     }
     else {
-      glDisable( GL_LIGHT0 ); 
+      glDisable( GL_LIGHT0 );
       light0_spinner->disable();
     }
   }
@@ -88,14 +88,14 @@ void control_cb( int control )
       light1_spinner->enable();
     }
     else {
-      glDisable( GL_LIGHT1 ); 
+      glDisable( GL_LIGHT1 );
       light1_spinner->disable();
     }
   }
   else if ( control == LIGHT0_INTENSITY_ID ) {
     float v[] = { light0_diffuse[0],  light0_diffuse[1],
 		  light0_diffuse[2],  light0_diffuse[3] };
-    
+
     v[0] *= light0_intensity;
     v[1] *= light0_intensity;
     v[2] *= light0_intensity;
@@ -105,7 +105,7 @@ void control_cb( int control )
   else if ( control == LIGHT1_INTENSITY_ID ) {
     float v[] = { light1_diffuse[0],  light1_diffuse[1],
 		  light1_diffuse[2],  light1_diffuse[3] };
-    
+
     v[0] *= light1_intensity;
     v[1] *= light1_intensity;
     v[2] *= light1_intensity;
@@ -128,8 +128,8 @@ void pointer_cb( GLUI_Control* control )
     /****** Make command line window ******/
     cmd_line_glui = GLUI_Master.create_glui( "Enter command:",
       0, 50, 500 );
-    
-    cmd_line = new GLUI_CommandLine( 
+
+    cmd_line = new GLUI_CommandLine(
       cmd_line_glui, "Command (try 'exit'):", NULL, -1, pointer_cb );
     cmd_line->set_w( 400 );  /** Widen 'command line' control **/
 
@@ -137,7 +137,7 @@ void pointer_cb( GLUI_Control* control )
     new GLUI_Button(panel, "Clear History", CMD_HIST_RESET_ID, pointer_cb);
     new GLUI_Column(panel, false);
     new GLUI_Button(panel, "Close", CMD_CLOSE_ID, pointer_cb);
-    
+
     cmd_line_glui->set_main_gfx_window( main_window );
 
     control->disable();
@@ -176,12 +176,12 @@ void myGlutKeyboard(unsigned char Key, int x, int y)
     wireframe = !wireframe;
     GLUI_Master.sync_live_all();
     break;
-  case 27: 
+  case 27:
   case 'q':
     exit(0);
     break;
   };
-  
+
   glutPostRedisplay();
 }
 
@@ -198,11 +198,11 @@ void myGlutMenu( int value )
 
 void myGlutIdle()
 {
-  /* According to the GLUT specification, the current window is 
+  /* According to the GLUT specification, the current window is
      undefined during an idle callback.  So we need to explicitly change
      it if necessary */
-  if ( glutGetWindow() != main_window ) 
-    glutSetWindow(main_window);  
+  if ( glutGetWindow() != main_window )
+    glutSetWindow(main_window);
 
 
   glutPostRedisplay();
@@ -219,7 +219,7 @@ void myGlutIdle()
   /****************************************************************/
 
   counter++;
-   
+
   glui->sync_live();
 
 }
@@ -245,7 +245,7 @@ void myGlutMotion(int x, int y )
   last_x = x;
   last_y = y;
 
-  glutPostRedisplay(); 
+  glutPostRedisplay();
 }
 
 /**************************************** myGlutReshape() *************/
@@ -278,13 +278,13 @@ void myGlutDisplay()
   glScalef( scale, scale, scale );
 
   /*** Now we render object, using the variables 'obj_type', 'segments', and
-    'wireframe'.  These are _live_ variables, which are transparently 
+    'wireframe'.  These are _live_ variables, which are transparently
     updated by GLUI ***/
-  
+
   if ( obj_type == 0 ) {
-    if ( wireframe )      
+    if ( wireframe )
       glutWireSphere( .6, segments, segments );
-    else                  
+    else
       glutSolidSphere( .6, segments, segments );
   }
   else if ( obj_type == 1 ) {
@@ -301,7 +301,7 @@ void myGlutDisplay()
   }
 
   /* Disable lighting and set up ortho projection to render text */
-  glDisable( GL_LIGHTING );  
+  glDisable( GL_LIGHTING );
   glMatrixMode( GL_PROJECTION );
   glLoadIdentity();
   gluOrtho2D( 0.0, 100.0, 0.0, 100.0  );
@@ -316,7 +316,7 @@ void myGlutDisplay()
 
   glEnable( GL_LIGHTING );
 
-  glutSwapBuffers(); 
+  glutSwapBuffers();
 }
 
 
@@ -332,10 +332,10 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
- 
+
   main_window = glutCreateWindow( "GLUI Example 3" );
   glutDisplayFunc( myGlutDisplay );
-  glutReshapeFunc( myGlutReshape );  
+  glutReshapeFunc( myGlutReshape );
   glutKeyboardFunc( myGlutKeyboard );
   glutMotionFunc( myGlutMotion );
   glutMouseFunc( myGlutMouse );
@@ -370,7 +370,7 @@ int main(int argc, char* argv[])
 
   glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 ); /* name, flags,
 							   x, and y */
-  new GLUI_StaticText( glui, "GLUI Example 3" ); 
+  new GLUI_StaticText( glui, "GLUI Example 3" );
   obj_panel = new GLUI_Panel(glui, "Object" );
 
   /***** Control for the object type *****/
@@ -381,14 +381,14 @@ int main(int argc, char* argv[])
   new GLUI_RadioButton( radio, "Torus" );
   new GLUI_RadioButton( radio, "Teapot" );
 
-  checkbox = 
+  checkbox =
     new GLUI_Checkbox(obj_panel, "Wireframe", &wireframe, 1, control_cb );
   spinner =
     new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
-  scale_spinner = 
+  scale_spinner =
     new GLUI_Spinner( obj_panel, "Scale:", &scale);
   scale_spinner->set_float_limits( .2f, 4.0 );
   scale_spinner->set_alignment( GLUI_ALIGN_RIGHT );
@@ -402,9 +402,9 @@ int main(int argc, char* argv[])
   GLUI_Panel *light0 = new GLUI_Panel( glui, "Light 1" );
   GLUI_Panel *light1 = new GLUI_Panel( glui, "Light 2" );
 
-  new GLUI_Checkbox( light0, "Enabled", &light0_enabled, 
+  new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
                      LIGHT0_ENABLED_ID, control_cb );
-  light0_spinner = 
+  light0_spinner =
     new GLUI_Spinner( light0, "Intensity:",
                       &light0_intensity, LIGHT0_INTENSITY_ID,
                       control_cb );
@@ -412,21 +412,21 @@ int main(int argc, char* argv[])
 
   new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
                      LIGHT1_ENABLED_ID, control_cb );
-  light1_spinner = 
-    new GLUI_Spinner( light1, "Intensity:", 
+  light1_spinner =
+    new GLUI_Spinner( light1, "Intensity:",
                       &light1_intensity, LIGHT1_INTENSITY_ID,
                       control_cb );
   light1_spinner->set_float_limits( 0.0, 1.0 );
   light1_spinner->disable();   /* Disable this light initially */
 
   /****** Add a grayed-out counter *****/
-  
-  GLUI_EditText *counter_edittext = 
+
+  GLUI_EditText *counter_edittext =
     new GLUI_EditText( glui, "Count:", &counter );
   counter_edittext->disable();
 
   /****** Button to Open Command Line Window ******/
-  open_console_btn = 
+  open_console_btn =
     new GLUI_Button(glui, "Open Console", OPEN_CONSOLE_ID, pointer_cb);
 
   /****** A 'quit' button *****/
@@ -434,13 +434,13 @@ int main(int argc, char* argv[])
   new GLUI_Button(glui, "Quit", 0,(GLUI_Update_CB)exit );
 
   /**** Link windows to GLUI, and register idle callback ******/
-  
+
   glui->set_main_gfx_window( main_window );
 
   /* We register the idle callback with GLUI, not with GLUT */
   GLUI_Master.set_glutIdleFunc( myGlutIdle );
 
-  /**** Regular GLUT main loop ****/  
+  /**** Regular GLUT main loop ****/
   glutMainLoop();
 
   return EXIT_SUCCESS;

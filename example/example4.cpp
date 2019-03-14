@@ -5,7 +5,7 @@
   A GLUI program demonstrating nested columns
 
   -----------------------------------------------------------------------
-	   
+
   10/2/98 Paul Rademacher (rademach@cs.unc.edu)
 
 ****************************************************************************/
@@ -71,7 +71,7 @@ void control_cb( int control )
       light0_spinner->enable();
     }
     else {
-      glDisable( GL_LIGHT0 ); 
+      glDisable( GL_LIGHT0 );
       light0_spinner->disable();
     }
   }
@@ -81,14 +81,14 @@ void control_cb( int control )
       light1_spinner->enable();
     }
     else {
-      glDisable( GL_LIGHT1 ); 
+      glDisable( GL_LIGHT1 );
       light1_spinner->disable();
     }
   }
   else if ( control == LIGHT0_INTENSITY_ID ) {
     float v[] = { light0_diffuse[0],  light0_diffuse[1],
 		  light0_diffuse[2],  light0_diffuse[3] };
-    
+
     v[0] *= light0_intensity;
     v[1] *= light0_intensity;
     v[2] *= light0_intensity;
@@ -98,7 +98,7 @@ void control_cb( int control )
   else if ( control == LIGHT1_INTENSITY_ID ) {
     float v[] = { light1_diffuse[0],  light1_diffuse[1],
 		  light1_diffuse[2],  light1_diffuse[3] };
-    
+
     v[0] *= light1_intensity;
     v[1] *= light1_intensity;
     v[2] *= light1_intensity;
@@ -113,12 +113,12 @@ void myGlutKeyboard(unsigned char Key, int x, int y)
 {
   switch(Key)
   {
-  case 27: 
+  case 27:
   case 'q':
     exit(0);
     break;
   };
-  
+
   glutPostRedisplay();
 }
 
@@ -151,7 +151,7 @@ void myGlutMotion(int x, int y )
   last_x = x;
   last_y = y;
 
-  glutPostRedisplay(); 
+  glutPostRedisplay();
 }
 
 /**************************************** myGlutReshape() *************/
@@ -176,7 +176,7 @@ void draw_axes( float scale )
   glScalef( scale, scale, scale );
 
   glBegin( GL_LINES );
- 
+
   glColor3f( 1.0, 0.0, 0.0 );
   glVertex3f( .8f, 0.05f, 0.0 );  glVertex3f( 1.0, 0.25f, 0.0 ); /* Letter X*/
   glVertex3f( 0.8f, .25f, 0.0 );  glVertex3f( 1.0, 0.05f, 0.0 );
@@ -213,7 +213,7 @@ void myGlutDisplay()
   glScalef( scale, scale, scale );
 
   /*** Now we render object, using the variables 'obj_type', 'segments', and
-    'wireframe'.  These are _live_ variables, which are transparently 
+    'wireframe'.  These are _live_ variables, which are transparently
     updated by GLUI ***/
 
   glPushMatrix();
@@ -238,7 +238,7 @@ void myGlutDisplay()
   draw_axes(.52f);
   glPopMatrix();
 
-  glutSwapBuffers(); 
+  glutSwapBuffers();
 }
 
 
@@ -254,10 +254,10 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
- 
+
   main_window = glutCreateWindow( "GLUI Example 4" );
   glutDisplayFunc( myGlutDisplay );
-  glutReshapeFunc( myGlutReshape );  
+  glutReshapeFunc( myGlutReshape );
   glutKeyboardFunc( myGlutKeyboard );
   glutMotionFunc( myGlutMotion );
   glutMouseFunc( myGlutMouse );
@@ -300,13 +300,13 @@ int main(int argc, char* argv[])
 
   /***** Control for object params *****/
 
-  checkbox = 
+  checkbox =
     new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
   spinner  = new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
-  GLUI_Spinner *scale_spinner = 
+  GLUI_Spinner *scale_spinner =
     new GLUI_Spinner( obj_panel, "Scale:", &scale);
   scale_spinner->set_float_limits( .2f, 4.0 );
   scale_spinner->set_alignment( GLUI_ALIGN_RIGHT );
@@ -328,33 +328,33 @@ int main(int argc, char* argv[])
 
   new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
                      LIGHT0_ENABLED_ID, control_cb );
-  light0_spinner = 
-    new GLUI_Spinner( light0, "Intensity:", 
+  light0_spinner =
+    new GLUI_Spinner( light0, "Intensity:",
                       &light0_intensity, LIGHT0_INTENSITY_ID,
                       control_cb );
   light0_spinner->set_float_limits( 0.0, 1.0 );
 
   new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
                      LIGHT1_ENABLED_ID, control_cb );
-  light1_spinner = 
+  light1_spinner =
     new GLUI_Spinner( light1, "Intensity:",
                       &light1_intensity, LIGHT1_INTENSITY_ID,
                       control_cb );
   light1_spinner->set_float_limits( 0.0, 1.0 );
   light1_spinner->disable();   /* Disable this light initially */
 
-  
+
   /****** A 'quit' button *****/
 
   new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
 
 
   /**** Link windows to GLUI ******/
-  
+
   glui->set_main_gfx_window( main_window );
 
   /**** Regular GLUT main loop ****/
-  
+
   glutMainLoop();
 
   return EXIT_SUCCESS;

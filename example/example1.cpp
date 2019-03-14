@@ -6,7 +6,7 @@
   No callbacks are used.
 
   -----------------------------------------------------------------------
-	   
+
   9/9/98 Paul Rademacher (rademach@cs.unc.edu)
 
 ****************************************************************************/
@@ -30,11 +30,11 @@ int   main_window;
 
 void myGlutIdle()
 {
-  /* According to the GLUT specification, the current window is 
+  /* According to the GLUT specification, the current window is
      undefined during an idle callback.  So we need to explicitly change
      it if necessary */
-  if ( glutGetWindow() != main_window ) 
-    glutSetWindow(main_window);  
+  if ( glutGetWindow() != main_window )
+    glutSetWindow(main_window);
 
   glutPostRedisplay();
 }
@@ -76,15 +76,15 @@ void myGlutDisplay()
   glRotatef( rotationX, 1.0, 0.0, 0.0 );
 
   /*** Now we render object, using the variables 'segments' and
-    'wireframe'.  These are _live_ variables, which are transparently 
+    'wireframe'.  These are _live_ variables, which are transparently
     updated by GLUI ***/
-  
+
   if ( wireframe )
     glutWireTorus( .2,.5,16,segments );
   else
     glutSolidTorus( .2,.5,16,segments );
 
-  glutSwapBuffers(); 
+  glutSwapBuffers();
 }
 
 
@@ -100,10 +100,10 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
- 
+
   main_window = glutCreateWindow( "GLUI Example 1" );
   glutDisplayFunc( myGlutDisplay );
-  glutReshapeFunc( myGlutReshape );  
+  glutReshapeFunc( myGlutReshape );
 
   /****************************************/
   /*       Set up OpenGL lights           */
@@ -129,16 +129,16 @@ int main(int argc, char* argv[])
   /****************************************/
   /*         Here's the GLUI code         */
   /****************************************/
-  
+
   GLUI *glui = GLUI_Master.create_glui( "GLUI" );
   new GLUI_Checkbox( glui, "Wireframe", &wireframe );
   (new GLUI_Spinner( glui, "Segments:", &segments ))
-    ->set_int_limits( 3, 60 ); 
-   
+    ->set_int_limits( 3, 60 );
+
   glui->set_main_gfx_window( main_window );
 
   /* We register the idle callback with GLUI, *not* with GLUT */
-  GLUI_Master.set_glutIdleFunc( myGlutIdle ); 
+  GLUI_Master.set_glutIdleFunc( myGlutIdle );
 
   glutMainLoop();
 
