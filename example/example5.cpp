@@ -6,7 +6,7 @@
 	translation controls, and listboxes
 
   -----------------------------------------------------------------------
-	   
+
   7/10/98 Paul Rademacher (rademach@cs.unc.edu)
 
 ****************************************************************************/
@@ -86,7 +86,7 @@ void control_cb( int control )
       light0_spinner->enable();
     }
     else {
-      glDisable( GL_LIGHT0 ); 
+      glDisable( GL_LIGHT0 );
       light0_spinner->disable();
     }
   }
@@ -96,15 +96,15 @@ void control_cb( int control )
       light1_spinner->enable();
     }
     else {
-      glDisable( GL_LIGHT1 ); 
+      glDisable( GL_LIGHT1 );
       light1_spinner->disable();
     }
   }
   else if ( control == LIGHT0_INTENSITY_ID ) {
-    float v[] = { 
+    float v[] = {
       light0_diffuse[0],  light0_diffuse[1],
       light0_diffuse[2],  light0_diffuse[3] };
-    
+
     v[0] *= light0_intensity;
     v[1] *= light0_intensity;
     v[2] *= light0_intensity;
@@ -112,10 +112,10 @@ void control_cb( int control )
     glLightfv(GL_LIGHT0, GL_DIFFUSE, v );
   }
   else if ( control == LIGHT1_INTENSITY_ID ) {
-    float v[] = { 
+    float v[] = {
       light1_diffuse[0],  light1_diffuse[1],
       light1_diffuse[2],  light1_diffuse[3] };
-    
+
     v[0] *= light1_intensity;
     v[1] *= light1_intensity;
     v[2] *= light1_intensity;
@@ -146,12 +146,12 @@ void myGlutKeyboard(unsigned char Key, int x, int y)
 {
   switch(Key)
   {
-  case 27: 
+  case 27:
   case 'q':
     exit(0);
     break;
   };
-  
+
   glutPostRedisplay();
 }
 
@@ -168,11 +168,11 @@ void myGlutMenu( int value )
 
 void myGlutIdle()
 {
-  /* According to the GLUT specification, the current window is 
+  /* According to the GLUT specification, the current window is
      undefined during an idle callback.  So we need to explicitly change
      it if necessary */
-  if ( glutGetWindow() != main_window ) 
-    glutSetWindow(main_window);  
+  if ( glutGetWindow() != main_window )
+    glutSetWindow(main_window);
 
   /*  GLUI_Master.sync_live_all();  -- not needed - nothing to sync in this
                                        application  */
@@ -191,7 +191,7 @@ void myGlutMouse(int button, int button_state, int x, int y )
 
 void myGlutMotion(int x, int y )
 {
-  glutPostRedisplay(); 
+  glutPostRedisplay();
 }
 
 /**************************************** myGlutReshape() *************/
@@ -219,7 +219,7 @@ void draw_axes( float scale )
   glScalef( scale, scale, scale );
 
   glBegin( GL_LINES );
- 
+
   glColor3f( 1.0, 0.0, 0.0 );
   glVertex3f( .8f, 0.05f, 0.0 );  glVertex3f( 1.0, 0.25f, 0.0 ); /* Letter X */
   glVertex3f( 0.8f, .25f, 0.0 );  glVertex3f( 1.0, 0.05f, 0.0 );
@@ -254,16 +254,16 @@ void myGlutDisplay()
   glLoadIdentity();
   glMultMatrixf( lights_rotation );
   glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
-  
+
   glLoadIdentity();
   glTranslatef( 0.0, 0.0, -2.6f );
-  glTranslatef( obj_pos[0], obj_pos[1], -obj_pos[2] ); 
+  glTranslatef( obj_pos[0], obj_pos[1], -obj_pos[2] );
   glMultMatrixf( view_rotate );
 
   glScalef( scale, scale, scale );
 
   /*** Now we render object, using the variables 'obj_type', 'segments', and
-    'wireframe'.  These are _live_ variables, which are transparently 
+    'wireframe'.  These are _live_ variables, which are transparently
     updated by GLUI ***/
 
   glPushMatrix();
@@ -288,7 +288,7 @@ void myGlutDisplay()
     draw_axes(.52f);
   glPopMatrix();
 
-  if ( show_text ) 
+  if ( show_text )
   {
     glDisable( GL_LIGHTING );  /* Disable lighting while we render text */
     glMatrixMode( GL_PROJECTION );
@@ -310,7 +310,7 @@ void myGlutDisplay()
   glEnable( GL_LIGHTING );
 
 
-  glutSwapBuffers(); 
+  glutSwapBuffers();
 }
 
 
@@ -326,10 +326,10 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 800, 600 );
- 
+
   main_window = glutCreateWindow( "GLUI Example 5" );
   glutDisplayFunc( myGlutDisplay );
-  GLUI_Master.set_glutReshapeFunc( myGlutReshape );  
+  GLUI_Master.set_glutReshapeFunc( myGlutReshape );
   GLUI_Master.set_glutKeyboardFunc( myGlutKeyboard );
   GLUI_Master.set_glutSpecialFunc( NULL );
   GLUI_Master.set_glutMouseFunc( myGlutMouse );
@@ -365,7 +365,7 @@ int main(int argc, char* argv[])
   printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
 
   /*** Create the side subwindow ***/
-  glui = GLUI_Master.create_glui_subwindow( main_window, 
+  glui = GLUI_Master.create_glui_subwindow( main_window,
 					    GLUI_SUBWINDOW_RIGHT );
 
   obj_panel = new GLUI_Rollout(glui, "Properties", false );
@@ -373,12 +373,12 @@ int main(int argc, char* argv[])
   /***** Control for object params *****/
 
   new GLUI_Checkbox( obj_panel, "Wireframe", &wireframe, 1, control_cb );
-  GLUI_Spinner *spinner = 
+  GLUI_Spinner *spinner =
     new GLUI_Spinner( obj_panel, "Segments:", &segments);
   spinner->set_int_limits( 3, 60 );
   spinner->set_alignment( GLUI_ALIGN_RIGHT );
 
-  GLUI_Spinner *scale_spinner = 
+  GLUI_Spinner *scale_spinner =
     new GLUI_Spinner( obj_panel, "Scale:", &scale);
   scale_spinner->set_float_limits( .2f, 4.0 );
   scale_spinner->set_alignment( GLUI_ALIGN_RIGHT );
@@ -393,8 +393,8 @@ int main(int argc, char* argv[])
 
   new GLUI_Checkbox( light0, "Enabled", &light0_enabled,
                      LIGHT0_ENABLED_ID, control_cb );
-  light0_spinner = 
-    new GLUI_Spinner( light0, "Intensity:", 
+  light0_spinner =
+    new GLUI_Spinner( light0, "Intensity:",
                       &light0_intensity, LIGHT0_INTENSITY_ID,
                       control_cb );
   light0_spinner->set_float_limits( 0.0, 1.0 );
@@ -410,7 +410,7 @@ int main(int argc, char* argv[])
   sb->set_float_limits(0,1);
   new GLUI_Checkbox( light1, "Enabled", &light1_enabled,
                      LIGHT1_ENABLED_ID, control_cb );
-  light1_spinner = 
+  light1_spinner =
     new GLUI_Spinner( light1, "Intensity:",
                       &light1_intensity, LIGHT1_INTENSITY_ID,
                       control_cb );
@@ -456,12 +456,12 @@ int main(int argc, char* argv[])
 
 
   /**** Link windows to GLUI, and register idle callback ******/
-  
+
   glui->set_main_gfx_window( main_window );
 
 
   /*** Create the bottom subwindow ***/
-  glui2 = GLUI_Master.create_glui_subwindow( main_window, 
+  glui2 = GLUI_Master.create_glui_subwindow( main_window,
                                              GLUI_SUBWINDOW_BOTTOM );
   glui2->set_main_gfx_window( main_window );
 
@@ -477,19 +477,19 @@ int main(int argc, char* argv[])
   GLUI_Rotation *lights_rot = new GLUI_Rotation(glui2, "Blue Light", lights_rotation );
   lights_rot->set_spin( .82 );
   new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_xy = 
+  GLUI_Translation *trans_xy =
     new GLUI_Translation(glui2, "Objects XY", GLUI_TRANSLATION_XY, obj_pos );
   trans_xy->set_speed( .005 );
   new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_x = 
+  GLUI_Translation *trans_x =
     new GLUI_Translation(glui2, "Objects X", GLUI_TRANSLATION_X, obj_pos );
   trans_x->set_speed( .005 );
   new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_y = 
+  GLUI_Translation *trans_y =
     new GLUI_Translation( glui2, "Objects Y", GLUI_TRANSLATION_Y, &obj_pos[1] );
   trans_y->set_speed( .005 );
   new GLUI_Column( glui2, false );
-  GLUI_Translation *trans_z = 
+  GLUI_Translation *trans_z =
     new GLUI_Translation( glui2, "Objects Z", GLUI_TRANSLATION_Z, &obj_pos[2] );
   trans_z->set_speed( .005 );
 
@@ -499,7 +499,7 @@ int main(int argc, char* argv[])
 #endif
 
   /**** Regular GLUT main loop ****/
-  
+
   glutMainLoop();
 
   return EXIT_SUCCESS;

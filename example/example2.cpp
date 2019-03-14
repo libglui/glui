@@ -5,7 +5,7 @@
   A simple GLUT program using the GLUI User Interface Library
 
   -----------------------------------------------------------------------
-	   
+
   9/9/98 Paul Rademacher (rademach@cs.unc.edu)
 
 ****************************************************************************/
@@ -33,8 +33,8 @@ int   segments = 8;
 // Using a std::string as a live variable is safe.
 std::string text = "Hello World!";
 
-// Using a char buffer as a live var is also possible, but it is dangerous 
-// because GLUI doesn't know how big your buffer is.  
+// Using a char buffer as a live var is also possible, but it is dangerous
+// because GLUI doesn't know how big your buffer is.
 // But still, it works as long as text doesn't happen to overflow.
 //char  text[200] = {"Hello World!"};
 
@@ -53,7 +53,7 @@ void control_cb( int control )
     callback, and we'll also explicitly get the values of each control.
     Note that we really didn't have to explicitly get the values, since
     they are already all contained within the live variables:
-    'wireframe',  'segments',  'obj',  and 'text'  
+    'wireframe',  'segments',  'obj',  and 'text'
     ********************************************************************/
 
   printf( "callback: %d\n", control );
@@ -61,7 +61,7 @@ void control_cb( int control )
   printf( "              spinner: %d\n", spinner->get_int_val() );
   printf( "          radio group: %d\n", radio->get_int_val() );
   printf( "                 text: %s\n", edittext->get_text().c_str() );
-  
+
 }
 
 /**************************************** myGlutKeyboard() **********/
@@ -81,7 +81,7 @@ void myGlutKeyboard(unsigned char Key, int x, int y)
     wireframe = !wireframe;
     GLUI_Master.sync_live_all();
     break;
-  case 27: 
+  case 27:
   case 'q':
     exit(0);
     break;
@@ -118,7 +118,7 @@ void myGlutMotion(int x, int y )
   last_x = x;
   last_y = y;
 
-  glutPostRedisplay(); 
+  glutPostRedisplay();
 }
 
 /**************************************** myGlutReshape() *************/
@@ -149,13 +149,13 @@ void myGlutDisplay()
   glRotatef( rotationX, 1.0, 0.0, 0.0 );
 
   /*** Now we render object, using the variables 'obj', 'segments', and
-    'wireframe'.  These are _live_ variables, which are transparently 
+    'wireframe'.  These are _live_ variables, which are transparently
     updated by GLUI ***/
-  
+
   if ( obj == 0 ) {
-    if ( wireframe )      
+    if ( wireframe )
       glutWireSphere( .6, segments, segments );
-    else                  
+    else
       glutSolidSphere( .6, segments, segments );
   }
   else if ( obj == 1 ) {
@@ -188,7 +188,7 @@ void myGlutDisplay()
 
   glEnable( GL_LIGHTING );
 
-  glutSwapBuffers(); 
+  glutSwapBuffers();
 }
 
 
@@ -204,10 +204,10 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
   glutInitWindowPosition( 50, 50 );
   glutInitWindowSize( 300, 300 );
- 
+
   main_window = glutCreateWindow( "GLUI Example 2" );
   glutDisplayFunc( myGlutDisplay );
-  glutReshapeFunc( myGlutReshape );  
+  glutReshapeFunc( myGlutReshape );
   glutKeyboardFunc( myGlutKeyboard );
   glutMotionFunc( myGlutMotion );
   glutMouseFunc( myGlutMouse );
@@ -250,7 +250,7 @@ int main(int argc, char* argv[])
   new GLUI_RadioButton( radio, "Torus" );
   new GLUI_RadioButton( radio, "Teapot" );
   new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
- 
+
   glui->set_main_gfx_window( main_window );
 
   /* We register the idle callback with GLUI, *not* with GLUT */
