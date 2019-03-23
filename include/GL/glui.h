@@ -38,8 +38,13 @@
 #include <OpenGL/GL.h>
 #include <OpenGL/GLU.h>
 #else
-#include <GL/gl.h>
-#include <GL/glu.h>
+# ifdef _WIN32
+#  define NOMINMAX
+#  include <Windows.h>
+#  undef NOMINMAX
+# endif
+# include <GL/gl.h>
+# include <GL/glu.h>
 #endif
 
 #include <cstdlib>
@@ -67,7 +72,7 @@
 #  endif
 # endif
 #else
-#define GLUIAPI
+# define GLUIAPI
 #endif
 
 
