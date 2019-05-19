@@ -1,64 +1,76 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
-project(glui)
-set(PROJECT_VERSION 2.37)
+####This is a hook for developers to use.
+####Please have it print out what changes it makes via the CMake's message API.
+include(developer.cmake OPTIONAL)
 
+project(glui VERSION 3.0.0 LANGUAGES CXX)
+set(PROJECT_VERSION 3.00)
+
+message(STATUS "Compiling GLUI Library Version ${PROJECT_VERSION}")
+message(STATUS "Using cmake version ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" )
+
+message(STATUS "Installing to ${CMAKE_INSTALL_PREFIX}")
+
+####CMake-GUI options##########################
+
+#These names need to stick out when building the external-libs projects.
+option(GLUI_BUILD_EXAMPLES "Include glui_example to launch demo" ON)
+option(GLUI_READLINE_MODIFIERS "Restore Unix's Readline key bindings" OFF)
+option(GLUI_DEBUG_STDOUT "Restore (dump) debug output feature" OFF)
+
+if(GLUI_BUILD_EXAMPLES)
+	add_definitions(-DGLUI_BUILD_EXAMPLES)
+endif()
+if(GLUI_READLINE_MODIFIERS)
+	add_definitions(-DGLUI_READLINE_MODIFIERS)
+endif()
+if(GLUI_DEBUG_STDOUT)
+	add_definitions(-DGLUI_DEBUG_STDOUT)
+endif()
+
+#Is this good enough for static builds??
+if(WIN32 OR CYGWIN)
+	add_definitions(-DGLUI_DLL)
+endif()
+
+####BUILD/INSTALL###############################
+
+string(APPEND CMAKE_CXX_FLAGS_DEBUG " -D_DEBUG")
+string(APPEND CMAKE_CXX_FLAGS_RELEASE " -DNDEBUG")
+string(APPEND CMAKE_CXX_FLAGS_MINSIZEREL " -DNDEBUG")
+string(APPEND CMAKE_CXX_FLAGS_RELWITHDEBINFO " -DNDEBUG")
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+add_compile_options(-frtti -fvisibility=hidden -fpermissive)
+endif()
+
+
+find_package(X11)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 
-SET(GLUI_SRCS
- algebra3.cpp
- arcball.cpp
- glui_add_controls.cpp
- glui_bitmap_img_data.cpp
- glui_bitmaps.cpp
- glui_button.cpp
- glui_checkbox.cpp
- glui_column.cpp
- glui_commandline.cpp
- glui_control.cpp
- glui.cpp
- glui_edittext.cpp
- glui_filebrowser.cpp
- glui_listbox.cpp
- glui_list.cpp
- glui_mouse_iaction.cpp
- glui_node.cpp
- glui_panel.cpp
- glui_radio.cpp
- glui_rollout.cpp
- glui_rotation.cpp
- glui_scrollbar.cpp
- glui_separator.cpp
- glui_spinner.cpp
- glui_statictext.cpp
- glui_string.cpp
- glui_textbox.cpp
- glui_translation.cpp
- glui_tree.cpp
- glui_treepanel.cpp
- glui_window.cpp
- quaternion.cpp
- viewmodel.cpp
-)
-add_library(glui_obj OBJECT ${GLUI_SRCS})
+set(glui_libs ${X11_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+set(glui_incl ${X11_INCLUDE_DIR} ${GLUT_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+
+file(GLOB glui_files "src/*.cpp" "src/example/glui_*" "include/*.*" "include/GL/*.*")
+
+add_library(glui_obj OBJECT ${glui_files})
 target_include_directories(glui_obj
       PUBLIC
       "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
-      ${OPENGL_INCLUDE_DIR}
-      ${GLUT_INCLUDE_DIR})
+      ${glui_incl})
 # we need to enable -fPIC this so that the same object code can be used to
 # create static *and* shared libraries without double compilation
-set_target_properties( glui_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+set_target_properties(glui_obj PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 add_library(glui SHARED $<TARGET_OBJECTS:glui_obj>)
 target_include_directories(glui
       PUBLIC
       "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
       "$<INSTALL_INTERFACE:include>"
-      ${OPENGL_INCLUDE_DIR}
-      ${GLUT_INCLUDE_DIR})
-target_link_libraries(glui PUBLIC ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+      ${glui_incl})
+target_link_libraries(glui PUBLIC ${glui_libs})
 set_target_properties(glui PROPERTIES
   DEBUG_POSTFIX "d"
   VERSION ${PROJECT_VERSION}
@@ -69,28 +81,26 @@ target_include_directories(glui_static
       PUBLIC
       "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
       "$<INSTALL_INTERFACE:include>"
-      ${OPENGL_INCLUDE_DIR}
-      ${GLUT_INCLUDE_DIR})
-target_link_libraries(glui_static PUBLIC ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+      ${glui_incl})
+target_link_libraries(glui_static PUBLIC ${glui_libs})
 set_target_properties(glui_static PROPERTIES DEBUG_POSTFIX "d")
 
-add_executable(ppm2array tools/ppm.cpp tools/ppm2array.cpp)
+
+file(GLOB ppm2array_files "src/ppm2array/*.cpp" "src/ppm2array/*.h")
+
+add_executable(ppm2array ${ppm2array_files})
 target_link_libraries(ppm2array)
 
-add_executable(example1 example/example1.cpp)
-target_link_libraries(example1 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example2 example/example2.cpp)
-target_link_libraries(example2 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example3 example/example3.cpp)
-target_link_libraries(example3 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example4 example/example4.cpp)
-target_link_libraries(example4 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example5 example/example5.cpp)
-target_link_libraries(example5 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example6 example/example6.cpp)
-target_link_libraries(example6 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
 
+if(GLUI_BUILD_EXAMPLES)
 
+	file(GLOB example_files "src/example/example.*")
+	set_source_files_properties(example.rc PROPERTIES LANGUAGE RC)
+
+	add_executable(example ${example_files})
+	target_link_libraries(example glui_static ${glui_libs})
+
+endif()
 
 ####
 # Installation
@@ -106,7 +116,7 @@ set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
 set(targets_export_name "${PROJECT_NAME}Targets")
 set(namespace "${PROJECT_NAME}::")
 
-# Include module with fuction 'write_basic_package_version_file'
+# Include module with function 'write_basic_package_version_file'
 include(CMakePackageConfigHelpers)
 
 # Configure '<PROJECT-NAME>ConfigVersion.cmake'

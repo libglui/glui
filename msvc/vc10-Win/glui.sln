@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glui", "glui.vcxproj", "{1EC8E2EF-5798-4626-A88F-D213840B9AAB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ppm2array", "ppm2array.vcxproj", "{88461BF4-048D-4CDD-8433-AF0540066804}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example.vcxproj", "{19FB4855-8DAB-47A3-9027-BDC94E12B58B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EC8E2EF-5798-4626-A88F-D213840B9AAB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1EC8E2EF-5798-4626-A88F-D213840B9AAB}.Debug|Win32.Build.0 = Debug|Win32
+		{1EC8E2EF-5798-4626-A88F-D213840B9AAB}.Release|Win32.ActiveCfg = Release|Win32
+		{1EC8E2EF-5798-4626-A88F-D213840B9AAB}.Release|Win32.Build.0 = Release|Win32
+		{88461BF4-048D-4CDD-8433-AF0540066804}.Debug|Win32.ActiveCfg = Debug|Win32
+		{88461BF4-048D-4CDD-8433-AF0540066804}.Debug|Win32.Build.0 = Debug|Win32
+		{88461BF4-048D-4CDD-8433-AF0540066804}.Release|Win32.ActiveCfg = Release|Win32
+		{88461BF4-048D-4CDD-8433-AF0540066804}.Release|Win32.Build.0 = Release|Win32
+		{19FB4855-8DAB-47A3-9027-BDC94E12B58B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19FB4855-8DAB-47A3-9027-BDC94E12B58B}.Debug|Win32.Build.0 = Debug|Win32
+		{19FB4855-8DAB-47A3-9027-BDC94E12B58B}.Release|Win32.ActiveCfg = Release|Win32
+		{19FB4855-8DAB-47A3-9027-BDC94E12B58B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
