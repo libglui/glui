@@ -1829,9 +1829,13 @@ public:
 	{
 		_var_set(p,float_count); 
 	}
-	inline void stage_live(int float_count=0)
+	inline void stage_live()
 	{
-		int_val = 0; text = float_count?"0.0":float_count++,"0";
+		int_val = 0; text = '0'; float_array_val[0] = 0;
+	}
+	inline void stage_live(int float_count)
+	{
+		int_val = 0; text = "0.0"; assert(float_count>0);
 		memset(float_array_val,0x00,sizeof(double)*float_count);
 	}
 

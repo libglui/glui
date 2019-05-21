@@ -115,18 +115,10 @@ void UI::Rotation::_iaction_mouse(int stage, int x, int y)
 void UI::Rotation::_iaction_draw(int persp)
 {
 	if(1==persp)
-	{			
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-
-		//glMultMatrixd(&(*ball->rot_ptr)[0][0]); //2019
-		glMultMatrixd(float_array_val);
-
+	{
 		//draw_ball(1.35f); //1.96f
 		//Want 2px separation so odd pixels don't touch.
 		draw_ball(1.25f,true,true);
-
-		glPopMatrix();		
 	}
 	else if(0==persp) //ortho
 	{
@@ -279,11 +271,11 @@ bool UI::Rotation::draw_ball(float radius, bool t, bool l)
 	{
 		glEnable(GL_CULL_FACE);
 
-	//	glMatrixMode(GL_MODELVIEW);
-	//	glPushMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
 
-		//glMultMatrixd(&(*ball->rot_ptr)[0][0]); //2019
-	//	glMultMatrixd(float_array_val);
+		glMultMatrixd(&(*ball->rot_ptr)[0][0]); //2019
+		glMultMatrixd(float_array_val);
 
 		//draw_ball
 		{
@@ -298,7 +290,7 @@ bool UI::Rotation::draw_ball(float radius, bool t, bool l)
 			glMatrixMode(GL_MODELVIEW);
 		}
 		
-	//	glPopMatrix();
+		glPopMatrix();
 
 		glDisable(GL_CULL_FACE);
 				
