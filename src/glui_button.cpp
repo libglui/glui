@@ -91,10 +91,6 @@ void UI::Button::_draw()
 		{
 			//REMINDER: This tweak is concerned with label spacing
 			//and collision with the stippled border.
-
-			if(!press)				
-			draw_active_rect(3,3,w-3,h-3);
-			else
 			draw_active_rect(3-press,3-press,w-3+press,h-3+press);
 		}
 	}

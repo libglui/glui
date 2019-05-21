@@ -1348,15 +1348,6 @@ UI::Control *UI::find_control(int x, int y)
 
 			if(!node->first_child())
 			{
-				/*** SPECIAL CASE: for edittext boxes, we make sure click is
-				in box, and not on name string.  This should be generalized
-				for all controls later... ***/
-				if(dynamic_cast<EditText*>(node)
-				&&x<node->x_abs+node->x_lr)
-				{
-					return (Control*)node->parent();
-				}
-
 				/* point is inside this node, and node has no children,
 				so return this node as the selected node */
 

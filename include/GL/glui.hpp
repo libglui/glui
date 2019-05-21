@@ -1166,7 +1166,7 @@ public:
 		//EXPERIMENTAL
 		//This can be a user data field, but it can depend on
 		//the control. The Translation control uses it for 2D
-		//translation. Its orig_z data is free in its XY mode.
+		//translation.
 		double float_union; int int_union; void *ptr_union; 
 
 	}extra_data; /**< One more float value */
@@ -1804,10 +1804,7 @@ public:
 	/* Called when ctrl is created */
 	LINKAGE void init_live();	
 
-	/* Reads live variable 
-	 NEW: Returns false if any child was the active control.
-	 Currently they are not "synced" so they may be altered.
-	 */	
+	/* Reads live variable */	
 	LINKAGE void sync_live(bool recurse=true, bool draw=true); 
 
 	/** Writes live variable **/
@@ -1834,7 +1831,7 @@ public:
 	}
 	inline void stage_live(int float_count=0)
 	{
-		int_val = 0; text = float_count?"0.0":"0";
+		int_val = 0; text = float_count?"0.0":float_count++,"0";
 		memset(float_array_val,0x00,sizeof(double)*float_count);
 	}
 
@@ -1880,7 +1877,7 @@ public: //User draw methods
 		
 		for(Control*ch=first_child();ch;ch=ch->next()) 
 		{
-			ch->draw_recursive();
+			ch->draw_recursive(if_hidden);
 		}
 	}	
 	inline void draw_at_origin()
@@ -1906,7 +1903,7 @@ private: //Display manager methods
 	friend class UI;
 	
 	/* Recalculate positions and offsets */
-	void _pack(int=0,int=0),_align(),_align_children();
+	void _pack(int=0,int=0),_align_control(),_align_children();
 	
 protected:
 
@@ -4357,7 +4354,7 @@ struct Event /* Zero-initialized GLUI_Master data members. */
 	int prev_click_et;
 	int curr_click_et;
 
-	int curr_modifiers; // Shift, Ctrl, Alt, WHEEL_HORZ	
+	int curr_modifiers; // Shift, Ctrl, Alt
 
 	bool prev_button_down;
 	bool curr_button_down;

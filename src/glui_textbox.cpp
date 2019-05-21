@@ -73,9 +73,8 @@ UI::ScrollBar *UI::Control::scrollbar_init(CB cb)
 
 namespace glui_textbox_gl_caret
 {	
-	//WARNING: I through together pretty quickly one
-	//day when I realized this is a nice way to do a
-	//caret. 
+	//WARNING: I threw this together pretty quickly one
+	//day when I realized this is one way to do a caret. 
 
 	enum{ ms=500 };
 	
@@ -131,6 +130,8 @@ namespace glui_textbox_gl_caret
 
 	extern bool callback(UI::Control *cc, int ch, int cx, int cy, bool)
 	{	
+		//NOTE: I think deactivated controls will send 0,0,0.
+
 		if(x!=cx||y!=cy)
 		{
 			x = cx; y = cy; h = ch; xor_bit = 0;
@@ -178,9 +179,6 @@ void UI::Control::pos_caret(int h, int x, int y)
 	
 	int cx = 0, cy = 0;
 
-	//Nvidia GLUT uses an HWND for subwindows.
-	//ui->get_subpos(&cx,&cy);
-
 	if(x>=0&&y>=0&&x<m[2]&&y+h<=m[3]) 
 	{
 		int cw = cx+ui->_w;
@@ -195,8 +193,7 @@ void UI::Control::pos_caret(int h, int x, int y)
 	}
 	else h = 0;
 				   
-	if(!GLUI.caret_callback
-	||GLUI.caret_callback(this,h,cx,cy,!enabled)) 
+	if(!GLUI.caret_callback||GLUI.caret_callback(this,h,cx,cy,!enabled)) 
 	{
 		if(h>0) goto draw;
 	}

@@ -153,7 +153,7 @@ void UI::Control::_post_repack(bool repack)
 
 /****** GLUI_Control::align() **************/
 
-void UI::Control::_align()
+void UI::Control::_align_control()
 {		
 	if(dynamic_cast<Column*>(this)) return;
 
@@ -215,7 +215,7 @@ void UI::Control::_align_children()
 {
 	//This subroutine used to be UI::_align_controls(). They're
 	//separate now.
-	/* _align(); */
+	/* _align_control(); */
 
 	//REMINDER: This looks like _align in a recursive form, however it
 	//must be more complicated than that, because it doesn't work that
@@ -229,7 +229,7 @@ void UI::Control::_align_children()
 		//GLUI made Spinner have an Edit control instead of the
 		//other way around ALIGN_BUDDY is a backward relationship.
 		
-		//ch->_align(); //NEW
+		//ch->_align_control(); //NEW
 		//Here x_rl is to make spinners easier to click at.
 		int hotzone = ch->w+ch->x_rl;
 		ch->x_abs = x_abs+w-x_rl-hotzone;
@@ -242,7 +242,7 @@ void UI::Control::_align_children()
 	{
 		for(;ch;ch=ch->next())
 		{
-			ch->_align(); ch->_align_children();
+			ch->_align_control(); ch->_align_children();
 		}
 		  //ALGORITHM
 		  //If rollouts are extended to fill the width of their
@@ -832,7 +832,7 @@ void UI::Control::set_alignment(int new_align)
 {
 	alignment = new_align;
 	
-	_align(); _align_children(); redraw();
+	_align_control(); _align_children(); redraw();
 }
 void UI::Control::set_placement(int new_place)
 {
