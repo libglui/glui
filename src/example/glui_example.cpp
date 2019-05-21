@@ -173,7 +173,7 @@ namespace glui_example_1 //EXAMPLE #1
 		//2019: Hold freeglut to reasonable frame rate so not to degrade demo.
 		static int et = 0;
 		int now = glutGet(GLUT_ELAPSED_TIME);
-		if(now-et>15){ et = now; glutPostRedisplay(); }
+		if(now-et>10){ et = now; glutPostRedisplay(); }
 	}
 
 	/**************************************** myGlutReshape() *************/

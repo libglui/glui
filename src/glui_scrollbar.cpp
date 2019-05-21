@@ -150,7 +150,7 @@ bool UI::ScrollBar::_mouse_down_handler(int local_x, int local_y)
 	//last_update_time = GLUI_Time()-1;
 	state = find_arrow(local_x,local_y);
 	if(needs_idle())
-	GLUI::glui_setIdleFuncIfNecessary();
+	GLUI::glui_setIdleFuncIfNecessary(true);
 
 	/* printf("spinner: mouse down  : %d/%d   arrow:%d\n",local_x,local_y,
 	find_arrow(local_x,local_y)); */

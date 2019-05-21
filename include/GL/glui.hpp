@@ -4672,7 +4672,7 @@ public: //Old GLUI_Master methods
 	inline static float get_version(){ return _this()._glui_version; }
 
 	//UNDOCUMENTED 
-	LINKAGE static void glui_setIdleFuncIfNecessary();
+	LINKAGE static void glui_setIdleFuncIfNecessary(bool necessary=false);
 	 	
 	#ifdef GLUI_GLUI_H___NODEPRECATED
 	inline UI *create_glui(C_String name, int flags=0, int x=-1, int y=-1); 

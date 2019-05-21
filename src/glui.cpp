@@ -440,6 +440,24 @@ struct UI::_glut_friends
 	/* Send idle event to each UI, then to the main window */
 	static void idle()
 	{	
+		//Spinner needs a speed limit... besides GLUT will
+		//call this idle function at infinite rate. That's
+		//unacceptable.
+		static int was = 0;
+		int now = glutGet(GLUT_ELAPSED_TIME);
+		{
+			if(now-was<2)
+			{
+				#ifdef _WIN32
+				Sleep(1);
+				#else
+				usleep(1000);
+				#endif
+				now = glutGet(GLUT_ELAPSED_TIME);
+			}
+		}
+		was = now;
+
 		for(UI*ui=GLUI::first_ui();ui;/*ui=ui->next*/) 
 		{
 			UI *swap = ui->next(); //_pending_idleclose
@@ -467,7 +485,7 @@ struct UI::_glut_friends
 	static void idle2(UI::Void_CB f)
 	{
 		if(GLUT._add_cb_to_glut_window(glutGetWindow(),GLUT::IDLE,f))
-		GLUI::glui_setIdleFuncIfNecessary();
+		GLUI::glui_setIdleFuncIfNecessary(f?true:false);
 	}
 };
 
@@ -617,7 +635,7 @@ void UI::_init(const char *text, int subpos, int x, int y, int parent_window)
 		glutPassiveMotionFunc(_glut_friends::passive_motion);
 		glutEntryFunc(_glut_friends::entry);
 		glutVisibilityFunc(_glut_friends::visibility);	
-		glutIdleFunc(_glut_friends::idle);
+		/*  glutIdleFunc(_glut_friends::idle);    // FIXME!  100% CPU usage!      */
 	}	
 	if(old_glut_window>0) glutSetWindow(old_glut_window);
 	
@@ -1686,7 +1704,7 @@ void UI::close(bool now, bool detach)
 
 	if(detach) _glut_parent_id = -1; 
 	_pending_idleclose = _pending_redisplay = true; 	
-	if(!now) GLUI::glui_setIdleFuncIfNecessary();
+	if(!now) GLUI::glui_setIdleFuncIfNecessary(true);
 	else _close_internal();
 }
 void UI::_close_internal()
@@ -2013,21 +2031,22 @@ void GLUI::_set_edited(UI::Control *c)
 
 /************* GLUI::glui_setIdleFuncIfNecessary() ***********************/
 
-void GLUI::glui_setIdleFuncIfNecessary()
+void GLUI::glui_setIdleFuncIfNecessary(bool necessary)
 {	
-	bool necessary = false;	
-	//NEW: Tying idle routines to life of windows/facilitating 
-	//multiple idle routines.
-	//if(!GLUT._glut_idle_CB)
-	for(GLUT::Window*gw=GLUT::first_glut_window();gw;gw=gw->next())
+	if(!necessary)
 	{
-		if(gw->_glut_idle_CB) necessary = true;
+		//NEW: Tying idle routines to life of windows/facilitating 
+		//multiple idle routines.
+		//if(!GLUT._glut_idle_CB)
+		for(GLUT::Window*gw=GLUT::first_glut_window();gw;gw=gw->next())
+		{
+			if(gw->_glut_idle_CB) necessary = true;
+		}
+		if(!necessary) for(UI*ui=GLUI::first_ui();ui;ui=ui->next())		
+		{
+			if(ui->_needs_idle()) necessary = true;
+		}
 	}
-	if(!necessary) for(UI*ui=GLUI::first_ui();ui;ui=ui->next())		
-	{
-		if(ui->_needs_idle()) necessary = true;
-	}
-
 	glutIdleFunc(necessary?UI::_glut_friends::idle:NULL);
 }
 

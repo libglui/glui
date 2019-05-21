@@ -726,8 +726,21 @@ bool UI::EditText::_special_handler(int key, int modifiers)
 	{
 	case GLUT_KEY_PAGE_UP: 
 	case GLUT_KEY_PAGE_DOWN: return true;		
-	case GLUT_KEY_UP: key = GLUT_KEY_LEFT; break;
-	case GLUT_KEY_DOWN: key = GLUT_KEY_RIGHT; break;
+	case GLUT_KEY_UP: case GLUT_KEY_DOWN:
+
+		key = key==GLUT_KEY_UP?GLUT_KEY_LEFT:GLUT_KEY_RIGHT;
+		
+		//Normally I'd choose GLUT_ACTIVE_CTRL for this, but
+		//GLUI is using that for reducing the increment.
+		if(modifiers&~GLUT_ACTIVE_SHIFT) if(Spinner*s=spinner)
+		{
+			if(data_type==EDIT_INT)
+			{
+				modifiers&=~GLUT_ACTIVE_CTRL;
+			}
+			return s->_special_handler(key,modifiers);
+		}		
+		break;
 	}
 	return Text_Interface::_special_handler(key,modifiers);
 }

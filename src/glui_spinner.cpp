@@ -49,6 +49,8 @@ namespace GLUI_Library
 {//-.
 //<-'
 
+static int glui_spinner_cogwheel = 0; //2019
+
 /*********************************** GLUI_Spinner:_reset_growth() *************/
 
 double &Spin_Interface::_growth(int inc)
@@ -136,30 +138,44 @@ g:	if(g<0.001) g = 0.001;
 bool UI::Spinner::_mouse_down_handler(int local_x, int local_y)
 {
 	state = find_arrow(local_x,local_y);
+	if(!state) return true; //2019
+	
 	if(needs_idle())
-	GLUI::glui_setIdleFuncIfNecessary();
+	GLUI::glui_setIdleFuncIfNecessary(true);
 
 	/* printf( "spinner: mouse down  : %d/%d   arrow:%d\n",local_x,local_y,find_arrow(local_x,local_y)); */
 
 	if(state!=STATE_UP&&state!=STATE_DOWN)
 	{
+		assert(0); //SCROLL?
+
 		return false; //return true; //???
 	}
-
+	
 	_reset_growth();
 
-	//DUBIOUS
+	//NOTE: I'm going to try to add this logic to do_click.
+	//2019: Either do_click should set the value or it shouldn't be also
+	//taken. The demos have no problem incrementing... in fact they have
+	//the opposite problem.
 	/*** ints and floats behave a bit differently.  When you click on
 	an int spinner, you expect the value to immediately go up by 1, whereas
 	for a float it'll go up only by a fractional amount.  Therefore, we
 	go ahead and increment by one for int spinners ***/
-	if(data_type==SPIN_INT)	
-	if(double step=state==STATE_UP?1:STATE_DOWN?-0.9:0)
-	{
-		set_float_val(float_val+step);
-	}
+	//if(data_type==SPIN_INT)	
+	//if(double step=state==STATE_UP?1:STATE_DOWN?-0.9:0) //0.9???
+	//{
+	//	set_float_val(float_val+step); 
+	//}
+	
+	glui_spinner_cogwheel = 0;
 
-	do_click(); return false;
+	do_click();
+
+	//2019: This is new... it should probably be GLUT_ELAPSED_TIME based.
+	glui_spinner_cogwheel = 45;
+	
+	return false;
 }
 
 /******************************** GLUI_Spinner::mouse_up_handler() **********/
@@ -193,7 +209,7 @@ static int glui_spinner_last_y = 0;
 bool UI::Spinner::_mouse_held_down_handler(int local_x, int local_y, bool inside)
 {
 	if(state==STATE_NONE) return false;
-
+	
 	/* printf("spinner: mouse held: %d/%d    inside: %d\n",local_x,local_y,inside); */
 
 	if(state==STATE_BOTH) /* dragging? */
@@ -300,6 +316,9 @@ void UI::Spinner::_draw()
 
 bool Spin_Interface::_special_handler(int key, int modifiers)
 {
+	//NOTE: It's currently not really possible to do key input
+	//into a Spinner becaue the focus goes to the text control.
+
 	if(key>=GLUT_KEY_LEFT&&key<=GLUT_KEY_DOWN)
 	{
 		int x,y;
@@ -313,6 +332,9 @@ bool Spin_Interface::_special_handler(int key, int modifiers)
 			y = !horizontal?h-3:3;	
 			xy:
 			x+=x_abs; y+=y_abs;
+
+			glui_spinner_cogwheel = 0; //NEW
+
 			if(GLUI::Click(this,x,y))
 			return true;
 		}
@@ -387,22 +409,38 @@ void UI::Spinner::do_click()
 		redraw(); return; 
 	}
 	
+	if(glui_spinner_cogwheel--) return;
+
+	glui_spinner_cogwheel = 10;
+	
 	double cm_factor = 1;
 	switch(GLUI.curr_modifiers)
 	{
-	case GLUT_ACTIVE_SHIFT: cm_factor = 100; break;
-	case GLUT_ACTIVE_CTRL: cm_factor = 0.01; break;
+	case GLUT_ACTIVE_SHIFT: cm_factor = 10; break; //100 //TOO MUCH
+	case GLUT_ACTIVE_CTRL: cm_factor = 0.1; break; //0.01 //TOO LITTLE
 	}
 
 	double cmp = float_val; //limits
 
 	//if(data_type==SPIN_FLOAT||1) //???
+	if(int dir=state==STATE_UP?1:state==STATE_DOWN?-1:0)
 	{
-		double inc = _increase_growth();
-		double dir = state==STATE_UP?1:state==STATE_DOWN?-1:0;		
-		set_float_val(float_val+inc*dir*cm_factor*speed);
+		double inc = _increase_growth()*dir*cm_factor*speed;
 
+		double new_val = float_val+inc;
+
+		if(data_type==SPIN_INT) 
+		{
+			while(int_val==(int)new_val) //NEW
+			{
+				new_val+=inc;
+			}
+			new_val = (int)new_val; //NEW
+		}
+		
 		/** Remember, edittext mirrors the float and int values ***/
+
+		set_float_val(new_val);
 	}
 
 	if(cmp!=float_val) do_callbacks();
