@@ -2383,8 +2383,7 @@ public:
 		int id = -1; CB cb = CB();
 		GLUI_INIT; is_open = open!=0; (void)type; //UNUSED
 	}
-	#endif
-	template<class LV>
+	#endif	
 	explicit Rollout(GLUI_ARGS(="",C_Bool open=true,))
 	{
 		GLUI_INIT; is_open = open!=0;
