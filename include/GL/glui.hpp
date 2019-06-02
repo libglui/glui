@@ -438,48 +438,13 @@ public:
  Keeps an array of GLUI_Bitmap objects to represent all the 
  images used in the UI: checkboxes, arrows, etc.
 */
-typedef const class Bitmap *StdBitmaps[Bitmap::_NUM_ITEMS];
+LINKAGE const Bitmap *std_bitmaps[/*Bitmap::_NUM_ITEMS*/];
 
-/************************************************************/
-/*                                                          */
-/*                 Circular Dependencies                    */
-/*                                                          */
-/************************************************************/
-	
-class U1 /* UI */
-{
-public:
-	
-	class Spinner;
-	class ScrollBar; 
-		
-public:
-
-	/** Static members of UI need to go into U1. */
-
-	LINKAGE static StdBitmaps &std_bitmaps;
-	
-	enum /****** How was a control activated? ************/
-	{
-	  //NOTE: MOUSE implies there are valid coordinates.
-	  //TAB is blocked by controls that use tab or that
-	  //do not participate in tab navigation.
-	  //OTHER (NEW) is a request to focus without mouse
-	  //information. Enablement happens post activation.
-
-		ACTIVATE_MOUSE=1, ACTIVATE_TAB, ACTIVATE_OTHER,
-
-	 /*************** set_click_type *********************/
-
-		/* wincon.h defines DOUBLE_CLICK as 2 */
-		SINGLE_CLICKED=0, DOUBLE_CLICKED
-	};	
-};	
 struct Silver3ubv //back-compat 
 {
 	operator const unsigned char*()
 	{
-		return U1::std_bitmaps[Bitmap::RADIOBUTTON_OFF]->lumens;
+		return std_bitmaps[Bitmap::RADIOBUTTON_OFF]->lumens;
 	}
 };
 static float Silver3[3] = {}; /** TRANSLATION-UNIT STORAGE */
@@ -488,7 +453,7 @@ struct Silver3fv //back-compat
 	operator const float*()
 	{
 		Silver3[0] = Silver3[1] = Silver3[2] = 
-		*U1::std_bitmaps[Bitmap::RADIOBUTTON_OFF]->lumens/255.0f;
+		*std_bitmaps[Bitmap::RADIOBUTTON_OFF]->lumens/255.0f;
 		return Silver3;
 	}
 };
@@ -512,20 +477,28 @@ typedef class Mouse_Interface MI;
 /*                                                          */
 /************************************************************/
 
+namespace Meta /*workarounds*/
+{
+	struct Spinner;
+	struct ScrollBar;
+}
+
 template<class T> class NodePtr
 {
 	class Node *_union; 
 
 public: 
 	
-	inline operator T*()const
-	{
-		return dynamic_cast<T*>(_union);
-	}
-
 	inline T *operator->()const
 	{
 		assert(*this); return (T*)_union; 
+	}
+
+	inline operator typename T*()const
+	{
+		if(sizeof(T)!=sizeof(typename T::Sub))
+		return dynamic_cast<typename T*>(_union);
+		return (T*)dynamic_cast<typename T::Sub*>(_union);
 	}
 };
 /**
@@ -545,13 +518,13 @@ public:
 	union
 	{
 		Node *_child_head;		
-		NodePtr<U1::ScrollBar> scrollbar;
+		NodePtr<Meta::ScrollBar> scrollbar;
 	};	
 	union
 	{
 		Node *_child_tail;
-		NodePtr<U1::Spinner> spinner;
-		NodePtr<U1::ScrollBar> scrollbar2;
+		NodePtr<Meta::Spinner> spinner;
+		NodePtr<Meta::ScrollBar> scrollbar2;
 	};		
 	union
 	{
@@ -653,7 +626,7 @@ inline void glui_sort_node(Node &node, bool(*pred)(T*,T*), int depth)
 /**
  The main user-visible interface object to UI. 
 */
-class UI : public Node, public U1
+class UI : public Node
 {	
 public:
 
@@ -662,7 +635,6 @@ public:
 
     /********** friend classes *************/
 
-	friend class U1;
 	friend class GLUI;
 	friend class GLUT;
 	friend class Node;	
@@ -689,10 +661,10 @@ public:
 	class RadioGroup;
 	class RadioButton;
 	class Separator;
-	//class Spinner;
+	class Spinner;
 	class StaticText;
 	class TextBox;
-	//class ScrollBar;
+	class ScrollBar;
 	class List;
 	class ListBox;
 	class Rotation;
@@ -982,6 +954,22 @@ protected:
 	bool _needs_idle();
 
 public:
+	
+	enum /****** How was a control activated? ************/
+	{
+	  //NOTE: MOUSE implies there are valid coordinates.
+	  //TAB is blocked by controls that use tab or that
+	  //do not participate in tab navigation.
+	  //OTHER (NEW) is a request to focus without mouse
+	  //information. Enablement happens post activation.
+
+		ACTIVATE_MOUSE=1, ACTIVATE_TAB, ACTIVATE_OTHER,
+
+	 /*************** set_click_type *********************/
+
+		/* wincon.h defines DOUBLE_CLICK as 2 */
+		SINGLE_CLICKED=0, DOUBLE_CLICKED
+	};	
 
 	String window_name;
 
@@ -1648,6 +1636,11 @@ public:
 
 		ALIGN_EXPAND=0, //NEW
 		ALIGN_BUDDY=-1, //back-compat (Spinner->EditText)
+
+	/*************** set_click_type *********************/
+
+		/* wincon.h defines DOUBLE_CLICK as 2 */
+		SINGLE_CLICKED=0, DOUBLE_CLICKED
 	};
 
 	int w, h; /* dimensions of control */
@@ -2383,11 +2376,12 @@ public:
 		int id = -1; CB cb = CB();
 		GLUI_INIT; is_open = open!=0; (void)type; //UNUSED
 	}
-	#endif	
+	#else	
 	explicit Rollout(GLUI_ARGS(="",C_Bool open=true,))
 	{
 		GLUI_INIT; is_open = open!=0;
-	}	
+	}
+	#endif
 	inline Rollout(){ _members_init(); }
 	inline void _members_init()
 	{	
@@ -2526,7 +2520,7 @@ protected:
 /*                                                          */
 /************************************************************/
  
-class U1::ScrollBar : public Interface<ScrollBar,Spin_Interface>
+class UI::ScrollBar : public Interface<ScrollBar,Spin_Interface>
 {
 public: //User draw methods
 
@@ -2604,6 +2598,7 @@ private:
 	/** update_size (update_scroll_parameters)  */
 	inline int _box_len(),_box_pos(),_track_len();
 };
+struct Meta::ScrollBar : UI::ScrollBar{ /*workaround*/ };
 
 /************************************************************/
 /*                                                          */
@@ -2926,7 +2921,7 @@ public:
 /*                                                          */
 /************************************************************/
  
-class U1::Spinner : public Interface<Spinner,Spin_Interface>
+class UI::Spinner : public Interface<Spinner,Spin_Interface>
 {
 public: //Interface methods
 
@@ -3026,6 +3021,7 @@ public:
 		set_parent(associated_object=et); parent = NULL;
 	}
 };
+struct Meta::Spinner : UI::Spinner{ /*workaround*/ };
 
 /************************************************************/
 /*                                                          */

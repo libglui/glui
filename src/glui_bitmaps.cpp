@@ -66,31 +66,30 @@ extern unsigned char glui_img_listbox_down[];
 extern unsigned char glui_img_listbox_up_dis[];
 
 // These must be in the same order as the UI_STDBITMAP enums from glui.h!
-static unsigned char *glui_bitmaps[] = 
+const Bitmap *std_bitmaps[] = 
 {
-	glui_img_checkbox_0,
-	glui_img_checkbox_1,
-	glui_img_radiobutton_0,
-	glui_img_radiobutton_1,
-	glui_img_uparrow,
-	glui_img_downarrow,
-	glui_img_leftarrow,
-	glui_img_rightarrow,
-	glui_img_spinup_0,
-	glui_img_spinup_1,
-	glui_img_spindown_0,
-	glui_img_spindown_1,
-	glui_img_checkbox_0_dis,
-	glui_img_checkbox_1_dis,
-	glui_img_radiobutton_0_dis,
-	glui_img_radiobutton_1_dis,
-	glui_img_spinup_dis,
-	glui_img_spindown_dis,
-	glui_img_listbox_up,
-	glui_img_listbox_down,
-	glui_img_listbox_up_dis,
+	(Bitmap*)glui_img_checkbox_0,
+	(Bitmap*)glui_img_checkbox_1,
+	(Bitmap*)glui_img_radiobutton_0,
+	(Bitmap*)glui_img_radiobutton_1,
+	(Bitmap*)glui_img_uparrow,
+	(Bitmap*)glui_img_downarrow,
+	(Bitmap*)glui_img_leftarrow,
+	(Bitmap*)glui_img_rightarrow,
+	(Bitmap*)glui_img_spinup_0,
+	(Bitmap*)glui_img_spinup_1,
+	(Bitmap*)glui_img_spindown_0,
+	(Bitmap*)glui_img_spindown_1,
+	(Bitmap*)glui_img_checkbox_0_dis,
+	(Bitmap*)glui_img_checkbox_1_dis,
+	(Bitmap*)glui_img_radiobutton_0_dis,
+	(Bitmap*)glui_img_radiobutton_1_dis,
+	(Bitmap*)glui_img_spinup_dis,
+	(Bitmap*)glui_img_spindown_dis,
+	(Bitmap*)glui_img_listbox_up,
+	(Bitmap*)glui_img_listbox_down,
+	(Bitmap*)glui_img_listbox_up_dis,
 };
-StdBitmaps &U1::std_bitmaps = *(StdBitmaps*)/*&*/glui_bitmaps;
 
 int Bitmap::_num_items()
 {

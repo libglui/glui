@@ -198,7 +198,7 @@ using GLUI_Library::glui_sort_node;
 
 typedef GLUI_Library::Bitmap GLUI_Bitmap;
 typedef GLUI_Library::Texture GLUI_Texture;
-typedef GLUI_Library::StdBitmaps GLUI_StdBitmaps;
+//typedef GLUI_Library::StdBitmaps GLUI_StdBitmaps;
 typedef GLUI_Library::Node GLUI_Node;
 typedef GLUI_Library::UI GLUI_Main, GLUI;
 typedef GLUI_Library::UI::CB GLUI_CB;
