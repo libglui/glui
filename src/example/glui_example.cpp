@@ -104,6 +104,11 @@ namespace //some common variables (that don't record state)
 
 	}main_window;
 
+	static void quit_cb(int)
+	{
+		glui_example_switch(0,main_window);
+	}
+
 	/************************************************** draw_axes() **********/
 
 	/* Disables lighting, then draws RGB axes                                */
@@ -271,6 +276,8 @@ namespace glui_example_1 //EXAMPLE #1
 		GLUI_Spinner *spinner = new GLUI_Spinner(glui,"Segments",&segments);
 		spinner->set_int_limits(3,60);
 
+		if(quit) new GLUI_Button(glui,"Quit",0,quit_cb);
+
 		//glutMainLoop(); return EXIT_SUCCESS;
 	}
 }
@@ -316,7 +323,7 @@ namespace glui_example_2 //EXAMPLE #2
 	/* GLUI control callback                                                 */
 
 	static void control_cb(int control)
-	{
+	{		
 		/********************************************************************
 		  Here we'll print the user id of the control that generated the
 		  callback, and we'll also explicitly get the values of each control.
@@ -509,7 +516,7 @@ namespace glui_example_2 //EXAMPLE #2
 		new GLUI_RadioButton(radio,"Teapot");
 		
 		if(quit)
-		new GLUI_Button(glui,"Quit",0,(GLUI_Update_CB)exit);
+		new GLUI_Button(glui,"Quit",0,quit_cb);
 
 		//glutMainLoop(); return EXIT_SUCCESS;
 	}
@@ -640,11 +647,7 @@ namespace glui_example_3 //EXAMPLE #3
 	{
 		int id = control->get_id();
 
-		if(id==0) //Quit
-		{
-			glui_example_switch(0,main_window);
-		}
-		else if(id==OPEN_CONSOLE_ID)
+		if(id==OPEN_CONSOLE_ID)
 		{
 			/****** Make command line window ******/
 			cmd_line_glui = GLUI_Master.create_glui("Enter command",0, //50,500
@@ -931,7 +934,7 @@ namespace glui_example_3 //EXAMPLE #3
 		if(quit) /****** A 'quit' button *****/
 		{		
 			//new GLUI_Button(glui,"Quit",0,(GLUI_Update_CB)exit);
-			new GLUI_Button(glui,"Quit",0,pointer_cb);
+			new GLUI_Button(glui,"Quit",0,quit_cb);
 		}
 	}
 }
@@ -998,11 +1001,6 @@ namespace glui_example_4 //EXAMPLE #4
 
 	static void control_cb(int control)
 	{
-		if(control==0) //Quit
-		{
-			glui_example_switch(0,main_window);
-		}
-
 		if(control==LIGHT0_ENABLED_ID)
 		{
 			if(light0_enabled)
@@ -1228,7 +1226,7 @@ namespace glui_example_4 //EXAMPLE #4
 		if(quit)
 		{
 			//new GLUI_Button(glui,"Quit",0,(GLUI_Update_CB)exit);
-			new GLUI_Button(panel1,"Quit",0,control_cb);			
+			new GLUI_Button(glui,"Quit",0,quit_cb);
 		}
 
 		/*** Start a new column in this panel ***/
@@ -1436,11 +1434,6 @@ namespace glui_example_5 //EXAMPLE #5
 	static void control_cb(GLUI_Control *c)
 	{
 		int control = c->user_id;
-
-		if(control==0) //Quit
-		{
-			glui_example_switch(0,main_window);
-		}
 
 		if(control==LIGHT0_ENABLED_ID)
 		{
@@ -1656,7 +1649,7 @@ namespace glui_example_5 //EXAMPLE #5
 		{
 			/****** A 'quit' button *****/
 			//new GLUI_Button(glui,"Quit",0,(GLUI_Update_CB)exit);
-			new GLUI_Button(glui,"Quit",0,control_cb);
+			new GLUI_Button(glui,"Quit",0,quit_cb);
 		}
 
 		glui->activate(); //NEW (main_window is noninteractive.)
@@ -1845,11 +1838,6 @@ namespace glui_example_6 //EXAMPLE #6
 
 	static void control_cb(int control)
 	{
-		if(control==0) //Quit
-		{
-			glui_example_switch(0,edit->get_glut_window_id());
-		}
-
 		if(control==7)
 		{
 			GLUI_String text;
@@ -1998,7 +1986,7 @@ namespace glui_example_6 //EXAMPLE #6
 		if(quit) /****** A 'quit' button *****/
 		{
 			//new GLUI_Button(glui,"Quit",0,(GLUI_Update_CB)exit);
-			new GLUI_Button(ep,"Quit",0,control_cb);			
+			new GLUI_Button(ep,"Quit",0,quit_cb);
 		}
 
 		new GLUI_Column(ep,false); 
