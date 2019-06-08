@@ -43,13 +43,14 @@ endif
 
 #######################################
 
-CPPFLAGS += -I./ -I./include
+CPPFLAGS += -I./src -I./include
 
 LIBGLUI = -L./lib -lglui
 
 #######################################
 
-GLUI_OBJS = glui_add_controls.o glui.o glui_bitmaps.o glui_button.o glui_edittext.o glui_commandline.o glui_checkbox.o glui_node.o glui_radio.o glui_statictext.o glui_panel.o glui_separator.o glui_spinner.o glui_control.o glui_column.o glui_translation.o glui_rotation.o glui_mouse_iaction.o glui_listbox.o glui_rollout.o glui_window.o arcball.o algebra3.o quaternion.o viewmodel.o glui_treepanel.o glui_tree.o glui_textbox.o glui_scrollbar.o glui_list.o glui_filebrowser.o
+GLUI_SRC = $(sort $(wildcard src/*.cpp))
+GLUI_OBJ := $(patsubst %.cpp,%.o,$(GLUI_SRC))
 
 GLUI_LIB = lib/libglui.a
 
@@ -75,20 +76,26 @@ bin/ppm2array: tools/ppm2array.cpp tools/ppm.cpp
 bin/%: example/%.cpp $(GLUI_LIB)
 	$(CXX) $(CPPFLAGS) -o $@ $<  $(LIBGLUI) $(LIBGLUT) $(LIBGL) $(LIBS)
 
-$(GLUI_LIB): $(GLUI_OBJS)
-	ar -r $(GLUI_LIB) $(GLUI_OBJS)
+$(GLUI_LIB): $(GLUI_OBJ)
+	ar -r $(GLUI_LIB) $(GLUI_OBJ)
+
+#src/%.o: src/%.cpp:
+#	$(CXX) $(CPPFLAGS) -c $<
+
+#src/%.o: src/%.c:
+#	$(CXX) $(CPPFLAGS) -c $<
 
 .cpp.o:
-	$(CXX) $(CPPFLAGS) -c $<
+	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 .c.o:
-	$(CXX) $(CPPFLAGS) -c $<
+	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 docs:
 	doxygen doc/doxygen.cfg
 
 clean:
-	rm -f *.o $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS) 
+	rm -f $(GLUI_OBJ) $(GLUI_LIB) $(GLUI_EXAMPLES) $(GLUI_TOOLS) 
 	rm -fr doc/doxygen
 
 depend:
