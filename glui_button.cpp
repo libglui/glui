@@ -48,7 +48,7 @@ GLUI_Button::GLUI_Button( GLUI_Node *parent, const GLUI_String &name,
   parent->add_control( this );
 }
 
-void GLUI_Button::common_init() 
+void GLUI_Button::common_init()
 {
   name         = tfm::format("Button: %p", this);
   h            = GLUI_BUTTON_SIZE;
