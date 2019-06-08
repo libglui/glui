@@ -115,13 +115,13 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\algebra3.cpp">
+			RelativePath="..\src\algebra3.cpp">
 		</File>
 		<File
-			RelativePath="..\arcball.cpp">
+			RelativePath="..\src\arcball.cpp">
 		</File>
 		<File
-			RelativePath="..\glui.cpp">
+			RelativePath="..\src\glui.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -139,10 +139,10 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\include\Gl\glui.h">
+			RelativePath="..\src\include\Gl\glui.h">
 		</File>
 		<File
-			RelativePath="..\glui_add_controls.cpp">
+			RelativePath="..\src\glui_add_controls.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -160,7 +160,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_bitmap_img_data.cpp">
+			RelativePath="..\src\glui_bitmap_img_data.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -178,7 +178,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_bitmaps.cpp">
+			RelativePath="..\src\glui_bitmaps.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -196,7 +196,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_button.cpp">
+			RelativePath="..\src\glui_button.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -214,7 +214,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_checkbox.cpp">
+			RelativePath="..\src\glui_checkbox.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -232,7 +232,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_column.cpp">
+			RelativePath="..\src\glui_column.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -250,7 +250,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_commandline.cpp">
+			RelativePath="..\src\glui_commandline.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -268,7 +268,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_control.cpp">
+			RelativePath="..\src\glui_control.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -286,7 +286,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_edittext.cpp">
+			RelativePath="..\src\glui_edittext.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -304,16 +304,16 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_filebrowser.cpp">
+			RelativePath="..\src\glui_filebrowser.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_internal.h">
+			RelativePath="..\src\glui_internal.h">
 		</File>
 		<File
-			RelativePath="..\glui_list.cpp">
+			RelativePath="..\src\glui_list.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_listbox.cpp">
+			RelativePath="..\src\glui_listbox.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -331,10 +331,10 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_mouse_iaction.cpp">
+			RelativePath="..\src\glui_mouse_iaction.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_node.cpp">
+			RelativePath="..\src\glui_node.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -352,7 +352,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_panel.cpp">
+			RelativePath="..\src\glui_panel.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -370,7 +370,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_radio.cpp">
+			RelativePath="..\src\glui_radio.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -388,10 +388,10 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_rollout.cpp">
+			RelativePath="..\src\glui_rollout.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_rotation.cpp">
+			RelativePath="..\src\glui_rotation.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -409,10 +409,10 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_scrollbar.cpp">
+			RelativePath="..\src\glui_scrollbar.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_separator.cpp">
+			RelativePath="..\src\glui_separator.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -430,7 +430,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_spinner.cpp">
+			RelativePath="..\src\glui_spinner.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -448,7 +448,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_statictext.cpp">
+			RelativePath="..\src\glui_statictext.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
@@ -466,25 +466,25 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\glui_string.cpp">
+			RelativePath="..\src\glui_string.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_textbox.cpp">
+			RelativePath="..\src\glui_textbox.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_translation.cpp">
+			RelativePath="..\src\glui_translation.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_tree.cpp">
+			RelativePath="..\src\glui_tree.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_treepanel.cpp">
+			RelativePath="..\src\glui_treepanel.cpp">
 		</File>
 		<File
-			RelativePath="..\glui_window.cpp">
+			RelativePath="..\src\glui_window.cpp">
 		</File>
 		<File
-			RelativePath="..\quaternion.cpp">
+			RelativePath="..\src\quaternion.cpp">
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
