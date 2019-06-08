@@ -1150,7 +1150,6 @@ void    GLUI_EditText::set_numeric_text()
 
     /* Now remove trailing zeros */
     if ( num_periods > 0 ) {
-      size_t i = 0;
       for ( size_t i=buf_num.size()-1; i>0 && i<buf_num.size(); i-- )
       {
         if ( buf_num[i]!='0' || buf_num[i-1]=='.' )
