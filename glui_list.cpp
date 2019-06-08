@@ -203,7 +203,6 @@ void    GLUI_List::deactivate()
 void    GLUI_List::draw( int x, int y )
 {
   int line = 0;
-  int box_width;
   GLUI_List_Item *item;
 
   GLUI_DRAWINGSENTINAL_IDIOM
@@ -247,9 +246,6 @@ void    GLUI_List::draw( int x, int y )
     glEnd();
   }
 
-  /* Figure out how wide the box is */
-  box_width = get_box_width();
-
   /* Figure out which lines are visible*/
 
   visible_lines = (int)(h-20)/15;
@@ -286,7 +282,8 @@ void    GLUI_List::draw( int x, int y )
 
 void    GLUI_List::draw_text(const GLUI_String &t, int selected, int x, int y )
 {
-  int text_x, i, x_pos;
+  int text_x, x_pos;
+  unsigned int i ;
   int box_width;
 
   GLUI_DRAWINGSENTINAL_IDIOM
@@ -457,6 +454,7 @@ int  GLUI_List::delete_all()
 
   num_lines = 0;
   curr_line = 0;
+  start_line = 0;
 
   return true;
 }
