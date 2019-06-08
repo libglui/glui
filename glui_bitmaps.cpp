@@ -78,7 +78,7 @@ GLUI_Bitmap::GLUI_Bitmap()
 /* Create bitmap from greyscale byte array */
 void GLUI_Bitmap::init_grey(const unsigned char *array)
 {
-  w = size_t(array[0]); 
+  w = size_t(array[0]);
   h = size_t(array[1]);
   pixels.resize(w*h*3);
   array += 2;
@@ -93,7 +93,7 @@ void GLUI_Bitmap::init_grey(const unsigned char *array)
 */
 void GLUI_Bitmap::init(const int *array)
 {
-  w = size_t(array[0]); 
+  w = size_t(array[0]);
   h = size_t(array[1]);
   pixels.resize(w*h*3);
   array += 2;
