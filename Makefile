@@ -79,12 +79,6 @@ bin/%: example/%.cpp $(GLUI_LIB)
 $(GLUI_LIB): $(GLUI_OBJ)
 	ar -r $(GLUI_LIB) $(GLUI_OBJ)
 
-#src/%.o: src/%.cpp:
-#	$(CXX) $(CPPFLAGS) -c $<
-
-#src/%.o: src/%.c:
-#	$(CXX) $(CPPFLAGS) -c $<
-
 .cpp.o:
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
