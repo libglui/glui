@@ -22,6 +22,12 @@
 #ifndef __GLUI_INTERNAL_CONTROL_H
 #define __GLUI_INTERNAL_CONTROL_H
 
+#ifdef __APPLE__
+#ifndef GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION
+#endif
+#endif
+
 /* This is the main GLUI external header */
 #include "GL/glui.h"
 

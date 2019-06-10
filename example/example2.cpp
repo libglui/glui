@@ -10,6 +10,12 @@
 
 ****************************************************************************/
 
+#ifdef __APPLE__
+#ifndef GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION
+#endif
+#endif
+
 #include <string.h>
 #include <GL/glui.h>
 

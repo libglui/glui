@@ -34,9 +34,7 @@ that aren't used.
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
-
+#include "glui_internal_control.h"
 
 /*********************************** GLUI:: add_checkbox() ************/
 

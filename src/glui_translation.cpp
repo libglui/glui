@@ -31,8 +31,8 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
+
 #include "algebra3.h"
 #include "tinyformat.h"
 

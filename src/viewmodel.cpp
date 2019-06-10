@@ -33,9 +33,9 @@
 
 ************************************************************************/
 
-#include "viewmodel.h"
+#include "glui_internal_control.h"
 
-#include "GL/glui.h"
+#include "viewmodel.h"
 
 #include <cstdio>
 #include <cstdlib>
