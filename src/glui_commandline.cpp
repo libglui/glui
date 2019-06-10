@@ -30,8 +30,7 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
 
 /****************************** GLUI_CommandLine::GLUI_CommandLine() **********/
 GLUI_CommandLine::GLUI_CommandLine( GLUI_Node *parent, const GLUI_String &name,

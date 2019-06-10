@@ -29,8 +29,8 @@
 
 *****************************************************************************/
 
-#include "GL/glui.h"
-#include "glui_internal.h"
+#include "glui_internal_control.h"
+
 #include <sys/types.h>
 
 #ifdef __GNUC__
