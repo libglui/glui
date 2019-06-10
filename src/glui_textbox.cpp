@@ -961,12 +961,9 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     sel_start = sel_end = insertion_pt;
 
 
-  CLAMP( insertion_pt, 0, text.length()); /* Make sure insertion_pt
-                           is in bounds */
-  CLAMP( sel_start, 0, text.length()); /* Make sure insertion_pt
-                        is in bounds */
-  CLAMP( sel_end, 0, text.length()); /* Make sure insertion_pt
-                          is in bounds */
+  CLAMP( insertion_pt, 0, int(text.length())); /* Make sure insertion_pt is in bounds */
+  CLAMP( sel_start, 0, int(text.length()));    /* Make sure sel_start is in bounds */
+  CLAMP( sel_end, 0, int(text.length()));      /* Make sure sel_end is in bounds */
 
   /******** Now redraw text ***********/
   if ( can_draw())
