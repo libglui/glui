@@ -201,11 +201,12 @@ And one other change:
 
 ### Welcome to the GLUI User Interface Library, v2.0 beta!
 
-This distribution contains the full GLUI sources, as well as 5 example
-programs.  You'll find the full manual under "glui_manual.pdf".  The
-GLUI web page is at 
+This distribution contains the full GLUI sources, as well as five example
+programs.
 
-	http://www.cs.unc.edu/~rademach/glui
+You'll find the full manual under [glui_manual.pdf](doc/glui_manual.pdf). 
+
+The (original) GLUI web page is at http://www.cs.unc.edu/~rademach/glui
 
 ### Windows
 
@@ -222,7 +223,6 @@ and add the OpenGL libs:
 	glui32.lib glut32.lib glu32.lib opengl32.lib   (Microsoft OpenGL)
 
 Include the file "glui.h" in any file that uses the GLUI library.
-
 
 ### Unix
 
