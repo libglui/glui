@@ -74,7 +74,6 @@ public:
 
   float  length() const;                   /* length of a quat                */
   float  length2() const;                  /* squared length of a quat        */
-  quat  &normalize();                      /* normalize a quat                */
   quat  &apply(V_FCT_PTR fct);             /* apply a func. to each component */
   vec3   xform(const vec3 &v );            /* q*v*q-1                         */
   mat4   to_mat4() const;
