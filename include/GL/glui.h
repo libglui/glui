@@ -677,7 +677,6 @@ public:
     GLUI_StdBitmaps  std_bitmaps;
     GLUI_String      window_name;
     unsigned char    bkgd_color[3];
-    float            bkgd_color_f[3];
 
     void            *font;
     int              curr_modifiers;
