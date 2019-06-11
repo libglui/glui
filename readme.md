@@ -7,8 +7,7 @@ https://github.com/libglui/glui
 This distribution contains the latest community-maintained fork of the
 GLUI Library, now under the ZLIB license.  
 
-It is based on the GLUI v2.1 beta version from Paul Rademacher
-(http://www.cs.unc.edu/~rademach/glui/) plus changes made in "GLUI v2.2" onwards.
+It is based on the GLUI v2.1 beta version from Paul Rademacher plus changes made in _GLUI v2.2_ onwards.
 
 The (original) manual is available: [glui_manual.pdf](doc/glui_manual.pdf). 
 
