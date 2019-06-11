@@ -54,9 +54,9 @@ Many changes submitted by Orion Sky Lawlor.
 
 ## Version 2.3, March 22, 2005
 
-- WARNING: Introduces some incompatible changes with previous versions!!
+- *WARNING*: Introduces some incompatible changes with previous versions!!
 
-- GLUI_String is now a std::string
+- GLUI_String is now a `std::string`
   This is the main source of most incompatibilities, but I felt it was
   a necessary change, because the previous usage of a fixed-sized
   buffer was just too unsafe.  I myself was bitten a few times passing
