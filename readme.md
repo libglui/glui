@@ -5,22 +5,27 @@ https://github.com/libglui/glui
 [![Build Status](https://travis-ci.org/libglui/glui.svg?branch=master)](https://travis-ci.org/libglui/glui)
 
 This distribution contains the latest community-maintained fork of the
-GLUI Library, now under the ZLIB license.  It is based on the GLUI
-v2.1 beta version from Paul Rademacher
-(http://www.cs.unc.edu/~rademach/glui/) plus the compatibility changes 
-made by Nigel Stewart in his "GLUI v2.2".
+GLUI Library, now under the ZLIB license.  
 
-WARNING: This version (2.3) introduces some incompatible changes with
-previous versions!!
+It is based on the GLUI v2.1 beta version from Paul Rademacher
+(http://www.cs.unc.edu/~rademach/glui/) plus changes made in "GLUI v2.2" onwards.
+
+## Version 2.37, October 15, 2015
+
+- [GLUI 2.37 Downloads](https://github.com/libglui/glui/releases/tag/2.37)
+- CMake build added
+- Bugfixes
 
 ## Version 2.36, November 4, 2007
 
+- [GLUI 2.36 Downloads](https://sourceforge.net/projects/glui/files/Source/2.36/)
 - License changed to the more permissive ZLIB license 
   with the blessing of Paul Rademacher, Nigel Stewart, Bill Baxter, 
   John Kew, Orion Sky Lawlor and all other developers.
 
 ## Version 2.35, July 7, 2006
 
+- [GLUI 2.35 Downloads](https://sourceforge.net/projects/glui/files/Source/2.35/)
 - Applied patch [950354] "Good Idle For Spinners" written by Alain
   Durat.  This makes it so GLUI doesn't suck up 100% of your CPU time
   when nothing is happening.
@@ -48,6 +53,8 @@ Many changes submitted by Orion Sky Lawlor.
   executable. 
 
 ## Version 2.3, March 22, 2005
+
+- WARNING: Introduces some incompatible changes with previous versions!!
 
 - GLUI_String is now a std::string
   This is the main source of most incompatibilities, but I felt it was
