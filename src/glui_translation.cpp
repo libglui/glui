@@ -373,9 +373,9 @@ void    GLUI_Translation::draw_2d_arrow( int radius, int filled, int orientation
   int   c_off=0; /* color index offset */
 
   if ( glui )
-    bkgd.set(glui->bkgd_color_f[0],
-	     glui->bkgd_color_f[1],
-	     glui->bkgd_color_f[2]);
+    bkgd.set(glui->bkgd_color[0]/255.0f,
+	     glui->bkgd_color[1]/255.0f,
+	     glui->bkgd_color[2]/255.0f);
 
   /*	bkgd[0] = 255.0; bkgd[1] = 0;              */
 

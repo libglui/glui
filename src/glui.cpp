@@ -1116,13 +1116,10 @@ GLUI_Main::GLUI_Main()
   font                    = GLUT_BITMAP_HELVETICA_12;
   curr_cursor             = GLUT_CURSOR_LEFT_ARROW;
 
-  int r=200, g=200, b=200;
-  bkgd_color[0] = r;
-  bkgd_color[1] = g;
-  bkgd_color[2] = b;
-  bkgd_color_f[0] = r / 255.0f;
-  bkgd_color_f[1] = g / 255.0f;
-  bkgd_color_f[2] = b / 255.0f;
+  // X11 Silver: 75% white = 192
+  bkgd_color[0] = 192;
+  bkgd_color[1] = 192;
+  bkgd_color[2] = 192;
 
   /*** Create the main panel ***/
   main_panel              = new GLUI_Panel;
