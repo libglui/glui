@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\algebra3.cpp" />
+    <ClCompile Include="..\src\arcball.cpp" />
+    <ClCompile Include="..\src\glui.cpp" />
+    <ClCompile Include="..\src\glui_add_controls.cpp" />
+    <ClCompile Include="..\src\glui_bitmaps.cpp" />
+    <ClCompile Include="..\src\glui_button.cpp" />
+    <ClCompile Include="..\src\glui_checkbox.cpp" />
+    <ClCompile Include="..\src\glui_column.cpp" />
+    <ClCompile Include="..\src\glui_commandline.cpp" />
+    <ClCompile Include="..\src\glui_control.cpp" />
+    <ClCompile Include="..\src\glui_edittext.cpp" />
+    <ClCompile Include="..\src\glui_filebrowser.cpp" />
+    <ClCompile Include="..\src\glui_img_checkbox_0.c" />
+    <ClCompile Include="..\src\glui_img_checkbox_0_dis.c" />
+    <ClCompile Include="..\src\glui_img_checkbox_1.c" />
+    <ClCompile Include="..\src\glui_img_checkbox_1_dis.c" />
+    <ClCompile Include="..\src\glui_img_downarrow.c" />
+    <ClCompile Include="..\src\glui_img_leftarrow.c" />
+    <ClCompile Include="..\src\glui_img_listbox_down.c" />
+    <ClCompile Include="..\src\glui_img_listbox_up.c" />
+    <ClCompile Include="..\src\glui_img_listbox_up_dis.c" />
+    <ClCompile Include="..\src\glui_img_radiobutton_0.c" />
+    <ClCompile Include="..\src\glui_img_radiobutton_0_dis.c" />
+    <ClCompile Include="..\src\glui_img_radiobutton_1.c" />
+    <ClCompile Include="..\src\glui_img_radiobutton_1_dis.c" />
+    <ClCompile Include="..\src\glui_img_rightarrow.c" />
+    <ClCompile Include="..\src\glui_img_spindown_0.c" />
+    <ClCompile Include="..\src\glui_img_spindown_1.c" />
+    <ClCompile Include="..\src\glui_img_spindown_dis.c" />
+    <ClCompile Include="..\src\glui_img_spinup_0.c" />
+    <ClCompile Include="..\src\glui_img_spinup_1.c" />
+    <ClCompile Include="..\src\glui_img_spinup_dis.c" />
+    <ClCompile Include="..\src\glui_img_uparrow.c" />
+    <ClCompile Include="..\src\glui_list.cpp" />
+    <ClCompile Include="..\src\glui_listbox.cpp" />
+    <ClCompile Include="..\src\glui_mouse_iaction.cpp" />
+    <ClCompile Include="..\src\glui_node.cpp" />
+    <ClCompile Include="..\src\glui_panel.cpp" />
+    <ClCompile Include="..\src\glui_radio.cpp" />
+    <ClCompile Include="..\src\glui_rollout.cpp" />
+    <ClCompile Include="..\src\glui_rotation.cpp" />
+    <ClCompile Include="..\src\glui_scrollbar.cpp" />
+    <ClCompile Include="..\src\glui_separator.cpp" />
+    <ClCompile Include="..\src\glui_spinner.cpp" />
+    <ClCompile Include="..\src\glui_statictext.cpp" />
+    <ClCompile Include="..\src\glui_textbox.cpp" />
+    <ClCompile Include="..\src\glui_translation.cpp" />
+    <ClCompile Include="..\src\glui_tree.cpp" />
+    <ClCompile Include="..\src\glui_treepanel.cpp" />
+    <ClCompile Include="..\src\glui_window.cpp" />
+    <ClCompile Include="..\src\quaternion.cpp" />
+    <ClCompile Include="..\src\viewmodel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\algebra3.h" />
+    <ClInclude Include="..\src\arcball.h" />
+    <ClInclude Include="..\src\glui_bitmap_img_data.h" />
+    <ClInclude Include="..\src\glui_internal.h" />
+    <ClInclude Include="..\src\glui_internal_control.h" />
+    <ClInclude Include="..\src\quaternion.h" />
+    <ClInclude Include="..\src\tinyformat.h" />
+    <ClInclude Include="..\src\viewmodel.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>glui32</ProjectName>
+    <ProjectGuid>{304505FF-4A2A-471E-B163-17446985C98E}</ProjectGuid>
+    <RootNamespace>_glui library</RootNamespace>
+    <SccProjectName />
+    <SccLocalPath />
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>16.0.28916.169</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(Platform)/$(Configuration)</OutDir>
+    <IntDir>$(Platform)/$(Configuration)/$(ProjectName)/</IntDir>
+    <TargetName>glui32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(Platform)/$(Configuration)</OutDir>
+    <IntDir>$(Platform)/$(Configuration)/$(ProjectName)/</IntDir>
+    <TargetName>glui32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(Platform)/$(Configuration)</OutDir>
+    <IntDir>$(Platform)/$(Configuration)/$(ProjectName)/</IntDir>
+    <TargetName>glui32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(Platform)/$(Configuration)</OutDir>
+    <IntDir>$(Platform)/$(Configuration)/$(ProjectName)/</IntDir>
+    <TargetName>glui32</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../include;C:\Program Files %28x86%29\NVIDIA Corporation\Cg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Release/glui.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName)</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(Platform)\$(Configuration)\glui32.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../include;C:\Program Files %28x86%29\NVIDIA Corporation\Cg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Release/glui.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName)</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(Platform)\$(Configuration)\glui32.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../include;C:\Program Files %28x86%29\NVIDIA Corporation\Cg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Debug/glui.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName)</ProgramDataBaseFileName>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(Platform)\$(Configuration)\glui32.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../include;C:\Program Files %28x86%29\NVIDIA Corporation\Cg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\Debug/glui.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName)</ProgramDataBaseFileName>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(Platform)\$(Configuration)\glui32.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
