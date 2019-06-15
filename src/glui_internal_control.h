@@ -28,6 +28,11 @@
 #endif
 #endif
 
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
 /* This is the main GLUI external header */
 #include "GL/glui.h"
 
