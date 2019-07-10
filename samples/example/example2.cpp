@@ -64,6 +64,7 @@ void control_cb( int control )
 void xf_cb( int // control
             )
 {
+  printf("Transfer function changed...\n");
 }
 
 /**************************************** myGlutKeyboard() **********/
