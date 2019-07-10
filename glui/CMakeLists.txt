@@ -30,6 +30,7 @@ SET(GLUI_SRCS
  glui_tree.cpp
  glui_treepanel.cpp
  glui_window.cpp
+ glui_transfer_function.cpp
  quaternion.cpp
  viewmodel.cpp
 )

@@ -30,6 +30,7 @@
 
 *****************************************************************************/
 #include "glui_internal_control.h"
+#include <sys/times.h>
 
 namespace glui {
 
@@ -238,8 +239,6 @@ namespace glui {
   {
     GLUI_Context *context;
 
-    /*  printf("display func\n");          */
-
     context = GLUI_Master.find_glui_by_window_id(glutGetWindow());
 
     if (context) {
@@ -259,8 +258,6 @@ namespace glui {
     GLUI_Context             *context;
     GLUI_Glut_Window *glut_window;
     int               current_window;
-
-    /*printf("glui_reshape_func(): %d  w/h: %d/%d\n", glutGetWindow(), w, h);          */
 
     current_window = glutGetWindow();
 

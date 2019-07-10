@@ -12,6 +12,7 @@
 
 #include <string.h>
 #include <GL/glui.h>
+#include <GL/glui/TransferFunction.h>
 
 using namespace glui;
 
@@ -58,6 +59,11 @@ void control_cb( int control )
   printf( "          radio group: %d\n", radio->get_int_val() );
   printf( "                 text: %s\n", edittext->get_text() );
   
+}
+
+void xf_cb( int // control
+            )
+{
 }
 
 /**************************************** myGlutKeyboard() **********/
@@ -232,9 +238,15 @@ int main(int argc, char* argv[])
   /*         Here's the GLUI_Context *code         */
   /****************************************/
 
-  GLUI_Context *context = GLUI_Master.create_glui( "GLUI", 0, 400, 50 ); /* name, flags,
-								 x, and y */
-  new GLUI_StaticText( context, "GLUI Example 2" );
+  GLUI_Context *context = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
+  new GLUI_StaticText( context, "GLUI Example 2 a" );
+
+GLfloat lights_rotation[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
+  
+  const int numXfAlpha = 128;
+  float xfAlpha[numXfAlpha];
+  new GLUI_TransferFunction( context, "XF", xfAlpha, numXfAlpha, -1,xf_cb );
+  new GLUI_StaticText( context, "GLUI Example 2 b" );
   new GLUI_Separator(context);
   checkbox = new GLUI_Checkbox( context, "Wireframe", &wireframe, 1, control_cb );
   spinner  = new GLUI_Spinner( context, "Segments:", &segments, 2, control_cb );
@@ -246,6 +258,8 @@ int main(int argc, char* argv[])
   new GLUI_RadioButton( radio, "Torus" );
   new GLUI_RadioButton( radio, "Teapot" );
   new GLUI_Button( context, "Quit", 0,(GLUI_Update_CB)exit );
+  GLUI_Rotation *lights_rot = new GLUI_Rotation(context, "Blue Light", lights_rotation );
+  lights_rot->set_spin( .82 );
  
   context->set_main_gfx_window( main_window );
 
