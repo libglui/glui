@@ -75,7 +75,6 @@
 # define GLUIAPI
 #endif
 
-
 #define GLUI_VERSION 2.36f    /********** Current version **********/
 
 /********** List of GLUT callbacks ********/
@@ -227,6 +226,13 @@ enum TranslationCodes
 /************ A string type for us to use **********/
 
 typedef std::string GLUI_String;
+
+/**** Workaround for Win32 template instantiation needed for dll ****/
+
+#ifdef _MSC_VER
+#  pragma warning( push )
+#  pragma warning( disable: 4251 )
+#endif
 
 /********* Pre-declare classes as needed *********/
 
@@ -682,7 +688,6 @@ public:
     GLUI_StdBitmaps  std_bitmaps;
     GLUI_String      window_name;
     unsigned char    bkgd_color[3];
-    float            bkgd_color_f[3];
 
     void            *font;
     int              curr_modifiers;
@@ -852,7 +857,7 @@ public:
     void         restore_window( int orig );
     void         translate_and_draw_front();
     void         translate_to_origin()
-    {glTranslatef((float)x_abs+.5,(float)y_abs+.5,0.0);}
+    {glTranslatef((float)x_abs+.5f,(float)y_abs+.5f,0.0f);}
     virtual void draw( int x, int y )=0;
     void         set_font( void *new_font );
     void        *get_font();
@@ -1624,12 +1629,6 @@ protected:
 /*               CommandLine class                          */
 /*                                                          */
 /************************************************************/
-
-#ifdef _MSC_VER
-// Explicit template instantiation needed for dll
-template class GLUIAPI std::allocator<GLUI_String>;
-template class GLUIAPI std::vector<GLUI_String, std::allocator<GLUI_String> >;
-#endif
 
 class GLUIAPI GLUI_CommandLine : public GLUI_EditText
 {
@@ -2439,5 +2438,10 @@ public:
 protected:
     void common_init();
 };
+
+#ifdef _MSC_VER
+#  pragma warning( push )
+#  pragma warning( disable: 4251 )
+#endif
 
 #endif

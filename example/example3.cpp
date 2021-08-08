@@ -11,6 +11,17 @@
 
 ****************************************************************************/
 
+#ifdef __APPLE__
+#ifndef GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION
+#endif
+#endif
+
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
 #include <string.h>
 #include <GL/glui.h>
 

@@ -5,22 +5,32 @@ https://github.com/libglui/glui
 [![Build Status](https://travis-ci.org/libglui/glui.svg?branch=master)](https://travis-ci.org/libglui/glui)
 
 This distribution contains the latest community-maintained fork of the
-GLUI Library, now under the ZLIB license.  It is based on the GLUI
-v2.1 beta version from Paul Rademacher
-(http://www.cs.unc.edu/~rademach/glui/) plus the compatibility changes 
-made by Nigel Stewart in his "GLUI v2.2".
+GLUI Library, now under the ZLIB license.  
 
-WARNING: This version (2.3) introduces some incompatible changes with
-previous versions!!
+It is based on the GLUI v2.1 beta version from Paul Rademacher plus changes made in _GLUI v2.2_ onwards.
+
+The (original) manual is available: [glui_manual.pdf](doc/glui_manual.pdf). 
+
+The (original) GLUI web page is at http://www.cs.unc.edu/~rademach/glui
+
+# Releases
+
+## Version 2.37, October 15, 2015
+
+- [GLUI 2.37 Downloads](https://github.com/libglui/glui/releases/tag/2.37)
+- CMake build added
+- Bugfixes
 
 ## Version 2.36, November 4, 2007
 
+- [GLUI 2.36 Downloads](https://sourceforge.net/projects/glui/files/Source/2.36/)
 - License changed to the more permissive ZLIB license 
   with the blessing of Paul Rademacher, Nigel Stewart, Bill Baxter, 
   John Kew, Orion Sky Lawlor and all other developers.
 
 ## Version 2.35, July 7, 2006
 
+- [GLUI 2.35 Downloads](https://sourceforge.net/projects/glui/files/Source/2.35/)
 - Applied patch [950354] "Good Idle For Spinners" written by Alain
   Durat.  This makes it so GLUI doesn't suck up 100% of your CPU time
   when nothing is happening.
@@ -49,7 +59,9 @@ Many changes submitted by Orion Sky Lawlor.
 
 ## Version 2.3, March 22, 2005
 
-- GLUI_String is now a std::string
+- *WARNING*: Introduces some incompatible changes with previous versions!!
+
+- GLUI_String is now a `std::string`
   This is the main source of most incompatibilities, but I felt it was
   a necessary change, because the previous usage of a fixed-sized
   buffer was just too unsafe.  I myself was bitten a few times passing
@@ -172,7 +184,7 @@ baxter
 at
 cs unc edu
 
-## JOHN KEW'S ADDITIONS (March 2005)
+# JOHN KEW'S ADDITIONS (March 2005)
 
 Thanks to John Kew of Natural Solutions Inc.,
 there are some new widgets.  These are demonstrated in example6.cpp.
@@ -190,17 +202,14 @@ And one other change:
 
 * GLUI_Rollout has optional embossed border 
 
-## PAUL'S ORIGINAL GLUI 2.0/2.1 README
+# PAUL'S ORIGINAL GLUI 2.0/2.1 README
 
-### Welcome to the GLUI User Interface Library, v2.0 beta!
+## Welcome to the GLUI User Interface Library, v2.0 beta!
 
-This distribution contains the full GLUI sources, as well as 5 example
-programs.  You'll find the full manual under "glui_manual.pdf".  The
-GLUI web page is at 
+This distribution contains the full GLUI sources, as well as five example
+programs.
 
-	http://www.cs.unc.edu/~rademach/glui
-
-### Windows
+## Windows
 
 The directory 'msvc' contains a Visual C++ workspace entitled
 'glui.dsw'.  To recompile the library and examples, open this
@@ -216,8 +225,7 @@ and add the OpenGL libs:
 
 Include the file "glui.h" in any file that uses the GLUI library.
 
-
-### Unix
+## Unix
 
 An SGI/HP makefile is found in the file 'makefile' (certain lines may need 
 to be commented/uncommented).
@@ -225,4 +233,3 @@ to be commented/uncommented).
 To include GLUI in your own apps, add the glui library to your
 makefile (before the glut library 'libglut.a'), and include "glui.h"
 in your sources.
-

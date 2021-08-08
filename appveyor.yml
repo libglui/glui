@@ -1,0 +1,38 @@
+version: '{build}'
+
+image: Visual Studio 2019
+
+environment:
+  matrix:
+    - COMPILER: "Visual Studio 16 2019"
+      ARCH: "Win32"
+      GLUT_LIBRARY: "../../glut/lib/glut32.lib"
+    - COMPILER: "Visual Studio 16 2019"
+      ARCH: "x64"
+      GLUT_LIBRARY: "../../glut/lib.x64/glut32.lib"
+
+configuration:
+  - Debug
+  - Release
+
+build_script:
+  # GLUT headers and libraries for Windows
+  - cd ..
+  - mkdir glut
+  - cd glut
+  - curl http://www.nigels.com/download/NvidiaCgGLUT_Windows.zip --output glut.zip
+  - unzip glut.zip
+  - cd ../glui
+ 
+  # Build GLUI
+  - mkdir build
+  - cd build
+  - cmake
+      -G "%COMPILER%"
+      -A "%ARCH%"
+      -DGLUT_INCLUDE_DIR=../../glut/include
+      -DGLUT_glut_LIBRARY_DEBUG="%GLUT_LIBRARY%"
+      -DGLUT_glut_LIBRARY_RELEASE="%GLUT_LIBRARY%"
+      ..
+  - cmake --build . --config %CONFIGURATION%
+  - cd ..
