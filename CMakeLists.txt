@@ -49,17 +49,18 @@ SET(GLUI_SRCS
  src/quaternion.cpp
  src/viewmodel.cpp
 )
-add_library(glui_obj OBJECT ${GLUI_SRCS})
-target_include_directories(glui_obj
-      PUBLIC
-      "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
-      ${OPENGL_INCLUDE_DIR}
-      ${GLUT_INCLUDE_DIR})
-# we need to enable -fPIC this so that the same object code can be used to
-# create static *and* shared libraries without double compilation
-set_target_properties( glui_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+# add_library(glui_obj OBJECT ${GLUI_SRCS})
+# target_include_directories(glui_obj
+#       PUBLIC
+#       "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
+#       ${OPENGL_INCLUDE_DIR}
+#       ${GLUT_INCLUDE_DIR})
+# # we need to enable -fPIC this so that the same object code can be used to
+# # create static *and* shared libraries without double compilation
+# set_target_properties( glui_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
 
-add_library(glui SHARED $<TARGET_OBJECTS:glui_obj>)
+add_library(glui SHARED ${GLUI_SRCS})
+target_compile_definitions(glui PRIVATE GLUI_BUILDING_LIB GLUIDLL)
 target_include_directories(glui
       PUBLIC
       "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
@@ -72,14 +73,14 @@ set_target_properties(glui PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION})
 
-add_library(glui_static STATIC $<TARGET_OBJECTS:glui_obj>)
+add_library(glui_static STATIC ${GLUI_SRCS})
+target_compile_definitions(glui PRIVATE GLUI_BUILDING_LIB)
 target_include_directories(glui_static
       PUBLIC
       "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
       "$<INSTALL_INTERFACE:include>"
       ${OPENGL_INCLUDE_DIR}
       ${GLUT_INCLUDE_DIR})
-#target_compile_definitions(glui_static PRIVATE FREEGLUT_STATIC)
 target_link_libraries(glui_static)
 set_target_properties(glui_static PROPERTIES DEBUG_POSTFIX "d")
 
