@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(glui)
 set(PROJECT_VERSION 2.37)
 
+set(GLUT_ROOT_PATH "D:\\Repos\\third-party\\FreeGLUT")
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 
@@ -79,26 +80,26 @@ target_include_directories(glui_static
       "$<INSTALL_INTERFACE:include>"
       ${OPENGL_INCLUDE_DIR}
       ${GLUT_INCLUDE_DIR})
-target_link_libraries(glui_static PUBLIC ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+#target_compile_definitions(glui_static PRIVATE FREEGLUT_STATIC)
+target_link_libraries(glui_static)
 set_target_properties(glui_static PROPERTIES DEBUG_POSTFIX "d")
 
 add_executable(ppm2array tools/ppm.cpp tools/ppm2array.cpp)
 target_link_libraries(ppm2array)
 
-add_executable(example1 example/example1.cpp)
-target_link_libraries(example1 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example2 example/example2.cpp)
-target_link_libraries(example2 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example3 example/example3.cpp)
-target_link_libraries(example3 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example4 example/example4.cpp)
-target_link_libraries(example4 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example5 example/example5.cpp)
-target_link_libraries(example5 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-add_executable(example6 example/example6.cpp)
-target_link_libraries(example6 glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+list(TRANSFORM GLUT_LIBRARIES REPLACE freeglut freeglut_static)
+macro(add_demo name)
+  add_executable("${name}" ${ARGN})
+  target_compile_definitions("${name}" PRIVATE FREEGLUT_STATIC)
+  target_link_libraries("${name}" glui_static ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+ENDMACRO()
 
-
+add_demo(example1 example/example1.cpp)
+add_demo(example2 example/example2.cpp)
+add_demo(example3 example/example3.cpp)
+add_demo(example4 example/example4.cpp)
+add_demo(example5 example/example5.cpp)
+add_demo(example6 example/example6.cpp)
 
 ####
 # Installation
